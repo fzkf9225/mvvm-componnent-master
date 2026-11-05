@@ -2,22 +2,18 @@ package io.coderf.arklab.common.widget.popupwindow;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
-import androidx.annotation.NonNull;
-import com.google.android.material.imageview.ShapeableImageView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,91 +21,48 @@ import java.util.List;
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.databinding.PopupMultiCascadeBinding;
-import io.coderf.arklab.core.utils.CollectionUtil;
-import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.common.utils.common.DrawableUtil;
-import io.coderf.arklab.common.widget.dialog.DialogHostAdaptHelper;
+import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 import io.coderf.arklab.common.widget.popupwindow.adapter.PopupWindowCheckBoxAdapter;
 import io.coderf.arklab.common.widget.popupwindow.adapter.PopupWindowSelectedAdapter;
 import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
-import io.coderf.arklab.common.utils.theme.ThemeAttrs;
+import io.coderf.arklab.core.utils.CollectionUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 
 /**
- * 多选级联
+ * 多选级联 PopupWindow
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
- * @created 2025/7/4 17:38
+ * @updated 2026/11/5
  */
-public class CascadeMultiPopupWindow<T extends PopupWindowBean> extends PopupWindow implements PopupWindowCheckBoxAdapter.OnItemSelectedChangedListener, PopupWindowSelectedAdapter.OnItemSelectedClearListener {
-    public final static String TAG = "PopupMultiCascadeView";
-    /**
-     * 选项列表适配器
-     */
+public class CascadeMultiPopupWindow<T extends PopupWindowBean> extends BasePopupWindow
+        implements PopupWindowCheckBoxAdapter.OnItemSelectedChangedListener,
+        PopupWindowSelectedAdapter.OnItemSelectedClearListener {
+
+    public static final String TAG = "PopupMultiCascadeView";
+
     private PopupWindowCheckBoxAdapter<T> popupWindowAdapter;
-    /**
-     * 选中列表适配器
-     */
     private PopupWindowSelectedAdapter<T> popupWindowSelectedAdapter;
-    /**
-     * 布局
-     */
     private PopupMultiCascadeBinding binding;
-    /**
-     * 选项数据源
-     */
     private final List<T> dataList;
-    /**
-     * 选中数据
-     */
     private final SelectedListener<T> selectedListener;
-    /**
-     * 顶部选中文字颜色
-     */
     private @ColorInt int selectTextColor;
-
-    /**
-     * 圆角
-     */
     private float radius;
-
-    /**
-     * 选项列表选中背景颜色
-     */
     private @ColorInt int selectBgColor;
-
-    /**
-     * 选项字体颜色
-     */
     private @ColorInt int selectionTextColor;
-    /**
-     * 列表选中图标样式
-     */
     private Drawable checkedDrawable;
-    /**
-     * 列表未选中图标样式
-     */
     private Drawable uncheckedDrawable;
+    private float paddingStart, paddingTop, paddingEnd, paddingBottom;
+    private float itemHeight;
 
-    /**
-     * 顶部选中按钮的padding
-     */
-    private float paddingStart,paddingTop,paddingEnd,paddingBottom;
-
-    /**
-     * 列表的高度
-     */
-    private float itemHeight = 0;
-
-    private final Activity hostActivity;
-
-    public CascadeMultiPopupWindow(Activity context, List<T> dataList, SelectedListener<T> selectedListener) {
+    public CascadeMultiPopupWindow(Activity context, List<T> dataList,
+                                   SelectedListener<T> selectedListener) {
         super(context);
-        this.hostActivity = context;
         this.dataList = dataList;
         this.selectedListener = selectedListener;
-        //默认参数
+
         itemHeight = DensityUtil.dp2px(context, 40f);
         selectionTextColor = ThemeAttrs.onSurface(context);
         selectTextColor = ThemeAttrs.onSurface(context);
@@ -119,23 +72,26 @@ public class CascadeMultiPopupWindow<T extends PopupWindowBean> extends PopupWin
         paddingTop = DensityUtil.dp2px(context, 6f);
         paddingEnd = DensityUtil.dp2px(context, 12f);
         paddingBottom = DensityUtil.dp2px(context, 6f);
-        // 获取选中状态的Drawable
-        checkedDrawable = DrawableUtil.createCheckedDrawable(context,ThemeAttrs.primary(context),DensityUtil.dp2px(context, 16f));
-        // 获取未选中状态的Drawable
-        uncheckedDrawable = DrawableUtil.createUncheckedDrawable(DensityUtil.dp2px(context, 1),ThemeAttrs.primary(context),DensityUtil.dp2px(context, 16));
-        initViews(context);
+        checkedDrawable = DrawableUtil.createCheckedDrawable(
+                context, ThemeAttrs.primary(context), DensityUtil.dp2px(context, 16f));
+        uncheckedDrawable = DrawableUtil.createUncheckedDrawable(
+                DensityUtil.dp2px(context, 1), ThemeAttrs.primary(context),
+                DensityUtil.dp2px(context, 16));
+
+        setLandscapeCenterEnabled(true);
+        enableHostDim(DEFAULT_HOST_DIM_ALPHA);
+        initViews();
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private void initViews(Activity context) {
-        binding = DialogHostAdaptHelper.inflateWithHostAdapt(context,
-                () -> PopupMultiCascadeBinding.inflate(LayoutInflater.from(context), null, false));
-        //初始化popupWindowAdapter
+    private void initViews() {
+        binding = inflateWithHostAdapt(
+                () -> PopupMultiCascadeBinding.inflate(layoutInflater, null, false));
+
         popupWindowSelectedAdapter = new PopupWindowSelectedAdapter<>();
         popupWindowSelectedAdapter.setOnItemSelectedClearListener(this);
         popupWindowAdapter = new PopupWindowCheckBoxAdapter<>(popupWindowSelectedAdapter);
         popupWindowAdapter.setOnItemSelectedChangedListener(this);
-        //设置默认参数
         popupWindowAdapter.setItemHeight(itemHeight);
         popupWindowAdapter.setCheckedDrawable(checkedDrawable);
         popupWindowAdapter.setUncheckedDrawable(uncheckedDrawable);
@@ -152,28 +108,23 @@ public class CascadeMultiPopupWindow<T extends PopupWindowBean> extends PopupWin
             if (!binding.mRecyclerviewSelected.isShown()) {
                 binding.mRecyclerviewSelected.setVisibility(View.VISIBLE);
             }
-
-            boolean hasChild = CollectionUtil.isNotEmpty(popupWindowAdapter.getList().get(position).getChildList());
-
-            if (hasChild) {
-                popupWindowAdapter.setList(popupWindowAdapter.getList().get(position).getChildList());
+            T item = popupWindowAdapter.getList().get(position);
+            if (CollectionUtil.isNotEmpty(item.getChildList())) {
+                popupWindowAdapter.setList(item.getChildList());
                 popupWindowAdapter.notifyDataSetChanged();
             }
         });
 
         popupWindowAdapter.setList(dataList);
         binding.mRecyclerviewOptions.addItemDecoration(
-                new RecycleViewDivider(
-                        context,
-                        LinearLayoutManager.VERTICAL,
-                        DensityUtil.dp2px(context, 1f),
-                        ThemeAttrs.outlineVariant(context)
-                )
-        );
-        binding.mRecyclerviewOptions.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL, false));
+                new RecycleViewDivider(context, LinearLayoutManager.VERTICAL,
+                        DensityUtil.dp2px(context, 1f), ThemeAttrs.outlineVariant(context)));
+        binding.mRecyclerviewOptions.setLayoutManager(
+                new LinearLayoutManager(context, RecyclerView.VERTICAL, false));
         binding.mRecyclerviewOptions.setAdapter(popupWindowAdapter);
 
-        binding.mRecyclerviewSelected.setLayoutManager(new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
+        binding.mRecyclerviewSelected.setLayoutManager(
+                new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
         binding.mRecyclerviewSelected.setAdapter(popupWindowSelectedAdapter);
 
         binding.tvClearSelected.setOnClickListener(v -> {
@@ -183,9 +134,8 @@ public class CascadeMultiPopupWindow<T extends PopupWindowBean> extends PopupWin
             popupWindowAdapter.notifyDataSetChanged();
         });
 
-        // Confirm button click event
         binding.tvConfirm.setOnClickListener(v -> {
-            if (popupWindowSelectedAdapter.getList() == null || popupWindowSelectedAdapter.getList().isEmpty()) {
+            if (CollectionUtil.isEmpty(popupWindowSelectedAdapter.getList())) {
                 Toast.makeText(context, "请至少选择一项", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -194,150 +144,48 @@ public class CascadeMultiPopupWindow<T extends PopupWindowBean> extends PopupWin
         });
 
         setContentView(binding.getRoot());
-        setOutsideTouchable(true);
-        setTouchable(true);
-        setFocusable(true);
-        binding.getRoot().setFocusableInTouchMode(true);
+        applyDefaultWindowConfig(binding.getRoot());
         setAnimationStyle(android.R.style.Animation_Dialog);
-        setBackgroundDrawable(ContextCompat.getDrawable(context, R.color.transparent));
-
-        DisplayMetrics appDisplayMetrics = context.getResources().getDisplayMetrics();
-        boolean landscape = context.getResources().getConfiguration().orientation
-                == Configuration.ORIENTATION_LANDSCAPE;
-        if (landscape) {
-            // 横屏收窄宽度，高度不超过约 4/5 屏，避免贴满左右
-            setWidth(appDisplayMetrics.widthPixels / 2);
-            setHeight(appDisplayMetrics.heightPixels * 4 / 5);
-        } else {
-            setWidth(appDisplayMetrics.widthPixels);
-            setHeight(appDisplayMetrics.heightPixels * 2 / 3);
-        }
-
-        android.view.WindowManager.LayoutParams lp = context.getWindow().getAttributes();
-        lp.alpha = 0.5f; // Set shadow transparency
-        context.getWindow().setAttributes(lp);
-
-        setOnDismissListener(() -> {
-            android.view.WindowManager.LayoutParams windowLayoutParams = context.getWindow().getAttributes();
-            windowLayoutParams.alpha = 1f;
-            context.getWindow().setAttributes(windowLayoutParams);
-        });
+        applyCascadePanelSize();
     }
 
-    private boolean isLandscape() {
-        return hostActivity.getResources().getConfiguration().orientation
-                == Configuration.ORIENTATION_LANDSCAPE;
-    }
-
-    /**
-     * 展示：竖屏仍相对锚点下拉；横屏屏幕居中（宽约 1/2）。
-     */
-    public void show(@NonNull View anchor) {
-        showAsDropDown(anchor, 0, 0);
-    }
-
-    @Override
-    public void showAsDropDown(View anchor) {
-        showAsDropDown(anchor, 0, 0);
-    }
-
-    @Override
-    public void showAsDropDown(View anchor, int xoff, int yoff) {
-        if (isLandscape()) {
-            showCentered(anchor);
-            return;
-        }
-        super.showAsDropDown(anchor, xoff, yoff);
-    }
-
-    @Override
-    public void showAsDropDown(View anchor, int xoff, int yoff, int gravity) {
-        if (isLandscape()) {
-            showCentered(anchor);
-            return;
-        }
-        super.showAsDropDown(anchor, xoff, yoff, gravity);
-    }
-
-    private void showCentered(@NonNull View anchor) {
-        View token = hostActivity.getWindow() != null
-                ? hostActivity.getWindow().getDecorView()
-                : anchor.getRootView();
-        showAtLocation(token, Gravity.CENTER, 0, 0);
-    }
-
-    /**
-     * 顶部标题文字
-     * @param title 标题提示文字
-     */
     public void setTitle(String title) {
         binding.tvTitle.setText(title);
     }
-    /**
-     * 确认按钮文字内容
-     * @param confirmText 确认按钮文字内容
-     */
+
     public void setConfirmText(String confirmText) {
         binding.tvConfirm.setText(confirmText);
     }
-    /**
-     * 清空按钮文字内容
-     * @param clearText 清空按钮文字内容
-     */
+
     public void setClearText(String clearText) {
         binding.tvClearSelected.setText(clearText);
     }
-    /**
-     * 确认按钮文字颜色
-     * @param confirmTextColor 确认按钮文字颜色
-     */
+
     public void setConfirmTextColor(@ColorInt int confirmTextColor) {
         binding.tvConfirm.setTextColor(confirmTextColor);
     }
-    /**
-     * 清空按钮文字颜色
-     * @param clearTextColor 清空按钮文字颜色
-     */
+
     public void setClearTextColor(@ColorInt int clearTextColor) {
         binding.tvClearSelected.setTextColor(clearTextColor);
     }
-    /**
-     * 确认按钮文字大小
-     * @param confirmTextSize 确认按钮文字大小
-     */
+
     public void setConfirmTextSize(float confirmTextSize) {
         binding.tvConfirm.setTextSize(confirmTextSize);
     }
-    /**
-     * 清空按钮文字大小
-     * @param clearTextSize 清空按钮文字大小
-     */
+
     public void setClearTextSize(float clearTextSize) {
         binding.tvClearSelected.setTextSize(clearTextSize);
     }
-    /**
-     * 顶部标题文字颜色
-     * @param titleTextColor 顶部标题文字颜色
-     */
+
     public void setTitleTextColor(@ColorInt int titleTextColor) {
         binding.tvTitle.setTextColor(titleTextColor);
     }
 
-    /**
-     * 顶部标题文字是否加粗
-     * @param titleBold 顶部标题文字是否加粗
-     */
     public void setTitleBold(boolean titleBold) {
         binding.tvTitle.setTypeface(titleBold ? Typeface.defaultFromStyle(Typeface.BOLD) : null);
     }
 
-    /**
-     * 设置顶部选项未选中样式，不区分选中和不选中
-     * @param bgColorRes 选项未选中背景颜色
-     * @param textColorRes 选项未选中文字颜色
-     * @param radius 选项未选中圆角
-     */
-    public void setSelectedBgStyle(@ColorInt int bgColorRes,@ColorInt int textColorRes,int radius) {
+    public void setSelectedBgStyle(@ColorInt int bgColorRes, @ColorInt int textColorRes, int radius) {
         this.radius = radius;
         this.selectBgColor = bgColorRes;
         this.selectTextColor = textColorRes;
@@ -348,14 +196,6 @@ public class CascadeMultiPopupWindow<T extends PopupWindowBean> extends PopupWin
         popupWindowSelectedAdapter.setRadius(this.radius);
     }
 
-
-    /**
-     * 设置顶部选中选项的按钮内间距
-     * @param paddingStart 左间距
-     * @param paddingTop 上间距
-     * @param paddingEnd 右间距
-     * @param paddingBottom 下间距
-     */
     public void setPadding(float paddingStart, float paddingTop, float paddingEnd, float paddingBottom) {
         this.paddingStart = paddingStart;
         this.paddingTop = paddingTop;
@@ -364,37 +204,21 @@ public class CascadeMultiPopupWindow<T extends PopupWindowBean> extends PopupWin
         popupWindowSelectedAdapter.setPadding(paddingStart, paddingTop, paddingEnd, paddingBottom);
     }
 
-    /**
-     * 列表文字颜色
-     * @param selectionTextColor 文字颜色
-     */
     public void setSelectionTextColor(int selectionTextColor) {
         this.selectionTextColor = selectionTextColor;
         popupWindowAdapter.setTextColor(selectionTextColor);
     }
 
-    /**
-     * 列表项选中时图标，也就是checkbox样式
-     * @param checkedDrawable 选中图标
-     */
     public void setCheckedDrawable(Drawable checkedDrawable) {
         this.checkedDrawable = checkedDrawable;
         popupWindowAdapter.setCheckedDrawable(checkedDrawable);
     }
 
-    /**
-     * 列表项未选中时图标，也就是checkbox样式
-     * @param uncheckedDrawable 未选中图标
-     */
     public void setUncheckedDrawable(Drawable uncheckedDrawable) {
         this.uncheckedDrawable = uncheckedDrawable;
         popupWindowAdapter.setUncheckedDrawable(uncheckedDrawable);
     }
 
-    /**
-     * 列表项高度
-     * @param itemHeight 高度，单位px
-     */
     public void setItemHeight(float itemHeight) {
         this.itemHeight = itemHeight;
         popupWindowAdapter.setItemHeight(itemHeight);
@@ -425,8 +249,6 @@ public class CascadeMultiPopupWindow<T extends PopupWindowBean> extends PopupWin
     }
 
     public interface SelectedListener<T> {
-         void onSelectedResult(PopupWindow popupWindow, List<T> dataList);
+        void onSelectedResult(PopupWindow popupWindow, List<T> dataList);
     }
 }
-
-

@@ -1,6 +1,6 @@
 package io.coderf.arklab.common.utils.download;
 
-import java.util.List;
+import java.util.Collection;
 
 import io.coderf.arklab.common.base.BaseException;
 
@@ -29,10 +29,19 @@ final class DownloadSupport {
     /**
      * @throws BaseException {@link BaseException.ErrorType#DOWNLOADING_ERROR} 同一 URL 已在下载中
      */
-    static void checkRepeatDownload(List<String> downloadingUrls, String url, boolean verifyRepeatDownload) {
-        if (verifyRepeatDownload && downloadingUrls.contains(url)) {
+    static void checkRepeatDownload(boolean alreadyDownloading, boolean verifyRepeatDownload) {
+        if (verifyRepeatDownload && alreadyDownloading) {
             throw new BaseException(BaseException.ErrorType.DOWNLOADING_ERROR);
         }
     }
-}
 
+    /**
+     * @throws BaseException {@link BaseException.ErrorType#DOWNLOADING_ERROR} 同一 URL 已在下载中
+     * @deprecated 使用 {@link #checkRepeatDownload(boolean, boolean)}
+     */
+    @Deprecated
+    static void checkRepeatDownload(Collection<String> downloadingUrls, String url, boolean verifyRepeatDownload) {
+        checkRepeatDownload(verifyRepeatDownload && downloadingUrls != null && downloadingUrls.contains(url),
+                verifyRepeatDownload);
+    }
+}

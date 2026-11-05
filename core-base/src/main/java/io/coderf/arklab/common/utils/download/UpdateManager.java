@@ -1,27 +1,21 @@
 package io.coderf.arklab.common.utils.download;
 
 import android.app.Activity;
+import android.text.TextUtils;
 import android.widget.Toast;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.common.base.BaseException;
-import io.coderf.arklab.core.utils.FileUtil;
 import io.coderf.arklab.common.utils.download.core.DownloadConfig;
-import io.coderf.arklab.common.utils.download.core.DownloadRetrofitFactory;
 import io.coderf.arklab.common.utils.download.core.UpdateConfig;
 import io.coderf.arklab.common.utils.download.listener.ApkUpdateListener;
 import io.coderf.arklab.common.utils.download.listener.DownloadListener;
 import io.coderf.arklab.common.utils.download.util.DownloadNotificationUtil;
 import io.coderf.arklab.common.utils.download.util.DownloadUtil;
 import io.coderf.arklab.common.widget.dialog.UpdateMessageDialog;
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
@@ -32,8 +26,8 @@ import io.reactivex.rxjava3.disposables.Disposable;
  *   <li><b>静默更新</b>：{@link #update(DownloadConfig)} — 直接下载并调起安装，不弹说明框</li>
  *   <li><b>对话框更新</b>：{@link #checkUpdateInfo(UpdateConfig)} — 展示更新说明，用户确认后下载</li>
  * </ul>
- * {@link #getDownloadingUrls()} 返回的列表可与自定义更新 Dialog 共享，用于防重复下载
- * （如业务方自行实现 Dialog 时传入 {@code setDownloadMap(...)}）。
+ * 实际下载统一委托 {@link DownloadManager}，与普通文件下载共享防重复状态
+ * （{@link #getDownloadingUrls()} 即 {@link DownloadManager#getDownloadingUrls()}）。
  * <p>
  * <b>API 分层</b>
  * <ul>
@@ -42,6 +36,7 @@ import io.reactivex.rxjava3.disposables.Disposable;
  * </ul>
  *
  * @see UpdateConfig
+ * @see DownloadManager
  *
  * @author fz
  * @version 1.0
@@ -51,9 +46,6 @@ import io.reactivex.rxjava3.disposables.Disposable;
 public class UpdateManager {
 
     private static volatile UpdateManager sInstance;
-
-    /** 当前进行中的 APK 下载 URL，供对话框与静默更新共享 */
-    private final List<String> mDownloadingUrls = new ArrayList<>();
 
     private UpdateManager() {
     }
@@ -71,10 +63,10 @@ public class UpdateManager {
     }
 
     /**
-     * 正在下载的 URL 列表（供更新对话框防重复下载）
+     * 正在下载的 URL 列表（与 {@link DownloadManager} 共享，供更新对话框防重复下载）。
      */
     public List<String> getDownloadingUrls() {
-        return mDownloadingUrls;
+        return DownloadManager.getInstance().getDownloadingUrls();
     }
 
     // ========== 推荐 API ==========
@@ -83,20 +75,13 @@ public class UpdateManager {
      * 静默下载并安装 APK（不弹更新说明框）。
      * <p>
      * 下载失败时通过通知栏全屏提醒；成功时调用 {@link DownloadUtil#installApk}。
+     * 下载管线委托 {@link DownloadManager#download(DownloadConfig)}。
      *
      * @param config 下载配置，推荐使用 {@link UpdateConfig.Builder} 以获取更新场景默认值
      * @return 可 dispose 的订阅，用于页面销毁时取消下载
      */
     public Disposable update(DownloadConfig config) {
-        return executeUpdate(
-                config.getContext(),
-                config.getFileUrl(),
-                config.getSaveFileName(),
-                config.getSaveBasePath(),
-                config.isVerifyRepeatDownload(),
-                config.getHeaders(),
-                config.getDownloadListener(),
-                config.isShowToast());
+        return executeUpdate(resolveUpdateDownloadConfig(config));
     }
 
     /**
@@ -148,7 +133,14 @@ public class UpdateManager {
     public Disposable update(Activity context, String apkUrl, String saveFileName,
                              boolean verifyRepeatDownload, Map<String, String> headers,
                              DownloadListener downloadListener) {
-        return executeUpdate(context, apkUrl, saveFileName, null, verifyRepeatDownload, headers, downloadListener, true);
+        return executeUpdate(new DownloadConfig.Builder(context, apkUrl)
+                .setSaveFileName(TextUtils.isEmpty(saveFileName)
+                        ? UpdateConfig.DEFAULT_APK_FILE_NAME : saveFileName)
+                .setVerifyRepeatDownload(verifyRepeatDownload)
+                .setHeaders(headers)
+                .setDownloadListener(downloadListener)
+                .setShowToast(true)
+                .build());
     }
 
     public void checkUpdateInfo(DownloadConfig config, String updateMsg,
@@ -238,38 +230,35 @@ public class UpdateManager {
 
     // ========== 内部实现 ==========
 
-    /** 静默更新核心逻辑：校验 → 权限 defer → 下载 → 安装 */
-    private Disposable executeUpdate(Activity context, String apkUrl, String saveFileName, String saveBasePath,
-                                     boolean verifyRepeatDownload, Map<String, String> headers,
-                                     DownloadListener downloadListener, boolean showToast) {
-        try {
-            DownloadSupport.validateUrl(apkUrl);
-            DownloadSupport.checkRepeatDownload(mDownloadingUrls, apkUrl, verifyRepeatDownload);
-        } catch (BaseException e) {
-            return notifyUpdateError(context, e);
-        }
-
-        final String fileName = saveFileName != null ? saveFileName : UpdateConfig.DEFAULT_APK_FILE_NAME;
-        final String basePath = saveBasePath != null
-                ? saveBasePath
-                : FileUtil.getDefaultDownloadDir(
-                        context.getApplicationContext(), Config.getInstance().getFolderName());
-
-        return DownloadPermissionHelper.deferWithStoragePermission(
-                context,
-                DownloadPermissionHelper.REQUEST_CODE_UPDATE,
-                () -> enqueueUpdate(context, apkUrl, fileName, basePath, headers, downloadListener, showToast))
+    /** 静默更新：委托 {@link DownloadManager} 下载，成功后安装 */
+    private Disposable executeUpdate(DownloadConfig config) {
+        Activity context = config.getContext();
+        return DownloadManager.getInstance()
+                .download(config)
                 .subscribe(
                         file -> DownloadUtil.installApk(context.getApplicationContext(), file),
                         throwable -> handleUpdateFailure(context, throwable));
     }
 
-    private Observable<File> enqueueUpdate(Activity context, String apkUrl, String saveFileName,
-                                           String saveBasePath, Map<String, String> headers,
-                                           DownloadListener downloadListener, boolean showToast) {
-        mDownloadingUrls.add(apkUrl);
-        return DownloadRetrofitFactory.enqueue(apkUrl, saveBasePath, saveFileName, headers, downloadListener, showToast)
-                .doFinally(() -> mDownloadingUrls.remove(apkUrl));
+    /**
+     * 补齐更新场景默认文件名（普通 {@link DownloadConfig} 未指定时）。
+     * {@link UpdateConfig} 在 build 时已写入 {@link UpdateConfig#DEFAULT_APK_FILE_NAME}。
+     */
+    private static DownloadConfig resolveUpdateDownloadConfig(DownloadConfig config) {
+        if (!TextUtils.isEmpty(config.getSaveFileName())) {
+            return config;
+        }
+        return new DownloadConfig.Builder(config.getContext(), config.getFileUrl())
+                .setSaveBasePath(config.getSaveBasePath())
+                .setSaveFileName(UpdateConfig.DEFAULT_APK_FILE_NAME)
+                .setVerifyRepeatDownload(config.isVerifyRepeatDownload())
+                .setHeaders(config.getHeaders())
+                .setDownloadListener(config.getDownloadListener())
+                .setShowToast(config.isShowToast())
+                .setTimeoutsSec(config.getConnectTimeoutSec(),
+                        config.getReadTimeoutSec(),
+                        config.getWriteTimeoutSec())
+                .build();
     }
 
     private void showUpdateDialog(Activity context, String apkUrl, String saveFileName,
@@ -277,9 +266,11 @@ public class UpdateManager {
                                   boolean cancelEnable, boolean verifyRepeatDownload,
                                   Map<String, String> headers, DownloadListener downloadListener,
                                   boolean showToast) {
+        String resolvedName = TextUtils.isEmpty(saveFileName)
+                ? UpdateConfig.DEFAULT_APK_FILE_NAME : saveFileName;
         new UpdateMessageDialog(context)
-                .setOnUpdateListener(new ApkUpdateListener(context, apkUrl, saveFileName,
-                        mDownloadingUrls, verifyRepeatDownload, headers, downloadListener, showToast))
+                .setOnUpdateListener(new ApkUpdateListener(context, apkUrl, resolvedName,
+                        getDownloadingUrls(), verifyRepeatDownload, headers, downloadListener, showToast))
                 .setCanCancel(cancelEnable)
                 .setUpdateMsgString(updateMsg)
                 .setVersionName(currentVersionName)
@@ -287,14 +278,20 @@ public class UpdateManager {
                 .show();
     }
 
-    private Disposable notifyUpdateError(Activity context, BaseException exception) {
-        return Observable.error(exception)
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe(o -> {
-                }, throwable -> Toast.makeText(context, throwable.getMessage(), Toast.LENGTH_SHORT).show());
-    }
-
+    /**
+     * URL / 防重复 / 权限等前置失败用 Toast；真正的下载失败走通知栏。
+     */
     private void handleUpdateFailure(Activity context, Throwable throwable) {
+        if (throwable instanceof BaseException) {
+            BaseException exception = (BaseException) throwable;
+            String code = exception.getErrorCode();
+            if (BaseException.ErrorType.DOWNLOAD_URL_404.getCode().equals(code)
+                    || BaseException.ErrorType.DOWNLOADING_ERROR.getCode().equals(code)
+                    || BaseException.ErrorType.PERMISSION_DENIED.getCode().equals(code)) {
+                Toast.makeText(context, exception.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
         DownloadNotificationUtil notificationUtil = new DownloadNotificationUtil(context.getApplicationContext());
         String message;
         if (throwable instanceof BaseException) {

@@ -12,22 +12,27 @@ import java.util.Random;
 
 import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.common.base.BaseException;
-import io.coderf.arklab.core.utils.FileUtil;
+import io.coderf.arklab.common.utils.download.DownloadManager;
 import io.coderf.arklab.common.utils.download.DownloadPermissionHelper;
-import io.coderf.arklab.common.utils.download.core.DownloadRetrofitFactory;
+import io.coderf.arklab.common.utils.download.core.DownloadConfig;
+import io.coderf.arklab.common.utils.download.core.UpdateConfig;
 import io.coderf.arklab.common.utils.download.util.DownloadNotificationUtil;
 import io.coderf.arklab.common.utils.download.util.DownloadUtil;
 import io.coderf.arklab.common.widget.dialog.ConfirmDialog;
 import io.coderf.arklab.common.widget.dialog.UpdateMessageDialog;
+import io.coderf.arklab.core.utils.FileUtil;
 
 /**
  * {@link UpdateMessageDialog}「立即更新」按钮的默认实现。
  * <p>
- * 流程：权限检查 → 本地 APK 缓存检测（已下载则询问直接安装）→ 防重复下载 → 下载 → 安装。
- * {@code downloadMap} 通常传入 {@link io.coderf.arklab.common.utils.download.UpdateManager#getDownloadingUrls()}，
- * 与静默更新共享防重复状态。
+ * 流程：权限检查 → 本地 APK 缓存检测（已下载则询问直接安装）→ 委托
+ * {@link DownloadManager#download(DownloadConfig)} → 安装。
+ * 防重复状态与静默更新、普通下载统一由 {@link DownloadManager#getDownloadingUrls()} 维护。
+ * <p>
+ * 构造参数中的 {@code downloadMap} 仍保留以兼容旧调用；实际防重复以
+ * {@link DownloadManager} 为准（推荐传入 {@link io.coderf.arklab.common.utils.download.UpdateManager#getDownloadingUrls()}）。
  *
- * @see io.coderf.arklab.common.utils.download.UpdateManager#checkUpdateInfo(io.coderf.arklab.common.utils.download.core.UpdateConfig)
+ * @see io.coderf.arklab.common.utils.download.UpdateManager#checkUpdateInfo(UpdateConfig)
  *
  * @author fz
  * @version 1.0
@@ -38,7 +43,10 @@ public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
 
     private final String apkUrl;
     private final Activity mContext;
-    /** 与 UpdateManager 共享的进行中 URL 列表 */
+    /**
+     * 兼容旧 API；推荐传入 {@link DownloadManager#getDownloadingUrls()}。
+     * 防重复以 {@link DownloadManager} 为准，此列表仅作补充判断。
+     */
     private final List<String> downloadMap;
     private final String saveFileName;
     private final boolean verifyRepeatDownload;
@@ -64,7 +72,8 @@ public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
                              boolean showToast) {
         this.mContext = mContext;
         this.apkUrl = apkUrl;
-        this.saveFileName = saveFileName;
+        this.saveFileName = TextUtils.isEmpty(saveFileName)
+                ? UpdateConfig.DEFAULT_APK_FILE_NAME : saveFileName;
         this.downloadMap = downloadMap;
         this.verifyRepeatDownload = verifyRepeatDownload;
         this.headers = headers;
@@ -90,47 +99,63 @@ public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
     private void proceedUpdate() {
         String saveBasePath = FileUtil.getDefaultDownloadDir(
                 mContext.getApplicationContext(), Config.getInstance().getFolderName());
-        if (!TextUtils.isEmpty(saveFileName)) {
-            File targetFile = new File(saveBasePath, saveFileName);
-            if (targetFile.exists() && targetFile.isFile()) {
-                new ConfirmDialog(mContext)
-                        .setMessage("当前版本已在WIFI环境下自动下载，是否直接安装？")
-                        .setPositiveText("直接安装")
-                        .setNegativeText("重新下载")
-                        .setOnPositiveClickListener(dialog -> DownloadUtil.installApk(mContext.getApplicationContext(), targetFile))
-                        .setOnNegativeClickListener(dialog -> download())
-                        .builder()
-                        .show();
-                return;
-            }
+        File targetFile = new File(saveBasePath, saveFileName);
+        if (targetFile.exists() && targetFile.isFile()) {
+            new ConfirmDialog(mContext)
+                    .setMessage("当前版本已在WIFI环境下自动下载，是否直接安装？")
+                    .setPositiveText("直接安装")
+                    .setNegativeText("重新下载")
+                    .setOnPositiveClickListener(dialog -> DownloadUtil.installApk(mContext.getApplicationContext(), targetFile))
+                    .setOnNegativeClickListener(dialog -> download())
+                    .builder()
+                    .show();
+            return;
         }
-        if (downloadMap.contains(apkUrl) && verifyRepeatDownload) {
+        if (verifyRepeatDownload && isApkDownloading()) {
             Toast.makeText(mContext, "新版本正在下载中，请勿重复下载！", Toast.LENGTH_SHORT).show();
             return;
         }
         download();
     }
 
-    /** 发起 APK 下载，完成后调起安装；失败时发送全屏通知 */
+    private boolean isApkDownloading() {
+        if (DownloadManager.getInstance().isDownloading(apkUrl)) {
+            return true;
+        }
+        return downloadMap != null && downloadMap.contains(apkUrl);
+    }
+
+    /** 委托 {@link DownloadManager} 下载 APK，完成后调起安装；失败时发送全屏通知 */
     private void download() {
-        downloadMap.add(apkUrl);
-        DownloadNotificationUtil downloadNotificationUtils = new DownloadNotificationUtil(mContext.getApplicationContext());
-        DownloadRetrofitFactory.enqueue(
-                        apkUrl,
-                        FileUtil.getDefaultDownloadDir(
-                                mContext.getApplicationContext(), Config.getInstance().getFolderName()),
-                        saveFileName,
-                        headers,
-                        downloadListener,
-                        showToast
-                )
-                .doFinally(() -> downloadMap.remove(apkUrl))
-                .subscribe(file -> DownloadUtil.installApk(mContext.getApplicationContext(), file), throwable -> {
-                    if (throwable instanceof BaseException baseException) {
-                        downloadNotificationUtils.sendNotificationFullScreen(new Random().nextInt(), "新版本下载失败", baseException.getErrorMsg(), null);
-                        return;
-                    }
-                    downloadNotificationUtils.sendNotificationFullScreen(new Random().nextInt(), "新版本下载失败", throwable.getMessage(), null);
-                });
+        DownloadConfig config = new DownloadConfig.Builder(mContext, apkUrl)
+                .setSaveFileName(saveFileName)
+                .setVerifyRepeatDownload(verifyRepeatDownload)
+                .setHeaders(headers)
+                .setDownloadListener(downloadListener)
+                .setShowToast(showToast)
+                .build();
+        DownloadNotificationUtil downloadNotificationUtils =
+                new DownloadNotificationUtil(mContext.getApplicationContext());
+        DownloadManager.getInstance()
+                .download(config)
+                .subscribe(
+                        file -> DownloadUtil.installApk(mContext.getApplicationContext(), file),
+                        throwable -> {
+                            if (throwable instanceof BaseException) {
+                                BaseException baseException = (BaseException) throwable;
+                                String code = baseException.getErrorCode();
+                                if (BaseException.ErrorType.DOWNLOADING_ERROR.getCode().equals(code)
+                                        || BaseException.ErrorType.DOWNLOAD_URL_404.getCode().equals(code)
+                                        || BaseException.ErrorType.PERMISSION_DENIED.getCode().equals(code)) {
+                                    Toast.makeText(mContext, baseException.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                downloadNotificationUtils.sendNotificationFullScreen(
+                                        new Random().nextInt(), "新版本下载失败", baseException.getErrorMsg(), null);
+                                return;
+                            }
+                            downloadNotificationUtils.sendNotificationFullScreen(
+                                    new Random().nextInt(), "新版本下载失败", throwable.getMessage(), null);
+                        });
     }
 }

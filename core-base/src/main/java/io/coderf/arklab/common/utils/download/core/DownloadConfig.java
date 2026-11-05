@@ -36,6 +36,20 @@ public class DownloadConfig {
     /** 下载完成后默认展示"文件已保存至..." Toast */
     public static final boolean DEFAULT_SHOW_TOAST = true;
 
+    /**
+     * 默认连接超时（秒）。建连失败应尽快感知，无需与读超时同为 120。
+     */
+    public static final int DEFAULT_CONNECT_TIMEOUT_SEC = 30;
+
+    /**
+     * 默认读超时（秒）。对 {@code @Streaming} 下载表示「两次读数据之间的空闲上限」，
+     * 不是整文件总时长；弱网大文件可适当调大，{@code <=0} 表示不限制。
+     */
+    public static final int DEFAULT_READ_TIMEOUT_SEC = 120;
+
+    /** 默认写超时（秒）。GET 下载写体量很小，短超时即可。 */
+    public static final int DEFAULT_WRITE_TIMEOUT_SEC = 30;
+
     /** 权限申请、对话框等需要 Activity 的场景 */
     private final Activity mContext;
     /** 文件路径、通知等长生命周期操作，避免 Activity 泄漏 */
@@ -54,6 +68,12 @@ public class DownloadConfig {
     private final DownloadListener downloadListener;
     /** 下载完成后是否展示默认 Toast 提示 */
     private final boolean showToast;
+    /** 连接超时（秒），{@code <=0} 表示不限制 */
+    private final int connectTimeoutSec;
+    /** 读超时（秒），流式下载下为数据空闲上限，{@code <=0} 表示不限制 */
+    private final int readTimeoutSec;
+    /** 写超时（秒），{@code <=0} 表示不限制 */
+    private final int writeTimeoutSec;
 
     public DownloadConfig(Builder builder) {
         this.mContext = builder.mContext;
@@ -65,6 +85,9 @@ public class DownloadConfig {
         this.headers = builder.headers;
         this.downloadListener = builder.downloadListener;
         this.showToast = builder.showToast;
+        this.connectTimeoutSec = builder.connectTimeoutSec;
+        this.readTimeoutSec = builder.readTimeoutSec;
+        this.writeTimeoutSec = builder.writeTimeoutSec;
     }
 
     /** 用于权限申请、对话框等需要 Activity 的场景 */
@@ -105,6 +128,21 @@ public class DownloadConfig {
         return showToast;
     }
 
+    /** 连接超时（秒），{@code <=0} 表示不限制 */
+    public int getConnectTimeoutSec() {
+        return connectTimeoutSec;
+    }
+
+    /** 读超时（秒），流式下载下为数据空闲上限，{@code <=0} 表示不限制 */
+    public int getReadTimeoutSec() {
+        return readTimeoutSec;
+    }
+
+    /** 写超时（秒），{@code <=0} 表示不限制 */
+    public int getWriteTimeoutSec() {
+        return writeTimeoutSec;
+    }
+
     public static class Builder {
         private final Activity mContext;
         private final Context appContext;
@@ -115,6 +153,9 @@ public class DownloadConfig {
         private Map<String, String> headers;
         private DownloadListener downloadListener;
         private boolean showToast = DEFAULT_SHOW_TOAST;
+        private int connectTimeoutSec = DEFAULT_CONNECT_TIMEOUT_SEC;
+        private int readTimeoutSec = DEFAULT_READ_TIMEOUT_SEC;
+        private int writeTimeoutSec = DEFAULT_WRITE_TIMEOUT_SEC;
 
         /** @param context 用于权限申请的 Activity */
         public Builder(@NonNull Activity context, @NonNull String fileUrl) {
@@ -179,6 +220,41 @@ public class DownloadConfig {
          */
         public Builder setShowToast(boolean showToast) {
             this.showToast = showToast;
+            return this;
+        }
+
+        /**
+         * 连接超时（秒），默认 {@link #DEFAULT_CONNECT_TIMEOUT_SEC}；{@code <=0} 不限制。
+         */
+        public Builder setConnectTimeoutSec(int connectTimeoutSec) {
+            this.connectTimeoutSec = connectTimeoutSec;
+            return this;
+        }
+
+        /**
+         * 读超时（秒），默认 {@link #DEFAULT_READ_TIMEOUT_SEC}。
+         * 流式下载下表示两次收到数据的最大间隔，不是整文件总时长；{@code <=0} 不限制。
+         */
+        public Builder setReadTimeoutSec(int readTimeoutSec) {
+            this.readTimeoutSec = readTimeoutSec;
+            return this;
+        }
+
+        /**
+         * 写超时（秒），默认 {@link #DEFAULT_WRITE_TIMEOUT_SEC}；{@code <=0} 不限制。
+         */
+        public Builder setWriteTimeoutSec(int writeTimeoutSec) {
+            this.writeTimeoutSec = writeTimeoutSec;
+            return this;
+        }
+
+        /**
+         * 一次性设置连接 / 读 / 写超时（秒）；任一 {@code <=0} 表示该项不限制。
+         */
+        public Builder setTimeoutsSec(int connectTimeoutSec, int readTimeoutSec, int writeTimeoutSec) {
+            this.connectTimeoutSec = connectTimeoutSec;
+            this.readTimeoutSec = readTimeoutSec;
+            this.writeTimeoutSec = writeTimeoutSec;
             return this;
         }
 

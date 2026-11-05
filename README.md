@@ -182,7 +182,7 @@ implementation project(':userapi')   // 需要用户契约时
 2. `AppSettingHelper`：可以设置基础的app是否首次运行等方法
 3. `ConstantsHelper`：基础的一些常用静态常量
 4. `MobileHelper`：获取手机的一些信息，比如获取手机的IMEI、MAC地址、手机型号、手机系统版本、手机分辨率、手机唯一标识符等
-5. `RegexUtils`： 正则表达式
+5. `RegexUtils`：正则表达式（位于 `core-utils`，包名 `io.coderf.arklab.core.utils`）
 6. `AuthManager`：登录相关的一些调用，`Fragment`、`Activity`持有的对象，可以直接获取使用
 7. `UIController`：控制`Fragment`、`Activity`一些`dialog`、`toast`、`loading`等
 8. `PropertiesModule`：加载Properties对象可以获取配置文件里的参数

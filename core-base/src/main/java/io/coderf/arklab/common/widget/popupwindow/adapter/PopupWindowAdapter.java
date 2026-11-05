@@ -181,11 +181,17 @@ public class PopupWindowAdapter<T extends PopupWindowBean> extends BaseRecyclerV
             holder.getBinding().tvOption.setTextColor(textColor);
         }
 
-        // 设置背景
+        // 设置背景（mutate 避免多 item 共用同一 RippleDrawable 互相干扰）
+        Drawable bg = null;
         if (isSelected && backgroundSelectedDrawable != null) {
-            holder.getBinding().tvOption.setBackground(backgroundSelectedDrawable);
+            bg = backgroundSelectedDrawable;
         } else if (backgroundDrawable != null) {
-            holder.getBinding().tvOption.setBackground(backgroundDrawable);
+            bg = backgroundDrawable;
+        }
+        if (bg != null) {
+            Drawable.ConstantState state = bg.getConstantState();
+            holder.getBinding().tvOption.setBackground(
+                    state != null ? state.newDrawable().mutate() : bg.mutate());
         }
 
         holder.getBinding().executePendingBindings();

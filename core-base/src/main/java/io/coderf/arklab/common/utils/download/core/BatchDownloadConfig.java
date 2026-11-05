@@ -47,6 +47,12 @@ public class BatchDownloadConfig {
     private final int maxConcurrency;
     /** 下载完成后是否展示默认 Toast 提示 */
     private final boolean showToast;
+    /** 连接超时（秒），透传到每条 {@link DownloadConfig}；{@code <=0} 不限制 */
+    private final int connectTimeoutSec;
+    /** 读超时（秒），透传到每条 {@link DownloadConfig}；{@code <=0} 不限制 */
+    private final int readTimeoutSec;
+    /** 写超时（秒），透传到每条 {@link DownloadConfig}；{@code <=0} 不限制 */
+    private final int writeTimeoutSec;
 
     private BatchDownloadConfig(Builder builder) {
         this.context = builder.context;
@@ -57,6 +63,9 @@ public class BatchDownloadConfig {
         this.headers = builder.headers;
         this.maxConcurrency = builder.maxConcurrency;
         this.showToast = builder.showToast;
+        this.connectTimeoutSec = builder.connectTimeoutSec;
+        this.readTimeoutSec = builder.readTimeoutSec;
+        this.writeTimeoutSec = builder.writeTimeoutSec;
     }
 
     public Activity getContext() {
@@ -91,6 +100,18 @@ public class BatchDownloadConfig {
         return showToast;
     }
 
+    public int getConnectTimeoutSec() {
+        return connectTimeoutSec;
+    }
+
+    public int getReadTimeoutSec() {
+        return readTimeoutSec;
+    }
+
+    public int getWriteTimeoutSec() {
+        return writeTimeoutSec;
+    }
+
     /**
      * {@link BatchDownloadConfig} 构建器。
      */
@@ -103,6 +124,9 @@ public class BatchDownloadConfig {
         private Map<String, String> headers;
         private int maxConcurrency = DEFAULT_MAX_CONCURRENCY;
         private boolean showToast = DownloadConfig.DEFAULT_SHOW_TOAST;
+        private int connectTimeoutSec = DownloadConfig.DEFAULT_CONNECT_TIMEOUT_SEC;
+        private int readTimeoutSec = DownloadConfig.DEFAULT_READ_TIMEOUT_SEC;
+        private int writeTimeoutSec = DownloadConfig.DEFAULT_WRITE_TIMEOUT_SEC;
 
         public Builder(@NonNull Activity context, @NonNull List<String> urlList) {
             this.context = context;
@@ -154,6 +178,32 @@ public class BatchDownloadConfig {
          */
         public Builder setShowToast(boolean showToast) {
             this.showToast = showToast;
+            return this;
+        }
+
+        /** @see DownloadConfig.Builder#setConnectTimeoutSec(int) */
+        public Builder setConnectTimeoutSec(int connectTimeoutSec) {
+            this.connectTimeoutSec = connectTimeoutSec;
+            return this;
+        }
+
+        /** @see DownloadConfig.Builder#setReadTimeoutSec(int) */
+        public Builder setReadTimeoutSec(int readTimeoutSec) {
+            this.readTimeoutSec = readTimeoutSec;
+            return this;
+        }
+
+        /** @see DownloadConfig.Builder#setWriteTimeoutSec(int) */
+        public Builder setWriteTimeoutSec(int writeTimeoutSec) {
+            this.writeTimeoutSec = writeTimeoutSec;
+            return this;
+        }
+
+        /** @see DownloadConfig.Builder#setTimeoutsSec(int, int, int) */
+        public Builder setTimeoutsSec(int connectTimeoutSec, int readTimeoutSec, int writeTimeoutSec) {
+            this.connectTimeoutSec = connectTimeoutSec;
+            this.readTimeoutSec = readTimeoutSec;
+            this.writeTimeoutSec = writeTimeoutSec;
             return this;
         }
 

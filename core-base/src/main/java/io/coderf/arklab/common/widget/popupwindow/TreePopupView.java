@@ -1,119 +1,70 @@
 package io.coderf.arklab.common.widget.popupwindow;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.DisplayMetrics;
-import android.view.LayoutInflater;
+import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.PopupWindow;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.Dimension;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
+import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.databinding.PopupCascadeViewBinding;
-import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.common.utils.common.DrawableUtil;
-import io.coderf.arklab.common.widget.popupwindow.adapter.PopupWindowAdapter;
-import io.coderf.arklab.common.widget.recyclerview.RecycleViewDivider;
 import io.coderf.arklab.common.utils.theme.ThemeAttrs;
+import io.coderf.arklab.common.widget.popupwindow.adapter.PopupWindowAdapter;
+import io.coderf.arklab.core.utils.CollectionUtil;
+import io.coderf.arklab.core.utils.DensityUtil;
 
 /**
- * updated by fz on 2026/3/12
- * PopupWindow 下拉框，树结构的PopupWindow（支持单选/多选）
+ * PopupWindow 下拉框，树结构（支持单选/多选）
  *
  * @author fz
- * @version 1.0
+ * @version 1.2
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/11/5
  */
-public class TreePopupView<T extends PopupWindowBean> extends PopupWindow {
-    /**
-     * 选择监听
-     */
+public class TreePopupView<T extends PopupWindowBean> extends BasePopupWindow {
+
     private final SelectedListener<T> selectedListener;
-    /**
-     * 数据源
-     */
     private final List<T> dataList;
-
-    /**
-     * 父级适配器
-     */
-    private PopupWindowAdapter<T> popupWindowAdapter = null;
-    /**
-     * 子级适配器
-     */
-    private PopupWindowAdapter<T> childAdapter = null;
-
-    /**
-     * 当前选中的父级位置、子集位置，可能为null
-     */
-    private Integer parentPosition, childPosition;
-    /**
-     * 上下文
-     */
-    private final Context activity;
-    /**
-     * 是否有右侧按钮，也就是是否有子集
-     */
+    private PopupWindowAdapter<T> popupWindowAdapter;
+    private PopupWindowAdapter<T> childAdapter;
+    private Integer parentPosition;
+    private Integer childPosition;
     private final boolean hasRight;
-
-    /**
-     * 选择模式（单选/多选）- 默认单选保持兼容
-     */
     private int selectionMode = PopupWindowAdapter.MODE_SINGLE;
-
-    /**
-     * 选中项的文字颜色
-     */
     private @ColorInt Integer selectTextColor;
-
-    /**
-     * 未选中项的文字颜色
-     */
     private @ColorInt Integer unSelectTextColor;
-
-    /**
-     * 选中项的背景Drawable
-     */
     private Drawable selectBgDrawable;
-
-    /**
-     * 未选中项的背景Drawable
-     */
     private Drawable unSelectBgDrawable;
-
-    /**
-     * 列表项的高度（单位：px）
-     */
     private @Dimension(unit = Dimension.PX) Float itemHeight;
-
     private PopupCascadeViewBinding binding;
 
-    public TreePopupView(Context activity, List<T> dataList, boolean hasRight, SelectedListener<T> selectedListener) {
+    public TreePopupView(Context activity, List<T> dataList, boolean hasRight,
+                         SelectedListener<T> selectedListener) {
+        super(activity);
         this.selectedListener = selectedListener;
         this.dataList = dataList;
-        this.activity = activity;
         this.hasRight = hasRight;
 
-        // 设置默认值
-        itemHeight = (float) DensityUtil.dp2px(activity, 48f);
+        itemHeight = (float) DensityUtil.dp2px(activity, 44f);
         selectTextColor = ThemeAttrs.primary(activity);
-        unSelectTextColor = ThemeAttrs.onSurface(activity);
-        selectBgDrawable = new android.graphics.drawable.ColorDrawable(
-                ContextCompat.getColor(activity, R.color.default_background));
-        unSelectBgDrawable = new android.graphics.drawable.ColorDrawable(
-                ThemeAttrs.surfaceContainerHigh(activity));
+        unSelectTextColor = ThemeAttrs.onSurfaceVariant(activity);
+        // 整条 item 选中/未选中（无圆角）+ 按下波纹
+        selectBgDrawable = createRowBackground(true);
+        unSelectBgDrawable = createRowBackground(false);
 
         init();
         initParent();
@@ -121,23 +72,14 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow {
     }
 
     private void init() {
-        binding = PopupCascadeViewBinding.inflate(LayoutInflater.from(activity), null, false);
-        binding.maskView.setOnClickListener(v -> dismiss());
-        this.setContentView(binding.getRoot());
-        setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-        setWidth(WindowManager.LayoutParams.MATCH_PARENT);
-
-        setOutsideTouchable(true);
-        setTouchable(true);
-        setFocusable(true);
-        binding.getRoot().setFocusableInTouchMode(true);
-        setBackgroundDrawable(DrawableUtil.createShapeDrawable(0x0000000, 0f));
+        binding = inflateWithHostAdapt(
+                () -> PopupCascadeViewBinding.inflate(layoutInflater, null, false));
+        setContentView(binding.getRoot());
+        applyMatchParentDropDownSize();
+        applyDefaultWindowConfig(binding.getRoot());
+        setupMask(binding.maskView);
     }
 
-    /**
-     * 设置选择模式
-     * @param selectionMode PopupWindowAdapter.MODE_SINGLE 或 PopupWindowAdapter.MODE_MULTI
-     */
     public void setSelectionMode(int selectionMode) {
         this.selectionMode = selectionMode;
         if (popupWindowAdapter != null) {
@@ -148,10 +90,6 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow {
         }
     }
 
-    /**
-     * 设置列表项高度
-     * @param itemHeight 高度单位px
-     */
     public void setItemHeight(@Dimension(unit = Dimension.PX) float itemHeight) {
         this.itemHeight = itemHeight;
         if (popupWindowAdapter != null) {
@@ -162,9 +100,6 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow {
         }
     }
 
-    /**
-     * 设置未选中项的背景
-     */
     public void setUnSelectBgDrawable(Drawable unSelectBgDrawable) {
         this.unSelectBgDrawable = unSelectBgDrawable;
         if (popupWindowAdapter != null) {
@@ -175,16 +110,10 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow {
         }
     }
 
-    /**
-     * 设置未选中项的背景颜色（自动转换为ColorDrawable）
-     */
     public void setUnSelectBgColor(@ColorInt int unSelectBgColor) {
-        setUnSelectBgDrawable(new android.graphics.drawable.ColorDrawable(unSelectBgColor));
+        setUnSelectBgDrawable(new ColorDrawable(unSelectBgColor));
     }
 
-    /**
-     * 设置选中项的背景
-     */
     public void setSelectBgDrawable(Drawable selectBgDrawable) {
         this.selectBgDrawable = selectBgDrawable;
         if (popupWindowAdapter != null) {
@@ -195,16 +124,10 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow {
         }
     }
 
-    /**
-     * 设置选中项的背景颜色（自动转换为ColorDrawable）
-     */
     public void setSelectBgColor(@ColorInt int selectBgColor) {
-        setSelectBgDrawable(new android.graphics.drawable.ColorDrawable(selectBgColor));
+        setSelectBgDrawable(new ColorDrawable(selectBgColor));
     }
 
-    /**
-     * 设置未选中项的文字颜色
-     */
     public void setUnSelectTextColor(@ColorInt int unSelectTextColor) {
         this.unSelectTextColor = unSelectTextColor;
         if (popupWindowAdapter != null) {
@@ -215,9 +138,6 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow {
         }
     }
 
-    /**
-     * 设置选中项的文字颜色
-     */
     public void setSelectTextColor(@ColorInt int selectTextColor) {
         this.selectTextColor = selectTextColor;
         if (popupWindowAdapter != null) {
@@ -228,9 +148,6 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow {
         }
     }
 
-    /**
-     * 设置文字大小（单位：sp）
-     */
     public void setTextSizeSp(float textSizeSp) {
         if (popupWindowAdapter != null) {
             popupWindowAdapter.setTextSizeSp(textSizeSp);
@@ -240,9 +157,6 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow {
         }
     }
 
-    /**
-     * 设置文字对齐方式
-     */
     public void setTextGravity(int gravity) {
         if (popupWindowAdapter != null) {
             popupWindowAdapter.setTextGravity(gravity);
@@ -252,9 +166,6 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow {
         }
     }
 
-    /**
-     * 设置内边距
-     */
     public void setPadding(int left, int top, int right, int bottom) {
         if (popupWindowAdapter != null) {
             popupWindowAdapter.setPadding(left, top, right, bottom);
@@ -264,9 +175,6 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow {
         }
     }
 
-    /**
-     * 设置外边距
-     */
     public void setMargin(int left, int top, int right, int bottom) {
         if (popupWindowAdapter != null) {
             popupWindowAdapter.setMargin(left, top, right, bottom);
@@ -280,159 +188,184 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow {
         return binding;
     }
 
-    /**
-     * 计算recyclerView高度
-     * @param recyclerView 列表控件
-     * @return 高度
-     */
-    private int calculateRecyclerViewHeight(RecyclerView recyclerView) {
-        LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-        if (layoutManager == null || recyclerView.getAdapter() == null) {
-            return 0;
-        }
-
-        int itemCount = recyclerView.getAdapter().getItemCount();
-        if (itemCount == 0) {
-            return 0;
-        }
-
-        View childView = layoutManager.findViewByPosition(0);
-        if (childView == null) {
-            childView = LayoutInflater.from(activity).inflate(R.layout.option_text_view, recyclerView, false);
-            childView.measure(
-                    View.MeasureSpec.makeMeasureSpec(recyclerView.getWidth(), View.MeasureSpec.EXACTLY),
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-            );
-            return childView.getMeasuredHeight() * itemCount;
-        }
-
-        int itemHeight = childView.getHeight();
-        int dividerHeight = 0;
-        if (recyclerView.getItemDecorationCount() > 0) {
-            dividerHeight = DensityUtil.dp2px(activity, 1);
-        }
-        return (itemHeight * itemCount) + (dividerHeight * (itemCount - 1));
-    }
-
     private void initParent() {
         popupWindowAdapter = new PopupWindowAdapter<>(selectionMode);
-
-        // 设置样式
-        popupWindowAdapter.setItemHeight(itemHeight)
-                .setBackgroundDrawable(unSelectBgDrawable)
-                .setBackgroundSelectedDrawable(selectBgDrawable)
-                .setPaddingLeft(DensityUtil.dp2px(activity, 12f))
-                .setPaddingRight(DensityUtil.dp2px(activity, 12f))
-                .setTextColor(unSelectTextColor)
-                .setTextSelectedColor(selectTextColor)
-                .setOnItemClickListener(this::onParentItemClick);
+        applyItemChrome(popupWindowAdapter);
+        popupWindowAdapter.setOnItemClickListener(this::onParentItemClick);
         popupWindowAdapter.setList(dataList);
 
-        binding.parentCategory.setLayoutManager(new LinearLayoutManager(activity));
+        binding.parentCategory.setLayoutManager(new LinearLayoutManager(context));
         binding.parentCategory.setAdapter(popupWindowAdapter);
-        binding.parentCategory.addItemDecoration(
-                new RecycleViewDivider(activity, LinearLayoutManager.VERTICAL, DensityUtil.dp2px(activity, 1),
-                        ThemeAttrs.outlineVariant(activity)));
+        // 不再加分割线，靠栏底色 + 圆角选中态区分
 
-        // 延迟测量 RecyclerView 高度
         binding.getRoot().post(() -> {
-            int totalHeight = calculateRecyclerViewHeight(binding.parentCategory);
-            ConstraintLayout.LayoutParams lp = (ConstraintLayout.LayoutParams) binding.contentLayout.getLayoutParams();
+            int totalHeight = calculateLinearRecyclerViewHeight(
+                    binding.parentCategory, R.layout.option_text_view);
+            // 上下 padding 已计入视觉，略加一点避免贴边
+            totalHeight += DensityUtil.dp2px(context, 8f);
+            ConstraintLayout.LayoutParams lp =
+                    (ConstraintLayout.LayoutParams) binding.contentLayout.getLayoutParams();
             lp.height = totalHeight;
             binding.contentLayout.setLayoutParams(lp);
-        });
 
-        // 延迟设置遮罩层高度
-        binding.getRoot().post(() -> {
-            DisplayMetrics metrics = new DisplayMetrics();
-            ((WindowManager) activity.getSystemService(Context.WINDOW_SERVICE))
-                    .getDefaultDisplay().getMetrics(metrics);
-            int maskHeight = metrics.heightPixels;
-            if (maskHeight > 0) {
-                ViewGroup.LayoutParams params = binding.maskView.getLayoutParams();
-                params.height = maskHeight;
-                binding.maskView.setLayoutParams(params);
+            // 有右栏时默认展开第一项，联动更直观
+            if (hasRight && CollectionUtil.isNotEmpty(dataList)) {
+                selectParentIndex(0, false);
+                initChild(safeChildList(dataList.get(0)));
             }
         });
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void initChild(List<T> childLists) {
+        List<T> safeList = childLists != null ? childLists : new ArrayList<>();
         if (childAdapter != null) {
-            childAdapter.setList(childLists);
+            childAdapter.clearSelection();
+            childAdapter.setList(safeList);
             childAdapter.notifyDataSetChanged();
+            binding.childrenCategory.scrollToPosition(0);
             return;
         }
 
         childAdapter = new PopupWindowAdapter<>(selectionMode);
-        childAdapter.setItemHeight(itemHeight)
+        applyItemChrome(childAdapter);
+        childAdapter.setOnItemClickListener(this::onChildItemClick);
+        childAdapter.setList(safeList);
+
+        binding.childrenCategory.setLayoutManager(new LinearLayoutManager(context));
+        binding.childrenCategory.setAdapter(childAdapter);
+    }
+
+    /** 左右栏共用的条目视觉：整行选中、左对齐、按下波纹 */
+    private void applyItemChrome(PopupWindowAdapter<T> adapter) {
+        int hPad = DensityUtil.dp2px(context, 14f);
+        adapter.setItemHeight(itemHeight)
                 .setBackgroundDrawable(unSelectBgDrawable)
                 .setBackgroundSelectedDrawable(selectBgDrawable)
-                .setPaddingLeft(DensityUtil.dp2px(activity, 12f))
-                .setPaddingRight(DensityUtil.dp2px(activity, 12f))
+                .setPadding(hPad, 0, hPad, 0)
+                .setMargin(0, 0, 0, 0)
+                .setTextGravity(Gravity.START | Gravity.CENTER_VERTICAL)
                 .setTextColor(unSelectTextColor)
-                .setTextSelectedColor(selectTextColor)
-                .setOnItemClickListener(this::onChildItemClick);
-        childAdapter.setList(childLists);
+                .setTextSelectedColor(selectTextColor);
+    }
 
-        binding.childrenCategory.setLayoutManager(new LinearLayoutManager(activity));
-        binding.childrenCategory.setAdapter(childAdapter);
-        binding.childrenCategory.addItemDecoration(
-                new RecycleViewDivider(activity, LinearLayoutManager.VERTICAL, DensityUtil.dp2px(activity, 1),
-                        ThemeAttrs.outlineVariant(activity)));
+    /** 整行背景：选中浅主色 / 未选透明，均带按下 ripple */
+    private Drawable createRowBackground(boolean selected) {
+        int fill = selected
+                ? ColorUtils.setAlphaComponent(ThemeAttrs.primary(context), 28)
+                : Color.TRANSPARENT;
+        int ripple = ColorUtils.setAlphaComponent(ThemeAttrs.onSurface(context), 48);
+        return DrawableUtil.createRippleDrawableCompat(new ColorDrawable(fill), ripple);
     }
 
     private void onParentItemClick(View view, int position) {
-        if (dataList == null || popupWindowAdapter == null) {
+        if (dataList == null || popupWindowAdapter == null
+                || position < 0 || position >= dataList.size()) {
             return;
         }
 
-        parentPosition = position;
+        boolean parentChanged = parentPosition == null || parentPosition != position;
+        selectParentIndex(position, false);
 
-        if (selectionMode == PopupWindowAdapter.MODE_SINGLE) {
-            // 单选模式：如果不需要子级或者点击的是同一项，则关闭
-            if (!hasRight || (hasRight && dataList.get(position).getChildList() == null)) {
-                dismiss();
-                if (selectedListener != null) {
-                    selectedListener.onSelectedResult(TreePopupView.this, dataList, parentPosition, childPosition);
-                }
+        T parent = dataList.get(position);
+        boolean noChild = !hasRight || CollectionUtil.isEmpty(parent.getChildList());
+
+        if (selectionMode == PopupWindowAdapter.MODE_SINGLE && noChild) {
+            dismiss();
+            if (selectedListener != null) {
+                selectedListener.onSelectedResult(
+                        TreePopupView.this, dataList, parentPosition, childPosition);
             }
-        } else {
-            // 多选模式：点击父级不关闭窗口，只更新子级
-            if (hasRight) {
-                initChild(dataList.get(position).getChildList());
-            }
+            return;
         }
 
         if (hasRight) {
-            initChild(dataList.get(position).getChildList());
+            // 切换父级时清掉子级选中，避免左右栏「假联动」
+            if (parentChanged) {
+                childPosition = null;
+            }
+            initChild(safeChildList(parent));
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    @SuppressWarnings("unchecked")
     private void onChildItemClick(View view, int position) {
-        if (dataList == null || dataList.size() <= parentPosition ||
-                dataList.get(parentPosition).getChildList().size() <= position) {
+        if (dataList == null || parentPosition == null
+                || parentPosition < 0 || parentPosition >= dataList.size()) {
+            return;
+        }
+        List<?> children = dataList.get(parentPosition).getChildList();
+        if (children == null || position < 0 || position >= children.size()) {
             return;
         }
 
         childPosition = position;
-
+        // setOnItemClickListener 会盖掉 Adapter 默认选中，这里补上视觉态
         if (selectionMode == PopupWindowAdapter.MODE_SINGLE) {
-            // 单选模式：点击子项后关闭
-            dismiss();
-            if (selectedListener != null) {
-                selectedListener.onSelectedResult(TreePopupView.this, dataList, parentPosition, childPosition);
+            for (int i = 0; i < children.size(); i++) {
+                T child = (T) children.get(i);
+                boolean shouldSelect = i == position;
+                if (Boolean.TRUE.equals(child.getSelected()) != shouldSelect) {
+                    child.setSelected(shouldSelect);
+                }
+            }
+            if (childAdapter != null) {
+                childAdapter.notifyDataSetChanged();
             }
         } else {
-            // 多选模式：只更新选中状态，不关闭窗口
-            if (selectedListener != null) {
-                selectedListener.onSelectedResult(TreePopupView.this, dataList, parentPosition, childPosition);
+            T child = (T) children.get(position);
+            child.setSelected(!Boolean.TRUE.equals(child.getSelected()));
+            if (childAdapter != null) {
+                childAdapter.notifyItemChanged(position);
             }
+        }
+        // 点子级时同步保持父级高亮
+        selectParentIndex(parentPosition, true);
+
+        if (selectionMode == PopupWindowAdapter.MODE_SINGLE) {
+            dismiss();
+        }
+        if (selectedListener != null) {
+            selectedListener.onSelectedResult(
+                    TreePopupView.this, dataList, parentPosition, childPosition);
         }
     }
 
     /**
-     * 获取选中的父级项（单选模式）
+     * 按位置选中父级（不依赖 popupId，避免空 id 误匹配）
+     *
+     * @param keepChildSelection 是否保留当前 childPosition
      */
+    @SuppressLint("NotifyDataSetChanged")
+    private void selectParentIndex(int position, boolean keepChildSelection) {
+        if (dataList == null || position < 0 || position >= dataList.size()) {
+            return;
+        }
+        parentPosition = position;
+        if (!keepChildSelection) {
+            childPosition = null;
+        }
+        for (int i = 0; i < dataList.size(); i++) {
+            T item = dataList.get(i);
+            boolean shouldSelect = i == position;
+            if (Boolean.TRUE.equals(item.getSelected()) != shouldSelect) {
+                item.setSelected(shouldSelect);
+            }
+        }
+        if (popupWindowAdapter != null) {
+            popupWindowAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<T> safeChildList(T parent) {
+        if (parent == null || CollectionUtil.isEmpty(parent.getChildList())) {
+            return new ArrayList<>();
+        }
+        return parent.getChildList();
+    }
+
     public T getSelectedParentItem() {
         if (parentPosition != null && parentPosition >= 0 && parentPosition < dataList.size()) {
             return dataList.get(parentPosition);
@@ -440,42 +373,30 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow {
         return null;
     }
 
-    /**
-     * 获取选中的子级项（单选模式）
-     */
+    @SuppressWarnings("unchecked")
     public T getSelectedChildItem() {
-        if (parentPosition != null && childPosition != null &&
-                parentPosition >= 0 && parentPosition < dataList.size() &&
-                dataList.get(parentPosition).getChildList() != null &&
-                childPosition >= 0 && childPosition < dataList.get(parentPosition).getChildList().size()) {
+        if (parentPosition != null && childPosition != null
+                && parentPosition >= 0 && parentPosition < dataList.size()
+                && dataList.get(parentPosition).getChildList() != null
+                && childPosition >= 0
+                && childPosition < dataList.get(parentPosition).getChildList().size()) {
             return (T) dataList.get(parentPosition).getChildList().get(childPosition);
         }
         return null;
     }
 
-    /**
-     * 获取所有选中的父级项（多选模式）
-     */
     public List<T> getSelectedParentItems() {
-        if (popupWindowAdapter != null) {
-            return popupWindowAdapter.getSelectedItems();
-        }
-        return new java.util.ArrayList<>();
+        return popupWindowAdapter != null
+                ? popupWindowAdapter.getSelectedItems()
+                : new ArrayList<>();
     }
 
-    /**
-     * 获取所有选中的子级项（多选模式）
-     */
     public List<T> getSelectedChildItems() {
-        if (childAdapter != null) {
-            return childAdapter.getSelectedItems();
-        }
-        return new java.util.ArrayList<>();
+        return childAdapter != null
+                ? childAdapter.getSelectedItems()
+                : new ArrayList<>();
     }
 
-    /**
-     * 清除所有选中
-     */
     public void clearSelection() {
         if (popupWindowAdapter != null) {
             popupWindowAdapter.clearSelection();
@@ -487,11 +408,8 @@ public class TreePopupView<T extends PopupWindowBean> extends PopupWindow {
         childPosition = null;
     }
 
-    /**
-     * 选择成功回调
-     * 把选中的下标通过方法回调回来
-     */
     public interface SelectedListener<T> {
-        void onSelectedResult(PopupWindow popupWindow, List<T> dataList, Integer parentSelectPosition, Integer childrenSelectPosition);
+        void onSelectedResult(PopupWindow popupWindow, List<T> dataList,
+                              Integer parentSelectPosition, Integer childrenSelectPosition);
     }
 }

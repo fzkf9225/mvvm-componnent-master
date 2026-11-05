@@ -6,7 +6,7 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-import io.coderf.arklab.common.api.BaseApplication;
+import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.core.utils.FileUtil;
 import io.coderf.arklab.core.utils.MapUtil;
 import io.coderf.arklab.common.utils.common.PropertiesUtil;
@@ -31,7 +31,7 @@ import retrofit2.http.Url;
  * <b>设计要点</b>
  * <ul>
  *   <li>按请求头组合缓存 {@link OkHttpClient}，避免并发重建 Retrofit 的竞态问题</li>
- *   <li>每次下载创建独立 {@link DownloadInterceptor}，用于断点续传与进度读取</li>
+ *   <li>每次下载创建独立 {@link DownloadInterceptor}，并按 {@link DownloadConfig} 覆盖超时</li>
  *   <li>断点续传：请求头 {@code Range: bytes=<tempFile.length>-}</li>
  *   <li>IO 线程发起请求，主线程回调 {@link DownloadListener}</li>
  * </ul>
@@ -46,14 +46,12 @@ import retrofit2.http.Url;
  */
 public class DownloadRetrofitFactory {
 
-    private static final int TIME_OUT_SECOND = 120;
     private static final String DEFAULT_HEADER_KEY = "default";
 
     /** 无自定义 headers 的 Retrofit 模板 */
-
     private static volatile Retrofit sBaseRetrofit;
 
-    /** headers 签名 → 基础 OkHttpClient（不含进度拦截器） */
+    /** headers 签名 → 基础 OkHttpClient（不含进度拦截器；超时在每次下载时按配置覆盖） */
     private static final ConcurrentHashMap<String, OkHttpClient> CLIENT_CACHE = new ConcurrentHashMap<>();
 
     private DownloadRetrofitFactory() {
@@ -84,7 +82,7 @@ public class DownloadRetrofitFactory {
 
 
     /**
-     * 创建下载请求（标准入口）。
+     * 创建下载请求（标准入口，使用 {@link DownloadConfig} 默认超时）。
      *
      * @param url          文件完整 URL（作为 Retrofit {@code @Url} 动态地址）
      * @param saveBasePath 本地保存目录
@@ -97,7 +95,21 @@ public class DownloadRetrofitFactory {
     public static Observable<File> enqueue(String url, String saveBasePath, String saveFileName,
                                            Map<String, String> headers, DownloadListener listener,
                                            boolean showToast) {
-        return enqueueInternal(url, saveBasePath, saveFileName, new DownloadInterceptor(), headers, listener, showToast);
+        return enqueue(url, saveBasePath, saveFileName, headers, listener, showToast,
+                DownloadConfig.DEFAULT_CONNECT_TIMEOUT_SEC,
+                DownloadConfig.DEFAULT_READ_TIMEOUT_SEC,
+                DownloadConfig.DEFAULT_WRITE_TIMEOUT_SEC);
+    }
+
+    /**
+     * 创建下载请求（可指定超时，单位秒；{@code <=0} 表示该项不限制）。
+     */
+    public static Observable<File> enqueue(String url, String saveBasePath, String saveFileName,
+                                           Map<String, String> headers, DownloadListener listener,
+                                           boolean showToast,
+                                           int connectTimeoutSec, int readTimeoutSec, int writeTimeoutSec) {
+        return enqueueInternal(url, saveBasePath, saveFileName, new DownloadInterceptor(), headers, listener,
+                showToast, connectTimeoutSec, readTimeoutSec, writeTimeoutSec);
     }
 
     /** @see #enqueue(String, String, String, Map, DownloadListener, boolean) */
@@ -112,7 +124,10 @@ public class DownloadRetrofitFactory {
     public static Observable<File> enqueue(String url, String saveBasePath, String saveFileName,
                                            DownloadInterceptor interceptor, Map<String, String> headers,
                                            DownloadListener listener, boolean showToast) {
-        return enqueueInternal(url, saveBasePath, saveFileName, interceptor, headers, listener, showToast);
+        return enqueueInternal(url, saveBasePath, saveFileName, interceptor, headers, listener, showToast,
+                DownloadConfig.DEFAULT_CONNECT_TIMEOUT_SEC,
+                DownloadConfig.DEFAULT_READ_TIMEOUT_SEC,
+                DownloadConfig.DEFAULT_WRITE_TIMEOUT_SEC);
     }
 
     /** @see #enqueue(String, String, String, DownloadInterceptor, Map, DownloadListener, boolean) */
@@ -125,9 +140,10 @@ public class DownloadRetrofitFactory {
     /** 实际发起下载：断点续传请求 + IO 线程写文件 + 主线程回调 */
     private static Observable<File> enqueueInternal(String url, String saveBasePath, String saveFileName,
                                                     DownloadInterceptor interceptor, Map<String, String> headers,
-                                                    DownloadListener listener, boolean showToast) {
+                                                    DownloadListener listener, boolean showToast,
+                                                    int connectTimeoutSec, int readTimeoutSec, int writeTimeoutSec) {
         File tempFile = FileUtil.getTempFile(url, saveBasePath);
-        return createRetrofit(interceptor, headers)
+        return createRetrofit(interceptor, headers, connectTimeoutSec, readTimeoutSec, writeTimeoutSec)
                 .create(DownloadApi.class)
                 .downloadFile("bytes=" + tempFile.length() + "-", url)
                 .subscribeOn(Schedulers.io())
@@ -137,13 +153,23 @@ public class DownloadRetrofitFactory {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    /** 为每次下载创建带独立进度拦截器的 Retrofit 实例 */
-    private static Retrofit createRetrofit(DownloadInterceptor downloadInterceptor, Map<String, String> headers) {
+    /** 为每次下载创建带独立进度拦截器、并按配置覆盖超时的 Retrofit 实例 */
+    private static Retrofit createRetrofit(DownloadInterceptor downloadInterceptor, Map<String, String> headers,
+                                           int connectTimeoutSec, int readTimeoutSec, int writeTimeoutSec) {
         OkHttpClient baseClient = CLIENT_CACHE.computeIfAbsent(buildHeaderKey(headers), key -> buildBaseClient(headers));
+        // 超时按次覆盖，避免写入 CLIENT_CACHE key，防止不同超时组合撑爆缓存
         OkHttpClient client = baseClient.newBuilder()
+                .connectTimeout(normalizeTimeoutSec(connectTimeoutSec), TimeUnit.SECONDS)
+                .readTimeout(normalizeTimeoutSec(readTimeoutSec), TimeUnit.SECONDS)
+                .writeTimeout(normalizeTimeoutSec(writeTimeoutSec), TimeUnit.SECONDS)
                 .addInterceptor(downloadInterceptor)
                 .build();
         return getBaseRetrofit().newBuilder().client(client).build();
+    }
+
+    /** OkHttp：{@code 0} 表示不超时；负值按 0 处理 */
+    private static long normalizeTimeoutSec(int timeoutSec) {
+        return Math.max(0, timeoutSec);
     }
 
     private static Retrofit getBaseRetrofit() {
@@ -152,7 +178,7 @@ public class DownloadRetrofitFactory {
                 if (sBaseRetrofit == null) {
                     sBaseRetrofit = new Retrofit.Builder()
                             .baseUrl(PropertiesUtil.getInstance()
-                                    .loadConfig(BaseApplication.getInstance()).getBaseUrl())
+                                    .loadConfig(Config.getInstance().getApplication()).getBaseUrl())
                             .addConverterFactory(GsonConverterFactory.create())
                             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                             .client(buildBaseClient(null))
@@ -163,12 +189,15 @@ public class DownloadRetrofitFactory {
         return sBaseRetrofit;
     }
 
-    /** 构建带通用 headers 与超时的基础 Client（不含 DownloadInterceptor） */
+    /**
+     * 构建带通用 headers 的基础 Client（不含 DownloadInterceptor）。
+     * 此处写入默认超时；真正下载时会在 {@link #createRetrofit} 中按 {@link DownloadConfig} 覆盖。
+     */
     private static OkHttpClient buildBaseClient(Map<String, String> headers) {
         return new OkHttpClient.Builder()
-                .connectTimeout(TIME_OUT_SECOND, TimeUnit.SECONDS)
-                .readTimeout(TIME_OUT_SECOND, TimeUnit.SECONDS)
-                .writeTimeout(TIME_OUT_SECOND, TimeUnit.SECONDS)
+                .connectTimeout(DownloadConfig.DEFAULT_CONNECT_TIMEOUT_SEC, TimeUnit.SECONDS)
+                .readTimeout(DownloadConfig.DEFAULT_READ_TIMEOUT_SEC, TimeUnit.SECONDS)
+                .writeTimeout(DownloadConfig.DEFAULT_WRITE_TIMEOUT_SEC, TimeUnit.SECONDS)
                 .addInterceptor(chain -> {
                     Request originalRequest = chain.request();
                     Request.Builder requestBuilder = originalRequest.newBuilder()
@@ -199,10 +228,4 @@ public class DownloadRetrofitFactory {
         return sb.toString();
     }
 
-}
-/** 下载专用 Retrofit API，避免 core-base 依赖 core-network 的 BaseApiService。 */
-interface DownloadApi {
-    @Streaming
-    @GET
-    Observable<ResponseBody> downloadFile(@Header("Range") String range, @Url String fileUrl);
 }

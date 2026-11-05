@@ -70,8 +70,8 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
         if (NotificationManagerCompat.from(this).areNotificationsEnabled()) {
             return;
         }
-        //是否不在提醒
-        if (AppSettingHelper.getPermissionNotTipEnable(this)) {
+        // 是否暂不提醒
+        if (AppSettingHelper.shouldSuppressNotifyTip(this)) {
             return;
         }
         new ConfirmDialog(this)
@@ -79,7 +79,7 @@ public class MainActivity extends BaseActivity<MainViewModel, ActivityMainBindin
                 .setCanOutSide(false)
                 .setPositiveText("前往开启")
                 .setNegativeText("不在提醒")
-                .setOnNegativeClickListener(dialog -> AppSettingHelper.setPermissionNotTipEnable(this,  System.currentTimeMillis()))
+                .setOnNegativeClickListener(dialog -> AppSettingHelper.setNotifyTipSuppress(this, System.currentTimeMillis()))
                 .setOnPositiveClickListener(dialog -> {
                     try {
                         Intent intent = new Intent();// 进入设置系统应用权限界面

@@ -112,9 +112,9 @@ Demo 参考：`app/.../SampleCoreNetworkRepository.kt`。
 整库工具迁 `core-utils` 暂不划算（`annotation` 为纯 Java，`core-utils` 为 Android Library；收益低于改包成本）。  
 当前约定：
 
-- 新 Kotlin 扩展可选用 `core-utils` `ext.*`；历史 Java 工具仍在 `core-base`
+- 新 Kotlin 扩展可选用 `core-utils` `ext.*`；历史 Java 工具多数仍在 `core-base`
 - `DensityUtil.setDensity` 已废弃为空操作（防泄漏），屏幕适配走 AutoSize
-- `RegexUtils`：`core-base` 与 `annotation` 各有一份，**均正常可用**；双份收敛以后再说，不预标 `@Deprecated`
+- `RegexUtils`：业务通用校验在 `core-utils`（`io.coderf.arklab.core.utils.RegexUtils`）；`annotation` 内仍有表单校验同源副本，双份收敛以后再说
 
 ### `core-autosize`
 

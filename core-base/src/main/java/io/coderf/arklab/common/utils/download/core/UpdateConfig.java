@@ -137,6 +137,30 @@ public class UpdateConfig extends DownloadConfig {
         }
 
         @Override
+        public Builder setConnectTimeoutSec(int connectTimeoutSec) {
+            super.setConnectTimeoutSec(connectTimeoutSec);
+            return this;
+        }
+
+        @Override
+        public Builder setReadTimeoutSec(int readTimeoutSec) {
+            super.setReadTimeoutSec(readTimeoutSec);
+            return this;
+        }
+
+        @Override
+        public Builder setWriteTimeoutSec(int writeTimeoutSec) {
+            super.setWriteTimeoutSec(writeTimeoutSec);
+            return this;
+        }
+
+        @Override
+        public Builder setTimeoutsSec(int connectTimeoutSec, int readTimeoutSec, int writeTimeoutSec) {
+            super.setTimeoutsSec(connectTimeoutSec, readTimeoutSec, writeTimeoutSec);
+            return this;
+        }
+
+        @Override
         public UpdateConfig build() {
             applySaveFileNameDefault(DEFAULT_APK_FILE_NAME);
             applyDefaults();

@@ -22,9 +22,10 @@
                 android:id="@+id/parent_category"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="?android:attr/colorBackground"
+                android:background="?attr/colorSurfaceContainer"
                 android:cacheColorHint="@android:color/transparent"
-                android:gravity="center_horizontal"
+                android:clipToPadding="false"
+                android:overScrollMode="never"
                 android:scrollbars="none"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/v_line"
@@ -35,18 +36,21 @@
             <View
                 android:id="@+id/v_line"
                 android:layout_width="1dp"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
                 android:background="?attr/colorOutlineVariant"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/children_category"
-                app:layout_constraintStart_toEndOf="@+id/parent_category" />
+                app:layout_constraintStart_toEndOf="@+id/parent_category"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/children_category"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="?android:attr/colorBackground"
+                android:background="?attr/colorSurface"
                 android:cacheColorHint="@android:color/transparent"
-                android:gravity="center_horizontal"
+                android:clipToPadding="false"
+                android:overScrollMode="never"
                 android:scrollbars="none"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

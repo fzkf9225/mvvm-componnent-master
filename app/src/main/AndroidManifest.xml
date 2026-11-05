@@ -212,6 +212,10 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="false" />
         <activity
+            android:name=".activity.PopupWindowSampleActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="false" />
+        <activity
             android:name=".activity.PreviewInfoPhotoActivity"
             android:exported="false" />
         <activity

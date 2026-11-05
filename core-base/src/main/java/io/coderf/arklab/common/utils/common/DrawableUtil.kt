@@ -12,6 +12,7 @@ import android.graphics.Paint
 import android.graphics.PixelFormat
 import android.graphics.RectF
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
@@ -564,18 +565,19 @@ object DrawableUtil {
 
     /**
      * 创建水波纹效果Drawable（兼容低版本）
-     * @param contentDrawable 内容Drawable
-     * @param maskColor 遮罩颜色
+     * @param contentDrawable 内容Drawable；透明底时仍靠 mask 显示按下波纹
+     * @param maskColor 波纹颜色
      */
     @JvmStatic
     fun createRippleDrawableCompat(
-        contentDrawable: Drawable,
+        contentDrawable: Drawable?,
         maskColor: Int = Color.argb(30, 0, 0, 0)
     ): Drawable {
+        // mask 用实色矩形，避免透明 content 时按下无波纹
         return RippleDrawable(
             ColorStateList.valueOf(maskColor),
             contentDrawable,
-            null
+            ColorDrawable(Color.WHITE)
         )
     }
 

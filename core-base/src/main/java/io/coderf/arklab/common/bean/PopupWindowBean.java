@@ -16,7 +16,7 @@ import io.coderf.arklab.core.utils.CollectionUtil;
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/11/5
  */
 public class PopupWindowBean<T> extends BaseObservable {
     /**
@@ -170,6 +170,6 @@ public class PopupWindowBean<T> extends BaseObservable {
         if (CollectionUtil.isEmpty(list) || TextUtils.isEmpty(popupCode)) {
             return false;
         }
-        return list.stream().anyMatch(item -> item.getPopupCode() != null && item.getPopupId().equals(popupCode));
+        return list.stream().anyMatch(item -> item.getPopupCode() != null && item.getPopupCode().equals(popupCode));
     }
 }
