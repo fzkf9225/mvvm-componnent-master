@@ -3,8 +3,13 @@
     <string name="user_setting_clear_cache">Clear cache</string>
     <string name="user_setting_patrol_mode">Patrol mode</string>
     <string name="user_overlay">Floating window permission</string>
-    <string name="user_setting_notice">Notify permission</string>
-    <string name="user_setting_battery">Battery optimization whitelist</string>
+    <string name="user_setting_notice">Notification permission</string>
+    <string name="user_setting_battery">Battery optimization</string>
+    <string name="user_background_run_settings">Background run permission</string>
+    <string name="user_user_agreement">User Agreement</string>
+    <string name="user_privacy_protection_policy">Privacy Protection Policy</string>
+    <string name="user_permission_enabled">Enabled</string>
+    <string name="user_permission_disabled">Disabled</string>
     <string name="user_functional_opinion">Functional opinion</string>
     <string name="user_function_error">Program error</string>
     <string name="user_enter_opinion">Please enter the problem or feature comment…</string>

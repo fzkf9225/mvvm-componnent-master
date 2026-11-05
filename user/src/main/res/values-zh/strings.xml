@@ -4,7 +4,12 @@
     <string name="user_setting_patrol_mode">巡护方式</string>
     <string name="user_overlay">悬浮窗权限</string>
     <string name="user_setting_notice">通知权限</string>
-    <string name="user_setting_battery">电池优化白名单</string>
+    <string name="user_setting_battery">电池优化设置</string>
+    <string name="user_background_run_settings">后台运行权限</string>
+    <string name="user_user_agreement">用户协议</string>
+    <string name="user_privacy_protection_policy">隐私保护政策</string>
+    <string name="user_permission_enabled">已开启</string>
+    <string name="user_permission_disabled">未开启</string>
     <string name="user_functional_opinion">功能意见</string>
     <string name="user_function_error">程序错误</string>
     <string name="user_enter_opinion">请输入遇到的问题或者功能意见...</string>

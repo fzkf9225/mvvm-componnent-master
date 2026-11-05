@@ -16,7 +16,7 @@ import io.coderf.arklab.user.viewmodel.SettingViewModel;
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/11/5
  */
 @AndroidEntryPoint
 public class SettingActivity extends BaseActivity<SettingViewModel, SettingBinding> {
@@ -36,13 +36,26 @@ public class SettingActivity extends BaseActivity<SettingViewModel, SettingBindi
     public void initView(Bundle savedInstanceState) {
         binding.versionName.setValue("v" + AppManager.getAppManager().getVersion(this));
         binding.setSetViewModel(mViewModel);
-        binding.tvSupport.setOnClickListener(v->startActivity(TechnicalSupportActivity.class));
     }
 
     @Override
     public void initData(Bundle bundle) {
-
+        this.bundle = bundle;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshPermissionStatus();
+    }
+
+    private void refreshPermissionStatus() {
+        binding.tvSettingNotice.setValue(
+                mViewModel.permissionStatusText(this, mViewModel.isNotificationEnabled(this)));
+        binding.tvSettingBattery.setValue(
+                mViewModel.permissionStatusText(this, mViewModel.isIgnoringBatteryOptimizations(this)));
+        binding.tvSettingOverlay.setValue(
+                mViewModel.permissionStatusText(this, mViewModel.canDrawOverlays(this)));
+    }
 
 }

@@ -1,5 +1,6 @@
 package io.coderf.arklab.user.activity;
 
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -50,6 +51,7 @@ public class FeedBackActivity extends BaseActivity<EmptyViewModel, FeedbackBindi
         imageAddAdapter = new ImageAddAdapter();
         imageAddAdapter.setImageViewAddListener(this);
         imageAddAdapter.setImageViewClearListener(this);
+        imageAddAdapter.setBgColor(Color.WHITE);
         binding.feedBackRecyclerView.setLayoutManager(new FullyGridLayoutManager(this, 4) {
             @Override
             public boolean canScrollVertically() {
