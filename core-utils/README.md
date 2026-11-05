@@ -28,7 +28,7 @@ namespace：`io.coderf.arklab.core.utils`
 
 | 包 | 内容 |
 |----|------|
-| `io.coderf.arklab.core.utils` | DateUtil / DensityUtil / FileUtil / StringUtil / NumberUtil / ScreenUtil / SoftKeyBoardListener / WebViewUtil … |
+| `io.coderf.arklab.core.utils` | DateUtil / DensityUtil / FileUtil / StringUtil / NumberUtil / RegexUtils / ScreenUtil / SoftKeyBoardListener / WebViewUtil … |
 | `io.coderf.arklab.core.utils.encode` | MD5Util / Base64Util / RSAUtils / RSAUtilsHelper / SM3Utils |
 | `io.coderf.arklab.core.utils.network` | NetworkStateUtil |
 | `io.coderf.arklab.core.utils.bean` | Gps（配合 GeoMapUtil） |
