@@ -30,6 +30,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -1020,30 +1021,33 @@ public final class FileUtil {
      * @return 文件名
      */
     public static String getFileNameByUrl(String url) {
-        // 获取文件路径部分
-        URL fileUrl = null;
         try {
             if (TextUtils.isEmpty(url)) {
                 return url;
             }
-            fileUrl = new URL(url);
+            URL fileUrl = new URL(url);
             String filePath = fileUrl.getPath();
-            // 找到最后一个斜杠的位置
+            if (TextUtils.isEmpty(filePath) || "/".equals(filePath)) {
+                return "";
+            }
             int lastIndex = filePath.lastIndexOf("/");
-
-            // 截取文件名部分
             String fileName = filePath.substring(lastIndex + 1);
-
-            // 去除参数部分
             int questionMarkIndex = fileName.indexOf("?");
             if (questionMarkIndex != -1) {
                 fileName = fileName.substring(0, questionMarkIndex);
+            }
+            // 路径百分号解码（如 %E6%B5%8B%E8%AF%95.pdf）
+            if (!TextUtils.isEmpty(fileName) && fileName.indexOf('%') >= 0) {
+                try {
+                    fileName = java.net.URLDecoder.decode(fileName, StandardCharsets.UTF_8);
+                } catch (Exception ignored) {
+                }
             }
             return fileName;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return System.currentTimeMillis() + ".apk";
+        return "";
     }
 
     /**
