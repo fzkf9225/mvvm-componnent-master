@@ -1,7 +1,7 @@
 # 升级与迁移说明
 
 > **当前主干版本（以各模块 `build.gradle` 发布号为准，README 若滞后请以此为准）：**  
-> **common `4.7.0`** · **core-base `1.7.2`** · **core-network `1.7.1`** · **core-db `1.6.2`** · **core-ui `1.3.1`** · **core-utils `1.2.0`** · **core-log `1.2.0`** · **core-autosize `1.0.0`** · **room-processor `1.2.0`** · **core-mqtt `1.6.2`** · **core-ws `1.0.1`** · **commonui `3.7.7`** · **commonmedia `3.7.0`** · **googlegps `3.4.0`** · **annotation `3.3.1`**  
+> **common `4.7.0`** · **core-base `1.7.2`** · **core-network `1.7.1`** · **core-db `1.6.2`** · **core-ui `1.3.1`** · **core-utils `1.2.0`** · **core-log `1.2.0`** · **core-autosize `1.0.0`** · **room-processor `1.2.0`** · **core-mqtt `1.6.2`** · **core-ws `1.0.1`** · **commonui `3.7.7`** · **commonmedia `3.7.0`** · **core-gnss `4.0.0`** · **annotation `3.3.1`**  
 >
 > **本轮重点：** [§0.4.3](#043-附件小图优先缩略图base-172--ui-377)；近期见 [§0.4.2](#042-附件模型简化base-171--db-162)、[§0.4.1](#041-commonui-376移除-forminputtype--formimeoptions)、[§0.4](#04-本轮补丁base-160--network-170--db-161--ws-101--ui-374--gps-340)。  
 > Room 协程栈落地见 [§0.5](#05-历史core-db-150-协程栈若尚未跟上)；剔除 `BaseView` 见 [§2](#2-120彻底剔除-baseview--mvp-页面绑定)；AppCompat → Material3 见 [§1](#1-460appcompat-主题--material3)。  
@@ -28,10 +28,29 @@ implementation 'io.coderf.arklab.ui:ui:3.7.7'
 implementation 'io.coderf.arklab.media:media:3.7.0'
 implementation 'io.coderf.arklab.mqtt:mqtt:1.6.2'
 implementation 'io.coderf.arklab.ws:ws:1.0.1'
-implementation 'io.coderf.arklab.googlegps:googlegps:3.4.0'
+implementation 'io.coderf.arklab.gnss:core-gnss:4.0.0'
 ```
 
 工程依赖 `implementation project(':common')` 时随源码即可。
+
+### core-gnss `4.0.0` �ƻ�����������ԭ googlegps��
+
+�޾����� / �ɰ������ݣ�������ͬ���滻��
+
+```gradle
+// ��
+implementation project(':googlegps')
+implementation 'io.coderf.arklab.googlegps:googlegps:3.4.0'
+// ��
+implementation project(':core-gnss')
+implementation 'io.coderf.arklab.gnss:core-gnss:4.0.0'
+```
+
+```text
+import io.coderf.arklab.googlegps.*  ��  import io.coderf.arklab.gnss.*
+```
+
+������`GpsStarter` / `GpsService` �ȣ�����δ�ġ�
 
 | 模块 | 坐标 |
 |------|------|
@@ -48,7 +67,7 @@ implementation 'io.coderf.arklab.googlegps:googlegps:3.4.0'
 | core-ws | `io.coderf.arklab.ws:ws:1.0.1` |
 | commonui | `io.coderf.arklab.ui:ui:3.7.7` |
 | commonmedia | `io.coderf.arklab.media:media:3.7.0` |
-| googlegps | `io.coderf.arklab.googlegps:googlegps:3.4.0` |
+| core-gnss | `io.coderf.arklab.gnss:core-gnss:4.0.0`（原 `googlegps`，包名 `io.coderf.arklab.gnss`，无旧坐标兼容） |
 | annotation | `io.coderf.arklab.annotation:annotation:3.3.1` |
 
 ---
@@ -141,7 +160,7 @@ flag 名与系统一致，可全局替换。非输入类 Form 控件上的旧 `f
 
 ## 0.4 本轮补丁：base `1.6.0` · network `1.7.0` · db `1.6.1` · ws `1.0.1` · ui `3.7.4` · gps `3.4.0`
 
-相对上一矩阵（base `1.5.9` / network·db `1.6.0` / ws `1.0.0` / commonui `3.7.3` / googlegps `3.3.x`）的修复与清理；**不强制**改业务调用点，建议宿主显式钉到下表。
+相对上一矩阵（base `1.5.9` / network·db `1.6.0` / ws `1.0.0` / commonui `3.7.3` / core-gnss `3.3.x`）的修复与清理；**不强制**改业务调用点，建议宿主显式钉到下表。
 
 | 模块 | 版本 | 要点 |
 |------|------|------|
@@ -150,14 +169,14 @@ flag 名与系统一致，可全局替换。非输入类 Form 控件上的旧 `f
 | core-db | **1.6.1** | Room Rx Loading 改主线程（与 network 对齐） |
 | core-ws | **1.0.1** | `onOpen` 过期连接 early-return，避免乱序回调 |
 | commonui | **3.7.4** | `FormHost.validateAll` / `validate()`；Form dataSource 回调防泄漏；`FormMedia.itemBg` 走主题色 |
-| googlegps | **3.4.0** | **删除**未完成的 Netty `socket` 上传与 `DeviceIdUtil`；去掉 netty / commons-lang3；实时上报请宿主自接 `core-ws` 等 |
+| core-gnss | **3.4.0** | **删除**未完成的 Netty `socket` 上传与 `DeviceIdUtil`；去掉 netty / commons-lang3；实时上报请宿主自接 `core-ws` 等 |
 
 `common` facade 仍为 **4.7.0**（未改发布号）；Maven 宿主请**显式钉**上表 core / ui / gps，勿只升 common。
 
 迁移提示：
 
 - 仍继承 `FlowRepositoryImpl` 的工程 → 改 `DefaultNetworkRepository` / `NetworkPagingRepository`（见 [core-network/MIGRATION.md](./core-network/MIGRATION.md)）。
-- 引用 `googlegps.socket.*` → 删除调用；定位能力不受影响。
+- 引用 `core-gnss.socket.*` → 删除调用；定位能力不受影响。
 
 ---
 
@@ -290,8 +309,8 @@ processor 配套仍为 **`room-processor:1.2.0`**（Bridge suspend RawQuery）�
 数据流：
 
 ```text
-Repository ──写──▶ NetworkRequestUiHost（RequestUi）──Binder──▶ Activity/Fragment（RequestUi）
-业务状态 / 导航 ──LiveData / Flow──▶ 页面 observe 后自行处理
+Repository ──写──? NetworkRequestUiHost（RequestUi）──Binder──? Activity/Fragment（RequestUi）
+业务状态 / 导航 ──LiveData / Flow──? 页面 observe 后自行处理
 ```
 
 ### 2.3 已删除 / 必须改的 API（编译期 breaking）
@@ -397,7 +416,7 @@ Repository ──写──▶ NetworkRequestUiHost（RequestUi）──Binder─
 数据流不变：
 
 ```text
-Repository ──RequestUi──▶ NetworkRequestUiHost ──LiveData──▶ NetworkRequestUiBinder ──RequestUi──▶ 页面
+Repository ──RequestUi──? NetworkRequestUiHost ──LiveData──? NetworkRequestUiBinder ──RequestUi──? 页面
 ```
 
 页面仍实现 `RequestUi`：`BaseActivity` / `BaseFragment` 已实现 `showError`，业务码走登录过期 / 无权限；非业务错误走 Toast。分页基类等若曾 `override onErrorCode`，请改为 `override fun showError(error: AppError)`。
@@ -433,7 +452,7 @@ Repository ──RequestUi──▶ NetworkRequestUiHost ──LiveData──▶
 | core-ws | — | **1.0.0** → 现 **1.0.1** |
 | commonui | 3.5.1 | **3.6.0** → 3.7.0 → 现 **3.7.6** |
 | commonmedia | 3.3.2 | **3.4.0** → 3.5.0 → 现 **3.7.0** |
-| googlegps | 3.1.7 | **3.2.0** → 3.3.x → 现 **3.4.0** |
+| core-gnss��ԭ googlegps�� | 3.1.7 | **3.2.0** �� 3.3.x �� 3.4.0 �� �� **4.0.0**��ģ��/�����ƻ����������� |
 | annotation | 3.2.0 | **3.3.0** → 现 **3.3.1** |
 
 Maven 示例（仅升主题时的历史坐标；**当前请以文首为准**）：

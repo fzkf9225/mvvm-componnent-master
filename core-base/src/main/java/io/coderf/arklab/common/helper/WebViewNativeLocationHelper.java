@@ -20,7 +20,7 @@ import io.coderf.arklab.common.utils.permission.PermissionManager;
 import io.coderf.arklab.common.utils.permission.WebViewPermissionHelper;
 
 /**
- * WebView JSBridge 单次定位：仅使用 Android 原生 {@link LocationManager}，不依赖 googlegps。
+ * WebView JSBridge 单次定位：仅使用 Android 原生 {@link LocationManager}，不依赖 core-gnss。
  * <p>Android 12+ 优先 {@link LocationManager#getCurrentLocation}；低版本使用 lastKnown + 单次更新。</p>
  *
  * @author fz

@@ -17,10 +17,10 @@ import io.coderf.arklab.core.utils.MathUtil
 import io.coderf.arklab.demo.activity.GoogleGPSActivity
 import io.coderf.arklab.demo.activity.GoogleGPSActivity.Companion.STOP_ACTION
 import io.coderf.arklab.demo.activity.GoogleGPSActivity.Companion.STOP_ACTION_REQUEST_CODE
-import io.coderf.arklab.googlegps.api.GpsCallback
-import io.coderf.arklab.googlegps.api.GpsSettingConfig
-import io.coderf.arklab.googlegps.service.Session
-import io.coderf.arklab.googlegps.service.GpsService
+import io.coderf.arklab.gnss.api.GpsCallback
+import io.coderf.arklab.gnss.api.GpsSettingConfig
+import io.coderf.arklab.gnss.service.Session
+import io.coderf.arklab.gnss.service.GpsService
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

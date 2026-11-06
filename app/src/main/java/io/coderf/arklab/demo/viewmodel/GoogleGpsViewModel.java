@@ -14,7 +14,7 @@ import io.coderf.arklab.common.base.BaseRepository;
 import io.coderf.arklab.common.base.BaseViewModel;
 import io.coderf.arklab.common.repository.RepositoryImpl;
 import io.coderf.arklab.common.utils.log.LogUtil;
-import io.coderf.arklab.googlegps.service.GpsService;
+import io.coderf.arklab.gnss.service.GpsService;
 
 /**
  * GoogleGpsViewModel 类。

@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.13.0" type="baseline" client="gradle" dependencies="false" name="AGP (8.13.0)" variant="all" version="8.13.0">
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`icon_wechat`&apos; does not start with the project&apos;s resource prefix &apos;`user_`&apos;; rename to &apos;`user_icon_wechat`&apos; ?">
+        <location
+            file="src/main/res/mipmap-xhdpi/icon_wechat.jpg"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`material_button_selector`&apos; does not start with the project&apos;s resource prefix &apos;`user_`&apos;; rename to &apos;`user_material_button_selector`&apos; ?"
+        errorLine1="&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~~~~">
+        <location
+            file="src/main/res/color/material_button_selector.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`me_fragment`&apos; does not start with the project&apos;s resource prefix &apos;`user_`&apos;; rename to &apos;`user_me_fragment`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/me_fragment.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`personal_center_activity`&apos; does not start with the project&apos;s resource prefix &apos;`user_`&apos;; rename to &apos;`user_personal_center_activity`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/personal_center_activity.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`setting`&apos; does not start with the project&apos;s resource prefix &apos;`user_`&apos;; rename to &apos;`user_setting`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/setting.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`technical_support_activity`&apos; does not start with the project&apos;s resource prefix &apos;`user_`&apos;; rename to &apos;`user_technical_support_activity`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/technical_support_activity.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="The resource `@color/textInputFilledDefault` is marked as private in mvvm-component-master:core-base:unspecified"
+        errorLine1="            app:bgColor=&quot;@color/textInputFilledDefault&quot;"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="60"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="The resource `@color/textInputFilledDefault` is marked as private in mvvm-component-master:core-base:unspecified"
+        errorLine1="            app:bgColor=&quot;@color/textInputFilledDefault&quot;"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="86"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="The resource `@drawable/ic_password_invisible` is marked as private in mvvm-component-master:core-base:unspecified"
+        errorLine1="            app:passwordInvisibleIcon=&quot;@drawable/ic_password_invisible&quot;"
+        errorLine2="                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="95"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="The resource `@drawable/ic_password_visible` is marked as private in mvvm-component-master:core-base:unspecified"
+        errorLine1="            app:passwordVisibleIcon=&quot;@drawable/ic_password_visible&quot;"
+        errorLine2="                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="96"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="The resource `@color/textInputFilledDefault` is marked as private in mvvm-component-master:core-base:unspecified"
+        errorLine1="            app:bgColor=&quot;@color/textInputFilledDefault&quot;"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="108"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="The resource `@color/textInputFilledDefault` is marked as private in mvvm-component-master:core-base:unspecified"
+        errorLine1="            app:bgColor=&quot;@color/textInputFilledDefault&quot;"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="167"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="The resource `@color/textInputFilledDefault` is marked as private in mvvm-component-master:core-base:unspecified"
+        errorLine1="        android:color=&quot;@color/textInputFilledDefault&quot; />"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/drawable/user_rounded_login_input.xml"
+            line="5"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="UnsafeIntentLaunch"
+        message="This intent could be coming from an untrusted source. It is later launched by an unprotected component io.coderf.arklab.user.activity.LoginActivity. You could either make the component io.coderf.arklab.user.activity.LoginActivity protected; or sanitize this intent using androidx.core.content.IntentSanitizer."
+        errorLine1="        setResult(RESULT_OK, intent.putExtras(bundle!!))"
+        errorLine2="                             ~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/user/activity/LoginActivity.kt"
+            line="199"
+            column="30"/>
+        <location
+            file="src/main/java/io/coderf/arklab/user/activity/LoginActivity.kt"
+            line="199"
+            column="9"
+            message="The unsafe intent is launched here."/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="        imageAddAdapter.notifyDataSetChanged();"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/user/activity/FeedBackActivity.java"
+            line="77"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="            imageAddAdapter.notifyDataSetChanged();"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/user/activity/FeedBackActivity.java"
+            line="87"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 21"
+        errorLine1="                tools:targetApi=&quot;lollipop&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/setting.xml"
+            line="262"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;user_enter_opinion&quot;>请输入遇到的问题或者功能意见...&lt;/string>"
+        errorLine2="                                      ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-zh/strings.xml"
+            line="15"
+            column="39"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;获取验证码&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;获取验证码&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="211"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;功能意见&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;功能意见&quot; />"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feedback.xml"
+            line="37"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;程序错误&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;程序错误&quot; />"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feedback.xml"
+            line="44"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;请输入遇到的问题或者功能意见...&quot;, should use `@string` resource"
+        errorLine1="                android:hint=&quot;请输入遇到的问题或者功能意见...&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feedback.xml"
+            line="54"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;联系人\u3000&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;联系人\u3000&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feedback.xml"
+            line="79"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;必填，姓名&quot;, should use `@string` resource"
+        errorLine1="                    android:hint=&quot;必填，姓名&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feedback.xml"
+            line="88"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;联系方式&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;联系方式&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feedback.xml"
+            line="107"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;必填，QQ、邮箱、电话号码等&quot;, should use `@string` resource"
+        errorLine1="                    android:hint=&quot;必填，QQ、邮箱、电话号码等&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feedback.xml"
+            line="116"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;提交&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;提交&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feedback.xml"
+            line="135"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;原密码&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;原密码&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/modify_password_activity.xml"
+            line="32"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;新密码&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;新密码&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/modify_password_activity.xml"
+            line="61"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;确认新密码&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;确认新密码&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/modify_password_activity.xml"
+            line="90"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;确定&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;确定&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/modify_password_activity.xml"
+            line="113"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;姓名&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;姓名&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/personal_center_activity.xml"
+            line="14"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;性别&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;性别&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/personal_center_activity.xml"
+            line="33"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;联系方式&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;联系方式&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/personal_center_activity.xml"
+            line="51"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;角色&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;角色&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/personal_center_activity.xml"
+            line="70"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;用户名称&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;用户名称&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/personal_center_activity.xml"
+            line="89"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;所属单位&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;所属单位&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/personal_center_activity.xml"
+            line="108"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;青穗&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;青穗&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/technical_support_activity.xml"
+            line="36"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;邮箱\u3000\u3000&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;邮箱\u3000\u3000&quot; />"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/technical_support_activity.xml"
+            line="52"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;fzkf3318@163.com&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;fzkf3318@163.com&quot; />"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/technical_support_activity.xml"
+            line="56"
+            column="21"/>
+    </issue>
+
+</issues>

@@ -1,0 +1,587 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.13.0" type="baseline" client="gradle" dependencies="false" name="AGP (8.13.0)" variant="all" version="8.13.0">
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`FormCheckbox`) and the declare-styleable (`FormUI`) should have the same name (various editor features rely on this convention)"
+        errorLine1="            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);"
+        errorLine2="                                                                               ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormCheckbox.java"
+            line="73"
+            column="80"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`FormConstraintLayout`) and the declare-styleable (`FormUI`) should have the same name (various editor features rely on this convention)"
+        errorLine1="                attrs, R.styleable.FormUI, R.attr.formStyle, R.style.Widget_App_Form);"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormConstraintLayout.java"
+            line="262"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`FormConstraintLayout`) and the declare-styleable (`FormUI`) should have the same name (various editor features rely on this convention)"
+        errorLine1="        TypedArray typedArray = getContext().obtainStyledAttributes(styleRes, R.styleable.FormUI);"
+        errorLine2="                                                                              ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormConstraintLayout.java"
+            line="836"
+            column="79"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`FormConstraintLayout`) and the declare-styleable (`FormUI`) should have the same name (various editor features rely on this convention)"
+        errorLine1="            TypedArray typedArray = getContext().obtainStyledAttributes(config.styleOverlay, R.styleable.FormUI);"
+        errorLine2="                                                                                             ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormConstraintLayout.java"
+            line="850"
+            column="94"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`FormFile`) and the declare-styleable (`FormUI`) should have the same name (various editor features rely on this convention)"
+        errorLine1="            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);"
+        errorLine2="                                                                               ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormFile.java"
+            line="117"
+            column="80"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`FormFilePreview`) and the declare-styleable (`FormUI`) should have the same name (various editor features rely on this convention)"
+        errorLine1="            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);"
+        errorLine2="                                                                               ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormFilePreview.java"
+            line="101"
+            column="80"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`FormImage`) and the declare-styleable (`FormUI`) should have the same name (various editor features rely on this convention)"
+        errorLine1="            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);"
+        errorLine2="                                                                               ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormImage.java"
+            line="130"
+            column="80"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`FormImageAndVideo`) and the declare-styleable (`FormUI`) should have the same name (various editor features rely on this convention)"
+        errorLine1="            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);"
+        errorLine2="                                                                               ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormImageAndVideo.java"
+            line="134"
+            column="80"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`FormImageAndVideoPreview`) and the declare-styleable (`FormUI`) should have the same name (various editor features rely on this convention)"
+        errorLine1="            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);"
+        errorLine2="                                                                               ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormImageAndVideoPreview.java"
+            line="77"
+            column="80"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`FormImagePreview`) and the declare-styleable (`FormUI`) should have the same name (various editor features rely on this convention)"
+        errorLine1="            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);"
+        errorLine2="                                                                               ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormImagePreview.java"
+            line="78"
+            column="80"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`FormMedia`) and the declare-styleable (`FormUI`) should have the same name (various editor features rely on this convention)"
+        errorLine1="                attrs, R.styleable.FormUI, R.attr.formStyle, R.style.Widget_App_Form);"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormMedia.java"
+            line="306"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`FormMedia`) and the declare-styleable (`FormUI`) should have the same name (various editor features rely on this convention)"
+        errorLine1="        TypedArray typedArray = getContext().obtainStyledAttributes(styleRes, R.styleable.FormUI);"
+        errorLine2="                                                                              ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormMedia.java"
+            line="742"
+            column="79"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`FormMedia`) and the declare-styleable (`FormUI`) should have the same name (various editor features rely on this convention)"
+        errorLine1="            TypedArray typedArray = getContext().obtainStyledAttributes(config.styleOverlay, R.styleable.FormUI);"
+        errorLine2="                                                                                             ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormMedia.java"
+            line="756"
+            column="94"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`FormRadio`) and the declare-styleable (`FormUI`) should have the same name (various editor features rely on this convention)"
+        errorLine1="            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);"
+        errorLine2="                                                                               ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormRadio.java"
+            line="101"
+            column="80"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`FormRating`) and the declare-styleable (`FormUI`) should have the same name (various editor features rely on this convention)"
+        errorLine1="            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);"
+        errorLine2="                                                                               ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormRating.java"
+            line="69"
+            column="80"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`FormSpinner`) and the declare-styleable (`FormUI`) should have the same name (various editor features rely on this convention)"
+        errorLine1="            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);"
+        errorLine2="                                                                               ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormSpinner.java"
+            line="81"
+            column="80"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`FormStepper`) and the declare-styleable (`FormUI`) should have the same name (various editor features rely on this convention)"
+        errorLine1="            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);"
+        errorLine2="                                                                               ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormStepper.java"
+            line="96"
+            column="80"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`FormSwitch`) and the declare-styleable (`FormUI`) should have the same name (various editor features rely on this convention)"
+        errorLine1="            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);"
+        errorLine2="                                                                               ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormSwitch.java"
+            line="69"
+            column="80"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`FormVideo`) and the declare-styleable (`FormUI`) should have the same name (various editor features rely on this convention)"
+        errorLine1="            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);"
+        errorLine2="                                                                               ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormVideo.java"
+            line="131"
+            column="80"/>
+    </issue>
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`FormVideoPreview`) and the declare-styleable (`FormUI`) should have the same name (various editor features rely on this convention)"
+        errorLine1="            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);"
+        errorLine2="                                                                               ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormVideoPreview.java"
+            line="77"
+            column="80"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="        View inflate = LayoutInflater.from(context).inflate(R.layout.tick_message_dialog, null);"
+        errorLine2="                                                                                          ~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/widget/dialog/TickViewMessageDialog.java"
+            line="75"
+            column="91"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="The resource `@style/ThemeOverlay_App_MaterialCalendar` is marked as private in mvvm-component-master:core-base:unspecified"
+        errorLine1="                .setTheme(R.style.ThemeOverlay_App_MaterialCalendar)"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormMaterialPickers.java"
+            line="63"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="The resource `@style/ThemeOverlay_App_MaterialTimePicker` is marked as private in mvvm-component-master:core-base:unspecified"
+        errorLine1="                .setTheme(R.style.ThemeOverlay_App_MaterialTimePicker)"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormMaterialPickers.java"
+            line="87"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="The resource `@style/ThemeOverlay_App_FormDropdown` is marked as private in mvvm-component-master:core-base:unspecified"
+        errorLine1="                getContext(), io.coderf.arklab.common.R.style.ThemeOverlay_App_FormDropdown));"
+        errorLine2="                                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormSpinner.java"
+            line="116"
+            column="63"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="The resource `@layout/mtrl_auto_complete_simple_item` is marked as private in com.google.android.material:material:1.14.0"
+        errorLine1="                com.google.android.material.R.layout.mtrl_auto_complete_simple_item, names);"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormSpinner.java"
+            line="356"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="The resource `@style/ThemeOverlay_App_FormDropdown` is marked as private in mvvm-component-master:core-base:unspecified"
+        errorLine1="                context, io.coderf.arklab.common.R.style.ThemeOverlay_App_FormDropdown));"
+        errorLine2="                                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormTextInputLayouts.java"
+            line="42"
+            column="58"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="Overriding `@attr/label` which is marked as private in mvvm-component-master:core-base:unspecified. If deliberate, use tools:override=&quot;true&quot;, otherwise pick a different name."
+        errorLine1="    &lt;attr name=&quot;label&quot; format=&quot;string&quot; />"
+        errorLine2="                ~~~~~">
+        <location
+            file="src/main/res/values/attr.xml"
+            line="23"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="Overriding `@attr/bottomBorder` which is marked as private in mvvm-component-master:core-base:unspecified. If deliberate, use tools:override=&quot;true&quot;, otherwise pick a different name."
+        errorLine1="    &lt;attr name=&quot;bottomBorder&quot; format=&quot;boolean&quot; />"
+        errorLine2="                ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/attr.xml"
+            line="37"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="Overriding `@attr/borderBottomColor` which is marked as private in mvvm-component-master:core-base:unspecified. If deliberate, use tools:override=&quot;true&quot;, otherwise pick a different name."
+        errorLine1="    &lt;attr name=&quot;borderBottomColor&quot; format=&quot;reference|color&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/attr.xml"
+            line="39"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="Overriding `@attr/borderBottomStartMargin` which is marked as private in mvvm-component-master:core-base:unspecified. If deliberate, use tools:override=&quot;true&quot;, otherwise pick a different name."
+        errorLine1="    &lt;attr name=&quot;borderBottomStartMargin&quot; format=&quot;dimension&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/attr.xml"
+            line="43"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="Overriding `@attr/borderBottomEndMargin` which is marked as private in mvvm-component-master:core-base:unspecified. If deliberate, use tools:override=&quot;true&quot;, otherwise pick a different name."
+        errorLine1="    &lt;attr name=&quot;borderBottomEndMargin&quot; format=&quot;dimension&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/attr.xml"
+            line="51"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="Overriding `@attr/labelStartMargin` which is marked as private in mvvm-component-master:core-base:unspecified. If deliberate, use tools:override=&quot;true&quot;, otherwise pick a different name."
+        errorLine1="    &lt;attr name=&quot;labelStartMargin&quot; format=&quot;dimension&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/attr.xml"
+            line="53"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="Overriding `@attr/labelEndMargin` which is marked as private in mvvm-component-master:core-base:unspecified. If deliberate, use tools:override=&quot;true&quot;, otherwise pick a different name."
+        errorLine1="    &lt;attr name=&quot;labelEndMargin&quot; format=&quot;dimension&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/attr.xml"
+            line="55"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="Overriding `@attr/textStartMargin` which is marked as private in mvvm-component-master:core-base:unspecified. If deliberate, use tools:override=&quot;true&quot;, otherwise pick a different name."
+        errorLine1="    &lt;attr name=&quot;textStartMargin&quot; format=&quot;dimension&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/attr.xml"
+            line="61"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="Overriding `@attr/textEndMargin` which is marked as private in mvvm-component-master:core-base:unspecified. If deliberate, use tools:override=&quot;true&quot;, otherwise pick a different name."
+        errorLine1="    &lt;attr name=&quot;textEndMargin&quot; format=&quot;dimension&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/attr.xml"
+            line="63"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="Overriding `@attr/labelTextColor` which is marked as private in mvvm-component-master:core-base:unspecified. If deliberate, use tools:override=&quot;true&quot;, otherwise pick a different name."
+        errorLine1="    &lt;attr name=&quot;labelTextColor&quot; format=&quot;reference|color&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/attr.xml"
+            line="67"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="Overriding `@attr/selectedTextColor` which is marked as private in mvvm-component-master:core-base:unspecified. If deliberate, use tools:override=&quot;true&quot;, otherwise pick a different name."
+        errorLine1="    &lt;attr name=&quot;selectedTextColor&quot; format=&quot;reference|color&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/attr.xml"
+            line="597"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="The resource `@mipmap/ic_clear_image_normal` is marked as private in mvvm-component-master:core-base:unspecified"
+        errorLine1="    &lt;item android:drawable=&quot;@mipmap/ic_clear_image_normal&quot; android:state_focused=&quot;false&quot; android:state_pressed=&quot;false&quot;/>"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/drawable/ib_clear_image_selector.xml"
+            line="4"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="PrivateResource"
+        message="The resource `@mipmap/ic_clear_image_pressed` is marked as private in mvvm-component-master:core-base:unspecified"
+        errorLine1="    &lt;item android:drawable=&quot;@mipmap/ic_clear_image_pressed&quot; android:state_pressed=&quot;true&quot;/>"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/drawable/ib_clear_image_selector.xml"
+            line="5"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="DataBindingWithoutKapt"
+        message="If you plan to use data binding in a Kotlin project, you should apply the kotlin-kapt plugin."
+        errorLine1="        dataBinding = true"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle"
+            line="57"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseCompatLoadingForDrawables"
+        message="Use `AppCompatResources.getDrawable()`"
+        errorLine1="        style.spinnerBackground = context.getDrawable(R.drawable.form_spinner_dropdown_bg);"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormSpinnerDropdownStyle.java"
+            line="64"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="        mediaAddAdapter.notifyDataSetChanged();"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormImageAndVideo.java"
+            line="398"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `TypedArray` should be recycled after use with `#recycle()`"
+        errorLine1="            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);"
+        errorLine2="                                                 ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormFilePreview.java"
+            line="101"
+            column="50"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `TypedArray` should be recycled after use with `#recycle()`"
+        errorLine1="            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);"
+        errorLine2="                                                 ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormImageAndVideoPreview.java"
+            line="77"
+            column="50"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `TypedArray` should be recycled after use with `#recycle()`"
+        errorLine1="            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);"
+        errorLine2="                                                 ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormImagePreview.java"
+            line="78"
+            column="50"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `TypedArray` should be recycled after use with `#recycle()`"
+        errorLine1="            TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.FormUI);"
+        errorLine2="                                                 ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormVideoPreview.java"
+            line="77"
+            column="50"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@drawable/rounded_white_16` with a theme that also paints a background (inferred theme is `@android:style/Theme.Holo`)"
+        errorLine1="    android:background=&quot;@drawable/rounded_white_16&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/tick_message_dialog.xml"
+            line="7"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="        binding.tvMonth.setText(calendarData.getYear() + &quot;-&quot;"
+        errorLine2="                                ^">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/widget/calendar/DateRangePickDialog.java"
+            line="852"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="        binding.tvMonth.setText(calendarData.getYear() + &quot;-&quot;"
+        errorLine2="                                ^">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/widget/calendar/DateRangePickDialog.java"
+            line="859"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="        tvCountLabel.setText(&quot;0/&quot; + maxCount);"
+        errorLine2="                             ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormImage.java"
+            line="220"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="        tvCountLabel.setText(&quot;0/&quot; + maxCount);"
+        errorLine2="                             ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormImageAndVideo.java"
+            line="306"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="        tvCountLabel.setText(&quot;0/&quot; + maxCount);"
+        errorLine2="                             ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormVideo.java"
+            line="292"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="        tvCountLabel.setText((videoAddAdapter.getList() == null ? 0 : videoAddAdapter.getList().size()) + &quot;/&quot; + maxCount);"
+        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/coderf/arklab/ui/form/FormVideo.java"
+            line="395"
+            column="30"/>
+    </issue>
+
+</issues>

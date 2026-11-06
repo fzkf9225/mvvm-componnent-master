@@ -138,7 +138,7 @@ public abstract class AttachmentDatabase extends RoomDatabase {
 
     /// 写法和SQLiteOpenHelper一致，用单例模式
     // room默认不能在主线程中操作数据库，因为数据库是一个耗时操作
-    // 实际项目中，默认使用异步 --自学
+    // 实际项目中，默认使用异步
     public static synchronized AttachmentDatabase getInstance(Context context, String attachmentDatabaseName) {
         if (attachmentDatabase == null) {
             if (TextUtils.isEmpty(attachmentDatabaseName)) {

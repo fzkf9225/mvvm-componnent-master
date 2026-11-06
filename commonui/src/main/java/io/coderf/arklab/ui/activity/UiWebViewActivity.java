@@ -21,7 +21,7 @@ import io.coderf.arklab.ui.webview.MediaWebChromeClient;
  *
  * 定位仍使用 common 模块原生 {@link io.coderf.arklab.common.helper.WebViewNativeLocationHelper}，
  *
- * 不依赖 googlegps 轨迹/上传等复杂能力。
+ * 不依赖 core-gnss 轨迹/上传等复杂能力。
  *
  * </p>
  *

@@ -90,7 +90,7 @@ dependencies {
     implementation project(':base')
     implementation project(':userapi')
     implementation project(':commonui')
-    implementation project(':googlegps')
+    implementation project(':core-gnss')
     implementation project(':commonmedia')
     implementation project(':user')
     implementation project(':core-mqtt')

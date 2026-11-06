@@ -1,83 +1,83 @@
 # mvvm-componnent-master
-# æ–‡æ¡£ç´¢å¼•
+# ÎÄµµË÷Òı
 
-| æ–‡æ¡£ | è¯´æ˜ |
+| ÎÄµµ | ËµÃ÷ |
 |------|------|
-| [MODULES.md](MODULES.md) | å„æ¨¡å—èŒè´£ã€ä¾èµ–å…³ç³»ã€Maven åæ ‡ã€Gateway / æ–°ç½‘ç»œ API ç”¨æ³• |
-| [UPGRADE.md](UPGRADE.md) | **Â§2ï¼šcore-* 1.2.0 å‰”é™¤ BaseView / MVP**ï¼›Â§1ï¼š4.6.0 Material3ï¼›é™„å½•ï¼š4.4.x â†’ 4.5.1 æ‹†åˆ† |
-| [QuickStart.md](QuickStart.md) | äº”åˆ†é’Ÿæ¥å…¥ï¼ˆä¾èµ–ã€Manifestã€ä¸»é¢˜ã€é…ç½®ã€é¡µé¢è„šæ‰‹æ¶ï¼‰ |
-| [core-base/README.md](core-base/README.md) | åŸºåº§æ¨¡å—ï¼›æ§ä»¶ä¸ä¸»é¢˜è¡¥ä¸ |
-| [core-db/README.md](core-db/README.md) | Roomï¼š**1.5.0** åç¨‹æ ˆ / Rx å¹¶è¡Œï¼›é…å¥— processor |
-| [room-processor/README.md](room-processor/README.md) | KSP Bridgeï¼š**1.2.0**ï¼ˆå« suspend RawQueryï¼‰ |
-| [commonui/README.md](commonui/README.md) | è¡¨å• / æ—¥å†ç­‰ |
+| [MODULES.md](MODULES.md) | ¸÷Ä£¿éÖ°Ôğ¡¢ÒÀÀµ¹ØÏµ¡¢Maven ×ø±ê¡¢Gateway / ĞÂÍøÂç API ÓÃ·¨ |
+| [UPGRADE.md](UPGRADE.md) | **¡ì2£ºcore-* 1.2.0 ÌŞ³ı BaseView / MVP**£»¡ì1£º4.6.0 Material3£»¸½Â¼£º4.4.x ¡ú 4.5.1 ²ğ·Ö |
+| [QuickStart.md](QuickStart.md) | Îå·ÖÖÓ½ÓÈë£¨ÒÀÀµ¡¢Manifest¡¢Ö÷Ìâ¡¢ÅäÖÃ¡¢Ò³Ãæ½ÅÊÖ¼Ü£© |
+| [core-base/README.md](core-base/README.md) | »ù×ùÄ£¿é£»¿Ø¼şÓëÖ÷Ìâ²¹¶¡ |
+| [core-db/README.md](core-db/README.md) | Room£º**1.5.0** Ğ­³ÌÕ» / Rx ²¢ĞĞ£»ÅäÌ× processor |
+| [room-processor/README.md](room-processor/README.md) | KSP Bridge£º**1.2.0**£¨º¬ suspend RawQuery£© |
+| [commonui/README.md](commonui/README.md) | ±íµ¥ / ÈÕÀúµÈ |
 
-å½“å‰ä¸»å¹²ç‰ˆæœ¬ï¼š**common `4.7.0`** Â· **core-base `1.7.2`** Â· **core-network `1.7.1`** Â· **core-db `1.6.2`** Â· **core-ui `1.3.1`** Â· **core-utils `1.2.0`** Â· **commonui `3.7.7`** Â· **commonmedia `3.7.0`** Â· **core-ws `1.0.1`** Â· **googlegps `3.4.0`**ï¼Œä¸»é¢˜ä¸º **Material3 DayNight**ï¼ˆViews + MDC 1.14ï¼‰ã€‚ä¸šåŠ¡ä¾§ä»å¯ä¾èµ– `common`ï¼Œä½† Maven è¯·æŒ‰ [UPGRADE.md æ–‡é¦–](UPGRADE.md) **æ˜¾å¼é’‰ä½** core / ui / media / gpsã€‚åŒ…åå¤šä¸º `io.coderf.arklab.common.*`ã€‚å‡çº§è¯´æ˜è§ [UPGRADE.md](UPGRADE.md)ï¼ˆé™„ä»¶ç¼©ç•¥å›¾è§ Â§0.4.3ï¼Œé™„ä»¶æ¨¡å‹è§ Â§0.4.2ï¼‰ã€‚
+µ±Ç°Ö÷¸É°æ±¾£º**common `4.7.0`** ¡¤ **core-base `1.7.2`** ¡¤ **core-network `1.7.1`** ¡¤ **core-db `1.6.2`** ¡¤ **core-ui `1.3.1`** ¡¤ **core-utils `1.2.0`** ¡¤ **commonui `3.7.7`** ¡¤ **commonmedia `3.7.0`** ¡¤ **core-ws `1.0.1`** ¡¤ **core-gnss `4.0.0`**£¬Ö÷ÌâÎª **Material3 DayNight**£¨Views + MDC 1.14£©¡£ÒµÎñ²àÈÔ¿ÉÒÀÀµ `common`£¬µ« Maven Çë°´ [UPGRADE.md ÎÄÊ×](UPGRADE.md) **ÏÔÊ½¶¤×¡** core / ui / media / gps¡£°üÃû¶àÎª `io.coderf.arklab.common.*`¡£Éı¼¶ËµÃ÷¼û [UPGRADE.md](UPGRADE.md)£¨¸½¼şËõÂÔÍ¼¼û ¡ì0.4.3£¬¸½¼şÄ£ĞÍ¼û ¡ì0.4.2£©¡£
 
-**1.2.0**ï¼šåˆ é™¤ `BaseView` ä¸ Repository/ViewModel ä¸Šçš„é¡µé¢æ³›å‹ï¼›è¯·æ±‚ UI èµ° `NetworkRequestUiHost` + **`RequestUi`**ï¼ˆå·²åˆ é™¤æ—§ç‰ˆ `RequestUiCallback`ï¼‰ï¼›ä¸šåŠ¡å¯¼èˆªç”¨ LiveData/Flowã€‚
+**1.2.0**£ºÉ¾³ı `BaseView` Óë Repository/ViewModel ÉÏµÄÒ³Ãæ·ºĞÍ£»ÇëÇó UI ×ß `NetworkRequestUiHost` + **`RequestUi`**£¨ÒÑÉ¾³ı¾É°æ `RequestUiCallback`£©£»ÒµÎñµ¼º½ÓÃ LiveData/Flow¡£
 
-**1.1.x / 3.6.x æ§ä»¶è¡¥ä¸**ï¼ˆå†å²ï¼‰ï¼šå®˜æ–¹å·²æœ‰åœ†è§’ã€æè¾¹çš„åŒ…è£…ç±»å·²å»æ‰ï¼Œæ”¹ç”¨ `MaterialButton` / `ShapeableImageView` / `TextInputLayout`ã€‚è¯¦æƒ…è§ [core-base/README.md](core-base/README.md)ã€‚
+**1.1.x / 3.6.x ¿Ø¼ş²¹¶¡**£¨ÀúÊ·£©£º¹Ù·½ÒÑÓĞÔ²½Ç¡¢Ãè±ßµÄ°ü×°ÀàÒÑÈ¥µô£¬¸ÄÓÃ `MaterialButton` / `ShapeableImageView` / `TextInputLayout`¡£ÏêÇé¼û [core-base/README.md](core-base/README.md)¡£
 
-# æ¡†æ¶ç®€ä»‹
-æ¡†æ¶å…¨é¢é‡‡ç”¨`MVVM`æ¶æ„ç»“åˆJetPackå…¨å®¶æ¡¶è¿›è¡Œå°è£…ï¼Œæ¡†æ¶ä¸­ä¸»è¦å°è£…äº†å¸¸ç”¨åŠŸèƒ½ï¼Œæ¯”å¦‚ç½‘ç»œè¯·æ±‚ã€æ•°æ®åº“ã€æ•°æ®å­˜å‚¨ã€å·¥å…·ç±»ã€UIç»„ä»¶ã€ä¸šåŠ¡é€»è¾‘å°è£…ç­‰ç­‰,å…¶ä¸­90%ä¸º`Java`,10%ä¸º`Kotlin`ï¼Œæœ€ä½å…¼å®¹åˆ°`Android 8` ï¼Œ`targetSdk` å¯¹é½ Demoï¼ˆå½“å‰ 35ï¼‰ã€‚
-ä»æ¶æ„ä¸Šæ ¹æœ¬çš„è¿›è¡Œæ‹†è§£ï¼Œå……åˆ†å‘æŒ¥è§£è€¦çš„æ€è·¯ï¼Œä»åŸå§‹çš„`Activity`å¹²æ‰€æœ‰äº‹ä»¶ï¼Œæ‹†åˆ†æˆå„ä¸ªåˆ†å¼€çš„æ¨¡å—ï¼Œå‘æŒ¥`ViewModel`ç‰¹æ€§ä¸“é—¨ä½¿ç”¨`Repository`è¿›è¡Œæ•°æ®å¤„ç†ï¼Œæ¥å£é€šè¿‡`Hilt`ä¾èµ–æ³¨å…¥çš„æ–¹å¼è¿›è¡Œä¸€é”®æ³¨å…¥çœå»å¤§é‡çš„`New`æ“ä½œã€‚
+# ¿ò¼Ü¼ò½é
+¿ò¼ÜÈ«Ãæ²ÉÓÃ`MVVM`¼Ü¹¹½áºÏJetPackÈ«¼ÒÍ°½øĞĞ·â×°£¬¿ò¼ÜÖĞÖ÷Òª·â×°ÁË³£ÓÃ¹¦ÄÜ£¬±ÈÈçÍøÂçÇëÇó¡¢Êı¾İ¿â¡¢Êı¾İ´æ´¢¡¢¹¤¾ßÀà¡¢UI×é¼ş¡¢ÒµÎñÂß¼­·â×°µÈµÈ,ÆäÖĞ90%Îª`Java`,10%Îª`Kotlin`£¬×îµÍ¼æÈİµ½`Android 8` £¬`targetSdk` ¶ÔÆë Demo£¨µ±Ç° 35£©¡£
+´Ó¼Ü¹¹ÉÏ¸ù±¾µÄ½øĞĞ²ğ½â£¬³ä·Ö·¢»Ó½âñîµÄË¼Â·£¬´ÓÔ­Ê¼µÄ`Activity`¸ÉËùÓĞÊÂ¼ş£¬²ğ·Ö³É¸÷¸ö·Ö¿ªµÄÄ£¿é£¬·¢»Ó`ViewModel`ÌØĞÔ×¨ÃÅÊ¹ÓÃ`Repository`½øĞĞÊı¾İ´¦Àí£¬½Ó¿ÚÍ¨¹ı`Hilt`ÒÀÀµ×¢ÈëµÄ·½Ê½½øĞĞÒ»¼ü×¢ÈëÊ¡È¥´óÁ¿µÄ`New`²Ù×÷¡£
 
-**4.5.0 èµ·**ï¼šåŸå•ä½“ `common` æ‹†ä¸º `core-utils` / `core-base` / `core-network` / `core-db` / `core-ui`ï¼Œ`common` å˜ä¸º **facade**ï¼ˆ`api` èšåˆ coreï¼‰ã€‚MQTT / åª’ä½“ç­‰å®ç°åº“ç» **Gateway**ï¼ˆcase æ¨¡å— `:base`ï¼‰æ³¨å…¥ï¼Œä¸šåŠ¡æ¨¡å—ä¸è¦ç›´æ¥ä¾èµ– `mqttcomponent` / `commonmedia`ã€‚
+**4.5.0 Æğ**£ºÔ­µ¥Ìå `common` ²ğÎª `core-utils` / `core-base` / `core-network` / `core-db` / `core-ui`£¬`common` ±äÎª **facade**£¨`api` ¾ÛºÏ core£©¡£MQTT / Ã½ÌåµÈÊµÏÖ¿â¾­ **Gateway**£¨case Ä£¿é `:base`£©×¢Èë£¬ÒµÎñÄ£¿é²»ÒªÖ±½ÓÒÀÀµ `mqttcomponent` / `commonmedia`¡£
 
-**4.6.0**ï¼š`AppBaseTheme` ä» AppCompat Light å‡çº§ä¸º `Theme.Material3.DayNight.NoActionBar`ï¼›æš—è‰²èµ° `values-night` tonal è‰²æ¿ï¼ˆå…³é—­ç³»ç»Ÿ `forceDarkAllowed`ï¼‰ã€‚æ§ä»¶ä»æ˜¯ Viewsï¼Œä¸æ˜¯ Composeã€‚å¯¹å¤– API ä¸æ—§å·¥ç¨‹å¯¹é½ï¼Œè¯¦è§ [UPGRADE.md](UPGRADE.md)ã€‚
+**4.6.0**£º`AppBaseTheme` ´Ó AppCompat Light Éı¼¶Îª `Theme.Material3.DayNight.NoActionBar`£»°µÉ«×ß `values-night` tonal É«°å£¨¹Ø±ÕÏµÍ³ `forceDarkAllowed`£©¡£¿Ø¼şÈÔÊÇ Views£¬²»ÊÇ Compose¡£¶ÔÍâ API Óë¾É¹¤³Ì¶ÔÆë£¬Ïê¼û [UPGRADE.md](UPGRADE.md)¡£
 
-**core-base 1.1.1 / commonui 3.6.1**ï¼šåœ¨ 4.6.0 ä¸»é¢˜ä¹‹ä¸Šåšæ§ä»¶è½åœ°â€”â€”èƒ½ç”¨å®˜æ–¹ Material3 æ§ä»¶çš„ä¸å†åŒ…ä¸€å±‚ï¼›éœ€è¦ XML `radius` / `bgColor` / `stroke*` çš„ä¸‰ä¸ªå®¹å™¨/æ–‡å­—æ§ä»¶æ”¹ä¸º `MaterialShapeDrawable`ã€‚ä¸»é¢˜é»˜è®¤æŒ‰é’® `inset`/`minHeight` æ¸…é›¶ï¼Œ`layout_height` å³è§†è§‰é«˜åº¦ã€‚
+**core-base 1.1.1 / commonui 3.6.1**£ºÔÚ 4.6.0 Ö÷ÌâÖ®ÉÏ×ö¿Ø¼şÂäµØ¡ª¡ªÄÜÓÃ¹Ù·½ Material3 ¿Ø¼şµÄ²»ÔÙ°üÒ»²ã£»ĞèÒª XML `radius` / `bgColor` / `stroke*` µÄÈı¸öÈİÆ÷/ÎÄ×Ö¿Ø¼ş¸ÄÎª `MaterialShapeDrawable`¡£Ö÷ÌâÄ¬ÈÏ°´Å¥ `inset`/`minHeight` ÇåÁã£¬`layout_height` ¼´ÊÓ¾õ¸ß¶È¡£
 
-ä¸»è¦å°è£…åŠŸèƒ½ï¼š
-1. åŸºç¡€`BaseActivity`ã€`BaseFragment`ä¸»è¦çš„é¡µé¢UIçš„åŸºç¡€ç±»ï¼ˆä½äº `core-base`ï¼‰
-2. è‡ªåŠ¨é›†æˆ`ä»Šæ—¥å¤´æ¡UIé€‚é…æ–¹æ¡ˆ`ï¼ˆç‹¬ç«‹æ¨¡å— `:core-autosize`ï¼Œç» `core-base` ä¼ é€’ï¼‰
-3. ç½‘ç»œè¯·æ±‚å°è£…ï¼š`OkHttp`+`RxJava`+`Retrofit`ï¼Œä»¥åŠåç¨‹ `Flow`ï¼›**æ¨è**æ–° API `DefaultNetworkRepository`ï¼ˆ`core` åŒ…ï¼‰ï¼›æ—§ Rx `RepositoryImpl` ä»ä¿ç•™ï¼›è¿‡æ¸¡å±‚ `FlowRepositoryImpl` å·²åˆ é™¤
-4. æœ¬åœ°æ•°æ®åº“å°è£…ï¼Œä½¿ç”¨`Room`+`RxJava` / `Flow`ï¼ˆ`core-db`ï¼‰
-5. è½»é‡åŒ–å­˜å‚¨æ¡†æ¶ï¼Œä½¿ç”¨`MMKV`ï¼Œæ›¿æ¢è‡ªå¸¦çš„`SharedPreferences`
-6. é›†æˆ`Paging3`åˆ†é¡µï¼Œæ›´åŠ æ™ºèƒ½åŒ–çš„åˆ†é¡µåˆ—è¡¨ï¼ŒåŒæ—¶ä¹Ÿæä¾›åŸå§‹çš„åˆ†é¡µåŠŸèƒ½
-7. æ‹†åˆ†`Media`æ¨¡å—`commonmedia`ï¼Œä¸“é—¨å¤„ç†åª’ä½“æ•°æ®ï¼›ä¸šåŠ¡ä¾§æ³¨å…¥ `MediaGateway`
-8. æ‹†åˆ†å¸¸ç”¨è¡¨å•ç»„ä»¶ï¼Œå•ç‹¬module`commonui`ï¼Œæ¯”å¦‚è¡¨å•æ ¡éªŒï¼Œè¡¨å•éªŒè¯ï¼Œè¡¨å•æäº¤ç­‰ç­‰
-9. æ‹†åˆ†å•ç‹¬çš„`GPS`æœåŠ¡å¤„ç†æ¨¡å—`googlegps`ï¼Œæä¾›GPSæœåŠ¡ï¼Œä»æ£€æµ‹GPSæ˜¯å¦æ‰“å¼€åˆ°è·å–æƒé™åˆ°è·å–ç»çº¬åº¦ä¸€é”®é›†æˆ
-10. ä½¿ç”¨`properties`é…ç½®æ–‡ä»¶ï¼Œé…ç½®æ–‡ä»¶ä¼šè‡ªåŠ¨æ‹†åˆ†ç¯å¢ƒï¼Œé˜²æ­¢é¢‘ç¹åˆ‡æ¢ç¯å¢ƒå¯¼è‡´çš„ä¸€ç³»åˆ—é—®é¢˜
-11. å•ç‹¬æ‹†åˆ†`annotation`æ¨¡å—ï¼Œä¸€é”®æ³¨è§£æ ¡éªŒå­—æ®µè¡¨å•å‚æ•°æ˜¯å¦æ»¡è¶³çº¦æŸæ¡ä»¶
-12. æ¶æ„ä¸Šé€šè¿‡æ¨¡å—æ‹†åˆ† + Gateway è§£è€¦ï¼Œä¸šåŠ¡åªä¾èµ– `*api`ï¼Œå®ç°ç”± app ç»„è£…å±‚ç»‘å®š
-13. Material3 ä¸»é¢˜ä¸ Top App Bar / æŒ‰é’® / åœ†è§’è‰²ï¼ˆ`AppBaseTheme`ï¼ŒåŠ¨æ€å–è‰²é»˜è®¤å…³ï¼‰
+Ö÷Òª·â×°¹¦ÄÜ£º
+1. »ù´¡`BaseActivity`¡¢`BaseFragment`Ö÷ÒªµÄÒ³ÃæUIµÄ»ù´¡Àà£¨Î»ÓÚ `core-base`£©
+2. ×Ô¶¯¼¯³É`½ñÈÕÍ·ÌõUIÊÊÅä·½°¸`£¨¶ÀÁ¢Ä£¿é `:core-autosize`£¬¾­ `core-base` ´«µİ£©
+3. ÍøÂçÇëÇó·â×°£º`OkHttp`+`RxJava`+`Retrofit`£¬ÒÔ¼°Ğ­³Ì `Flow`£»**ÍÆ¼ö**ĞÂ API `DefaultNetworkRepository`£¨`core` °ü£©£»¾É Rx `RepositoryImpl` ÈÔ±£Áô£»¹ı¶É²ã `FlowRepositoryImpl` ÒÑÉ¾³ı
+4. ±¾µØÊı¾İ¿â·â×°£¬Ê¹ÓÃ`Room`+`RxJava` / `Flow`£¨`core-db`£©
+5. ÇáÁ¿»¯´æ´¢¿ò¼Ü£¬Ê¹ÓÃ`MMKV`£¬Ìæ»»×Ô´øµÄ`SharedPreferences`
+6. ¼¯³É`Paging3`·ÖÒ³£¬¸ü¼ÓÖÇÄÜ»¯µÄ·ÖÒ³ÁĞ±í£¬Í¬Ê±Ò²Ìá¹©Ô­Ê¼µÄ·ÖÒ³¹¦ÄÜ
+7. ²ğ·Ö`Media`Ä£¿é`commonmedia`£¬×¨ÃÅ´¦ÀíÃ½ÌåÊı¾İ£»ÒµÎñ²à×¢Èë `MediaGateway`
+8. ²ğ·Ö³£ÓÃ±íµ¥×é¼ş£¬µ¥¶Àmodule`commonui`£¬±ÈÈç±íµ¥Ğ£Ñé£¬±íµ¥ÑéÖ¤£¬±íµ¥Ìá½»µÈµÈ
+9. ²ğ·Öµ¥¶ÀµÄ`GPS`·şÎñ´¦ÀíÄ£¿é`core-gnss`£¬Ìá¹©GPS·şÎñ£¬´Ó¼ì²âGPSÊÇ·ñ´ò¿ªµ½»ñÈ¡È¨ÏŞµ½»ñÈ¡¾­Î³¶ÈÒ»¼ü¼¯³É
+10. Ê¹ÓÃ`properties`ÅäÖÃÎÄ¼ş£¬ÅäÖÃÎÄ¼ş»á×Ô¶¯²ğ·Ö»·¾³£¬·ÀÖ¹Æµ·±ÇĞ»»»·¾³µ¼ÖÂµÄÒ»ÏµÁĞÎÊÌâ
+11. µ¥¶À²ğ·Ö`annotation`Ä£¿é£¬Ò»¼ü×¢½âĞ£Ñé×Ö¶Î±íµ¥²ÎÊıÊÇ·ñÂú×ãÔ¼ÊøÌõ¼ş
+12. ¼Ü¹¹ÉÏÍ¨¹ıÄ£¿é²ğ·Ö + Gateway ½âñî£¬ÒµÎñÖ»ÒÀÀµ `*api`£¬ÊµÏÖÓÉ app ×é×°²ã°ó¶¨
+13. Material3 Ö÷ÌâÓë Top App Bar / °´Å¥ / Ô²½ÇÉ«£¨`AppBaseTheme`£¬¶¯Ì¬È¡É«Ä¬ÈÏ¹Ø£©
 
-# å·¥ç¨‹ä»‹ç»
-    - **core-utils**ï¼šæ—  R ä¾èµ–çš„è½»é‡å·¥å…·ï¼ˆé¢„ç•™åˆ†å±‚ï¼‰
-    - **core-base**ï¼šBase* / widget / helper / resï¼ˆnamespace ä»ä¸º `io.coderf.arklab.common`ï¼‰ï¼›ä¸»é¢˜ä¸ Material æ§ä»¶å…¥å£åœ¨æ­¤
-    - **core-network**ï¼šRetrofit / Repository / `DefaultNetworkRepository`
-    - **core-db**ï¼šRoom DAO / Database / RoomRepository
-    - **core-ui**ï¼šActivity å§”æ‰˜ï¼ˆå¦‚ `InitDataPolicy`ï¼‰
-    - **common**ï¼šå…¼å®¹é—¨é¢ï¼ˆfacadeï¼‰ï¼Œä¸šåŠ¡æ¨èåªä¾èµ–å®ƒ
-    - annotationï¼šæ³¨è§£æ¡†æ¶ï¼Œä¸»è¦ç”¨äºæ•°æ®æ ¡éªŒçš„æ³¨è§£
-    - appï¼šæ¡†æ¶ case ç¤ºä¾‹ï¼ˆå« Gateway Hilt ç»‘å®šï¼‰
-    - commonmediaï¼šæ‘„åƒå¤´ã€ç›¸å†Œã€åª’ä½“ç›¸å…³å°è£…ï¼ˆä¸å« Gatewayï¼‰
-    - commonuiï¼šUIç»„ä»¶å°è£…ï¼Œä¸»è¦ä¸ºè¡¨å•ç»„ä»¶
-    - googlegpsï¼šGPSå·¥å…·ç±»
-    - mqttcomponentï¼šMQTT å°è£…ï¼ˆä¸å« Gatewayï¼‰
-    - baseï¼šDemo/case åŸºå»ºï¼ˆGatewayã€AppPropertiesConfigã€BaseAppActivity ç­‰ï¼›**éæ¡†æ¶**ï¼Œå‹¿ä¸ core-base æ··æ·†ï¼‰
-    - userapiï¼šç”¨æˆ·æ¨¡å—å¯¹å¤–æ¥å£ï¼ˆUserService / UserInfo / Routerï¼‰
-    - userï¼šç¤ºä¾‹ä¸šåŠ¡ moduleï¼ˆä¾èµ– common + base + userapiï¼‰
-    - core-wsï¼šWebSocket ç»„ä»¶ï¼ˆOkHttpï¼Œå¯¹é½ core-mqttï¼‰
-    - room-processorï¼š`@RoomObservedEntity` KSP å¤„ç†å™¨
+# ¹¤³Ì½éÉÜ
+    - **core-utils**£ºÎŞ R ÒÀÀµµÄÇáÁ¿¹¤¾ß£¨Ô¤Áô·Ö²ã£©
+    - **core-base**£ºBase* / widget / helper / res£¨namespace ÈÔÎª `io.coderf.arklab.common`£©£»Ö÷ÌâÓë Material ¿Ø¼şÈë¿ÚÔÚ´Ë
+    - **core-network**£ºRetrofit / Repository / `DefaultNetworkRepository`
+    - **core-db**£ºRoom DAO / Database / RoomRepository
+    - **core-ui**£ºActivity Î¯ÍĞ£¨Èç `InitDataPolicy`£©
+    - **common**£º¼æÈİÃÅÃæ£¨facade£©£¬ÒµÎñÍÆ¼öÖ»ÒÀÀµËü
+    - annotation£º×¢½â¿ò¼Ü£¬Ö÷ÒªÓÃÓÚÊı¾İĞ£ÑéµÄ×¢½â
+    - app£º¿ò¼Ü case Ê¾Àı£¨º¬ Gateway Hilt °ó¶¨£©
+    - commonmedia£ºÉãÏñÍ·¡¢Ïà²á¡¢Ã½ÌåÏà¹Ø·â×°£¨²»º¬ Gateway£©
+    - commonui£ºUI×é¼ş·â×°£¬Ö÷ÒªÎª±íµ¥×é¼ş
+    - core-gnss£ºGPS¹¤¾ßÀà
+    - mqttcomponent£ºMQTT ·â×°£¨²»º¬ Gateway£©
+    - base£ºDemo/case »ù½¨£¨Gateway¡¢AppPropertiesConfig¡¢BaseAppActivity µÈ£»**·Ç¿ò¼Ü**£¬ÎğÓë core-base »ìÏı£©
+    - userapi£ºÓÃ»§Ä£¿é¶ÔÍâ½Ó¿Ú£¨UserService / UserInfo / Router£©
+    - user£ºÊ¾ÀıÒµÎñ module£¨ÒÀÀµ common + base + userapi£©
+    - core-ws£ºWebSocket ×é¼ş£¨OkHttp£¬¶ÔÆë core-mqtt£©
+    - room-processor£º`@RoomObservedEntity` KSP ´¦ÀíÆ÷
 
-å…¨é¢ä½¿ç”¨``ksp``
+È«ÃæÊ¹ÓÃ``ksp``
 
-# äº”åˆ†é’Ÿå¿«è¯»å¼€å§‹
-[äº”åˆ†é’Ÿå¿«è¯»å¼€å§‹](QuickStart.md)ï¼ˆæ–‡å†…å·²è¡¥å…… **è¯·æ±‚ UIï¼ˆ`NetworkRequestUiHost` / `RequestUi`ï¼‰** è¯´æ˜ä¸ç¤ºä¾‹ã€‚ï¼‰  
-ä»æ—§ç‰ˆå‡çº§è¯·å…ˆè¯» [UPGRADE.md](UPGRADE.md)ã€‚
+# Îå·ÖÖÓ¿ì¶Á¿ªÊ¼
+[Îå·ÖÖÓ¿ì¶Á¿ªÊ¼](QuickStart.md)£¨ÎÄÄÚÒÑ²¹³ä **ÇëÇó UI£¨`NetworkRequestUiHost` / `RequestUi`£©** ËµÃ÷ÓëÊ¾Àı¡££©  
+´Ó¾É°æÉı¼¶ÇëÏÈ¶Á [UPGRADE.md](UPGRADE.md)¡£
 
-## MVVMæ¶æ„ç¤ºä¾‹ä»£ç ï¼Œé‡æ„ç‰ˆæœ¬
+## MVVM¼Ü¹¹Ê¾Àı´úÂë£¬ÖØ¹¹°æ±¾
 
-### ä¸šåŠ¡ä¾§ä¾èµ–å…¥å£ï¼šç»§ç»­ç”¨ `common`ï¼ˆ4.7.0 facadeï¼‰
+### ÒµÎñ²àÒÀÀµÈë¿Ú£º¼ÌĞøÓÃ `common`£¨4.7.0 facade£©
 
-#### åœ¨çº¿å¼•ç”¨ï¼ˆMavenï¼‰
+#### ÔÚÏßÒıÓÃ£¨Maven£©
 
-ä»“åº“ä¸å‡­è¯åŒå‰ï¼ˆ`ALIYUN_USER_NAME` / `ALIYUN_PASSWORD`ï¼‰ã€‚æ¨èåæ ‡ï¼ˆå®Œæ•´çŸ©é˜µè§ [UPGRADE.md](UPGRADE.md) / [MODULES.md](MODULES.md)ï¼‰ï¼š
+²Ö¿âÓëÆ¾Ö¤Í¬Ç°£¨`ALIYUN_USER_NAME` / `ALIYUN_PASSWORD`£©¡£ÍÆ¼ö×ø±ê£¨ÍêÕû¾ØÕó¼û [UPGRADE.md](UPGRADE.md) / [MODULES.md](MODULES.md)£©£º
 
 ```gradle
 implementation 'io.coderf.arklab.common:common:4.7.0'
-// ä¸€èˆ¬å¯ç”± common POM ä¼ é€’ï¼›Maven å®¿ä¸»å»ºè®®æ˜¾å¼é’‰ï¼š
+// Ò»°ã¿ÉÓÉ common POM ´«µİ£»Maven ËŞÖ÷½¨ÒéÏÔÊ½¶¤£º
 // implementation 'io.coderf.arklab.core:base:1.7.2'
 // implementation 'io.coderf.arklab.core:network:1.7.0'
 // implementation 'io.coderf.arklab.core:db:1.6.2'
@@ -85,58 +85,58 @@ implementation 'io.coderf.arklab.common:common:4.7.0'
 // implementation 'io.coderf.arklab.core:utils:1.1.1'
 ```
 
-æœ¬ä»“åº“å‘å¸ƒï¼š`./gradlew :common:publish` / `:core-*:publish`ï¼ˆè¯¦è§ [MODULES.md](MODULES.md)ï¼‰ã€‚
+±¾²Ö¿â·¢²¼£º`./gradlew :common:publish` / `:core-*:publish`£¨Ïê¼û [MODULES.md](MODULES.md)£©¡£
 
-å·¥ç¨‹å†…ä¾èµ–ï¼š
+¹¤³ÌÄÚÒÀÀµ£º
 
 ```gradle
 implementation project(':common')
-implementation project(':base')      // Gateway / é…ç½® / BaseApp*
-implementation project(':userapi')   // éœ€è¦ç”¨æˆ·å¥‘çº¦æ—¶
+implementation project(':base')      // Gateway / ÅäÖÃ / BaseApp*
+implementation project(':userapi')   // ĞèÒªÓÃ»§ÆõÔ¼Ê±
 ```
 
 ### mqttcomponent / commonmedia / websocket
 
-å®ç°åº“ä»å¯å•ç‹¬ä¾èµ–ï¼Œä½† **ä¸šåŠ¡ module ä¸è¦ç›´æ¥ä¾èµ–**ã€‚åº”æ³¨å…¥ï¼š
+ÊµÏÖ¿âÈÔ¿Éµ¥¶ÀÒÀÀµ£¬µ« **ÒµÎñ module ²»ÒªÖ±½ÓÒÀÀµ**¡£Ó¦×¢Èë£º
 
-- `MessageGateway`ï¼ˆMQTTï¼‰
-- `MediaGateway`ï¼ˆåª’ä½“ï¼‰
+- `MessageGateway`£¨MQTT£©
+- `MediaGateway`£¨Ã½Ìå£©
 
-åœ¨ **app** ä¸­ Hilt ç»‘å®šå®ç°ï¼ˆå‚è€ƒ `GatewayModule`ã€`MediaGatewayModule`ï¼‰ã€‚æ¥å£åœ¨ **`:base`**ã€‚
+ÔÚ **app** ÖĞ Hilt °ó¶¨ÊµÏÖ£¨²Î¿¼ `GatewayModule`¡¢`MediaGatewayModule`£©¡£½Ó¿ÚÔÚ **`:base`**¡£
 
 ### userapi
 
-ä¸º **user æ¨¡å—** çš„å…¬å…± apiï¼šæ¥å£ã€å®ä½“ã€è·¯ç”±ã€‚ä¸è¦æ”¾ Gateway / å…¨å±€é…ç½®ã€‚
+Îª **user Ä£¿é** µÄ¹«¹² api£º½Ó¿Ú¡¢ÊµÌå¡¢Â·ÓÉ¡£²»Òª·Å Gateway / È«¾ÖÅäÖÃ¡£
 
-### baseï¼ˆcaseï¼‰
+### base£¨case£©
 
-é¡¹ç›®åŸºç¡€æ¨¡å—æ ·æ¿ï¼šGatewayã€`AppPropertiesConfig`ã€`PropertiesKeyEnum`ã€`FileTypeEnum`ã€`BasePage`ã€`BaseAppActivity` ç­‰ã€‚å„å®¿ä¸»å¯æŒ‰ serm-app çš„ `:base` æ€è·¯æ‰©å±•å­—å…¸ã€æ–‡ä»¶æœåŠ¡ç­‰ï¼Œ**ä¸è¦æŠŠä¸šåŠ¡å­—å…¸ç¡¬å¡è¿›æ¡†æ¶**ã€‚
+ÏîÄ¿»ù´¡Ä£¿éÑù°å£ºGateway¡¢`AppPropertiesConfig`¡¢`PropertiesKeyEnum`¡¢`FileTypeEnum`¡¢`BasePage`¡¢`BaseAppActivity` µÈ¡£¸÷ËŞÖ÷¿É°´ serm-app µÄ `:base` Ë¼Â·À©Õ¹×Öµä¡¢ÎÄ¼ş·şÎñµÈ£¬**²»Òª°ÑÒµÎñ×ÖµäÓ²Èû½ø¿ò¼Ü**¡£
 
 ### user
 
-ç»„ä»¶åŒ–ç¤ºä¾‹ï¼šä¾èµ– `common` + `base` + `userapi`ï¼›å…¶ä»–ä¸šåŠ¡ module ä¸è¦ä¾èµ– `user` å®ç°æ¨¡å—ã€‚
-## å°è£…æ€è·¯åšæ–‡ï¼Œæ³¨æ„è§‚çœ‹é¡ºåºå“ˆ
+×é¼ş»¯Ê¾Àı£ºÒÀÀµ `common` + `base` + `userapi`£»ÆäËûÒµÎñ module ²»ÒªÒÀÀµ `user` ÊµÏÖÄ£¿é¡£
+## ·â×°Ë¼Â·²©ÎÄ£¬×¢Òâ¹Û¿´Ë³Ğò¹ş
 
-ä¸€ï¼šhttps://blog.csdn.net/fzkf9225/article/details/105197996
+Ò»£ºhttps://blog.csdn.net/fzkf9225/article/details/105197996
 
-äºŒï¼šhttps://blog.csdn.net/fzkf9225/article/details/105200803
+¶ş£ºhttps://blog.csdn.net/fzkf9225/article/details/105200803
 
-ä¸‰ï¼šhttps://blog.csdn.net/fzkf9225/article/details/132182449
+Èı£ºhttps://blog.csdn.net/fzkf9225/article/details/132182449
 
-## æŸ¥çœ‹ç½‘ç»œè¯·æ±‚ç­‰ç›¸å…³æ—¥å¿—
+## ²é¿´ÍøÂçÇëÇóµÈÏà¹ØÈÕÖ¾
 
-### åˆå§‹åŒ–å’Œæ‰“å¼€æ—¥å¿—
+### ³õÊ¼»¯ºÍ´ò¿ªÈÕÖ¾
 
-åœ¨appä¸­çš„Applicationä¸­è°ƒç”¨åˆå§‹åŒ–æ–¹æ³•
+ÔÚappÖĞµÄApplicationÖĞµ÷ÓÃ³õÊ¼»¯·½·¨
 
 ```
-        // ä»¥ä¸‹å‡é¡»åœ¨ init ä¹‹å‰ï¼›ä¸å†™åˆ™ç”¨é»˜è®¤å€¼
-        // Config.getInstance().setDynamicColorEnabled(true);          // Material Youï¼Œé»˜è®¤å…³
-        // Config.getInstance().setAutoSizeEnabled(false);             // å±å¹•é€‚é…ï¼Œé»˜è®¤å¼€
-        // Config.getInstance().setCrashHandlerEnabled(false);         // è‡ªå¸¦å´©æºƒæ•è·ï¼Œé»˜è®¤å¼€
-        // Config.getInstance().setCrashLogRetainDays(7);              // å´©æºƒæ—¥å¿—ä¿ç•™å¤©æ•°ï¼Œé»˜è®¤ 5ï¼›<=0 ä¸æ¸…ç†
+        // ÒÔÏÂ¾ùĞëÔÚ init Ö®Ç°£»²»Ğ´ÔòÓÃÄ¬ÈÏÖµ
+        // Config.getInstance().setDynamicColorEnabled(true);          // Material You£¬Ä¬ÈÏ¹Ø
+        // Config.getInstance().setAutoSizeEnabled(false);             // ÆÁÄ»ÊÊÅä£¬Ä¬ÈÏ¿ª
+        // Config.getInstance().setCrashHandlerEnabled(false);         // ×Ô´ø±ÀÀ£²¶»ñ£¬Ä¬ÈÏ¿ª
+        // Config.getInstance().setCrashLogRetainDays(7);              // ±ÀÀ£ÈÕÖ¾±£ÁôÌìÊı£¬Ä¬ÈÏ 5£»<=0 ²»ÇåÀí
         // Config.getInstance().setNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        // Config.getInstance().setEdgeToEdgeEnabled(false);           // BaseActivity å…¨å±€é»˜è®¤ï¼Œé»˜è®¤å¼€
+        // Config.getInstance().setEdgeToEdgeEnabled(false);           // BaseActivity È«¾ÖÄ¬ÈÏ£¬Ä¬ÈÏ¿ª
         // Config.getInstance().setDefaultPlaceholderRes(R.drawable.my_placeholder);
         // Config.getInstance().setDefaultErrorImageRes(R.drawable.my_error);
         Config.getInstance().init(this);
@@ -144,163 +144,163 @@ implementation project(':userapi')   // éœ€è¦ç”¨æˆ·å¥‘çº¦æ—¶
             Config.getInstance().enableDebug(true);
         }
 ```
-### å¸¸ç”¨Api
+### ³£ÓÃApi
 
-#### ç³»ç»Ÿé…ç½®
-1. ç»§æ‰¿`BaseApplication`ï¼Œç„¶ååˆå§‹åŒ–`Config.getInstance().init(this)`ï¼›å±å¹•é€‚é…ã€å´©æºƒæ•è·ã€å¤œé—´æ¨¡å¼ã€Edge-to-Edgeã€å ä½å›¾ç­‰å…¨å±€å¼€å…³é¡»åœ¨ `init` å‰è®¾ç½®ã€‚å¦‚æœéœ€è¦è·å–å…¨å±€çš„`Application`å¯¹è±¡å¯ä»¥è°ƒç”¨`Config`çš„æ–¹æ³•
-2. `ErrorService`ï¼šæä¾›å…¨å±€çš„apiï¼Œå¤„ç†ç½‘ç»œè¯·æ±‚å›è°ƒçš„ä¸€äº›é”™è¯¯å’Œè·³è½¬ç™»å½•æ‹¦æˆªç­‰é—®é¢˜ï¼Œè¿˜æœ‰ç»Ÿä¸€ç½‘ç»œè¯·æ±‚å¤´çš„é…ç½®ç­‰
+#### ÏµÍ³ÅäÖÃ
+1. ¼Ì³Ğ`BaseApplication`£¬È»ºó³õÊ¼»¯`Config.getInstance().init(this)`£»ÆÁÄ»ÊÊÅä¡¢±ÀÀ£²¶»ñ¡¢Ò¹¼äÄ£Ê½¡¢Edge-to-Edge¡¢Õ¼Î»Í¼µÈÈ«¾Ö¿ª¹ØĞëÔÚ `init` Ç°ÉèÖÃ¡£Èç¹ûĞèÒª»ñÈ¡È«¾ÖµÄ`Application`¶ÔÏó¿ÉÒÔµ÷ÓÃ`Config`µÄ·½·¨
+2. `ErrorService`£ºÌá¹©È«¾ÖµÄapi£¬´¦ÀíÍøÂçÇëÇó»Øµ÷µÄÒ»Ğ©´íÎóºÍÌø×ªµÇÂ¼À¹½ØµÈÎÊÌâ£¬»¹ÓĞÍ³Ò»ÍøÂçÇëÇóÍ·µÄÅäÖÃµÈ
 
-#### UIç›¸å…³
-1. æ™®é€š`Activity`ç»§æ‰¿`BaseActivity`å³å¯
-2. æ™®é€š`Fragment`ç»§æ‰¿`BaseFragment`å³å¯
-3. æ™®é€š`Adapter`ç»§æ‰¿`BaseRecyclerViewAdapter`å³å¯
-4. å¦‚æœéœ€è¦`pinging`åˆ†é¡µçš„`Adapter`çš„è¯ï¼Œç»§æ‰¿`BasePagingAdapter`
-5. åŸå§‹çš„åˆ—è¡¨è‡ªå¸¦çš„ä¸‹æ‹‰åˆ·æ–°ï¼Œ`paging`åˆ†é¡µå¯ä»¥ç»§æ‰¿`BasePagingFragment`
-6. ä¸å¸¦`pinging`åˆ†é¡µçš„åˆ—è¡¨`Fragment`ç»§æ‰¿`BaseRecyclerViewFragment`
-7. æœ€å¸¸ç”¨çš„åˆ†é¡µåˆ—è¡¨`Fragment`ï¼Œæ”¯æŒå¤šæ ·å¼åˆ·æ–°ï¼ŒåŠ è½½æ›´å¤šï¼Œ`paging3`åˆ†é¡µç»§æ‰¿`BaseSmartPagingFragment`
-8. è¯·æ±‚ä¾§ UIï¼ˆåŠ è½½æ¡† / é”™è¯¯ / ä¸šåŠ¡ç ï¼‰ç”± `BaseActivity` / `BaseFragment` å®ç° **`RequestUi`**ï¼Œç» `NetworkRequestUiBinder` è®¢é˜… ViewModel å†… `NetworkRequestUiHost`ï¼›é”™è¯¯ç»Ÿä¸€ `showError(AppError)`ï¼›ä¸šåŠ¡å¯¼èˆªç”¨ LiveData/Flowï¼ˆå¦‚ç™»å½• `PostLoginRoute`ï¼‰ï¼ŒViewModel/Repository ä¸æŒæœ‰é¡µé¢
-9. `adapter`å¦‚æœéœ€è¦å®ç°è‡ªå®šä¹‰çš„äº‹ä»¶æ§ä»¶ç­‰ï¼Œå¯ä»¥è‡ªå®šä¹‰`BaseViewHolder`ï¼Œç„¶ååœ¨adapterä¸­é‡å†™createViewHoldæ–¹æ³•
-10. æ™®é€š`ViewModel`å¯ä»¥ç›´æ¥ç»§æ‰¿`BaseViewModel`
-11. åˆ†é¡µåˆ—è¡¨çš„`ViewModel`ç»§æ‰¿`PagingViewModel`
-12. æ”¯æŒtabæ ‡ç­¾ä¾§æ»‘åŠŸèƒ½çš„`Fragment`ç»§æ‰¿`BaseViewPagerFragment`ï¼Œå¦‚æœä¸éœ€è¦`Fragment`çš„è¯ç›´æ¥`Activity`ç»§æ‰¿`BaseViewPagerActivity`
-13. è‡ªå®šä¹‰ç›¸æœºå¯ä»¥ç›´æ¥è°ƒç”¨`CameraActivity`ï¼Œè§†é¢‘æ’­æ”¾å¯ä»¥ç›´æ¥è°ƒç”¨`VideoPlayerActivity`ï¼ŒäºŒç»´ç æ‰«æå¯ä»¥ç›´æ¥è°ƒç”¨`CaptureActivity`ï¼ŒWebViewå¯ä»¥ç›´æ¥è°ƒç”¨`WebViewActivity`
+#### UIÏà¹Ø
+1. ÆÕÍ¨`Activity`¼Ì³Ğ`BaseActivity`¼´¿É
+2. ÆÕÍ¨`Fragment`¼Ì³Ğ`BaseFragment`¼´¿É
+3. ÆÕÍ¨`Adapter`¼Ì³Ğ`BaseRecyclerViewAdapter`¼´¿É
+4. Èç¹ûĞèÒª`pinging`·ÖÒ³µÄ`Adapter`µÄ»°£¬¼Ì³Ğ`BasePagingAdapter`
+5. Ô­Ê¼µÄÁĞ±í×Ô´øµÄÏÂÀ­Ë¢ĞÂ£¬`paging`·ÖÒ³¿ÉÒÔ¼Ì³Ğ`BasePagingFragment`
+6. ²»´ø`pinging`·ÖÒ³µÄÁĞ±í`Fragment`¼Ì³Ğ`BaseRecyclerViewFragment`
+7. ×î³£ÓÃµÄ·ÖÒ³ÁĞ±í`Fragment`£¬Ö§³Ö¶àÑùÊ½Ë¢ĞÂ£¬¼ÓÔØ¸ü¶à£¬`paging3`·ÖÒ³¼Ì³Ğ`BaseSmartPagingFragment`
+8. ÇëÇó²à UI£¨¼ÓÔØ¿ò / ´íÎó / ÒµÎñÂë£©ÓÉ `BaseActivity` / `BaseFragment` ÊµÏÖ **`RequestUi`**£¬¾­ `NetworkRequestUiBinder` ¶©ÔÄ ViewModel ÄÚ `NetworkRequestUiHost`£»´íÎóÍ³Ò» `showError(AppError)`£»ÒµÎñµ¼º½ÓÃ LiveData/Flow£¨ÈçµÇÂ¼ `PostLoginRoute`£©£¬ViewModel/Repository ²»³ÖÓĞÒ³Ãæ
+9. `adapter`Èç¹ûĞèÒªÊµÏÖ×Ô¶¨ÒåµÄÊÂ¼ş¿Ø¼şµÈ£¬¿ÉÒÔ×Ô¶¨Òå`BaseViewHolder`£¬È»ºóÔÚadapterÖĞÖØĞ´createViewHold·½·¨
+10. ÆÕÍ¨`ViewModel`¿ÉÒÔÖ±½Ó¼Ì³Ğ`BaseViewModel`
+11. ·ÖÒ³ÁĞ±íµÄ`ViewModel`¼Ì³Ğ`PagingViewModel`
+12. Ö§³Ötab±êÇ©²à»¬¹¦ÄÜµÄ`Fragment`¼Ì³Ğ`BaseViewPagerFragment`£¬Èç¹û²»ĞèÒª`Fragment`µÄ»°Ö±½Ó`Activity`¼Ì³Ğ`BaseViewPagerActivity`
+13. ×Ô¶¨ÒåÏà»ú¿ÉÒÔÖ±½Óµ÷ÓÃ`CameraActivity`£¬ÊÓÆµ²¥·Å¿ÉÒÔÖ±½Óµ÷ÓÃ`VideoPlayerActivity`£¬¶şÎ¬ÂëÉ¨Ãè¿ÉÒÔÖ±½Óµ÷ÓÃ`CaptureActivity`£¬WebView¿ÉÒÔÖ±½Óµ÷ÓÃ`WebViewActivity`
 
-#### æ•°æ®å­˜å‚¨å’Œç½‘ç»œè¯·æ±‚ç›¸å…³
-1. ç½‘ç»œè¯·æ±‚ï¼šæ–°ä»£ç æ¨è `DefaultNetworkRepository`ï¼ˆ`core` åŒ…ï¼Œ`Flow<RequestResult<T>>`ï¼‰ã€‚æ—§ Rx `RepositoryImpl` ä»ä¿ç•™ï¼›è¿‡æ¸¡å±‚ `FlowRepositoryImpl` å·²åˆ é™¤ã€‚Demo è§ `SampleCoreNetworkRepository`
-2. ç½‘ç»œè¯·æ±‚å°è£…`ApiRetrofit`ï¼Œé€šè¿‡`Builder`æ¨¡å¼åˆ›å»ºï¼Œå…·ä½“`Api`å‚è€ƒ`ApiRetrofit.Builder`
-3. å¦‚æœæœ¬åœ°å­˜å‚¨æ•°æ®çš„è¯å¯ä»¥ä½¿ç”¨`MMKVHelper`ä»£æ›¿`SharedPreferences`ï¼Œæ•°æ®åº“çš„è¯ï¼Œå¯ä»¥ç»§æ‰¿`BaseRoomDao`ã€‚**Rx æ ˆ**ç”¨ `RoomRepositoryImpl`ï¼›**åç¨‹æ ˆ**ç”¨ `io.coderf.arklab.core.db.RoomDataRepository`ï¼ˆå¯¹é½ç½‘ç»œå±‚ `DefaultNetworkRepository`ï¼ŒRoom åŸç”Ÿ `*Suspend`ï¼Œè¿”å› `Flow<RequestResult>`ï¼Œä¸¤å¥—å¹¶è¡Œä¸æ¡¥æ¥ï¼‰ã€‚é™„ä»¶æ¨¡ç‰ˆè§ `AttachmentDao` / `AttachmentDatabase` / `AttachmentRepositoryImpl`ï¼šä¸šåŠ¡æŒæœ‰ `mobileId`ï¼ŒæœåŠ¡ç«¯ç”¨ `fileId`ï¼Œä¸å†ç”¨ `mainId`/`fieldName` åæŸ¥ã€‚DAO åŠ  `@RoomObservedEntity` å KSP ç”Ÿæˆ `XxxDaoRawQueryBridge`ã€‚Mavenï¼š`core-base:1.7.2` + `core-db:1.6.2` + `room-processor:1.2.0`ï¼Œè¯¦è§ [core-db/README.md](core-db/README.md)ã€[UPGRADE.md Â§0.4.2](UPGRADE.md#042-é™„ä»¶æ¨¡å‹ç®€åŒ–base-171--db-162) / [Â§0.4.3](UPGRADE.md#043-é™„ä»¶å°å›¾ä¼˜å…ˆç¼©ç•¥å›¾base-172--ui-377)
-4. æ‰€æœ‰çš„`Retrofit`çš„ç½‘ç»œè¯·æ±‚ä»£ç†æ¥å£éƒ½éœ€è¦é›†æˆ`BaseApiService`
-5. ç½‘ç»œè¯·æ±‚åˆ†é¡µ`PagingSource`ç»§æ‰¿`PagingSource`ï¼Œåç¨‹`flow`æ–¹å¼ç»§æ‰¿`FlowPagingSource`ï¼ˆå‡åœ¨ `core-network`ï¼‰ï¼›æ•°æ®åº“å­˜å‚¨åˆ†é¡µç»§æ‰¿`RxRoomPagingSource`ï¼ˆ`core-db`ï¼ŒæŸ¥è¯¢å‚æ•°ç”¨ `RoomPagingQuery`ï¼‰
-6. `RetryService`ï¼šå°è£…äº†ç½‘ç»œè¯·æ±‚æ‹¦æˆªé‡è¯•æœºåˆ¶ï¼Œå¯ä»¥åœ¨`Repository`ä¸­è®¾ç½®æˆ–è€…`ApiRetrofit`ä¸­é…ç½®ï¼Œ`ApiRetrofit`é…ç½®ä¸ºé»˜è®¤çš„ï¼Œ`Repository`ä¸­ä¸ºå½“å‰ç±»è¦†ç›–é»˜è®¤çš„é…ç½®
-7. `FlowRetryService`ï¼šåç¨‹æ–¹å¼çš„ç½‘ç»œè¯·æ±‚é‡è¯•ï¼Œå¯ä»¥åœ¨`Repository`ä¸­è®¾ç½®æˆ–è€…`ApiRetrofit`ä¸­é…ç½®ï¼Œ`ApiRetrofit`é…ç½®ä¸ºé»˜è®¤çš„ï¼Œ`Repository`ä¸­ä¸ºå½“å‰ç±»è¦†ç›–é»˜è®¤çš„é…ç½®
-8. `RoomRepositoryImpl`ï¼šæ•°æ®åº“çš„ä¸€äº›å¸¸ç”¨æ–¹æ³•
-9. `PagingRepositoryImpl`ï¼š`paging3`åˆ†é¡µçš„`Repository`å±‚å°è£…
-10. åç¨‹åˆ†é¡µï¼š`NetworkPagingRepository` + `NetworkFlowPagingViewModel`ï¼ˆ`core` åŒ…ï¼‰
-11. Rx åˆ†é¡µï¼š`PagingRepositoryImpl` + `PagingViewModel`ï¼ˆ`common.repository`ï¼Œä»ä¿ç•™ï¼‰
-#### å¸¸ç”¨å·¥å…·ç±»
-1. `AppManager`ï¼šè·å–`Activity`æ ˆä¿¡æ¯å’Œè·å–Appç‰ˆæœ¬å·ã€ç‰ˆæœ¬åç§°ã€Appæ˜¯å¦åœ¨å‰å°è¿è¡Œç­‰API
-2. `AppSettingHelper`ï¼šå¯ä»¥è®¾ç½®åŸºç¡€çš„appæ˜¯å¦é¦–æ¬¡è¿è¡Œç­‰æ–¹æ³•
-3. `ConstantsHelper`ï¼šåŸºç¡€çš„ä¸€äº›å¸¸ç”¨é™æ€å¸¸é‡
-4. `MobileHelper`ï¼šè·å–æ‰‹æœºçš„ä¸€äº›ä¿¡æ¯ï¼Œæ¯”å¦‚è·å–æ‰‹æœºçš„IMEIã€MACåœ°å€ã€æ‰‹æœºå‹å·ã€æ‰‹æœºç³»ç»Ÿç‰ˆæœ¬ã€æ‰‹æœºåˆ†è¾¨ç‡ã€æ‰‹æœºå”¯ä¸€æ ‡è¯†ç¬¦ç­‰
-5. `RegexUtils`ï¼šæ­£åˆ™è¡¨è¾¾å¼ï¼ˆä½äº `core-utils`ï¼ŒåŒ…å `io.coderf.arklab.core.utils`ï¼‰
-6. `AuthManager`ï¼šç™»å½•ç›¸å…³çš„ä¸€äº›è°ƒç”¨ï¼Œ`Fragment`ã€`Activity`æŒæœ‰çš„å¯¹è±¡ï¼Œå¯ä»¥ç›´æ¥è·å–ä½¿ç”¨
-7. `UIController`ï¼šæ§åˆ¶`Fragment`ã€`Activity`ä¸€äº›`dialog`ã€`toast`ã€`loading`ç­‰
-8. `PropertiesModule`ï¼šåŠ è½½Propertieså¯¹è±¡å¯ä»¥è·å–é…ç½®æ–‡ä»¶é‡Œçš„å‚æ•°
-9. `CacheUtil`ï¼šç¼“å­˜å·¥å…·
-10. `CollectionUtil`ï¼šé›†åˆå·¥å…·ç±»
-11. `DownloadManger`ï¼šä¸‹è½½ç®¡ç†å·¥å…·
-12. `PermissionManager`ï¼šç³»ç»Ÿæƒé™ç®¡ç†å·¥å…·ç±»
-13. `NetworkStateUtil`ï¼šç½‘ç»œçŠ¶æ€å·¥å…·ç±»
-14. `StringUtil`: å­—ç¬¦ä¸²å·¥å…·ç±»
-15. `RxMenuView`ï¼š`Toolbar`èœå•æ§ä»¶ç‚¹å‡»æ‹¦æˆªæ—¶é—´ï¼Œå¯æ‹¦æˆªå¿«é€Ÿç‚¹å‡»äº‹ä»¶
-16. `RxView`ï¼š`View`ç‚¹å‡»æ‹¦æˆªæ—¶é—´ï¼Œå¯æ‹¦æˆªå¿«é€Ÿç‚¹å‡»äº‹ä»¶
-17. `QRCodeUtil`ï¼šäºŒç»´ç å·¥å…·ç±»
-18. `MathUtil`ï¼šæ•°å­¦è®¡ç®—å·¥å…·ç±»ï¼ŒåŠ å‡ä¹˜é™¤å’Œä¸€äº›æ ¼å¼åŒ–ï¼Œä¿ç•™å°æ•°ä½æ•°ç­‰
-19. `NumberUtil`ï¼šæ•°å­—å¤§å°å†™è½¬åŒ–ï¼Œæ•°å­—æ ¼å¼åŒ–ç­‰
-20. `KeyBoardUtil`ï¼šè½¯é”®ç›˜æ§åˆ¶ã€å”¤é†’ã€å…³é—­å’Œç›‘å¬ç­‰
-21. `GeoMapUtil`ï¼šåæ ‡è½¬åŒ–å·¥å…·
-22. `FastBlur`ï¼šé«˜æ–¯æ¨¡ç³Šå·¥å…·ç±»
-23. `ThreadExecutor`ï¼šçº¿ç¨‹æ± å·¥å…·ç±»
-24. `ThreadExecutorBounded`ï¼šçº¿ç¨‹æ± å·¥å…·ç±»ï¼Œè¾¹ç•Œæ›´å¤§é»˜è®¤ä¸º128
+#### Êı¾İ´æ´¢ºÍÍøÂçÇëÇóÏà¹Ø
+1. ÍøÂçÇëÇó£ºĞÂ´úÂëÍÆ¼ö `DefaultNetworkRepository`£¨`core` °ü£¬`Flow<RequestResult<T>>`£©¡£¾É Rx `RepositoryImpl` ÈÔ±£Áô£»¹ı¶É²ã `FlowRepositoryImpl` ÒÑÉ¾³ı¡£Demo ¼û `SampleCoreNetworkRepository`
+2. ÍøÂçÇëÇó·â×°`ApiRetrofit`£¬Í¨¹ı`Builder`Ä£Ê½´´½¨£¬¾ßÌå`Api`²Î¿¼`ApiRetrofit.Builder`
+3. Èç¹û±¾µØ´æ´¢Êı¾İµÄ»°¿ÉÒÔÊ¹ÓÃ`MMKVHelper`´úÌæ`SharedPreferences`£¬Êı¾İ¿âµÄ»°£¬¿ÉÒÔ¼Ì³Ğ`BaseRoomDao`¡£**Rx Õ»**ÓÃ `RoomRepositoryImpl`£»**Ğ­³ÌÕ»**ÓÃ `io.coderf.arklab.core.db.RoomDataRepository`£¨¶ÔÆëÍøÂç²ã `DefaultNetworkRepository`£¬Room Ô­Éú `*Suspend`£¬·µ»Ø `Flow<RequestResult>`£¬Á½Ì×²¢ĞĞ²»ÇÅ½Ó£©¡£¸½¼şÄ£°æ¼û `AttachmentDao` / `AttachmentDatabase` / `AttachmentRepositoryImpl`£ºÒµÎñ³ÖÓĞ `mobileId`£¬·şÎñ¶ËÓÃ `fileId`£¬²»ÔÙÓÃ `mainId`/`fieldName` ·´²é¡£DAO ¼Ó `@RoomObservedEntity` ºó KSP Éú³É `XxxDaoRawQueryBridge`¡£Maven£º`core-base:1.7.2` + `core-db:1.6.2` + `room-processor:1.2.0`£¬Ïê¼û [core-db/README.md](core-db/README.md)¡¢[UPGRADE.md ¡ì0.4.2](UPGRADE.md#042-¸½¼şÄ£ĞÍ¼ò»¯base-171--db-162) / [¡ì0.4.3](UPGRADE.md#043-¸½¼şĞ¡Í¼ÓÅÏÈËõÂÔÍ¼base-172--ui-377)
+4. ËùÓĞµÄ`Retrofit`µÄÍøÂçÇëÇó´úÀí½Ó¿Ú¶¼ĞèÒª¼¯³É`BaseApiService`
+5. ÍøÂçÇëÇó·ÖÒ³`PagingSource`¼Ì³Ğ`PagingSource`£¬Ğ­³Ì`flow`·½Ê½¼Ì³Ğ`FlowPagingSource`£¨¾ùÔÚ `core-network`£©£»Êı¾İ¿â´æ´¢·ÖÒ³¼Ì³Ğ`RxRoomPagingSource`£¨`core-db`£¬²éÑ¯²ÎÊıÓÃ `RoomPagingQuery`£©
+6. `RetryService`£º·â×°ÁËÍøÂçÇëÇóÀ¹½ØÖØÊÔ»úÖÆ£¬¿ÉÒÔÔÚ`Repository`ÖĞÉèÖÃ»òÕß`ApiRetrofit`ÖĞÅäÖÃ£¬`ApiRetrofit`ÅäÖÃÎªÄ¬ÈÏµÄ£¬`Repository`ÖĞÎªµ±Ç°Àà¸²¸ÇÄ¬ÈÏµÄÅäÖÃ
+7. `FlowRetryService`£ºĞ­³Ì·½Ê½µÄÍøÂçÇëÇóÖØÊÔ£¬¿ÉÒÔÔÚ`Repository`ÖĞÉèÖÃ»òÕß`ApiRetrofit`ÖĞÅäÖÃ£¬`ApiRetrofit`ÅäÖÃÎªÄ¬ÈÏµÄ£¬`Repository`ÖĞÎªµ±Ç°Àà¸²¸ÇÄ¬ÈÏµÄÅäÖÃ
+8. `RoomRepositoryImpl`£ºÊı¾İ¿âµÄÒ»Ğ©³£ÓÃ·½·¨
+9. `PagingRepositoryImpl`£º`paging3`·ÖÒ³µÄ`Repository`²ã·â×°
+10. Ğ­³Ì·ÖÒ³£º`NetworkPagingRepository` + `NetworkFlowPagingViewModel`£¨`core` °ü£©
+11. Rx ·ÖÒ³£º`PagingRepositoryImpl` + `PagingViewModel`£¨`common.repository`£¬ÈÔ±£Áô£©
+#### ³£ÓÃ¹¤¾ßÀà
+1. `AppManager`£º»ñÈ¡`Activity`Õ»ĞÅÏ¢ºÍ»ñÈ¡App°æ±¾ºÅ¡¢°æ±¾Ãû³Æ¡¢AppÊÇ·ñÔÚÇ°Ì¨ÔËĞĞµÈAPI
+2. `AppSettingHelper`£º¿ÉÒÔÉèÖÃ»ù´¡µÄappÊÇ·ñÊ×´ÎÔËĞĞµÈ·½·¨
+3. `ConstantsHelper`£º»ù´¡µÄÒ»Ğ©³£ÓÃ¾²Ì¬³£Á¿
+4. `MobileHelper`£º»ñÈ¡ÊÖ»úµÄÒ»Ğ©ĞÅÏ¢£¬±ÈÈç»ñÈ¡ÊÖ»úµÄIMEI¡¢MACµØÖ·¡¢ÊÖ»úĞÍºÅ¡¢ÊÖ»úÏµÍ³°æ±¾¡¢ÊÖ»ú·Ö±æÂÊ¡¢ÊÖ»úÎ¨Ò»±êÊ¶·ûµÈ
+5. `RegexUtils`£ºÕıÔò±í´ïÊ½£¨Î»ÓÚ `core-utils`£¬°üÃû `io.coderf.arklab.core.utils`£©
+6. `AuthManager`£ºµÇÂ¼Ïà¹ØµÄÒ»Ğ©µ÷ÓÃ£¬`Fragment`¡¢`Activity`³ÖÓĞµÄ¶ÔÏó£¬¿ÉÒÔÖ±½Ó»ñÈ¡Ê¹ÓÃ
+7. `UIController`£º¿ØÖÆ`Fragment`¡¢`Activity`Ò»Ğ©`dialog`¡¢`toast`¡¢`loading`µÈ
+8. `PropertiesModule`£º¼ÓÔØProperties¶ÔÏó¿ÉÒÔ»ñÈ¡ÅäÖÃÎÄ¼şÀïµÄ²ÎÊı
+9. `CacheUtil`£º»º´æ¹¤¾ß
+10. `CollectionUtil`£º¼¯ºÏ¹¤¾ßÀà
+11. `DownloadManger`£ºÏÂÔØ¹ÜÀí¹¤¾ß
+12. `PermissionManager`£ºÏµÍ³È¨ÏŞ¹ÜÀí¹¤¾ßÀà
+13. `NetworkStateUtil`£ºÍøÂç×´Ì¬¹¤¾ßÀà
+14. `StringUtil`: ×Ö·û´®¹¤¾ßÀà
+15. `RxMenuView`£º`Toolbar`²Ëµ¥¿Ø¼şµã»÷À¹½ØÊ±¼ä£¬¿ÉÀ¹½Ø¿ìËÙµã»÷ÊÂ¼ş
+16. `RxView`£º`View`µã»÷À¹½ØÊ±¼ä£¬¿ÉÀ¹½Ø¿ìËÙµã»÷ÊÂ¼ş
+17. `QRCodeUtil`£º¶şÎ¬Âë¹¤¾ßÀà
+18. `MathUtil`£ºÊıÑ§¼ÆËã¹¤¾ßÀà£¬¼Ó¼õ³Ë³ıºÍÒ»Ğ©¸ñÊ½»¯£¬±£ÁôĞ¡ÊıÎ»ÊıµÈ
+19. `NumberUtil`£ºÊı×Ö´óĞ¡Ğ´×ª»¯£¬Êı×Ö¸ñÊ½»¯µÈ
+20. `KeyBoardUtil`£ºÈí¼üÅÌ¿ØÖÆ¡¢»½ĞÑ¡¢¹Ø±ÕºÍ¼àÌıµÈ
+21. `GeoMapUtil`£º×ø±ê×ª»¯¹¤¾ß
+22. `FastBlur`£º¸ßË¹Ä£ºı¹¤¾ßÀà
+23. `ThreadExecutor`£ºÏß³Ì³Ø¹¤¾ßÀà
+24. `ThreadExecutorBounded`£ºÏß³Ì³Ø¹¤¾ßÀà£¬±ß½ç¸ü´óÄ¬ÈÏÎª128
 
-#### è‡ªå®šä¹‰Viewç›¸å…³
+#### ×Ô¶¨ÒåViewÏà¹Ø
 
-å®˜æ–¹å·²æœ‰åœ†è§’ / æè¾¹çš„åœºæ™¯ï¼Œç›´æ¥ç”¨ Material3 æ§ä»¶ï¼ˆ**1.1.1 å·²åˆ é™¤å¯¹åº”åŒ…è£…ç±»**ï¼‰ï¼š
+¹Ù·½ÒÑÓĞÔ²½Ç / Ãè±ßµÄ³¡¾°£¬Ö±½ÓÓÃ Material3 ¿Ø¼ş£¨**1.1.1 ÒÑÉ¾³ı¶ÔÓ¦°ü×°Àà**£©£º
 
-| åœºæ™¯ | ä½¿ç”¨ |
+| ³¡¾° | Ê¹ÓÃ |
 |------|------|
-| åœ†è§’ / æè¾¹æŒ‰é’® | `MaterialButton`ï¼ˆ`app:cornerRadius` / `app:backgroundTint` / `app:stroke*`ï¼‰ |
-| åœ†è§’ / åœ†å½¢å›¾ç‰‡ | `ShapeableImageView`ï¼ˆ`app:shapeAppearanceOverlay`ï¼Œå¦‚ `CircleShapeAppearance` / `RoundedShapeAppearanceL`ï¼›æè¾¹ `app:strokeColor` / `app:strokeWidth`ï¼‰ã€‚**å¡«è‰²ç”¨ `android:background`ï¼Œä¸è¦ç”¨ `app:backgroundTint`** |
-| å¯†é“ºè¾“å…¥æ¡† | `TextInputLayout` + `TextInputEditText`ï¼ˆå¯ç”¨ `Widget.App.TextInputLayout.Dense`ï¼‰ |
-| ä»£ç é‡Œç»™ä»»æ„ View é“ºåœ†è§’åº• | `CornerShapeHelper.apply` / `applyFromAttributes`ï¼ˆè¯» `ShapeView`ï¼š`radius` / `bgColor` / `stroke*`ï¼‰ |
+| Ô²½Ç / Ãè±ß°´Å¥ | `MaterialButton`£¨`app:cornerRadius` / `app:backgroundTint` / `app:stroke*`£© |
+| Ô²½Ç / Ô²ĞÎÍ¼Æ¬ | `ShapeableImageView`£¨`app:shapeAppearanceOverlay`£¬Èç `CircleShapeAppearance` / `RoundedShapeAppearanceL`£»Ãè±ß `app:strokeColor` / `app:strokeWidth`£©¡£**ÌîÉ«ÓÃ `android:background`£¬²»ÒªÓÃ `app:backgroundTint`** |
+| ÃÜÆÌÊäÈë¿ò | `TextInputLayout` + `TextInputEditText`£¨¿ÉÓÃ `Widget.App.TextInputLayout.Dense`£© |
+| ´úÂëÀï¸øÈÎÒâ View ÆÌÔ²½Çµ× | `CornerShapeHelper.apply` / `applyFromAttributes`£¨¶Á `ShapeView`£º`radius` / `bgColor` / `stroke*`£© |
 
-å®˜æ–¹ **æ²¡æœ‰** XML åœ†è§’ã€å¡«å……ã€æè¾¹å±æ€§ï¼Œå› æ­¤ä»ä¿ç•™å°è£…ï¼ˆèƒŒæ™¯ä¸º `MaterialShapeDrawable`ï¼‰ï¼š
+¹Ù·½ **Ã»ÓĞ** XML Ô²½Ç¡¢Ìî³ä¡¢Ãè±ßÊôĞÔ£¬Òò´ËÈÔ±£Áô·â×°£¨±³¾°Îª `MaterialShapeDrawable`£©£º
 
-1. `AutoNextLineLinearlayout`ï¼šè‡ªåŠ¨æ¢è¡Œçš„`ViewGroup`
-2. `CircleTextView`ï¼šåœ†å½¢ `MaterialTextView`ï¼ŒXML `bgColor` / `stroke*`ï¼Œæ–‡å­—æŒ‰åœ†å¿ƒå±…ä¸­
-3. `CirclePaddingImageView`ï¼šåœ†å½¢**èƒŒæ™¯** + `android:padding` å†…ç¼©å›¾æ ‡ï¼ˆçˆ¶ç±» `AppCompatImageView`ï¼Œä¸æ˜¯è£åœ†å¤´åƒï¼›å¤´åƒç”¨ `ShapeableImageView` + `CircleShapeAppearance`ï¼‰
-4. `CustomScrollView`ï¼šæ”¯æŒä¸‹æ‹‰å›å¼¹æ•ˆæœçš„ `ScrollView`
-5. `Code`ï¼šç”Ÿæˆå›¾å½¢éªŒè¯ç çš„å·¥å…·ç±»ï¼Œå¯ç»˜åˆ¶éšæœºå­—ç¬¦å’Œå¹²æ‰°çº¿
-6. `DividerView`ï¼šå¯ç»˜åˆ¶æ¨ªçº¿æˆ–ç«–çº¿çš„è™šçº¿æ§ä»¶ï¼ˆKotlin å®ç°ï¼‰
-7. `CircleProgressBar`ï¼šåœ†å½¢è¿›åº¦æ¡ï¼Œæ”¯æŒæ–‡å­—æ˜¾ç¤ºã€åŠ¨ç”»è¿›åº¦æ›´æ–°
-8. `GradationRectTextView`ï¼šæ”¯æŒæ¸å˜èƒŒæ™¯ã€å·¦å³æ–‡å­—æ ·å¼ä¸åŒçš„ `TextView`
-9. `GridMenuView`ï¼šåˆ†é¡µç½‘æ ¼èœå•ï¼Œç»§æ‰¿ `CornerConstraintLayout`ï¼ˆ`Kotlin`ï¼‰
-10. `ClearableEditText` / `PasswordEditText`ï¼šåœ†è§’è¾“å…¥ + æ¸…é™¤ / æ˜æ–‡åˆ‡æ¢ï¼ˆcompound drawableï¼›å®˜æ–¹ `TextInputLayout` æ— æ³•åŒæ—¶æ¸… + çœ¼ï¼‰
-11. `CornerLabelView`ï¼šä¸‰è§’å½¢è§’æ ‡æ§ä»¶ï¼Œå¯æ˜¾ç¤ºåœ¨å››ä¸ªè§’è½ï¼Œæ”¯æŒæ–‡å­—å’ŒèƒŒæ™¯è‰²
-12. `CornerTextView`ï¼šåœ†è§’ `MaterialTextView`ï¼ŒXML `radius` / `bgColor` / `stroke*`
-13. `HorizontalProgressBar`ï¼šæ°´å¹³æ¨ªå‘è¿›åº¦æ¡ï¼Œæ”¯æŒåœ†è§’èƒŒæ™¯å’Œæ–‡å­—æ˜¾ç¤º
-14. `ConfigurableWebView`ï¼šå¯é…ç½®çš„ `WebView`ï¼Œæ”¯æŒåŠ è½½æœ¬åœ° assets æˆ–ç½‘ç»œ URL
-15. `AutoTextView`ï¼šå¸¦ 3D ç¿»è½¬åŠ¨ç”»çš„æ–‡å­—åˆ‡æ¢æ§ä»¶ï¼ˆåŸºäº `TextSwitcher`ï¼‰
-16. `CustomSearchEditText`ï¼šå¸¦æœç´¢å›¾æ ‡å’Œæ¸…é™¤åŠŸèƒ½çš„ `EditText`ï¼Œæ”¯æŒåœ†è§’èƒŒæ™¯
-17. `CornerConstraintLayout`ï¼šåœ†è§’ `ConstraintLayout`ï¼ŒXML `radius` / `bgColor` / `stroke*`
-18. `BannerView`ï¼šè½®æ’­å›¾æ§ä»¶ï¼Œæ”¯æŒåœ†ç‚¹æŒ‡ç¤ºå™¨ã€è‡ªåŠ¨è½®æ’­ã€åœ†è§’è£å‰ª
-19. `StarBar`ï¼šè‡ªå®šä¹‰æ˜Ÿæ˜Ÿè¯„åˆ†æ§ä»¶ï¼Œæ”¯æŒå®å¿ƒ/ç©ºå¿ƒäº”è§’æ˜Ÿã€æ•´æ•°/å°æ•°è¯„åˆ†ã€è§¦æ‘¸æ»‘åŠ¨è¯„åˆ†ç­‰åŠŸèƒ½
-20. `IconDotTextView`ï¼šå›¾æ ‡+æ–‡å­—+æ•°å­—è§’æ ‡çš„ç»„åˆæ§ä»¶ï¼Œæ”¯æŒå¤šç§å¸ƒå±€æ–¹å‘ï¼ˆå›¾æ ‡ä¸Šä¸‹ä½ç½®ï¼‰å’Œè§’æ ‡è‡ªå®šä¹‰
-21. `SquareLabelView`ï¼šå·¦ä¾§å¸¦æ–¹å—çš„`TextView`ï¼Œç”¨äºæ¨¡å—åç§°ç­‰åœºæ™¯ï¼Œæ”¯æŒæ–¹å—å½¢çŠ¶ï¼ˆçŸ©å½¢ã€æ¤­åœ†ã€åœ†è§’çŸ©å½¢ï¼‰å’Œä½ç½®è‡ªå®šä¹‰
-22. `IconLabelValueView`ï¼šå›¾æ ‡-æ ‡ç­¾-å€¼-å›¾æ ‡çš„å¸ƒå±€è§†å›¾ï¼Œå¸¸ç”¨äºè®¾ç½®é¡¹æˆ–è¯¦æƒ…å±•ç¤ºï¼Œæ”¯æŒå·¦å³å›¾æ ‡å¼€å…³ã€åº•éƒ¨è¾¹æ¡†ã€å€¼å¯¹é½æ–¹å¼ç­‰é…ç½®
-23. `VerificationCodeInputView`ï¼šéªŒè¯ç è¾“å…¥æ§ä»¶ï¼Œæ”¯æŒå¤šæ ¼ç‹¬ç«‹è¾“å…¥æ¡†ã€å…‰æ ‡é—ªçƒã€è¾“å…¥ç±»å‹é™åˆ¶ï¼ˆæ•°å­—ã€å­—æ¯ç­‰ï¼‰ã€è¾¹æ¡†æ ·å¼è‡ªå®šä¹‰
-24. `ScalingTextView`ï¼šå¯å±•å¼€/æ”¶èµ·çš„æ–‡æœ¬æ§ä»¶ï¼Œé»˜è®¤æ˜¾ç¤ºæŒ‡å®šè¡Œæ•°ï¼Œæ”¯æŒâ€œæŸ¥çœ‹å…¨æ–‡/æ”¶èµ·å…¨æ–‡â€ç‚¹å‡»åˆ‡æ¢
-25. `LoadingProgressDialog`ï¼šåŠ è½½è¿›åº¦å¯¹è¯æ¡†ï¼Œæ”¯æŒåŠ¨æ€çœç•¥å·åŠ¨ç”»æ•ˆæœã€è‡ªå®šä¹‰æç¤ºæ–‡å­—ã€å¯è®¾ç½®æ˜¯å¦å¯å–æ¶ˆ
-26. `DatePickDialog`ï¼šå¹´æœˆæ—¥é€‰æ‹©å¯¹è¯æ¡†ï¼Œæ”¯æŒå¤šç§æ—¥æœŸæ¨¡å¼ï¼ˆå¹´æœˆæ—¥ã€å¹´æœˆã€å¹´ä»½ã€æ—¶é—´ç­‰ï¼‰ã€è‡ªå®šä¹‰æ—¥æœŸèŒƒå›´å’Œæ ‡ç­¾
-27. `BottomSheetDialog`ï¼šåº•éƒ¨é€‰æ‹©æ¡†ï¼ˆMaterial `BottomSheetDialog`ï¼‰ï¼Œæ”¯æŒåˆ—è¡¨é€‰é¡¹æ˜¾ç¤ºã€è‡ªå®šä¹‰åˆ†å‰²çº¿æ ·å¼å’Œå–æ¶ˆæŒ‰é’®
-28. `MenuDialog`ï¼šåº•éƒ¨èœå•å¯¹è¯æ¡†ï¼ŒåŠŸèƒ½ç±»ä¼¼Â·BottomSheetDialogÂ·ä½†ä½¿ç”¨ä¼ ç»ŸDialogå®ç°ï¼Œæ”¯æŒè‡ªå®šä¹‰ä½ç½®å’Œæ ·å¼
-29. `ImageSaveDialog`ï¼šå›¾ç‰‡ä¿å­˜é€‰æ‹©å¯¹è¯æ¡†ï¼Œæä¾›â€œä¿å­˜åˆ°æœ¬åœ°â€ç­‰é€‰é¡¹ï¼Œç”¨äºå›¾ç‰‡ä¿å­˜åœºæ™¯
-30. `EmptyLayout`ï¼šç©ºç™½å ä½å¸ƒå±€æ§ä»¶ï¼Œå¯æ˜¾ç¤ºåŠ è½½ä¸­ã€åŠ è½½å¤±è´¥ã€æ— æ•°æ®ç­‰çŠ¶æ€ï¼Œæ”¯æŒè‡ªå®šä¹‰å›¾æ ‡å’Œç‚¹å‡»é‡è¯•
-31. `InputDialog`ï¼šå•è¡Œè¾“å…¥å¯¹è¯æ¡†ï¼Œæ”¯æŒæ–‡æœ¬è¾“å…¥ã€æœ€å¤§å­—æ•°é™åˆ¶ã€è¾“å…¥ç±»å‹è®¾ç½®å’Œæç¤ºæ–‡å­—
-32. `EditAreaDialog`ï¼šå¤šè¡Œæ–‡æœ¬è¾“å…¥å¯¹è¯æ¡†ï¼ŒåŠŸèƒ½ç±»ä¼¼`InputDialog`ä½†æ”¯æŒå¤šè¡Œæ–‡æœ¬ç¼–è¾‘
-33. `UpdateMessageDialog`ï¼šåº”ç”¨æ›´æ–°æç¤ºå¯¹è¯æ¡†ï¼Œæ˜¾ç¤ºç‰ˆæœ¬ä¿¡æ¯å’Œæ›´æ–°å†…å®¹ï¼Œæ”¯æŒé“¾æ¥è¯†åˆ«å’Œæµé‡æé†’
-34. `ConfirmDialog`ï¼šç¡®è®¤å¯¹è¯æ¡†ï¼Œæä¾›ç¡®å®šå’Œå–æ¶ˆæŒ‰é’®ï¼Œæ”¯æŒå¯Œæ–‡æœ¬å†…å®¹æ˜¾ç¤ºå’ŒæŒ‰é’®å¯è§æ€§æ§åˆ¶
-35. `ProgressBarDialog`ï¼šè¿›åº¦æ¡å¯¹è¯æ¡†ï¼Œæ”¯æŒåœ†å½¢å’Œæ°´å¹³ä¸¤ç§è¿›åº¦æ¡æ ·å¼ï¼Œå¯è‡ªå®šä¹‰è¿›åº¦æ¡å¤–è§‚å’ŒæŒ‰é’®
-36. `MessageDialog`ï¼šä¿¡æ¯æç¤ºå¯¹è¯æ¡†ï¼Œå•æŒ‰é’®è®¾è®¡ï¼Œç”¨äºç®€å•ä¿¡æ¯æç¤ºåœºæ™¯
-37. `ProtectionGuidelinesDialog`ï¼šå¯åŠ¨é¡µçš„ç”¨æˆ·æƒé™éšç§æŒ‡å¼•ï¼Œè¯·æ±‚æƒé™æç¤ºå¼¹æ¡†ï¼Œæ”¯æŒå¯Œæ–‡æœ¬å†…å®¹ã€è‡ªå®šä¹‰æŒ‰é’®æ–‡å­—å’Œæ ·å¼ï¼Œç”¨äºæƒé™ç”³è¯·åœºæ™¯
-38. `CascadeSinglePopupWindow`ï¼šå•é€‰é¡¹çº§è”å¼¹çª—
-39. `PopupView`ï¼šæ™®é€šä¸‹æ‹‰é€‰æ‹©å¼¹çª—ï¼ˆå•é€‰ï¼‰
-40. `TextPopupView`ï¼šè‡ªå®šä¹‰æ–‡æœ¬+å›¾æ ‡ç»„åˆæ§ä»¶
-41. `MultiPopupView`ï¼šå¤šé€‰ï¼ˆéçº§è”ï¼‰å¼¹çª—
-42. `TreePopupView`ï¼šäºŒçº§æ ‘å½¢é€‰æ‹©å¼¹çª—
-43. `CascadeMultiPopupWindow`ï¼šå¤šé€‰é¡¹çº§è”å¼¹çª—
-44. `TxSlideRecyclerView`ï¼šæ”¯æŒä¾§æ»‘çš„`RecyclerView`
-45. `SpeakButton`ï¼šä»¿å¾®ä¿¡çš„é•¿æŒ‰è¯´è¯View
-46. `VoiceView`ï¼šè¯­éŸ³æ’­æ”¾æ¡æ§ä»¶
+1. `AutoNextLineLinearlayout`£º×Ô¶¯»»ĞĞµÄ`ViewGroup`
+2. `CircleTextView`£ºÔ²ĞÎ `MaterialTextView`£¬XML `bgColor` / `stroke*`£¬ÎÄ×Ö°´Ô²ĞÄ¾ÓÖĞ
+3. `CirclePaddingImageView`£ºÔ²ĞÎ**±³¾°** + `android:padding` ÄÚËõÍ¼±ê£¨¸¸Àà `AppCompatImageView`£¬²»ÊÇ²ÃÔ²Í·Ïñ£»Í·ÏñÓÃ `ShapeableImageView` + `CircleShapeAppearance`£©
+4. `CustomScrollView`£ºÖ§³ÖÏÂÀ­»Øµ¯Ğ§¹ûµÄ `ScrollView`
+5. `Code`£ºÉú³ÉÍ¼ĞÎÑéÖ¤ÂëµÄ¹¤¾ßÀà£¬¿É»æÖÆËæ»ú×Ö·ûºÍ¸ÉÈÅÏß
+6. `DividerView`£º¿É»æÖÆºáÏß»òÊúÏßµÄĞéÏß¿Ø¼ş£¨Kotlin ÊµÏÖ£©
+7. `CircleProgressBar`£ºÔ²ĞÎ½ø¶ÈÌõ£¬Ö§³ÖÎÄ×ÖÏÔÊ¾¡¢¶¯»­½ø¶È¸üĞÂ
+8. `GradationRectTextView`£ºÖ§³Ö½¥±ä±³¾°¡¢×óÓÒÎÄ×ÖÑùÊ½²»Í¬µÄ `TextView`
+9. `GridMenuView`£º·ÖÒ³Íø¸ñ²Ëµ¥£¬¼Ì³Ğ `CornerConstraintLayout`£¨`Kotlin`£©
+10. `ClearableEditText` / `PasswordEditText`£ºÔ²½ÇÊäÈë + Çå³ı / Ã÷ÎÄÇĞ»»£¨compound drawable£»¹Ù·½ `TextInputLayout` ÎŞ·¨Í¬Ê±Çå + ÑÛ£©
+11. `CornerLabelView`£ºÈı½ÇĞÎ½Ç±ê¿Ø¼ş£¬¿ÉÏÔÊ¾ÔÚËÄ¸ö½ÇÂä£¬Ö§³ÖÎÄ×ÖºÍ±³¾°É«
+12. `CornerTextView`£ºÔ²½Ç `MaterialTextView`£¬XML `radius` / `bgColor` / `stroke*`
+13. `HorizontalProgressBar`£ºË®Æ½ºáÏò½ø¶ÈÌõ£¬Ö§³ÖÔ²½Ç±³¾°ºÍÎÄ×ÖÏÔÊ¾
+14. `ConfigurableWebView`£º¿ÉÅäÖÃµÄ `WebView`£¬Ö§³Ö¼ÓÔØ±¾µØ assets »òÍøÂç URL
+15. `AutoTextView`£º´ø 3D ·­×ª¶¯»­µÄÎÄ×ÖÇĞ»»¿Ø¼ş£¨»ùÓÚ `TextSwitcher`£©
+16. `CustomSearchEditText`£º´øËÑË÷Í¼±êºÍÇå³ı¹¦ÄÜµÄ `EditText`£¬Ö§³ÖÔ²½Ç±³¾°
+17. `CornerConstraintLayout`£ºÔ²½Ç `ConstraintLayout`£¬XML `radius` / `bgColor` / `stroke*`
+18. `BannerView`£ºÂÖ²¥Í¼¿Ø¼ş£¬Ö§³ÖÔ²µãÖ¸Ê¾Æ÷¡¢×Ô¶¯ÂÖ²¥¡¢Ô²½Ç²Ã¼ô
+19. `StarBar`£º×Ô¶¨ÒåĞÇĞÇÆÀ·Ö¿Ø¼ş£¬Ö§³ÖÊµĞÄ/¿ÕĞÄÎå½ÇĞÇ¡¢ÕûÊı/Ğ¡ÊıÆÀ·Ö¡¢´¥Ãş»¬¶¯ÆÀ·ÖµÈ¹¦ÄÜ
+20. `IconDotTextView`£ºÍ¼±ê+ÎÄ×Ö+Êı×Ö½Ç±êµÄ×éºÏ¿Ø¼ş£¬Ö§³Ö¶àÖÖ²¼¾Ö·½Ïò£¨Í¼±êÉÏÏÂÎ»ÖÃ£©ºÍ½Ç±ê×Ô¶¨Òå
+21. `SquareLabelView`£º×ó²à´ø·½¿éµÄ`TextView`£¬ÓÃÓÚÄ£¿éÃû³ÆµÈ³¡¾°£¬Ö§³Ö·½¿éĞÎ×´£¨¾ØĞÎ¡¢ÍÖÔ²¡¢Ô²½Ç¾ØĞÎ£©ºÍÎ»ÖÃ×Ô¶¨Òå
+22. `IconLabelValueView`£ºÍ¼±ê-±êÇ©-Öµ-Í¼±êµÄ²¼¾ÖÊÓÍ¼£¬³£ÓÃÓÚÉèÖÃÏî»òÏêÇéÕ¹Ê¾£¬Ö§³Ö×óÓÒÍ¼±ê¿ª¹Ø¡¢µ×²¿±ß¿ò¡¢Öµ¶ÔÆë·½Ê½µÈÅäÖÃ
+23. `VerificationCodeInputView`£ºÑéÖ¤ÂëÊäÈë¿Ø¼ş£¬Ö§³Ö¶à¸ñ¶ÀÁ¢ÊäÈë¿ò¡¢¹â±êÉÁË¸¡¢ÊäÈëÀàĞÍÏŞÖÆ£¨Êı×Ö¡¢×ÖÄ¸µÈ£©¡¢±ß¿òÑùÊ½×Ô¶¨Òå
+24. `ScalingTextView`£º¿ÉÕ¹¿ª/ÊÕÆğµÄÎÄ±¾¿Ø¼ş£¬Ä¬ÈÏÏÔÊ¾Ö¸¶¨ĞĞÊı£¬Ö§³Ö¡°²é¿´È«ÎÄ/ÊÕÆğÈ«ÎÄ¡±µã»÷ÇĞ»»
+25. `LoadingProgressDialog`£º¼ÓÔØ½ø¶È¶Ô»°¿ò£¬Ö§³Ö¶¯Ì¬Ê¡ÂÔºÅ¶¯»­Ğ§¹û¡¢×Ô¶¨ÒåÌáÊ¾ÎÄ×Ö¡¢¿ÉÉèÖÃÊÇ·ñ¿ÉÈ¡Ïû
+26. `DatePickDialog`£ºÄêÔÂÈÕÑ¡Ôñ¶Ô»°¿ò£¬Ö§³Ö¶àÖÖÈÕÆÚÄ£Ê½£¨ÄêÔÂÈÕ¡¢ÄêÔÂ¡¢Äê·İ¡¢Ê±¼äµÈ£©¡¢×Ô¶¨ÒåÈÕÆÚ·¶Î§ºÍ±êÇ©
+27. `BottomSheetDialog`£ºµ×²¿Ñ¡Ôñ¿ò£¨Material `BottomSheetDialog`£©£¬Ö§³ÖÁĞ±íÑ¡ÏîÏÔÊ¾¡¢×Ô¶¨Òå·Ö¸îÏßÑùÊ½ºÍÈ¡Ïû°´Å¥
+28. `MenuDialog`£ºµ×²¿²Ëµ¥¶Ô»°¿ò£¬¹¦ÄÜÀàËÆ¡¤BottomSheetDialog¡¤µ«Ê¹ÓÃ´«Í³DialogÊµÏÖ£¬Ö§³Ö×Ô¶¨ÒåÎ»ÖÃºÍÑùÊ½
+29. `ImageSaveDialog`£ºÍ¼Æ¬±£´æÑ¡Ôñ¶Ô»°¿ò£¬Ìá¹©¡°±£´æµ½±¾µØ¡±µÈÑ¡Ïî£¬ÓÃÓÚÍ¼Æ¬±£´æ³¡¾°
+30. `EmptyLayout`£º¿Õ°×Õ¼Î»²¼¾Ö¿Ø¼ş£¬¿ÉÏÔÊ¾¼ÓÔØÖĞ¡¢¼ÓÔØÊ§°Ü¡¢ÎŞÊı¾İµÈ×´Ì¬£¬Ö§³Ö×Ô¶¨ÒåÍ¼±êºÍµã»÷ÖØÊÔ
+31. `InputDialog`£ºµ¥ĞĞÊäÈë¶Ô»°¿ò£¬Ö§³ÖÎÄ±¾ÊäÈë¡¢×î´ó×ÖÊıÏŞÖÆ¡¢ÊäÈëÀàĞÍÉèÖÃºÍÌáÊ¾ÎÄ×Ö
+32. `EditAreaDialog`£º¶àĞĞÎÄ±¾ÊäÈë¶Ô»°¿ò£¬¹¦ÄÜÀàËÆ`InputDialog`µ«Ö§³Ö¶àĞĞÎÄ±¾±à¼­
+33. `UpdateMessageDialog`£ºÓ¦ÓÃ¸üĞÂÌáÊ¾¶Ô»°¿ò£¬ÏÔÊ¾°æ±¾ĞÅÏ¢ºÍ¸üĞÂÄÚÈİ£¬Ö§³ÖÁ´½ÓÊ¶±ğºÍÁ÷Á¿ÌáĞÑ
+34. `ConfirmDialog`£ºÈ·ÈÏ¶Ô»°¿ò£¬Ìá¹©È·¶¨ºÍÈ¡Ïû°´Å¥£¬Ö§³Ö¸»ÎÄ±¾ÄÚÈİÏÔÊ¾ºÍ°´Å¥¿É¼ûĞÔ¿ØÖÆ
+35. `ProgressBarDialog`£º½ø¶ÈÌõ¶Ô»°¿ò£¬Ö§³ÖÔ²ĞÎºÍË®Æ½Á½ÖÖ½ø¶ÈÌõÑùÊ½£¬¿É×Ô¶¨Òå½ø¶ÈÌõÍâ¹ÛºÍ°´Å¥
+36. `MessageDialog`£ºĞÅÏ¢ÌáÊ¾¶Ô»°¿ò£¬µ¥°´Å¥Éè¼Æ£¬ÓÃÓÚ¼òµ¥ĞÅÏ¢ÌáÊ¾³¡¾°
+37. `ProtectionGuidelinesDialog`£ºÆô¶¯Ò³µÄÓÃ»§È¨ÏŞÒşË½Ö¸Òı£¬ÇëÇóÈ¨ÏŞÌáÊ¾µ¯¿ò£¬Ö§³Ö¸»ÎÄ±¾ÄÚÈİ¡¢×Ô¶¨Òå°´Å¥ÎÄ×ÖºÍÑùÊ½£¬ÓÃÓÚÈ¨ÏŞÉêÇë³¡¾°
+38. `CascadeSinglePopupWindow`£ºµ¥Ñ¡Ïî¼¶Áªµ¯´°
+39. `PopupView`£ºÆÕÍ¨ÏÂÀ­Ñ¡Ôñµ¯´°£¨µ¥Ñ¡£©
+40. `TextPopupView`£º×Ô¶¨ÒåÎÄ±¾+Í¼±ê×éºÏ¿Ø¼ş
+41. `MultiPopupView`£º¶àÑ¡£¨·Ç¼¶Áª£©µ¯´°
+42. `TreePopupView`£º¶ş¼¶Ê÷ĞÎÑ¡Ôñµ¯´°
+43. `CascadeMultiPopupWindow`£º¶àÑ¡Ïî¼¶Áªµ¯´°
+44. `TxSlideRecyclerView`£ºÖ§³Ö²à»¬µÄ`RecyclerView`
+45. `SpeakButton`£º·ÂÎ¢ĞÅµÄ³¤°´Ëµ»°View
+46. `VoiceView`£ºÓïÒô²¥·ÅÌõ¿Ø¼ş
 
-#### Formè¡¨å•ç›¸å…³æ§ä»¶
-ä¸»è¦ç”¨äºå¸¸è§çš„ä¸€äº›è¡¨å•è¾“å…¥å’Œå›æ˜¾æƒ…å†µ
-1. `FormDate`ï¼šæ—¥æœŸé€‰æ‹©æ§ä»¶
-2. `FormDateRange`ï¼šæ—¥æœŸèŒƒå›´é€‰æ‹©æ§ä»¶
-3. `FormDateTime`ï¼šæ—¥æœŸ+æ—¶é—´é€‰æ‹©æ§ä»¶
-4. `FormEditArea`ï¼šæ–‡æœ¬åŸŸè¾“å…¥æ§ä»¶
-5. `FormEditText`ï¼šå•è¡Œæ–‡æœ¬è¾“å…¥æ§ä»¶
-6. `FormFile`ï¼šæ–‡ä»¶é€‰æ‹©æ§ä»¶ï¼ŒåŒ…å«å…¨éƒ¨æ ¼å¼çš„æ–‡ä»¶é€‰æ‹©
-7. `FormFilePreview`ï¼šæ–‡ä»¶é¢„è§ˆæ§ä»¶
-8. `FormImage`ï¼šå›¾ç‰‡é€‰æ‹©æ§ä»¶
-9. `FormImageAndVideo`ï¼šå›¾ç‰‡+è§†é¢‘é€‰æ‹©æ§ä»¶
-10. `FormImageAndVideoPreview`ï¼šå›¾ç‰‡+è§†é¢‘é¢„è§ˆæ§ä»¶
-11. `FormImagePreview`ï¼šå›¾ç‰‡é¢„è§ˆæ§ä»¶
-12. `FormRichText`ï¼šå¯Œæ–‡æœ¬æ§ä»¶
-13. `FormSelection`ï¼šä¸‹æ‹‰é€‰æ‹©æ§ä»¶
-14. `FormTextView`ï¼šæ–‡æœ¬é¢„è§ˆæ§ä»¶ï¼Œæ”¯æŒå•è¡Œå¤šè¡Œæ˜¾ç¤ºï¼Œä¸»è¦ç”¨äºè¯¦æƒ…é¡µçš„è¡¨å•å›æ˜¾
-15. `FormTime`ï¼šæ—¶é—´é€‰æ‹©æ§ä»¶
-16. `FormVideo`ï¼šè§†é¢‘é€‰æ‹©æ§ä»¶
-17. `FormVideoPreview`ï¼šè§†é¢‘é¢„è§ˆæ§ä»¶
-18. `DateRangePickDialog`ï¼šæ—¥æœŸèŒƒå›´é€‰æ‹©`dialog`
-19. `TickViewMessageDialog`ï¼šå¯¹å‹¾åŠ¨ç”»å¼¹çª—
-20. `CalendarView`ï¼šè‡ªå®šä¹‰æ—¥å†
+#### Form±íµ¥Ïà¹Ø¿Ø¼ş
+Ö÷ÒªÓÃÓÚ³£¼ûµÄÒ»Ğ©±íµ¥ÊäÈëºÍ»ØÏÔÇé¿ö
+1. `FormDate`£ºÈÕÆÚÑ¡Ôñ¿Ø¼ş
+2. `FormDateRange`£ºÈÕÆÚ·¶Î§Ñ¡Ôñ¿Ø¼ş
+3. `FormDateTime`£ºÈÕÆÚ+Ê±¼äÑ¡Ôñ¿Ø¼ş
+4. `FormEditArea`£ºÎÄ±¾ÓòÊäÈë¿Ø¼ş
+5. `FormEditText`£ºµ¥ĞĞÎÄ±¾ÊäÈë¿Ø¼ş
+6. `FormFile`£ºÎÄ¼şÑ¡Ôñ¿Ø¼ş£¬°üº¬È«²¿¸ñÊ½µÄÎÄ¼şÑ¡Ôñ
+7. `FormFilePreview`£ºÎÄ¼şÔ¤ÀÀ¿Ø¼ş
+8. `FormImage`£ºÍ¼Æ¬Ñ¡Ôñ¿Ø¼ş
+9. `FormImageAndVideo`£ºÍ¼Æ¬+ÊÓÆµÑ¡Ôñ¿Ø¼ş
+10. `FormImageAndVideoPreview`£ºÍ¼Æ¬+ÊÓÆµÔ¤ÀÀ¿Ø¼ş
+11. `FormImagePreview`£ºÍ¼Æ¬Ô¤ÀÀ¿Ø¼ş
+12. `FormRichText`£º¸»ÎÄ±¾¿Ø¼ş
+13. `FormSelection`£ºÏÂÀ­Ñ¡Ôñ¿Ø¼ş
+14. `FormTextView`£ºÎÄ±¾Ô¤ÀÀ¿Ø¼ş£¬Ö§³Öµ¥ĞĞ¶àĞĞÏÔÊ¾£¬Ö÷ÒªÓÃÓÚÏêÇéÒ³µÄ±íµ¥»ØÏÔ
+15. `FormTime`£ºÊ±¼äÑ¡Ôñ¿Ø¼ş
+16. `FormVideo`£ºÊÓÆµÑ¡Ôñ¿Ø¼ş
+17. `FormVideoPreview`£ºÊÓÆµÔ¤ÀÀ¿Ø¼ş
+18. `DateRangePickDialog`£ºÈÕÆÚ·¶Î§Ñ¡Ôñ`dialog`
+19. `TickViewMessageDialog`£º¶Ô¹´¶¯»­µ¯´°
+20. `CalendarView`£º×Ô¶¨ÒåÈÕÀú
 
-#### GPSç›¸å…³api
-1. `GpsService`: GPSåå°æœåŠ¡
-2. `GpsLifecycleObserver`ï¼šGPSç”Ÿå‘½å‘¨æœŸè§‚å¯Ÿè€…ï¼Œå¯ä»¥ç›´æ¥æ·»åŠ è¿™ä¸ªè§‚å¯Ÿè€…ï¼ŒåŒ…æ‹¬GPSæ˜¯å¦å¼€å¯ã€æƒé™åˆ¤æ–­ç­‰ç­‰
-### è¿‡æ»¤ç½‘ç»œè¯·æ±‚æ—¥å¿—
+#### GPSÏà¹Øapi
+1. `GpsService`: GPSºóÌ¨·şÎñ
+2. `GpsLifecycleObserver`£ºGPSÉúÃüÖÜÆÚ¹Û²ìÕß£¬¿ÉÒÔÖ±½ÓÌí¼ÓÕâ¸ö¹Û²ìÕß£¬°üÀ¨GPSÊÇ·ñ¿ªÆô¡¢È¨ÏŞÅĞ¶ÏµÈµÈ
+### ¹ıÂËÍøÂçÇëÇóÈÕÖ¾
 
-è°ƒç”¨ApiRetrofitä¸‹çš„TAG
-TAGå€¼ä¸ºç±»åï¼š`ApiRetrofit`
+µ÷ÓÃApiRetrofitÏÂµÄTAG
+TAGÖµÎªÀàÃû£º`ApiRetrofit`
 
-## æ¥å…¥æŒ‡å¼•ï¼š
+## ½ÓÈëÖ¸Òı£º
 
-### å¯¼å…¥å…¬å…±ä¾èµ–åŒ…
+### µ¼Èë¹«¹²ÒÀÀµ°ü
 
-ç”±äºé›†æˆçš„aaråŒ…æœ‰éš”ç¦»æ•ˆæœå› æ­¤éœ€è¦åœ¨ç»§æ‰¿baseç±»æ—¶å¯¼å…¥ä»–ä»¬çš„åŒ…ï¼Œä¸ç„¶å°±ä¼šæ‰¾ä¸åˆ°å¼•ç”¨çš„ç¬¬ä¸‰æ–¹åº“ï¼Œä½†æ˜¯å¦‚æœä½ æ²¡æœ‰ä»¥aarå¼•ç”¨è€Œæ˜¯ç›´æ¥moduleå¼•ç”¨çš„è¯ï¼Œå¯ä»¥ç›´æ¥å°†
-`implementation` æ”¹æˆ`api`å³å¯
-å¯å‚è€ƒappæ¨¡å—çš„demoä¾èµ–åº“
+ÓÉÓÚ¼¯³ÉµÄaar°üÓĞ¸ôÀëĞ§¹ûÒò´ËĞèÒªÔÚ¼Ì³ĞbaseÀàÊ±µ¼ÈëËûÃÇµÄ°ü£¬²»È»¾Í»áÕÒ²»µ½ÒıÓÃµÄµÚÈı·½¿â£¬µ«ÊÇÈç¹ûÄãÃ»ÓĞÒÔaarÒıÓÃ¶øÊÇÖ±½ÓmoduleÒıÓÃµÄ»°£¬¿ÉÒÔÖ±½Ó½«
+`implementation` ¸Ä³É`api`¼´¿É
+¿É²Î¿¼appÄ£¿éµÄdemoÒÀÀµ¿â
 
 ```
     implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
@@ -317,8 +317,8 @@ TAGå€¼ä¸ºç±»åï¼š`ApiRetrofit`
     implementation project(':common')
     implementation project(':userapi')
     implementation project(':commonui')
-    implementation project(':googlegps')
-    // ç»„è£…å±‚æ‰ä¾èµ–å®ç°åº“ï¼›ä¸šåŠ¡ module é€šè¿‡ Gateway æ³¨å…¥
+    implementation project(':core-gnss')
+    // ×é×°²ã²ÅÒÀÀµÊµÏÖ¿â£»ÒµÎñ module Í¨¹ı Gateway ×¢Èë
     implementation project(':commonmedia')
     implementation project(':mqttcomponent')
     implementation project(':user')
@@ -353,8 +353,8 @@ TAGå€¼ä¸ºç±»åï¼š`ApiRetrofit`
     implementation libs.zxing.android.embedded
     //paging3
     implementation libs.androidx.paging.runtime
-    // ç”¨äºæµ‹è¯•
-    testImplementation libs.androidx.paging.common// [å¯é€‰] RxJava æ”¯æŒ
+    // ÓÃÓÚ²âÊÔ
+    testImplementation libs.androidx.paging.common// [¿ÉÑ¡] RxJava Ö§³Ö
     implementation libs.paging.rxjava3
     implementation libs.swiperefreshlayout
 
@@ -372,59 +372,59 @@ TAGå€¼ä¸ºç±»åï¼š`ApiRetrofit`
     implementation libs.room.paging
 ```
 
-### æ··æ·†é…ç½®
+### »ìÏıÅäÖÃ
 
 ```
 # ==================== MVVM Common / Core Library ====================
-# common facade + core-*ï¼ˆåŒ…åä»å¤šä¸º io.coderf.arklab.common.*ï¼‰
+# common facade + core-*£¨°üÃûÈÔ¶àÎª io.coderf.arklab.common.*£©
 -keep class io.coderf.arklab.common.** { *; }
 -dontwarn io.coderf.arklab.common.**
 -keep class io.coderf.arklab.core.** { *; }
 -dontwarn io.coderf.arklab.core.**
 -keep class io.coderf.arklab.base.gateway.** { *; }
 
-# ä¿ç•™æ•°æ®ç»‘å®šç›¸å…³ç±»
+# ±£ÁôÊı¾İ°ó¶¨Ïà¹ØÀà
 -keep class io.coderf.arklab.common.bean.** { *; }
 -keepclassmembers class io.coderf.arklab.common.bean.** {
     void set*(***);
     *** get*();
 }
 
-# ä¿ç•™ BaseResponse å’Œ ViewModel
+# ±£Áô BaseResponse ºÍ ViewModel
 -keep class io.coderf.arklab.common.base.BaseResponse { *; }
 -keep class io.coderf.arklab.common.viewmodel.** { *; }
 
-# ä¿ç•™æ³¨è§£å¤„ç†å™¨ç”Ÿæˆçš„ç±»
+# ±£Áô×¢½â´¦ÀíÆ÷Éú³ÉµÄÀà
 -keep class * extends io.coderf.arklab.common.base.** { *; }
 
-# ä¿ç•™èµ„æºç»‘å®šç›¸å…³ç±»ï¼ˆå¦‚æœæœ‰è‡ªåŠ¨ç”Ÿæˆçš„ç»‘å®šç±»ï¼‰
+# ±£Áô×ÊÔ´°ó¶¨Ïà¹ØÀà£¨Èç¹ûÓĞ×Ô¶¯Éú³ÉµÄ°ó¶¨Àà£©
 -keep class *Binding { *; }
 -keep class *BindingImpl { *; }
 ```
 ```
 # ==================== Media Common Library ====================
-# ä¿ç•™ Media æ¡†æ¶æ ¸å¿ƒç±»
+# ±£Áô Media ¿ò¼ÜºËĞÄÀà
 -keep class io.coderf.arklab.media.** { *; }
 -dontwarn io.coderf.arklab.media.**
 -keep class io.coderf.arklab.media.gateway.** { *; }
 
-# ä¿ç•™æ•°æ®æ¨¡å‹ç±»
+# ±£ÁôÊı¾İÄ£ĞÍÀà
 -keep class io.coderf.arklab.media.bean.** { *; }
 -keepclassmembers class io.coderf.arklab.media.bean.** {
     void set*(***);
     *** get*();
 }
 
-# ä¿ç•™æ ¸å¿ƒå·¥å…·ç±»å’Œæ„å»ºå™¨
+# ±£ÁôºËĞÄ¹¤¾ßÀàºÍ¹¹½¨Æ÷
 -keep class io.coderf.arklab.media.MediaBuilder { *; }
 -keep class io.coderf.arklab.media.MediaHelper { *; }
 -keep class io.coderf.arklab.media.utils.** { *; }
 
-# ä¿ç•™å›è°ƒæ¥å£
+# ±£Áô»Øµ÷½Ó¿Ú
 -keep class io.coderf.arklab.media.callback.** { *; }
 -keep interface io.coderf.arklab.media.callback.** { *; }
 
-# ä¿ç•™å¤šåª’ä½“å¤„ç†æ–¹æ³•
+# ±£Áô¶àÃ½Ìå´¦Àí·½·¨
 -keepclassmembers class io.coderf.arklab.media.** {
     public * compress*(...);
     public * process*(...);
@@ -435,68 +435,68 @@ TAGå€¼ä¸ºç±»åï¼š`ApiRetrofit`
 
 ```
 # ==================== CommonUI Library ====================
-# ä¿ç•™ CommonUI æ¡†æ¶æ ¸å¿ƒç±»
+# ±£Áô CommonUI ¿ò¼ÜºËĞÄÀà
 -keep class io.coderf.arklab.commonui.** { *; }
 -dontwarn io.coderf.arklab.commonui.**
 
-# ç¡®ä¿æ•°æ®æ¨¡å‹ä¸è¢«æ··æ·†
+# È·±£Êı¾İÄ£ĞÍ²»±»»ìÏı
 -keep class io.coderf.arklab.commonui.bean.** { *; }
 -keepclassmembers class io.coderf.arklab.commonui.bean.** {
     void set*(***);
     *** get*();
 }
 
-# ä¿ç•™è‡ªå®šä¹‰ Widget ç»„ä»¶
+# ±£Áô×Ô¶¨Òå Widget ×é¼ş
 -keep class io.coderf.arklab.commonui.widget.** { *; }
 -keepclassmembers class io.coderf.arklab.commonui.widget.** {
     public <init>(android.content.Context);
     public <init>(android.content.Context, android.util.AttributeSet);
 }
 
-# ä¿ç•™ Fragment
+# ±£Áô Fragment
 -keep class io.coderf.arklab.commonui.fragment.** { *; }
 
-# ä¿ç•™é€‚é…å™¨
+# ±£ÁôÊÊÅäÆ÷
 -keep class io.coderf.arklab.commonui.adapter.** { *; }
 
-# ä¿ç•™è¡¨å•ç›¸å…³åŠŸèƒ½
+# ±£Áô±íµ¥Ïà¹Ø¹¦ÄÜ
 -keep class io.coderf.arklab.commonui.form.** { *; }
 
-# ä¿ç•™æ¥å£å’Œå›è°ƒ
+# ±£Áô½Ó¿ÚºÍ»Øµ÷
 -keep interface io.coderf.arklab.commonui.inter.** { *; }
 -keep class io.coderf.arklab.commonui.impl.** { *; }
 
-# ä¿ç•™æ•°æ®ç»‘å®šç›¸å…³ç±»
+# ±£ÁôÊı¾İ°ó¶¨Ïà¹ØÀà
 -keep class *Binding { *; }
 -keep class *BindingImpl { *; }
 ```
 
 ```
 # ==================== Google GPS Library ====================
-# ä»¥ä¸‹è§„åˆ™å·²å†…ç½®åœ¨ googlegps çš„ consumer-rules.pro ä¸­ï¼Œéš AAR è‡ªåŠ¨ç”Ÿæ•ˆï¼Œå®¿ä¸»æ— éœ€é‡å¤å£°æ˜ã€‚
-# åŒ…ç»“æ„ï¼šapi(å¯¹å¤– API) / service(æœåŠ¡+Session) / permission(æƒé™å¼•å¯¼) / track(è½¨è¿¹æ–‡ä»¶)
-#          / utils(å·¥å…·)  â€”â€” å‡ä¿ç•™ï¼›location / ui ä¸ºå†…éƒ¨å®ç°ï¼Œå…è®¸æ··æ·†ï¼ˆåŸ socket ä¸Šä¼ å·²ç§»é™¤ï¼‰
--dontwarn io.coderf.arklab.googlegps.**
+# ÒÔÏÂ¹æÔòÒÑÄÚÖÃÔÚ core-gnss µÄ consumer-rules.pro ÖĞ£¬Ëæ AAR ×Ô¶¯ÉúĞ§£¬ËŞÖ÷ÎŞĞèÖØ¸´ÉùÃ÷¡£
+# °ü½á¹¹£ºapi(¶ÔÍâ API) / service(·şÎñ+Session) / permission(È¨ÏŞÒıµ¼) / track(¹ì¼£ÎÄ¼ş)
+#          / utils(¹¤¾ß)  ¡ª¡ª ¾ù±£Áô£»location / ui ÎªÄÚ²¿ÊµÏÖ£¬ÔÊĞí»ìÏı£¨Ô­ socket ÉÏ´«ÒÑÒÆ³ı£©
+-dontwarn io.coderf.arklab.gnss.**
 
-# å¯¹å¤– APIï¼šGpsStarter / GpsCallback / GpsSettingConfig / LocationFilter
--keep class io.coderf.arklab.googlegps.api.** { *; }
--keepnames class * implements io.coderf.arklab.googlegps.api.LocationFilter
+# ¶ÔÍâ API£ºGpsStarter / GpsCallback / GpsSettingConfig / LocationFilter
+-keep class io.coderf.arklab.gnss.api.** { *; }
+-keepnames class * implements io.coderf.arklab.gnss.api.LocationFilter
 
-# å®šä½æœåŠ¡ GpsService / GpsBinder / Session
--keep class io.coderf.arklab.googlegps.service.** { *; }
+# ¶¨Î»·şÎñ GpsService / GpsBinder / Session
+-keep class io.coderf.arklab.gnss.service.** { *; }
 
-# æƒé™å¼•å¯¼ GpsLifecycleObserver / PermissionsChecker
--keep class io.coderf.arklab.googlegps.permission.** { *; }
+# È¨ÏŞÒıµ¼ GpsLifecycleObserver / PermissionsChecker
+-keep class io.coderf.arklab.gnss.permission.** { *; }
 
-# è½¨è¿¹æ–‡ä»¶ IFileLogger / Files / GpsFileParser
--keep class io.coderf.arklab.googlegps.track.** { *; }
+# ¹ì¼£ÎÄ¼ş IFileLogger / Files / GpsFileParser
+-keep class io.coderf.arklab.gnss.track.** { *; }
 
-# å·¥å…·ç±» DebugUtil / LogUtil / EsriUtil
--keep class io.coderf.arklab.googlegps.utils.** { *; }
+# ¹¤¾ßÀà DebugUtil / LogUtil / EsriUtil
+-keep class io.coderf.arklab.gnss.utils.** { *; }
 ```
-### hiltæ¡†æ¶ä¾èµ–
+### hilt¿ò¼ÜÒÀÀµ
 
-åœ¨é¡¹ç›®æ ¹ç›®å½•ä¸‹build.gradleæ·»åŠ 
+ÔÚÏîÄ¿¸ùÄ¿Â¼ÏÂbuild.gradleÌí¼Ó
 
 ```
 plugins {
@@ -507,7 +507,7 @@ plugins {
 }
 ```
 
-åœ¨å„ä¸ªæ¨¡å—æ·»åŠ æ’ä»¶å¼•ç”¨ï¼Œé‚£ä¸ªæ¨¡å—ç”¨åˆ°åœ¨å“ªä¸ªæ¨¡å—æ·»åŠ ï¼Œæ¯ä¸ªç”¨åˆ°çš„é¢éƒ½è¦æ·»åŠ 
+ÔÚ¸÷¸öÄ£¿éÌí¼Ó²å¼şÒıÓÃ£¬ÄÇ¸öÄ£¿éÓÃµ½ÔÚÄÄ¸öÄ£¿éÌí¼Ó£¬Ã¿¸öÓÃµ½µÄ¶î¶¼ÒªÌí¼Ó
 
 ```
 plugins {
@@ -517,81 +517,81 @@ plugins {
 }
 ```
 
-åœ¨å„ä¸ªæ¨¡å—æ·»åŠ æ’ä»¶å¼•ç”¨ï¼Œé‚£ä¸ªæ¨¡å—ç”¨åˆ°åœ¨å“ªä¸ªæ¨¡å—æ·»åŠ ï¼Œæ¯ä¸ªç”¨åˆ°çš„é¢éƒ½è¦æ·»åŠ 
+ÔÚ¸÷¸öÄ£¿éÌí¼Ó²å¼şÒıÓÃ£¬ÄÇ¸öÄ£¿éÓÃµ½ÔÚÄÄ¸öÄ£¿éÌí¼Ó£¬Ã¿¸öÓÃµ½µÄ¶î¶¼ÒªÌí¼Ó
 
 ```
     implementation libs.google.hilt.android
     ksp libs.google.hilt.android.compiler
 ```
 
-### æ–°å»ºassetsç›®å½•
+### ĞÂ½¨assetsÄ¿Â¼
 
-ä¸‹é¢æ–°å»ºdev.propertieså’Œrelease.propertiesï¼Œé‡Œé¢æœ‰ä¸€äº›åŸºç¡€é…ç½®ï¼Œåœ¨commonæ¨¡å—é‡Œå·²ç»é…ç½®äº†ï¼Œå‚æ•°keyå…·ä½“å‚è€ƒdemoä¸­çš„çš„propertiesé…ç½®æ–‡ä»¶ï¼Œä¹Ÿå¯ä»¥è‡ªå®šä¹‰ä¸€äº›é…ç½®
+ÏÂÃæĞÂ½¨dev.propertiesºÍrelease.properties£¬ÀïÃæÓĞÒ»Ğ©»ù´¡ÅäÖÃ£¬ÔÚcommonÄ£¿éÀïÒÑ¾­ÅäÖÃÁË£¬²ÎÊıkey¾ßÌå²Î¿¼demoÖĞµÄµÄpropertiesÅäÖÃÎÄ¼ş£¬Ò²¿ÉÒÔ×Ô¶¨ÒåÒ»Ğ©ÅäÖÃ
 
-è°ƒç”¨é»˜è®¤é…ç½®ï¼Œæ³¨æ„å‚æ•°keyä¸èƒ½é”™è¯¯ï¼Œå‚è€ƒdemoä¸­çš„
+µ÷ÓÃÄ¬ÈÏÅäÖÃ£¬×¢Òâ²ÎÊıkey²»ÄÜ´íÎó£¬²Î¿¼demoÖĞµÄ
 
 ```
     PropertiesUtil.getInstance().loadConfig(application).getBaseUrl()
 ```
 
-è°ƒç”¨è‡ªå®šä¹‰æ–‡ä»¶ä¸­çš„è‡ªå®šä¹‰é…ç½®
+µ÷ÓÃ×Ô¶¨ÒåÎÄ¼şÖĞµÄ×Ô¶¨ÒåÅäÖÃ
 
 ```
     PropertiesUtil.getInstance().loadConfig(application).getPropertyValue(key,defaultValue)
 ```
 
-ä¸Šé¢é»˜è®¤åŠ è½½çš„æ˜¯'prod.properties'é…ç½®æ–‡ä»¶ä¸­çš„é…ç½®å¦‚æœéœ€è¦åŠ è½½åˆ«çš„ç›´æ¥å†builde.gradleä¸­æ·»åŠ å¦‚ä¸‹resValueé…ç½®å³å¯
+ÉÏÃæÄ¬ÈÏ¼ÓÔØµÄÊÇ'prod.properties'ÅäÖÃÎÄ¼şÖĞµÄÅäÖÃÈç¹ûĞèÒª¼ÓÔØ±ğµÄÖ±½ÓÔÙbuilde.gradleÖĞÌí¼ÓÈçÏÂresValueÅäÖÃ¼´¿É
 
 ```
     buildTypes {
         release {
-            resValue "string", "app_config_file", "prod.properties"//æŒ‡å®šæ–‡ä»¶åï¼Œapp_config_fileä¸èƒ½ä¿®æ”¹ï¼Œåé¢çš„prod.properties"å¯ä»¥ä¿®æ”¹
-            minifyEnabled true// æ··æ·†
-            shrinkResources true // ç§»é™¤æ— ç”¨çš„resource
+            resValue "string", "app_config_file", "prod.properties"//Ö¸¶¨ÎÄ¼şÃû£¬app_config_file²»ÄÜĞŞ¸Ä£¬ºóÃæµÄprod.properties"¿ÉÒÔĞŞ¸Ä
+            minifyEnabled true// »ìÏı
+            shrinkResources true // ÒÆ³ıÎŞÓÃµÄresource
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            resValue "string", "app_config_file", "dev.properties"//æŒ‡å®šæ–‡ä»¶åï¼Œapp_config_fileä¸èƒ½ä¿®æ”¹ï¼Œåé¢çš„dev.properties"å¯ä»¥ä¿®æ”¹
-            minifyEnabled false// æ··æ·†
-            shrinkResources false // ç§»é™¤æ— ç”¨çš„resource
+            resValue "string", "app_config_file", "dev.properties"//Ö¸¶¨ÎÄ¼şÃû£¬app_config_file²»ÄÜĞŞ¸Ä£¬ºóÃæµÄdev.properties"¿ÉÒÔĞŞ¸Ä
+            minifyEnabled false// »ìÏı
+            shrinkResources false // ÒÆ³ıÎŞÓÃµÄresource
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 ```
 
-### æ–°å»ºApplicationç»§æ‰¿BaseApplication
+### ĞÂ½¨Application¼Ì³ĞBaseApplication
 
-ä¸€å®šè¦é…ç½®ï¼Œä¸ç„¶commonä¸­å¾ˆå¤šä»£ç ä¼šæŠ¥é”™ï¼Œåœ¨applicationä¸­åˆå§‹åŒ–ä¸€äº›åŸºç¡€é…ç½®ä¾‹å¦‚ï¼šMMKVã€ç½‘ç»œæ¡†æ¶ã€WebSocketã€mqttç­‰
-å¦‚æœéœ€è¦æ‰“å°æ—¥å¿—çš„è¯è¯·è°ƒç”¨Configæ¥å£
-è°ƒç”¨åˆå§‹åŒ–æ–¹æ³•
+Ò»¶¨ÒªÅäÖÃ£¬²»È»commonÖĞºÜ¶à´úÂë»á±¨´í£¬ÔÚapplicationÖĞ³õÊ¼»¯Ò»Ğ©»ù´¡ÅäÖÃÀıÈç£ºMMKV¡¢ÍøÂç¿ò¼Ü¡¢WebSocket¡¢mqttµÈ
+Èç¹ûĞèÒª´òÓ¡ÈÕÖ¾µÄ»°Çëµ÷ÓÃConfig½Ó¿Ú
+µ÷ÓÃ³õÊ¼»¯·½·¨
 
 ```
-    // å…¶ä»–å…¨å±€å¼€å…³è§ä¸Šæ–‡ã€Œç³»ç»Ÿé…ç½®ã€ï¼Œé¡»åœ¨ init å‰è®¾ç½®
+    // ÆäËûÈ«¾Ö¿ª¹Ø¼ûÉÏÎÄ¡¸ÏµÍ³ÅäÖÃ¡¹£¬ĞëÔÚ init Ç°ÉèÖÃ
     Config.getInstance().init(this);
 ```
 
-### CommonUIä¸­é™„ä»¶ç»„ä»¶é…ç½®ç»Ÿä¸€çš„ä¸Šä¼ æœåŠ¡
+### CommonUIÖĞ¸½¼ş×é¼şÅäÖÃÍ³Ò»µÄÉÏ´«·şÎñ
 ```
         MediaUploadConfig.getInstance()
                 .setFileApiService(fileApiService)
                 .setUploadUrl("minioc/upload");
 ```
 
-### æ–°å»ºErrorServiceImplå®ç°ErrorServiceæ¥å£
+### ĞÂ½¨ErrorServiceImplÊµÏÖErrorService½Ó¿Ú
 
-é‡Œé¢æœ‰å¾ˆå¤šå°è£…å¥½çš„apiéœ€è¦å®ç°ï¼Œå½“ç„¶ä½ ä¹Ÿå¯ä»¥ä¸ç”¨ï¼Œä¸å»ºè®®ç›´æ¥ä¿®æ”¹commonç»„ä»¶ï¼Œå› ä¸ºç»„ä»¶åŒ–è®²çš„å°±æ˜¯è§£è€¦ï¼Œä½ ä»€ä¹ˆéƒ½åœ¨commonç¦»å®ç°é‚£è€¦åˆæ€§å¿…ç„¶å°±ä¼šå¾ˆé«˜ï¼Œå½“ç„¶ä¹Ÿè¦æ–°å»ºErrorServiceModuleï¼Œè¿™æ˜¯hiltç”¨æ³•ï¼Œå…·ä½“ä½ ä»¬è‡ªå·±ç™¾åº¦äº†
+ÀïÃæÓĞºÜ¶à·â×°ºÃµÄapiĞèÒªÊµÏÖ£¬µ±È»ÄãÒ²¿ÉÒÔ²»ÓÃ£¬²»½¨ÒéÖ±½ÓĞŞ¸Äcommon×é¼ş£¬ÒòÎª×é¼ş»¯½²µÄ¾ÍÊÇ½âñî£¬ÄãÊ²Ã´¶¼ÔÚcommonÀëÊµÏÖÄÇñîºÏĞÔ±ØÈ»¾Í»áºÜ¸ß£¬µ±È»Ò²ÒªĞÂ½¨ErrorServiceModule£¬ÕâÊÇhiltÓÃ·¨£¬¾ßÌåÄãÃÇ×Ô¼º°Ù¶ÈÁË
 
-### å¼ºè°ƒä¸€ä¸‹
+### Ç¿µ÷Ò»ÏÂ
 
-åœ¨æ¥å…¥hiltæ—¶æ¯ä¸ªmoduleéƒ½è¦å¯¼å…¥è¿™ä¸¤ä¸ªåŒ…ï¼Œä¸èƒ½å°‘ï¼Œå°‘äº†çš„è¯ä½ å¯ä»¥ç¼–è¯‘ä½†æ˜¯æ— æ³•è¿è¡Œï¼Œè€Œä¸”ä½ è¿˜æ‰¾ä¸åˆ°é”™åœ¨å“ª
-æ¯ä¸ªç”¨åˆ°çš„æ¨¡å—éƒ½è¦åŠ è¿™ä¸¤ä¸ªï¼Œä¸èƒ½ä½¿ç”¨api
+ÔÚ½ÓÈëhiltÊ±Ã¿¸ömodule¶¼Òªµ¼ÈëÕâÁ½¸ö°ü£¬²»ÄÜÉÙ£¬ÉÙÁËµÄ»°Äã¿ÉÒÔ±àÒëµ«ÊÇÎŞ·¨ÔËĞĞ£¬¶øÇÒÄã»¹ÕÒ²»µ½´íÔÚÄÄ
+Ã¿¸öÓÃµ½µÄÄ£¿é¶¼Òª¼ÓÕâÁ½¸ö£¬²»ÄÜÊ¹ÓÃapi
 
 ``` 
     implementation libs.google.hilt.android
     ksp libs.google.hilt.android.compiler
 ```
 
-### é¡¹ç›®ä¸­è‡ªåŠ¨ä¸ºæ‚¨é›†æˆäº†ä»Šæ—¥å¤´æ¡çš„é€‚é…æ–¹æ¡ˆï¼Œå› æ­¤éœ€è¦ä½ åœ¨é…ç½®æ–‡ä»¶ä¸­æ–°å¢å±æ€§
+### ÏîÄ¿ÖĞ×Ô¶¯ÎªÄú¼¯³ÉÁË½ñÈÕÍ·ÌõµÄÊÊÅä·½°¸£¬Òò´ËĞèÒªÄãÔÚÅäÖÃÎÄ¼şÖĞĞÂÔöÊôĞÔ
 
     <meta-data
         android:name="design_width_in_dp"
@@ -600,21 +600,21 @@ plugins {
         android:name="design_height_in_dp"
         android:value="640" />
 
-### å…³äºç½‘ç»œè®¿é—®é‡è¯•
+### ¹ØÓÚÍøÂç·ÃÎÊÖØÊÔ
 
-åœ¨å„å®ç°`RetryService`æ¥å£ï¼Œè¯¥æ¥å£ä¼šè‡ªåŠ¨å®ç°æœ€å¥½åœ¨ç”¨æˆ·æ¨¡å—å®ç°ï¼Œå› ä¸ºè¯¥æ¥å£ä¸»è¦ç”¨äºå®ç°è¿‡æœŸå…ç™»å½•ï¼Œå› æ­¤åœ¨ç™»å½•æ¨¡å—å®ç°æœ€ä¸ºåˆç†ï¼Œç¤ºä¾‹ä»£ç é‡Œæœ‰ç¤ºä¾‹ï¼Œæ­¤åŠŸèƒ½å…³äºhiltçš„ä½¿ç”¨ï¼Œå› æ­¤éœ€è¦äº†è§£hiltæ¡†æ¶ç”¨æ³•,éœ€è¦å†ViewModelä¸Šæ·»åŠ æ³¨è§£@HiltViewModel,
-å½“ç„¶ä½ ä¹Ÿå¯ä»¥å†²è¿‡é‡å†™æ–¹æ³•æŒ‡å®šé”™è¯¯é‡è¯•æ–¹æ³•ï¼Œå¯ä»¥ä¸é‡å†™ï¼Œä¹Ÿå¯ä»¥ä¸åŠ æ³¨è§£ï¼Œç³»ç»Ÿä¼šé»˜è®¤ä¸€ä¸ªæ–¹æ³•ï¼Œä½†æ˜¯è¯·ä¸è¦é‡å†™ä¸ºnull
+ÔÚ¸÷ÊµÏÖ`RetryService`½Ó¿Ú£¬¸Ã½Ó¿Ú»á×Ô¶¯ÊµÏÖ×îºÃÔÚÓÃ»§Ä£¿éÊµÏÖ£¬ÒòÎª¸Ã½Ó¿ÚÖ÷ÒªÓÃÓÚÊµÏÖ¹ıÆÚÃâµÇÂ¼£¬Òò´ËÔÚµÇÂ¼Ä£¿éÊµÏÖ×îÎªºÏÀí£¬Ê¾Àı´úÂëÀïÓĞÊ¾Àı£¬´Ë¹¦ÄÜ¹ØÓÚhiltµÄÊ¹ÓÃ£¬Òò´ËĞèÒªÁË½âhilt¿ò¼ÜÓÃ·¨,ĞèÒªÔÙViewModelÉÏÌí¼Ó×¢½â@HiltViewModel,
+µ±È»ÄãÒ²¿ÉÒÔ³å¹ıÖØĞ´·½·¨Ö¸¶¨´íÎóÖØÊÔ·½·¨£¬¿ÉÒÔ²»ÖØĞ´£¬Ò²¿ÉÒÔ²»¼Ó×¢½â£¬ÏµÍ³»áÄ¬ÈÏÒ»¸ö·½·¨£¬µ«ÊÇÇë²»ÒªÖØĞ´Îªnull
 
-### å…³äºåŒæ„å°ºå¯¸çš„é…ç½®
+### ¹ØÓÚÍ¬Òâ³ß´çµÄÅäÖÃ
 
-åœ¨dimensèµ„æºæ–‡ä»¶ä¸‹é…ç½®äº†ç»Ÿä¸€çš„å°ºå¯¸å¤§å°ï¼Œæ–¹ä¾¿ç»´æŠ¤
+ÔÚdimens×ÊÔ´ÎÄ¼şÏÂÅäÖÃÁËÍ³Ò»µÄ³ß´ç´óĞ¡£¬·½±ãÎ¬»¤
 
-### å…³äºä¸€äº›å°è£…æ–¹æ³•çš„è°ƒç”¨
+### ¹ØÓÚÒ»Ğ©·â×°·½·¨µÄµ÷ÓÃ
 
-#### å›¾ç‰‡è§†é¢‘é€‰æ‹©åº“
+#### Í¼Æ¬ÊÓÆµÑ¡Ôñ¿â
 
-æš‚æ—¶å›¾ç‰‡è§†é¢‘é€‰æ‹©æ²¡æœ‰å¢åŠ æ•°é‡é™åˆ¶ï¼Œå¤§å®¶å¯ä»¥è‡ªè¡Œå®ç°ï¼ŒåæœŸæˆ‘ä¼šæ›´æ–°
-é€‰æ‹©å›¾ç‰‡ï¼š
+ÔİÊ±Í¼Æ¬ÊÓÆµÑ¡ÔñÃ»ÓĞÔö¼ÓÊıÁ¿ÏŞÖÆ£¬´ó¼Ò¿ÉÒÔ×ÔĞĞÊµÏÖ£¬ºóÆÚÎÒ»á¸üĞÂ
+Ñ¡ÔñÍ¼Æ¬£º
 
 ```
     new OpenImageDialog(requireActivity())
@@ -624,7 +624,7 @@ plugins {
         .show();
 ```
 
-é€‰æ‹©è§†é¢‘
+Ñ¡ÔñÊÓÆµ
 
 ```
     new OpenShootDialog(requireActivity())
@@ -634,28 +634,28 @@ plugins {
         .show();
 ```
 
-åˆå§‹åŒ–åŠè·å–å…¶å›è°ƒä¿¡æ¯
+³õÊ¼»¯¼°»ñÈ¡Æä»Øµ÷ĞÅÏ¢
 
 ```
-//ä¼ ç»Ÿåˆå§‹åŒ–æ–¹å¼
+//´«Í³³õÊ¼»¯·½Ê½
     mediaHelper = new MediaBuilder(this, this)
         .setImageMaxSelectedCount(1)
         .builder();
     mediaHelper.getMutableLiveData().observe(this, mediaBean -> {
             
     });
-//hiltåˆå§‹åŒ–æ–¹å¼ï¼Œactivityä¸­
+//hilt³õÊ¼»¯·½Ê½£¬activityÖĞ
     @Inject
     @MediaModule.ActivityMediaHelper
     MediaHelper mediaHelper;
     
-//hiltåˆå§‹åŒ–æ–¹å¼ï¼Œfragmentä¸­
+//hilt³õÊ¼»¯·½Ê½£¬fragmentÖĞ
     @Inject
     @MediaModule.FragmentMediaHelper
     MediaHelper mediaHelper;
 ```
 
-#### æ¬¢è¿é¡µéšç§æƒé™dialog
+#### »¶Ó­Ò³ÒşË½È¨ÏŞdialog
 ```
         new ProtectionGuidelinesDialog(this)
                 .setCanOutSide(false)
@@ -663,7 +663,7 @@ plugins {
                 .setSpannableContent(getSpannableContent())
                 .setOnNegativeClickListener(dialog -> {
 
-                    showToast("æ‹’ç»å¯èƒ½ä¼šå¯¼è‡´éƒ¨åˆ†åŠŸèƒ½ä½¿ç”¨å¼‚å¸¸");
+                    showToast("¾Ü¾ø¿ÉÄÜ»áµ¼ÖÂ²¿·Ö¹¦ÄÜÊ¹ÓÃÒì³£");
                     keepOnScreenCondition.compareAndSet(false, true);
                     startCountDown();
                 })
@@ -679,7 +679,7 @@ plugins {
                 .builder()
                 .show();
 ```
-### è‡ªå®šä¹‰æ³¨è§£ä½¿ç”¨
+### ×Ô¶¨Òå×¢½âÊ¹ÓÃ
 
 ```java
 import android.net.Uri;
@@ -709,23 +709,23 @@ import io.coderf.arklab.common.converter.RoomListStringConverter;
 @VerifyEntity(sort = true)
 public class Person extends BaseDaoBean {
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "å§“åä¸ºç©ºï¼"),
-            @VerifyParams(type = VerifyType.LENGTH_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, minLength = 2, maxLength = 10, errorMsg = "å§“åè¾“å…¥é”™è¯¯ï¼"),
-            @VerifyParams(type = VerifyType.EQUALS, group = {VerifyGroup.Default.class}, errorMsg = "æ‚¨åªèƒ½å¡«å¼ ä¸‰ï¼", equalStr = "å¼ ä¸‰")
+            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "ĞÕÃûÎª¿Õ£¡"),
+            @VerifyParams(type = VerifyType.LENGTH_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, minLength = 2, maxLength = 10, errorMsg = "ĞÕÃûÊäÈë´íÎó£¡"),
+            @VerifyParams(type = VerifyType.EQUALS, group = {VerifyGroup.Default.class}, errorMsg = "ÄúÖ»ÄÜÌîÕÅÈı£¡", equalStr = "ÕÅÈı")
     })
     @VerifySort(1)
     @ColumnInfo
     private String name;
 
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "è¯·é€‰æ‹©æ€§åˆ«ï¼"),
+            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "ÇëÑ¡ÔñĞÔ±ğ£¡"),
     })
     @VerifySort(2)
     @ColumnInfo
     private String sex;
 
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "è¯·é€‰æ‹©ç”Ÿæ—¥ï¼"),
+            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "ÇëÑ¡ÔñÉúÈÕ£¡"),
     })
     @VerifySort(3)
     @ColumnInfo
@@ -741,70 +741,70 @@ public class Person extends BaseDaoBean {
     private String classStartTime;
 
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "è¯·å¡«å†™æ‰‹æœºå·ç ï¼"),
-            @VerifyParams(type = VerifyType.MOBILE_PHONE, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "æ‰‹æœºå·ç æ ¼å¼è¾“å…¥ä¸æ­£ç¡®ï¼")
+            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "ÇëÌîĞ´ÊÖ»úºÅÂë£¡"),
+            @VerifyParams(type = VerifyType.MOBILE_PHONE, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "ÊÖ»úºÅÂë¸ñÊ½ÊäÈë²»ÕıÈ·£¡")
     })
     @VerifySort(4)
     @ColumnInfo
     private String mobile;
 
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "è¯·å¡«å†™å›ºè¯å·ç ï¼"),
-            @VerifyParams(type = VerifyType.TEL_PHONE, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "å›ºè¯å·ç æ ¼å¼è¾“å…¥ä¸æ­£ç¡®ï¼")
+            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "ÇëÌîĞ´¹Ì»°ºÅÂë£¡"),
+            @VerifyParams(type = VerifyType.TEL_PHONE, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "¹Ì»°ºÅÂë¸ñÊ½ÊäÈë²»ÕıÈ·£¡")
     })
     @VerifySort(5)
     @ColumnInfo
     private String tel;
 
     @VerifySort(6)
-    @VerifyParams(type = VerifyType.NUMBER_RANGE, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, minNumber = 0, maxNumber = 120, errorMsg = "æ‚¨æ˜¯ç¥ä»™å—ï¼Ÿ")
+    @VerifyParams(type = VerifyType.NUMBER_RANGE, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, minNumber = 0, maxNumber = 120, errorMsg = "ÄúÊÇÉñÏÉÂğ£¿")
     @ColumnInfo
     private String age;
 
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOTNULL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "ä½“é‡ä¸ºç©º"),
-            @VerifyParams(type = VerifyType.NUMBER_00, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "ä½“é‡è¾“å…¥æ ¼å¼ä¸æ­£ç¡®"),
-            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, maxNumber = 200, errorMsg = "ä½ è¯¥å‡è‚¥äº†ï¼ï¼ï¼"),
-            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, minNumber = 40, errorMsg = "ä½ å·²ç»ç˜¦æˆç«¹ç«¿äº†ï¼ï¼ï¼")
+            @VerifyParams(type = VerifyType.NOTNULL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "ÌåÖØÎª¿Õ"),
+            @VerifyParams(type = VerifyType.NUMBER_00, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "ÌåÖØÊäÈë¸ñÊ½²»ÕıÈ·"),
+            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, maxNumber = 200, errorMsg = "Äã¸Ã¼õ·ÊÁË£¡£¡£¡"),
+            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, minNumber = 40, errorMsg = "ÄãÒÑ¾­Êİ³ÉÖñ¸ÍÁË£¡£¡£¡")
     })
     @VerifySort(7)
     @ColumnInfo
     private String weight;
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOTNULL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "èº«é«˜ä¸ºç©º"),
-            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, maxNumber = 300, errorMsg = "å§šæ˜éƒ½æ²¡ä½ é«˜ï¼ï¼ï¼"),
-            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, minNumber = 40, errorMsg = "å»ºè®®æ‚¨è¡¥è¡¥é’™ï¼Œå¤šæ™’æ™’å¤ªé˜³ï¼ï¼ï¼")
+            @VerifyParams(type = VerifyType.NOTNULL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "Éí¸ßÎª¿Õ"),
+            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, maxNumber = 300, errorMsg = "Ò¦Ã÷¶¼Ã»Äã¸ß£¡£¡£¡"),
+            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, minNumber = 40, errorMsg = "½¨ÒéÄú²¹²¹¸Æ£¬¶àÉ¹É¹Ì«Ñô£¡£¡£¡")
 
     })
     @VerifySort(8)
     @ColumnInfo
     private String height;
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Create.class}, errorMsg = "é‚®ç®±åœ°å€ä¸ºç©ºï¼"),
-            @VerifyParams(type = VerifyType.EMAIL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "é‚®ç®±åœ°å€é”™è¯¯ï¼")
+            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Create.class}, errorMsg = "ÓÊÏäµØÖ·Îª¿Õ£¡"),
+            @VerifyParams(type = VerifyType.EMAIL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "ÓÊÏäµØÖ·´íÎó£¡")
     })
     @VerifySort(9)
     @ColumnInfo
     private String email;
 
     @VerifySort(10)
-    @VerifyParams(type = VerifyType.NOT_EMPTY, errorMsg = "æ‚¨å¡«å¡«å†™æ‚¨çš„çˆ±å¥½ï¼")
+    @VerifyParams(type = VerifyType.NOT_EMPTY, errorMsg = "ÄúÌîÌîĞ´ÄúµÄ°®ºÃ£¡")
     @ColumnInfo
     @TypeConverters({RoomListStringConverter.class})
     private List<String> hobby;
 
     //    @VerifyFieldSort(11)
-//    @VerifyParams(type = VerifyType.NOTNULL, notNull = true, errorMsg = "æ‚¨é€‰æ‹©æ‚¨çš„æœ¬äººç…§ç‰‡ï¼")
+//    @VerifyParams(type = VerifyType.NOTNULL, notNull = true, errorMsg = "ÄúÑ¡ÔñÄúµÄ±¾ÈËÕÕÆ¬£¡")
     @Ignore
     private List<Uri> imageList;
 
     //    @VerifyFieldSort(12)
-//    @Valid(notNull = true, errorMsg = "è¯·é€‰æ‹©æ‚¨çš„å®¶åº­ä¿¡æ¯ï¼")
+//    @Valid(notNull = true, errorMsg = "ÇëÑ¡ÔñÄúµÄ¼ÒÍ¥ĞÅÏ¢£¡")
     @Ignore
     public Family family;
 
     //    @VerifyFieldSort(13)
-//    @Valid(notNull = true, errorMsg = "è¯·é€‰æ‹©æ‚¨çš„å®¶åº­é›†åˆä¿¡æ¯ï¼")
+//    @Valid(notNull = true, errorMsg = "ÇëÑ¡ÔñÄúµÄ¼ÒÍ¥¼¯ºÏĞÅÏ¢£¡")
     @ColumnInfo
     @Ignore
     public List<Family> familyList;
@@ -998,42 +998,42 @@ public class Person extends BaseDaoBean {
     }
 }
 ```
-å¼€å§‹æ ¡éªŒ
+¿ªÊ¼Ğ£Ñé
 ```
             VerifyResult verifyResult = EntityValidator.validate(binding.getData());
-            showToast((verifyResult.isOk() ? "éªŒè¯æˆåŠŸ" : "éªŒè¯å¤±è´¥ï¼š") + StringUtil.filterNull(verifyResult.getErrorMsg()));
+            showToast((verifyResult.isOk() ? "ÑéÖ¤³É¹¦" : "ÑéÖ¤Ê§°Ü£º") + StringUtil.filterNull(verifyResult.getErrorMsg()));
             if (!verifyResult.isOk()) {
                 return;
             }
 ```
 
-#### è‡ªå®šä¹‰ç›¸æœº
-å‚è€ƒç¤ºä¾‹ä»£ç `CustomCameraActivity`
+#### ×Ô¶¨ÒåÏà»ú
+²Î¿¼Ê¾Àı´úÂë`CustomCameraActivity`
 
-#### Dialogå¸¸è§å°è£…ç¤ºä¾‹
-å‚è€ƒç¤ºä¾‹ä»£ç `DialogActivity`
+#### Dialog³£¼û·â×°Ê¾Àı
+²Î¿¼Ê¾Àı´úÂë`DialogActivity`
 
-#### è‡ªå®šä¹‰ç»„ä»¶å°è£…ç¤ºä¾‹
-å‚è€ƒç¤ºä¾‹ä»£ç `WightActivity`
+#### ×Ô¶¨Òå×é¼ş·â×°Ê¾Àı
+²Î¿¼Ê¾Àı´úÂë`WightActivity`
 
-#### äºŒç»´ç èƒ½åŠ›ç¤ºä¾‹
-å‚è€ƒç¤ºä¾‹ä»£ç `ScanQrCodeActivity`
+#### ¶şÎ¬ÂëÄÜÁ¦Ê¾Àı
+²Î¿¼Ê¾Àı´úÂë`ScanQrCodeActivity`
 
-#### GPSèƒ½åŠ›ç¤ºä¾‹
-å‚è€ƒç¤ºä¾‹ä»£ç `GoogleGPSActivity`
+#### GPSÄÜÁ¦Ê¾Àı
+²Î¿¼Ê¾Àı´úÂë`GoogleGPSActivity`
 
-#### è‡ªå®šä¹‰è¡¨å•ç»„ä»¶
-å‚è€ƒç¤ºä¾‹ä»£ç `VerifyActivity`
+#### ×Ô¶¨Òå±íµ¥×é¼ş
+²Î¿¼Ê¾Àı´úÂë`VerifyActivity`
 
-#### æ–­ç‚¹ç»­ä¼ ä¸‹è½½
+#### ¶ÏµãĞø´«ÏÂÔØ
 
-æ™®é€šæ–‡ä»¶ä¸‹è½½ç¤ºä¾‹ï¼š
+ÆÕÍ¨ÎÄ¼şÏÂÔØÊ¾Àı£º
 
 ```
                Disposable disposable = DownloadManger.getInstance().download(this, binding.editUrl.getText().toString().trim())
                     .subscribe(file -> {
-                        LogUtil.show(ApiRetrofit.TAG, "ä¸‹è½½æˆåŠŸï¼š" + file.getAbsolutePath());
-                        showToast("ä¸‹è½½æˆåŠŸï¼");
+                        LogUtil.show(ApiRetrofit.TAG, "ÏÂÔØ³É¹¦£º" + file.getAbsolutePath());
+                        showToast("ÏÂÔØ³É¹¦£¡");
                     }, throwable -> {
                         if (throwable instanceof BaseException baseException) {
                             showToast(baseException.getErrorMsg());
@@ -1043,20 +1043,20 @@ public class Person extends BaseDaoBean {
                     });
 ```
 
-ç‰ˆæœ¬æ›´æ–°ç¤ºä¾‹ï¼š
+°æ±¾¸üĞÂÊ¾Àı£º
 
 ```
     UpdateManger.getInstance().checkUpdateInfo((Activity) view.getContext(),
                         "http://softfile.3g.qq.com:8080/msoft/179/24659/43549/qq_hd_mini_1.4.apk",
-                        "1ã€ä¿®å¤å·²çŸ¥bug",
+                        "1¡¢ĞŞ¸´ÒÑÖªbug",
                         "1.0.1");
 ```
 
-#### è§†é¢‘æ’­æ”¾
+#### ÊÓÆµ²¥·Å
 
-é¡¹ç›®ä¸­é›†æˆäº†githubä¸Šçš„gsyè§†é¢‘æ’­æ”¾åº“ï¼Œç›®å‰æ˜¯æˆ‘è§‰å¾—å¼€æºåº“ä¸­å…¼å®¹æ€§æœ€å¥½çš„äº†å§ç›´æ¥è°ƒç”¨VideoPlayerActivityè¿™ä¸ªActivityå°±è¡Œäº†ï¼ŒåŸºç¡€æ’­æ”¾åŠŸèƒ½ï¼Œå¦‚æœä½ çš„åœºæ™¯æ›´è´Ÿè´£é‚£å¯èƒ½éœ€è¦è‡ªå·±å•ç‹¬é›†æˆäº†
+ÏîÄ¿ÖĞ¼¯³ÉÁËgithubÉÏµÄgsyÊÓÆµ²¥·Å¿â£¬Ä¿Ç°ÊÇÎÒ¾õµÃ¿ªÔ´¿âÖĞ¼æÈİĞÔ×îºÃµÄÁË°ÉÖ±½Óµ÷ÓÃVideoPlayerActivityÕâ¸öActivity¾ÍĞĞÁË£¬»ù´¡²¥·Å¹¦ÄÜ£¬Èç¹ûÄãµÄ³¡¾°¸ü¸ºÔğÄÇ¿ÉÄÜĞèÒª×Ô¼ºµ¥¶À¼¯³ÉÁË
 
-#### å¤§å›¾é¢„è§ˆæ¡†æ¶
+#### ´óÍ¼Ô¤ÀÀ¿ò¼Ü
 
 ```
     new PreviewPhotoDialog(this)
@@ -1065,7 +1065,7 @@ public class Person extends BaseDaoBean {
         .show()
 ```
 
-#### å…³äºä¸€äº›å…¶ä»–çš„å…¬å…±åº“
+#### ¹ØÓÚÒ»Ğ©ÆäËûµÄ¹«¹²¿â
 
-baseå°è£…ã€ä¸€äº›dialogæ¡†ã€è‡ªå®šä¹‰viewå°è£…ç­‰ç­‰å¯ä»¥è‡ªè¡Œåœ¨æºç ä¸­æŸ¥çœ‹äº†è§£ï¼Œä¸ä¸€ä¸€ä»‹ç»äº†
+base·â×°¡¢Ò»Ğ©dialog¿ò¡¢×Ô¶¨Òåview·â×°µÈµÈ¿ÉÒÔ×ÔĞĞÔÚÔ´ÂëÖĞ²é¿´ÁË½â£¬²»Ò»Ò»½éÉÜÁË
 

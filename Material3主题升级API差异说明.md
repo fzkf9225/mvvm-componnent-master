@@ -86,7 +86,7 @@ if (context.getTheme().resolveAttribute(
 }
 ```
 
-`googlegps` 的 `GPSConfirmDialog` 已按此方式取 `colorSurface`。
+`core-gnss` 的 `GPSConfirmDialog` 已按此方式取 `colorSurface`。
 
 ### 2.4 暗色模式
 
@@ -345,7 +345,7 @@ public class ActionToolbar extends MaterialToolbar
 | | 升级前 | 升级后 |
 |---|---|---|
 | Dialog 主题父类 | `@android:style/Theme.Dialog` | `App.Material3.Dialog` → `Theme.Material3.DayNight.Dialog` |
-| ActionSheet | 同上 | `ThemeOverlay.Material3.MaterialAlertDialog`（commonui / googlegps / commonmedia） |
+| ActionSheet | 同上 | `ThemeOverlay.Material3.MaterialAlertDialog`（commonui / core-gnss / commonmedia） |
 | `BaseDialog` 默认背景 | `Color.WHITE` | `R.color.cardSurface` |
 | `ChoiceSelectDialog` | 无专门表面处理 | `applySurfaceBackground()`，16dp 圆角 + `cardSurface` |
 | 布局文本 | `AppCompatTextView` | `MaterialTextView` |
@@ -552,7 +552,7 @@ android:theme="@style/ThemeOverlay.Material3.Dark.ActionBar"
 写颜色 / 暗色
 
 - [ ] 新 color 在 `values` 和 `values-night` 成对出现，或引用已有语义色
-- [ ] 模块级 Dialog 若覆盖 `colorSurface`，同时覆盖 `colorOnSurface`（参考 googlegps）
+- [ ] 模块级 Dialog 若覆盖 `colorSurface`，同时覆盖 `colorOnSurface`（参考 core-gnss）
 
 ---
 

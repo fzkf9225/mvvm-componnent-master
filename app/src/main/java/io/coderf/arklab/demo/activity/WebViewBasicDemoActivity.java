@@ -15,7 +15,7 @@ import io.coderf.arklab.demo.helper.WebViewDemoFileHelper;
  * <ul>
  *     <li>文件选择：系统选择器 + 拍照（{@link io.coderf.arklab.common.utils.common.NativeWebChromeClient}）</li>
  *     <li>定位：原生 {@link io.coderf.arklab.common.helper.WebViewNativeLocationHelper}</li>
- *     <li>不依赖 commonmedia / googlegps</li>
+ *     <li>不依赖 commonmedia / core-gnss</li>
  * </ul>
  *
  * @author fz

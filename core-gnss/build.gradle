@@ -1,0 +1,117 @@
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
+}
+
+android {
+    namespace = 'io.coderf.arklab.gnss'
+    compileSdk = libs.versions.compileSdkVersion.get().toInteger()
+    defaultConfig {
+        minSdk = libs.versions.minSdkVersion.get().toInteger()
+        targetSdk = libs.versions.targetSdkVersion.get().toInteger()
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
+    }
+
+    buildTypes {
+        release {
+            resValue("string", "gps_config_file", "prod.properties" )
+            buildConfigField("boolean", "LOG_DEBUG", "false")// 不显示log
+            minifyEnabled = false// 混淆
+            proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
+            //新版混淆添加以下代码：，如果只添加上面会导致混淆规则一直无效；
+            consumerProguardFiles('consumer-rules.pro')
+        }
+        debug {
+            resValue("string", "gps_config_file", "dev.properties")
+            buildConfigField("boolean", "LOG_DEBUG", "true")// 显示log
+            minifyEnabled = false// 混淆
+            proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
+        }
+    }
+    compileOptions {
+        encoding = "UTF-8"
+        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+    }
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
+    ksp {
+
+    }
+
+    kotlin {
+        jvmToolchain(17)  // 这是 kotlin DSL 的写法
+    }
+
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        }
+    }
+
+    buildFeatures {
+        //noinspection DataBindingWithoutKapt
+        dataBinding = true
+        buildConfig = true
+    }
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java']
+            res.srcDirs = ['src/main/res']
+            assets.srcDirs = ['src/main/assets']
+        }
+    }
+}
+
+dependencies {
+
+    implementation platform(libs.kotlin.bom)
+    implementation libs.androidx.appcompat
+    implementation libs.material
+    api project(':core-log')
+    testImplementation libs.junit
+    implementation libs.gson
+}
+// Publish: ./gradlew :core-gnss:publish（或 IDE 点 publish；会自动依赖 assembleRelease）
+// env: ALIYUN_USER_NAME / ALIYUN_PASSWORD
+apply plugin: 'maven-publish'
+
+tasks.register('androidSourcesJar', Jar) {
+    archiveClassifier.set("sources")
+    from android.sourceSets.main.java.srcDirs
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            // 与 core-base / commonmedia 一致：from components.release，publish 时自动打包 AAR
+            plugin(MavenPublication) {
+                from components.release
+                artifact(androidSourcesJar)
+                groupId = 'io.coderf.arklab.gnss'
+                artifactId = 'core-gnss'
+                version = '4.0.0'
+            }
+        }
+        repositories {
+            maven {
+                url = 'https://packages.aliyun.com/maven/repository/2405978-release-ObRSGq/'
+                credentials {
+                    username = System.getenv("ALIYUN_USER_NAME")
+                    password = System.getenv("ALIYUN_PASSWORD")
+                }
+            }
+            maven {
+                url = 'https://packages.aliyun.com/maven/repository/2405978-snapshot-rT6GM2/'
+                credentials {
+                    username = System.getenv("ALIYUN_USER_NAME")
+                    password = System.getenv("ALIYUN_PASSWORD")
+                }
+            }
+        }
+    }
+}

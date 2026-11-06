@@ -43,7 +43,7 @@ import io.coderf.arklab.common.webview.WebViewMenuAction;
 import io.coderf.arklab.common.widget.dialog.WebViewActionSheetDialog;
 
 /**
- * 通用 WebView 容器（<b>仅依赖 common 模块</b>，无 commonmedia / googlegps）。
+ * 通用 WebView 容器（<b>仅依赖 common 模块</b>，无 commonmedia / core-gnss）。
  * <p>能力：</p>
  * <ul>
  *     <li>网络 / assets / 沙盒 / 下载目录（{@link WebViewUrlTypeEnum}）</li>

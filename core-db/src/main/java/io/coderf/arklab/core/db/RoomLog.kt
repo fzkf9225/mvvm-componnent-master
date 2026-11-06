@@ -99,7 +99,8 @@ object RoomLog {
     }
 
     /**
-     * 开始一次仓库操作会话；在 subscribe 时调用，完成后 [Session.success] / [Session.error]。
+     * 开始一次仓库操作会话；在 subscribe / Flow.onStart 时调用，
+     * 完成后 [Session.success] / [Session.error]。仅 Debug 控制台输出，不落库。
      */
     @JvmStatic
     fun begin(
@@ -113,6 +114,16 @@ object RoomLog {
         return Session(traceId, repositoryName, operation, tableName, options, payload)
     }
 
+    /**
+     * 单次 Repository 操作的控制台日志会话（不持久化）。
+     *
+     * @param traceId          本次操作追踪 ID，便于在 Logcat 中配对 Start / End
+     * @param repositoryName   仓库类名
+     * @param operation        操作名（如 INSERT / FIND_ALL / EXECUTE）
+     * @param tableName        Dao 表名；未知时可为 "-"
+     * @param options          [RoomRequestOptions] 摘要（Loading / 超时 / Toast 等）
+     * @param payload          入参摘要（实体、id、查询条件等）
+     */
     class Session internal constructor(
         private val traceId: String,
         private val repositoryName: String,
@@ -123,19 +134,54 @@ object RoomLog {
     ) {
         private val startMs = SystemClock.elapsedRealtime()
 
+        init {
+            printStart()
+        }
+
         fun success(result: Any?) {
-            print(result, null)
+            printEnd(result, null)
         }
 
         fun error(error: Throwable) {
-            print(null, error)
+            printEnd(null, error)
         }
 
-        private fun print(result: Any?, error: Throwable?) {
+        /** 操作开始时打请求摘要，便于卡住时也能在 Logcat 看到。 */
+        private fun printStart() {
+            if (!isEnabled()) return
+            val log = StringBuilder(256)
+            log.append("--------------------Room Request--------------------\n")
+            appendCommon(log)
+            log.append("--------------------Room Request End--------------------")
+            LogUtil.logger(TAG, log.toString())
+        }
+
+        private fun printEnd(result: Any?, error: Throwable?) {
             if (!isEnabled()) return
             val duration = SystemClock.elapsedRealtime() - startMs
             val log = StringBuilder(384)
-            log.append("--------------------Room Start--------------------\n")
+            log.append("--------------------Room Response--------------------\n")
+            appendCommon(log)
+            log.append("Duration：").append(duration).append("ms\n")
+            if (error != null) {
+                log.append("Error：")
+                    .append(error.javaClass.simpleName)
+                    .append(": ")
+                    .append(error.message)
+                    .append('\n')
+            } else {
+                log.append("Result：").append(formatValue(result)).append('\n')
+            }
+            log.append("--------------------Room Response End--------------------")
+            LogUtil.logger(TAG, log.toString())
+            if (error != null) {
+                LogUtil.loggerE(TAG, "$operation failed", error)
+            } else if (Config.getInstance().isResponseBodyLogConverterJson) {
+                jsonResult(result)
+            }
+        }
+
+        private fun appendCommon(log: StringBuilder) {
             log.append("Trace Id：").append(traceId).append('\n')
             log.append("Operation：").append(operation).append('\n')
             log.append("Table：").append(tableName).append('\n')
@@ -149,23 +195,6 @@ object RoomLog {
                 log.append("Show Error Toast：").append(options.isShowErrorToast).append('\n')
             }
             log.append("Payload：").append(formatValue(payload)).append('\n')
-            log.append("Duration：").append(duration).append("ms\n")
-            if (error != null) {
-                log.append("Error：")
-                    .append(error.javaClass.simpleName)
-                    .append(": ")
-                    .append(error.message)
-                    .append('\n')
-            } else {
-                log.append("Result：").append(formatValue(result)).append('\n')
-            }
-            log.append("--------------------Room End--------------------")
-            LogUtil.logger(TAG, log.toString())
-            if (error != null) {
-                LogUtil.loggerE(TAG, "$operation failed", error)
-            } else if (Config.getInstance().isResponseBodyLogConverterJson()) {
-                jsonResult(result)
-            }
         }
     }
 
