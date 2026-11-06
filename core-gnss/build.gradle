@@ -91,7 +91,6 @@ afterEvaluate {
             // 与 core-base / commonmedia 一致：from components.release，publish 时自动打包 AAR
             plugin(MavenPublication) {
                 from components.release
-                artifact(androidSourcesJar)
                 groupId = 'io.coderf.arklab.gnss'
                 artifactId = 'core-gnss'
                 version = '4.0.0'
