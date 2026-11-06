@@ -11,7 +11,7 @@ import io.coderf.arklab.media.enums.MediaTypeEnum
 
 /**
  * Demo 组装层：将框架 [MediaHelper] 适配为 case 侧 [MediaGateway]。
- * commonmedia 不依赖 :base / userapi。
+ * core-media 不依赖 :base / userapi。
  *
  * @author fz
  * @version 1.0

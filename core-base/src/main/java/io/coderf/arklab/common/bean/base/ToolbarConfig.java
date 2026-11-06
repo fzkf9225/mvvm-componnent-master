@@ -100,6 +100,13 @@ public class ToolbarConfig extends BaseObservable {
      * 是否启用沉浸式（Edge-to-Edge 下与透明状态栏等价，保留字段兼容业务）
      */
     private boolean enableImmersionBar = false;
+
+    /**
+     * 正文是否延伸到 Toolbar 下方（透明 Toolbar 可透出内容）。
+     * 为 true 时去掉 {@code appbar_scrolling_view_behavior}，AppBar 浮在内容之上。
+     */
+    private boolean contentUnderToolbar = false;
+
     /**
      * 是否显示返回按钮
      */
@@ -266,6 +273,18 @@ public class ToolbarConfig extends BaseObservable {
     public ToolbarConfig setEnableImmersionBar(boolean enableImmersionBar) {
         this.enableImmersionBar = enableImmersionBar;
         notifyPropertyChanged(BR.enableImmersionBar);
+        return this;
+    }
+
+    public boolean isContentUnderToolbar() {
+        return contentUnderToolbar;
+    }
+
+    /**
+     * 正文画到 Toolbar 下方。配合 {@link #setBgColor} 透明可透出下方内容；默认 false。
+     */
+    public ToolbarConfig setContentUnderToolbar(boolean contentUnderToolbar) {
+        this.contentUnderToolbar = contentUnderToolbar;
         return this;
     }
 

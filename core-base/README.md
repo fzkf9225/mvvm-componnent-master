@@ -15,7 +15,7 @@ namespace：`io.coderf.arklab.common`
 
 ### 1.7.2
 
-附件列表小图优先缩略图（配合 **commonui ≥3.7.7**）：
+附件列表小图优先缩略图（配合 **core-form ≥3.7.7**）：
 
 - `AttachmentBean.getDisplayPath(preferThumbnail)` / `AttachmentUtil.getDisplayPath`
 - `BaseMediaRecyclerViewAdapter.preferThumbnail`（默认 `true`）；列表 Add/Show Adapter 的 Glide 改走展示地址

@@ -18,7 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
 
 /**
- * commonmedia Dialog 基类：统一横屏 Window 尺寸，与 core-base {@code BaseDialog} 行为对齐，
+ * core-media Dialog 基类：统一横屏 Window 尺寸，与 core-base {@code BaseDialog} 行为对齐，
  * 但不依赖其他模块。
  * <p>
  * 横屏适配：

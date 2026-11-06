@@ -2,6 +2,7 @@ package io.coderf.arklab.demo.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
@@ -10,6 +11,8 @@ import android.text.TextUtils;
 import android.view.View;
 
 import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -45,6 +48,7 @@ import io.coderf.arklab.common.helper.NumberTextWatcher;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 import io.coderf.arklab.common.widget.recyclerview.FullyGridLayoutManager;
 import io.coderf.arklab.common.widget.recyclerview.GridSpacingItemDecoration;
+import io.coderf.arklab.core.utils.ScreenUtil;
 import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.bean.UseCase;
 import io.coderf.arklab.demo.databinding.ActivityWightBinding;
@@ -67,7 +71,7 @@ public class WightActivity extends BaseStatefulActivity<WightViewModel, Activity
     private String imageUrl = "https://img1.baidu.com/it/u=805676447,2282344960&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800";
     private ImageShowAdapter imageShowAdapter;
     private VideoShowAdapter videoShowAdapter;
-
+    private boolean initPadding = false;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_wight;
@@ -81,6 +85,7 @@ public class WightActivity extends BaseStatefulActivity<WightViewModel, Activity
     @SuppressLint("NotifyDataSetChanged")
     @Override
     public void initView(Bundle savedInstanceState) {
+//        applyScrollTopInsetUnderToolbar();
         binding.setImageUrl(imageUrl);
         initAutoTextViewDemo();
         initMarqueeTextViewDemo();
@@ -295,15 +300,42 @@ public class WightActivity extends BaseStatefulActivity<WightViewModel, Activity
     };
 
     public ToolbarConfig createdToolbarConfig() {
+//        return new ToolbarConfig(this)
+//                .setTitle(setTitleBar())
+//                .setTextColor(io.coderf.arklab.common.R.color.cardOnSurface)
+//                .setBackIconRes(io.coderf.arklab.common.R.drawable.icon_fh)
+//                .setBackIconColor(io.coderf.arklab.common.R.color.cardOnSurface)
+//                .setBgColor(io.coderf.arklab.common.R.color.themeColor)
+//                .setContentUnderToolbar(true)
+//                .setStatusBarIconsLight(true)
+//                .setElevationDp(0f)
+//                .setHeight(DensityUtil.dp2px(this, 32f))
+//                .setTitleTextSizeSp(15)
+//                .applyStatusBar();
         return new ToolbarConfig(this)
-                .setLightMode(true)
                 .setTitle(setTitleBar())
                 .setTextColor(io.coderf.arklab.common.R.color.onPrimary)
                 .setBackIconRes(io.coderf.arklab.common.R.drawable.icon_fh)
                 .setBgColor(io.coderf.arklab.common.R.color.themeColor)
                 .setHeight(DensityUtil.dp2px(this,32f))
+                .setStatusBarIconsLight(true)
                 .setTitleTextSizeSp(15)
                 .applyStatusBar();
+    }
+
+    /** 默认顶在 Toolbar 下；clipToPadding=false，上滑可钻进透明区。 */
+    private void applyScrollTopInsetUnderToolbar() {
+        if(initPadding){
+            return;
+        }
+        View scroll = binding.scrollContent;
+        scroll.post(()->{
+            int top = ScreenUtil.getStatusBarHeight(this)
+                    + toolbarBind.getToolbarConfig().getHeight()
+                    + scroll.getPaddingTop();
+            scroll.setPadding(scroll.getPaddingLeft(), top, scroll.getPaddingRight(), scroll.getPaddingBottom());
+        });
+        initPadding = true;
     }
 
     @Override

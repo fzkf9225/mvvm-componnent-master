@@ -89,7 +89,7 @@ public final class MediaDialogHostAdaptHelper {
                 method.invoke(null, resources, DEFAULT_DIALOG_ADAPT_SIZE_DP, false);
             }
         } catch (Throwable ignored) {
-            // commonmedia 独立使用或未集成 AutoSize 时不做密度转换
+            // core-media 独立使用或未集成 AutoSize 时不做密度转换
         }
     }
 

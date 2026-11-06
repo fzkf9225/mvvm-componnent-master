@@ -163,7 +163,7 @@ log.e("GpsService", "bootstrap failed", t);
 
 ## 本仓库模块依赖
 
-本工程内 `:core-base` / `:core-mqtt` / `:core-ws` / `:core-gnss` / `:commonmedia` 已依赖 `:core-log`，删除了各自重复的 Log 实现；模块侧通过薄封装委托本库：
+本工程内 `:core-base` / `:core-mqtt` / `:core-ws` / `:core-gnss` / `:core-media` 已依赖 `:core-log`，删除了各自重复的 Log 实现；模块侧通过薄封装委托本库：
 
 | 模块 | 封装 |
 |------|------|
@@ -171,4 +171,4 @@ log.e("GpsService", "bootstrap failed", t);
 | core-mqtt | `MqttLog` → `ArkLog.mqtt()` |
 | core-ws | `WsLog` → `ArkLog.ws()` |
 | core-gnss | `LogUtil` / `DebugUtil` → `ArkLog.gps()` |
-| commonmedia | `LogUtil` / `DebugUtil` → `ArkLog.media()` |
+| core-media | `LogUtil` / `DebugUtil` → `ArkLog.media()` |

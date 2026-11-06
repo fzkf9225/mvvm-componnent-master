@@ -15,7 +15,7 @@ import io.coderf.arklab.media.enums.MediaPickerTypeEnum;
 import io.coderf.arklab.ui.webview.MediaWebChromeClient;
 
 /**
- * commonui 增强 WebView：在 {@link WebViewActivity} 基础上仅增强<b>文件选择</b>（commonmedia {@link MediaHelper}）。
+ * core-form 增强 WebView：在 {@link WebViewActivity} 基础上仅增强<b>文件选择</b>（core-media {@link MediaHelper}）。
  *
  * <p>
  *

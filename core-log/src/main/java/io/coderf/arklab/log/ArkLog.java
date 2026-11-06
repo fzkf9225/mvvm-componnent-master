@@ -46,7 +46,7 @@ public final class ArkLog {
     public static final String MODULE_WS = "ws";
     /** core-gnss 通道 id */
     public static final String MODULE_GPS = "gps";
-    /** commonmedia 通道 id */
+    /** core-media 通道 id */
     public static final String MODULE_MEDIA = "media";
 
     /** 模块日志通道缓存（key 为 moduleId），同一模块全局单例 */
@@ -167,7 +167,7 @@ public final class ArkLog {
         return channel(MODULE_GPS, "ArkLab");
     }
 
-    /** @return commonmedia 通道 */
+    /** @return core-media 通道 */
     public static LogChannel media() {
         return channel(MODULE_MEDIA, "ArkLab");
     }

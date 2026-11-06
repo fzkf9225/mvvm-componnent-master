@@ -1,9 +1,9 @@
 # 升级与迁移说明
 
 > **当前主干版本（以各模块 `build.gradle` 发布号为准，README 若滞后请以此为准）：**  
-> **common `4.7.0`** · **core-base `1.7.2`** · **core-network `1.7.1`** · **core-db `1.6.2`** · **core-ui `1.3.1`** · **core-utils `1.2.0`** · **core-log `1.2.0`** · **core-autosize `1.0.0`** · **room-processor `1.2.0`** · **core-mqtt `1.6.2`** · **core-ws `1.0.1`** · **commonui `3.7.7`** · **commonmedia `3.7.0`** · **core-gnss `4.0.0`** · **annotation `3.3.1`**  
+> **common `4.7.0`** · **core-base `1.7.2`** · **core-network `1.7.1`** · **core-db `1.6.2`** · **core-ui `1.3.1`** · **core-utils `1.2.0`** · **core-log `1.2.0`** · **core-autosize `1.0.0`** · **room-processor `1.2.0`** · **core-mqtt `1.6.2`** · **core-ws `1.0.1`** · **core-form `3.7.7`** · **core-media `3.7.0`** · **core-gnss `4.0.0`** · **annotation `3.3.1`**  
 >
-> **本轮重点：** [§0.4.3](#043-附件小图优先缩略图base-172--ui-377)；近期见 [§0.4.2](#042-附件模型简化base-171--db-162)、[§0.4.1](#041-commonui-376移除-forminputtype--formimeoptions)、[§0.4](#04-本轮补丁base-160--network-170--db-161--ws-101--ui-374--gps-340)。  
+> **本轮重点：** [§0.4.3](#043-附件小图优先缩略图base-172--ui-377)；近期见 [§0.4.2](#042-附件模型简化base-171--db-162)、[§0.4.1](#041-core-form原-commonui376移除-forminputtype--formimeoptions)、[§0.4](#04-本轮补丁base-160--network-170--db-161--ws-101--ui-374--gps-340)。  
 > Room 协程栈落地见 [§0.5](#05-历史core-db-150-协程栈若尚未跟上)；剔除 `BaseView` 见 [§2](#2-120彻底剔除-baseview--mvp-页面绑定)；AppCompat → Material3 见 [§1](#1-460appcompat-主题--material3)。  
 > 仍停留在 **common 4.4.x 单体**：先完成 [附录 A](#附录-a4451从-444x-单体拆到-core)。  
 > 模块职责见 [MODULES.md](./MODULES.md)；网络迁移细节见 [core-network/MIGRATION.md](./core-network/MIGRATION.md)、[core-network/README.md](./core-network/README.md)；Room 见 [core-db/README.md](./core-db/README.md)。
@@ -32,6 +32,32 @@ implementation 'io.coderf.arklab.gnss:core-gnss:4.0.0'
 ```
 
 工程依赖 `implementation project(':common')` 时随源码即可。
+
+### core-form（原 commonui）
+
+Gradle 模块由 `:commonui` 重命名为 `:core-form`；**包名与 Maven 坐标不变**（`io.coderf.arklab.ui:ui:3.7.7`）。勿与 `:core-ui`（`io.coderf.arklab.core:ui`）混淆。
+
+```gradle
+// 旧
+implementation project(':commonui')
+// 新
+implementation project(':core-form')
+// Maven 仍为：
+implementation 'io.coderf.arklab.ui:ui:3.7.7'
+```
+
+### core-media（原 commonmedia）
+
+Gradle 模块由 `:commonmedia` 重命名为 `:core-media`；**包名与 Maven 坐标不变**（`io.coderf.arklab.media:media:3.7.0`）。
+
+```gradle
+// 旧
+implementation project(':commonmedia')
+// 新
+implementation project(':core-media')
+// Maven 仍为：
+implementation 'io.coderf.arklab.media:media:3.7.0'
+```
 
 ### core-gnss `4.0.0` �ƻ�����������ԭ googlegps��
 
@@ -65,8 +91,8 @@ import io.coderf.arklab.googlegps.*  ��  import io.coderf.arklab.gnss.*
 | room-processor | `io.coderf.arklab.room:room-processor:1.2.0` |
 | core-mqtt | `io.coderf.arklab.mqtt:mqtt:1.6.2` |
 | core-ws | `io.coderf.arklab.ws:ws:1.0.1` |
-| commonui | `io.coderf.arklab.ui:ui:3.7.7` |
-| commonmedia | `io.coderf.arklab.media:media:3.7.0` |
+| core-form | `io.coderf.arklab.ui:ui:3.7.7`（原模块名 `commonui`；包名 / Maven 坐标不变） |
+| core-media | `io.coderf.arklab.media:media:3.7.0`（原模块名 `commonmedia`；包名 / Maven 坐标不变） |
 | core-gnss | `io.coderf.arklab.gnss:core-gnss:4.0.0`（原 `googlegps`，包名 `io.coderf.arklab.gnss`，无旧坐标兼容） |
 | annotation | `io.coderf.arklab.annotation:annotation:3.3.1` |
 
@@ -79,7 +105,7 @@ import io.coderf.arklab.googlegps.*  ��  import io.coderf.arklab.gnss.*
 | 模块 | 版本 | 要点 |
 |------|------|------|
 | core-base | **1.7.2** | `AttachmentBean.getDisplayPath(preferThumbnail)`；`AttachmentUtil.getDisplayPath`；媒体列表 Adapter（`Image*` / `Media*` / `Video*` Add/Show）小图走展示地址；大图 `Preview*ViewPager` 仍用 `path`；相册条 `PreviewAlbumAdapter` 优先缩略图 |
-| commonui | **3.7.7** | `FormMedia` / `FormUI` 新增 `app:preferThumbnail`（默认 `true`），经 `applyPreviewPhotoConfigure` 下发到 Adapter；`setPreferThumbnail(boolean)` |
+| core-form（原 commonui） | **3.7.7** | `FormMedia` / `FormUI` 新增 `app:preferThumbnail`（默认 `true`），经 `applyPreviewPhotoConfigure` 下发到 Adapter；`setPreferThumbnail(boolean)` |
 
 ### 字段约定
 
@@ -145,7 +171,7 @@ attachmentRepo.saveOrUpdate(listOf(item))
 
 ---
 
-## 0.4.1 commonui `3.7.6`：移除 formInputType / formImeOptions
+## 0.4.1 core-form（原 commonui）`3.7.6`：移除 formInputType / formImeOptions
 
 **破坏性**（仅影响 `FormEditText` / `FormEditArea` 布局）：
 
@@ -160,7 +186,7 @@ flag 名与系统一致，可全局替换。非输入类 Form 控件上的旧 `f
 
 ## 0.4 本轮补丁：base `1.6.0` · network `1.7.0` · db `1.6.1` · ws `1.0.1` · ui `3.7.4` · gps `3.4.0`
 
-相对上一矩阵（base `1.5.9` / network·db `1.6.0` / ws `1.0.0` / commonui `3.7.3` / core-gnss `3.3.x`）的修复与清理；**不强制**改业务调用点，建议宿主显式钉到下表。
+相对上一矩阵（base `1.5.9` / network·db `1.6.0` / ws `1.0.0` / commonui（现 core-form）`3.7.3` / core-gnss `3.3.x`）的修复与清理；**不强制**改业务调用点，建议宿主显式钉到下表。
 
 | 模块 | 版本 | 要点 |
 |------|------|------|
@@ -168,7 +194,7 @@ flag 名与系统一致，可全局替换。非输入类 Form 控件上的旧 `f
 | core-network | **1.7.0** | **删除**过渡层 `FlowRepositoryImpl` / `PagingFlowRepositoryImpl` / `FlowPaging*`（协程请用 `DefaultNetworkRepository`）；保留 Rx `RepositoryImpl`；拦截器 header 快照防并发；签名 body one-shot 安全；`o-appMac`/`o-mediaDrmId` 默认不写（`setLegacyDeviceHeaders(true)` 兼容）；Rx Loading 改主线程 |
 | core-db | **1.6.1** | Room Rx Loading 改主线程（与 network 对齐） |
 | core-ws | **1.0.1** | `onOpen` 过期连接 early-return，避免乱序回调 |
-| commonui | **3.7.4** | `FormHost.validateAll` / `validate()`；Form dataSource 回调防泄漏；`FormMedia.itemBg` 走主题色 |
+| core-form（原 commonui） | **3.7.4** | `FormHost.validateAll` / `validate()`；Form dataSource 回调防泄漏；`FormMedia.itemBg` 走主题色 |
 | core-gnss | **3.4.0** | **删除**未完成的 Netty `socket` 上传与 `DeviceIdUtil`；去掉 netty / commons-lang3；实时上报请宿主自接 `core-ws` 等 |
 
 `common` facade 仍为 **4.7.0**（未改发布号）；Maven 宿主请**显式钉**上表 core / ui / gps，勿只升 common。
@@ -271,7 +297,7 @@ processor 配套仍为 **`room-processor:1.2.0`**（Bridge suspend RawQuery）�
 
 ## 2. 1.2.0：彻底剔除 BaseView / MVP 页面绑定
 
-这是一次 **架构契约** 大版本（相对当时 core-base **1.1.3** / commonui **3.6.2** / commonmedia **3.4.1**），不是主题变更。目标：ViewModel / Repository **不再持有页面**，请求 Loading / 错误展示只走 **`RequestUi` + `NetworkRequestUiHost`**；业务导航用 LiveData / Flow。后续已进一步删除旧版 `RequestUiCallback`，全链路统一为 `RequestUi`。
+这是一次 **架构契约** 大版本（相对当时 core-base **1.1.3** / core-form（当时 commonui）**3.6.2** / core-media（当时 commonmedia）**3.4.1**），不是主题变更。目标：ViewModel / Repository **不再持有页面**，请求 Loading / 错误展示只走 **`RequestUi` + `NetworkRequestUiHost`**；业务导航用 LiveData / Flow。后续已进一步删除旧版 `RequestUiCallback`，全链路统一为 `RequestUi`。
 
 > **版本说明：** 下表「当时落点」描述的是 **BaseView 剔除当轮** 的发布号。当前主干已继续演进（见文首矩阵 / 文首 Maven 块），业务工程请钉**当前**坐标，不要只升到表中的 1.2.0。
 
@@ -285,8 +311,8 @@ processor 配套仍为 **`room-processor:1.2.0`**（Bridge suspend RawQuery）�
 | core-db | 1.1.0 | 1.2.0（其后 1.5.0 协程栈） | **1.6.2** |
 | core-ui | 1.1.0 | 1.2.0 | **1.3.1** |
 | core-utils | 1.1.0 | 1.1.1 | **1.1.1** |
-| commonui | 3.6.2 | 3.7.0 | **3.7.4** |
-| commonmedia | 3.4.1 | 3.5.0 | **3.7.0** |
+| core-form（原 commonui） | 3.6.2 | 3.7.0 | **3.7.4** |
+| core-media（原 commonmedia） | 3.4.1 | 3.5.0 | **3.7.0** |
 | room-processor | — | 1.2.0（配套 db 1.5.0+） | **1.2.0** |
 
 依赖坐标请直接复制文首「当前推荐 Maven 钉版本」。
@@ -364,7 +390,7 @@ Repository ──写──? NetworkRequestUiHost（RequestUi）──Binder─�
 - 不要再 `implements BaseView` / 业务 View 接口。
 - 自定义请求 UI：重写 `provideRequestUi()` 或空实现 `bindNetworkRequestUi()` 后自行 observe `getNetworkRequestUiHost()`。
 
-#### commonui 表单
+#### core-form（原 commonui）表单
 
 ```diff
 - formMedia.setBaseView(this)
@@ -390,8 +416,8 @@ Repository ──写──? NetworkRequestUiHost（RequestUi）──Binder─�
 - [ ] 网络 / Room 请求仍出现 Loading，失败 Toast / 业务码（`showError`）正常
 - [ ] 配置变更（旋转）后请求 UI 仍正常（Host 在 VM，页面只重新 bind）
 - [ ] 登录或其它「跳转」不再通过 View 接口，而是 observe 事件
-- [ ] 使用 commonui `FormMedia` 的页面已改为 `setRequestUi`
-- [ ] 使用 commonmedia 时加载框样式正常
+- [ ] 使用 core-form `FormMedia` 的页面已改为 `setRequestUi`
+- [ ] 使用 core-media 时加载框样式正常
 
 ```bash
 ./gradlew :app:assembleDebug
@@ -450,8 +476,8 @@ Repository ──RequestUi──? NetworkRequestUiHost ──LiveData──? Net
 | room-processor | 1.0.1 | **1.1.0** → 现 **1.2.0** |
 | core-mqtt | 1.5.1 | **1.6.0** → 现 **1.6.2** |
 | core-ws | — | **1.0.0** → 现 **1.0.1** |
-| commonui | 3.5.1 | **3.6.0** → 3.7.0 → 现 **3.7.6** |
-| commonmedia | 3.3.2 | **3.4.0** → 3.5.0 → 现 **3.7.0** |
+| core-form（原 commonui） | 3.5.1 | **3.6.0** → 3.7.0 → 现 **3.7.6** |
+| core-media（原 commonmedia） | 3.3.2 | **3.4.0** → 3.5.0 → 现 **3.7.0** |
 | core-gnss��ԭ googlegps�� | 3.1.7 | **3.2.0** �� 3.3.x �� 3.4.0 �� �� **4.0.0**��ģ��/�����ƻ����������� |
 | annotation | 3.2.0 | **3.3.0** → 现 **3.3.1** |
 
@@ -506,9 +532,9 @@ implementation 'io.coderf.arklab.core:network:1.7.1'
 ./gradlew :app:assembleRelease   # minify 时加测登录
 ```
 
-### 1.6 补丁：core-base 1.1.1 / commonui 3.6.1（历史）
+### 1.6 补丁：core-base 1.1.1 / core-form（原 commonui）3.6.1（历史）
 
-这是 4.6.0 主题之后的 **控件落地**，不是再改主题父类。详细对照见 [core-base/README.md](core-base/README.md)、[commonui/README.md](commonui/README.md)。当前主干版本以文首为准。
+这是 4.6.0 主题之后的 **控件落地**，不是再改主题父类。详细对照见 [core-base/README.md](core-base/README.md)、[core-form/README.md](core-form/README.md)。当前主干版本以文首为准。
 
 | 已删除 | 替代 |
 |--------|------|
@@ -518,7 +544,7 @@ implementation 'io.coderf.arklab.core:network:1.7.1'
 
 **仍保留**：`CornerTextView`、`CircleTextView`、`CornerConstraintLayout`（官方没有 XML 圆角属性，背景改为 `MaterialShapeDrawable`）；`ClearableEditText` / `PasswordEditText`（官方 TIL 无法同时清 + 眼）。
 
-主题默认按钮 `inset` / `minHeight` 已清零。`commonui` 的 `FormConstraintLayout` / `FormMedia` 改为继承 `CornerConstraintLayout`。
+主题默认按钮 `inset` / `minHeight` 已清零。`core-form`（原 `commonui`）的 `FormConstraintLayout` / `FormMedia` 改为继承 `CornerConstraintLayout`。
 
 ---
 
@@ -533,7 +559,7 @@ implementation 'io.coderf.arklab.core:network:1.7.1'
 | 模块 | 新增 `core-utils` / `core-base` / `core-network` / `core-db` / `core-ui`；`common` 改为 facade |
 | 包名 | 业务仍使用 `io.coderf.arklab.common.*`（一般 **import 不用改**） |
 | 网络 | 新增 `DefaultNetworkRepository` + `RequestResult`；旧 Repository **已 Deprecated，未删除** |
-| 解耦 | `user` 去掉对 `mqttcomponent` / `commonmedia` 的直接依赖，改走 Gateway |
+| 解耦 | `user` 去掉对 `mqttcomponent` / `commonmedia`（现 `core-media`）的直接依赖，改走 Gateway |
 | 发布 | `common` 与各 `core-*` 补齐 `maven-publish`；混淆规则按模块拆到 `consumer-rules.pro` |
 
 ### A.2 宿主工程怎么升（4.4 → 4.5）
@@ -556,7 +582,7 @@ implementation 'io.coderf.arklab.common:common:4.5.1'
 
 ### A.3 代码迁移清单
 
-**业务模块依赖：** 不要在业务 module 写 `mqttcomponent` / `commonmedia`，改 `@Inject MessageGateway` / `MediaGateway`（接口在 `:base`）。app 侧绑定见 `GatewayModule`、`MediaGatewayModule`。
+**业务模块依赖：** 不要在业务 module 写 `mqttcomponent` / `core-media`（原 `commonmedia`），改 `@Inject MessageGateway` / `MediaGateway`（接口在 `:base`）。app 侧绑定见 `GatewayModule`、`MediaGatewayModule`。
 
 **网络：** 旧 `sendRequest` 可编译但勿新增；新代码用 `repository.request(RequestOptions) { api.xxx() }`。
 
@@ -567,7 +593,7 @@ implementation 'io.coderf.arklab.common:common:4.5.1'
 ```bash
 ./gradlew :app:assembleDebug
 ./gradlew :user:dependencies --configuration debugCompileClasspath
-# 输出中不应出现 mqttcomponent、commonmedia
+# 输出中不应出现 mqttcomponent、core-media / commonmedia
 ```
 
 - [ ] 冷启动 / 旋转屏后 Loading、Toast 正常

@@ -9,9 +9,11 @@
 | [core-base/README.md](core-base/README.md) | 基座模块；控件与主题补丁 |
 | [core-db/README.md](core-db/README.md) | Room：**1.5.0** 协程栈 / Rx 并行；配套 processor |
 | [room-processor/README.md](room-processor/README.md) | KSP Bridge：**1.2.0**（含 suspend RawQuery） |
-| [commonui/README.md](commonui/README.md) | 表单 / 日历等 |
+| [core-form/README.md](core-form/README.md) | 表单 / 日历等（原 commonui） |
+| [core-media/README.md](core-media/README.md) | 媒体选图 / 压缩等（原 commonmedia） |
+| [core-gnss/README.md](core-gnss/README.md) | GNSS / 轨迹（原 googlegps） |
 
-当前主干版本：**common `4.7.0`** · **core-base `1.7.2`** · **core-network `1.7.1`** · **core-db `1.6.2`** · **core-ui `1.3.1`** · **core-utils `1.2.0`** · **commonui `3.7.7`** · **commonmedia `3.7.0`** · **core-ws `1.0.1`** · **core-gnss `4.0.0`**，主题为 **Material3 DayNight**（Views + MDC 1.14）。业务侧仍可依赖 `common`，但 Maven 请按 [UPGRADE.md 文首](UPGRADE.md) **显式钉住** core / ui / media / gps。包名多为 `io.coderf.arklab.common.*`。升级说明见 [UPGRADE.md](UPGRADE.md)（附件缩略图见 §0.4.3，附件模型见 §0.4.2）。
+当前主干版本：**common `4.7.0`** · **core-base `1.7.2`** · **core-network `1.7.1`** · **core-db `1.6.2`** · **core-ui `1.3.1`** · **core-utils `1.2.0`** · **core-form `3.7.7`** · **core-media `3.7.0`** · **core-ws `1.0.1`** · **core-gnss `4.0.0`**，主题为 **Material3 DayNight**（Views + MDC 1.14）。业务侧仍可依赖 `common`，但 Maven 请按 [UPGRADE.md 文首](UPGRADE.md) **显式钉住** core / ui / media / gps。包名多为 `io.coderf.arklab.common.*`。升级说明见 [UPGRADE.md](UPGRADE.md)（附件缩略图见 §0.4.3，附件模型见 §0.4.2）。
 
 **1.2.0**：删除 `BaseView` 与 Repository/ViewModel 上的页面泛型；请求 UI 走 `NetworkRequestUiHost` + **`RequestUi`**（已删除旧版 `RequestUiCallback`）；业务导航用 LiveData/Flow。
 
@@ -21,11 +23,11 @@
 框架全面采用`MVVM`架构结合JetPack全家桶进行封装，框架中主要封装了常用功能，比如网络请求、数据库、数据存储、工具类、UI组件、业务逻辑封装等等,其中90%为`Java`,10%为`Kotlin`，最低兼容到`Android 8` ，`targetSdk` 对齐 Demo（当前 35）。
 从架构上根本的进行拆解，充分发挥解耦的思路，从原始的`Activity`干所有事件，拆分成各个分开的模块，发挥`ViewModel`特性专门使用`Repository`进行数据处理，接口通过`Hilt`依赖注入的方式进行一键注入省去大量的`New`操作。
 
-**4.5.0 起**：原单体 `common` 拆为 `core-utils` / `core-base` / `core-network` / `core-db` / `core-ui`，`common` 变为 **facade**（`api` 聚合 core）。MQTT / 媒体等实现库经 **Gateway**（case 模块 `:base`）注入，业务模块不要直接依赖 `mqttcomponent` / `commonmedia`。
+**4.5.0 起**：原单体 `common` 拆为 `core-utils` / `core-base` / `core-network` / `core-db` / `core-ui`，`common` 变为 **facade**（`api` 聚合 core）。MQTT / 媒体等实现库经 **Gateway**（case 模块 `:base`）注入，业务模块不要直接依赖 `mqttcomponent` / `core-media`（原 `commonmedia`）。
 
 **4.6.0**：`AppBaseTheme` 从 AppCompat Light 升级为 `Theme.Material3.DayNight.NoActionBar`；暗色走 `values-night` tonal 色板（关闭系统 `forceDarkAllowed`）。控件仍是 Views，不是 Compose。对外 API 与旧工程对齐，详见 [UPGRADE.md](UPGRADE.md)。
 
-**core-base 1.1.1 / commonui 3.6.1**：在 4.6.0 主题之上做控件落地——能用官方 Material3 控件的不再包一层；需要 XML `radius` / `bgColor` / `stroke*` 的三个容器/文字控件改为 `MaterialShapeDrawable`。主题默认按钮 `inset`/`minHeight` 清零，`layout_height` 即视觉高度。
+**core-base 1.1.1 / core-form（原 commonui）3.6.1**：在 4.6.0 主题之上做控件落地——能用官方 Material3 控件的不再包一层；需要 XML `radius` / `bgColor` / `stroke*` 的三个容器/文字控件改为 `MaterialShapeDrawable`。主题默认按钮 `inset`/`minHeight` 清零，`layout_height` 即视觉高度。
 
 主要封装功能：
 1. 基础`BaseActivity`、`BaseFragment`主要的页面UI的基础类（位于 `core-base`）
@@ -34,8 +36,8 @@
 4. 本地数据库封装，使用`Room`+`RxJava` / `Flow`（`core-db`）
 5. 轻量化存储框架，使用`MMKV`，替换自带的`SharedPreferences`
 6. 集成`Paging3`分页，更加智能化的分页列表，同时也提供原始的分页功能
-7. 拆分`Media`模块`commonmedia`，专门处理媒体数据；业务侧注入 `MediaGateway`
-8. 拆分常用表单组件，单独module`commonui`，比如表单校验，表单验证，表单提交等等
+7. 拆分`Media`模块`core-media`（原 `commonmedia`），专门处理媒体数据；业务侧注入 `MediaGateway`
+8. 拆分常用表单组件，单独 module `core-form`（原 `commonui`），比如表单校验，表单验证，表单提交等等
 9. 拆分单独的`GPS`服务处理模块`core-gnss`，提供GPS服务，从检测GPS是否打开到获取权限到获取经纬度一键集成
 10. 使用`properties`配置文件，配置文件会自动拆分环境，防止频繁切换环境导致的一系列问题
 11. 单独拆分`annotation`模块，一键注解校验字段表单参数是否满足约束条件
@@ -51,8 +53,8 @@
     - **common**：兼容门面（facade），业务推荐只依赖它
     - annotation：注解框架，主要用于数据校验的注解
     - app：框架 case 示例（含 Gateway Hilt 绑定）
-    - commonmedia：摄像头、相册、媒体相关封装（不含 Gateway）
-    - commonui：UI组件封装，主要为表单组件
+    - core-media：摄像头、相册、媒体相关封装（原 commonmedia；不含 Gateway）
+    - core-form：UI 组件封装，主要为表单组件（原 commonui）
     - core-gnss：GPS工具类
     - mqttcomponent：MQTT 封装（不含 Gateway）
     - base：Demo/case 基建（Gateway、AppPropertiesConfig、BaseAppActivity 等；**非框架**，勿与 core-base 混淆）
@@ -95,7 +97,7 @@ implementation project(':base')      // Gateway / 配置 / BaseApp*
 implementation project(':userapi')   // 需要用户契约时
 ```
 
-### mqttcomponent / commonmedia / websocket
+### mqttcomponent / core-media / websocket
 
 实现库仍可单独依赖，但 **业务 module 不要直接依赖**。应注入：
 
@@ -316,11 +318,11 @@ TAG值为类名：`ApiRetrofit`
 
     implementation project(':common')
     implementation project(':userapi')
-    implementation project(':commonui')
+    implementation project(':core-form')
     implementation project(':core-gnss')
     // 组装层才依赖实现库；业务 module 通过 Gateway 注入
-    implementation project(':commonmedia')
-    implementation project(':mqttcomponent')
+    implementation project(':core-media')
+    implementation project(':core-mqtt')
     implementation project(':user')
     implementation project(':core-ws')
 
@@ -434,37 +436,37 @@ TAG值为类名：`ApiRetrofit`
 ```
 
 ```
-# ==================== CommonUI Library ====================
-# 保留 CommonUI 框架核心类
--keep class io.coderf.arklab.commonui.** { *; }
--dontwarn io.coderf.arklab.commonui.**
+# ==================== core-form Library（原 commonui）====================
+# 保留 core-form 框架核心类（包名 io.coderf.arklab.ui）
+-keep class io.coderf.arklab.ui.** { *; }
+-dontwarn io.coderf.arklab.ui.**
 
 # 确保数据模型不被混淆
--keep class io.coderf.arklab.commonui.bean.** { *; }
--keepclassmembers class io.coderf.arklab.commonui.bean.** {
+-keep class io.coderf.arklab.ui.bean.** { *; }
+-keepclassmembers class io.coderf.arklab.ui.bean.** {
     void set*(***);
     *** get*();
 }
 
 # 保留自定义 Widget 组件
--keep class io.coderf.arklab.commonui.widget.** { *; }
--keepclassmembers class io.coderf.arklab.commonui.widget.** {
+-keep class io.coderf.arklab.ui.widget.** { *; }
+-keepclassmembers class io.coderf.arklab.ui.widget.** {
     public <init>(android.content.Context);
     public <init>(android.content.Context, android.util.AttributeSet);
 }
 
 # 保留 Fragment
--keep class io.coderf.arklab.commonui.fragment.** { *; }
+-keep class io.coderf.arklab.ui.fragment.** { *; }
 
 # 保留适配器
--keep class io.coderf.arklab.commonui.adapter.** { *; }
+-keep class io.coderf.arklab.ui.adapter.** { *; }
 
 # 保留表单相关功能
--keep class io.coderf.arklab.commonui.form.** { *; }
+-keep class io.coderf.arklab.ui.form.** { *; }
 
 # 保留接口和回调
--keep interface io.coderf.arklab.commonui.inter.** { *; }
--keep class io.coderf.arklab.commonui.impl.** { *; }
+-keep interface io.coderf.arklab.ui.inter.** { *; }
+-keep class io.coderf.arklab.ui.impl.** { *; }
 
 # 保留数据绑定相关类
 -keep class *Binding { *; }

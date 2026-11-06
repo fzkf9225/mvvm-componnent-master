@@ -345,7 +345,7 @@ public class ActionToolbar extends MaterialToolbar
 | | 升级前 | 升级后 |
 |---|---|---|
 | Dialog 主题父类 | `@android:style/Theme.Dialog` | `App.Material3.Dialog` → `Theme.Material3.DayNight.Dialog` |
-| ActionSheet | 同上 | `ThemeOverlay.Material3.MaterialAlertDialog`（commonui / core-gnss / commonmedia） |
+| ActionSheet | 同上 | `ThemeOverlay.Material3.MaterialAlertDialog`（core-form / core-gnss / core-media） |
 | `BaseDialog` 默认背景 | `Color.WHITE` | `R.color.cardSurface` |
 | `ChoiceSelectDialog` | 无专门表面处理 | `applySurfaceBackground()`，16dp 圆角 + `cardSurface` |
 | 布局文本 | `AppCompatTextView` | `MaterialTextView` |
@@ -491,7 +491,7 @@ android:theme="@style/ThemeOverlay.Material3.Dark.ActionBar"
 
 ### 6.4 Manifest 局部主题
 
-`commonmedia` 中相关 Activity：`Theme.AppCompat.NoActionBar` → `Theme.Material3.DayNight.NoActionBar`。第三方库或独立 Activity 不要再贴 AppCompat 主题，否则控件和颜色会对不上。
+`core-media`（原 `commonmedia`）中相关 Activity：`Theme.AppCompat.NoActionBar` → `Theme.Material3.DayNight.NoActionBar`。第三方库或独立 Activity 不要再贴 AppCompat 主题，否则控件和颜色会对不上。
 
 ### 6.5 未改、可继续用的 API
 
@@ -565,7 +565,7 @@ android:theme="@style/ThemeOverlay.Material3.Dark.ActionBar"
 | Toolbar 逻辑 | `BaseActivity.java`、`ToolbarConfig.java`、`core-ui/.../ToolbarDelegate.kt` |
 | 标题栏 | `TitleBar.java`、`ActionToolbar.java` |
 | 圆角 / Shape | `ShapeableImageView`、`layout_style.xml`（`RoundedShapeAppearance*`）、`CornerShapeHelper.java`、`CornerTextView` |
-| 表单 | `commonui/.../form/FormEditText.java`、`FormSwitch.java`；样式见 commonui README「formStyle 优先级」 |
+| 表单 | `core-form/.../form/FormEditText.java`、`FormSwitch.java`；样式见 core-form README「formStyle 优先级」 |
 | Dialog 基类 | `BaseDialog.java`、`ChoiceSelectDialog.java`、`MenuDialog.java` |
 | 菜单示例 | `WebViewActivity.java` |
 

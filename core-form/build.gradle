@@ -80,7 +80,7 @@ dependencies {
     // 直接依赖实现层，不经 common facade（表单用到 Base*/widget/R + ErrorConsumer）
     api project(':core-base')
     api project(':core-network')
-    implementation project(':commonmedia')
+    implementation project(':core-media')
 
     implementation libs.google.hilt.android
     ksp libs.google.hilt.android.compiler
@@ -94,7 +94,7 @@ dependencies {
     implementation libs.retrofit2.adapter.rxjava3
 }
 
-// Publish: ./gradlew :commonui:publish (env: ALIYUN_USER_NAME / ALIYUN_PASSWORD)
+// Publish: ./gradlew :core-form:publish (env: ALIYUN_USER_NAME / ALIYUN_PASSWORD)
 apply plugin: 'maven-publish'
 
 afterEvaluate {

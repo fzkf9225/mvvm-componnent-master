@@ -72,6 +72,35 @@ public final class EdgeToEdgeHelper {
     }
 
     /**
+     * CollapsingToolbar 沉浸式：根布局只吃导航栏 inset；pin 的 Toolbar 用 statusBar topMargin 顶开。
+     * <p>
+     * 必须挂在根布局上：基类 {@code applyNavigationBarInsets(root)} 会截获分发，
+     * 子 View 的 {@code OnApplyWindowInsetsListener} 收不到 statusBars。
+     */
+    public static void applyPinnedToolbarTopInset(@NonNull View root,
+                                                  @NonNull MaterialToolbar toolbar,
+                                                  boolean adjustForIme) {
+        ViewCompat.setOnApplyWindowInsetsListener(root, (v, windowInsets) -> {
+            Insets statusBars = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars());
+            Insets navBars = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars());
+            Insets ime = windowInsets.getInsets(WindowInsetsCompat.Type.ime());
+
+            ViewGroup.LayoutParams rawLp = toolbar.getLayoutParams();
+            if (rawLp instanceof ViewGroup.MarginLayoutParams lp) {
+                if (lp.topMargin != statusBars.top) {
+                    lp.topMargin = statusBars.top;
+                    toolbar.setLayoutParams(lp);
+                }
+            }
+
+            int bottom = adjustForIme ? Math.max(navBars.bottom, ime.bottom) : navBars.bottom;
+            v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), bottom);
+            return stripImeInsets(windowInsets, adjustForIme);
+        });
+        ViewCompat.requestApplyInsets(root);
+    }
+
+    /**
      * 正文容器：底部留出导航栏；默认不随软键盘上顶。
      *
      * @see #applyNavigationBarInsets(View, boolean)

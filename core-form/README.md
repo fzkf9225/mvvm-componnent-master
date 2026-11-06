@@ -1,10 +1,16 @@
-# commonui
+# core-form
 
 可选 UI 能力库：通用表单与若干可复用界面组件（日历、文件展示等）。
 
-当前版本：**3.7.7**  
-Maven：`io.coderf.arklab.ui:ui:3.7.7`  
-namespace：`io.coderf.arklab.ui`
+| 项 | 值 |
+|----|-----|
+| 当前版本 | **3.7.7** |
+| Maven | `io.coderf.arklab.ui:ui:3.7.7` |
+| namespace | `io.coderf.arklab.ui` |
+| Gradle 模块 | `:core-form`（原 `:commonui`） |
+
+> **模块重命名**：工程模块由 `commonui` 改为 `core-form`；**包名与 Maven 坐标不变**（`io.coderf.arklab.ui:ui`）。依赖请写 `project(':core-form')` 或上述 Maven 坐标。  
+> 勿与 `io.coderf.arklab.core:ui`（`:core-ui`，Activity 委托层）混淆。
 
 需要与 **core-base ≥1.7.2** 一起使用（`api` 传递；当前配套 **1.7.2**）。升级说明见 [UPGRADE.md](../UPGRADE.md)。
 
@@ -78,7 +84,7 @@ if (!FormHost.validateAll(binding.formContainer)) {
 
 ### 3.7.2（相对 3.7.0）
 
-新增 `formStyle` 方式可全局配置默认样式能力，新增 `applyFormConfig` 配置方法和动态配置类文件 `FormUiConfig`,见 [FormUiConfig.java](../commonui/src/main/java/io/coderf/arklab/ui/api/FormUiConfig.java)
+新增 `formStyle` 方式可全局配置默认样式能力，新增 `applyFormConfig` 配置方法和动态配置类文件 `FormUiConfig`,见 [FormUiConfig.java](../core-form/src/main/java/io/coderf/arklab/ui/api/FormUiConfig.java)
 
 ### 3.7.0（相对 3.6.2）
 
@@ -103,14 +109,14 @@ Material3 DayNight；日历选中日默认字色为 `onPrimary`。详见仓库 [
 ## 职责
 
 - 表单组件与通用 UI 封装（日历选中日默认字色为 `onPrimary`，与品牌色底配对）
-- 依赖核心栈（`core-base` / `core-network`），部分能力内部使用 `commonmedia`
+- 依赖核心栈（`core-base` / `core-network`），部分能力内部使用 `core-media`
 
 ---
 
 ## 依赖
 
 - `api` → `:core-base`、`:core-network`
-- `implementation` → `:commonmedia`
+- `implementation` → `:core-media`
 
 **不**再依赖 `common` facade。宿主若只引本库，会带上对应 core；媒体实现按需由 app 侧处理 Gateway。
 
@@ -123,7 +129,7 @@ Material3 DayNight；日历选中日默认字色为 `onPrimary`。详见仓库 [
 ```gradle
 implementation 'io.coderf.arklab.ui:ui:3.7.7'
 // 或
-implementation project(':commonui')
+implementation project(':core-form')
 ```
 
 > 勿与 `io.coderf.arklab.core:ui`（`:core-ui`）混淆。
@@ -133,5 +139,5 @@ implementation project(':commonui')
 ## 发布
 
 ```bash
-./gradlew :commonui:publish
+./gradlew :core-form:publish
 ```

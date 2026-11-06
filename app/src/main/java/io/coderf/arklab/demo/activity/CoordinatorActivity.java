@@ -7,6 +7,7 @@ import com.bumptech.glide.request.RequestOptions;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.common.base.BaseActivity;
+import io.coderf.arklab.common.utils.theme.EdgeToEdgeHelper;
 import io.coderf.arklab.common.viewmodel.EmptyViewModel;
 import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.databinding.ActivityCoordinatorBinding;
@@ -27,6 +28,11 @@ public class CoordinatorActivity extends BaseActivity<EmptyViewModel, ActivityCo
     }
 
     @Override
+    protected boolean enableImmersionBar() {
+        return true;
+    }
+
+    @Override
     public String setTitleBar() {
         return null;
     }
@@ -38,6 +44,9 @@ public class CoordinatorActivity extends BaseActivity<EmptyViewModel, ActivityCo
 
     @Override
     public void initView(Bundle savedInstanceState) {
+        // 覆盖基类挂在 root 上的 nav inset 监听：子 View 收不到分发，必须在 root 上同时顶开 pin Toolbar
+        EdgeToEdgeHelper.applyPinnedToolbarTopInset(
+                binding.getRoot(), binding.detailToolbar, shouldAdjustBottomForIme());
         binding.text.setText("关于Snackbar在4.4和emui3.1上高度显示不准确的问题是由于沉浸式使用了系统的" +
                 "WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS或者WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION" +
                 "属性造成的，目前尚不知有什么解决办法");

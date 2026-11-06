@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.view.ViewGroup;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -297,6 +299,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
             binding.setLifecycleOwner(this);
             toolbarBind.setToolbarConfig(createdToolbarConfig());
             applyToolbarHeight();
+            applyContentUnderToolbarIfNeeded();
             if (shouldApplyEdgeToEdge()) {
                 EdgeToEdgeHelper.applyNavigationBarInsets(toolbarBind.mainContainer, shouldAdjustBottomForIme());
             }
@@ -348,6 +351,26 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         } else {
             EdgeToEdgeHelper.applyToolbarHeight(toolbarBind.mainBar, height, customHeight);
         }
+    }
+
+    /**
+     * {@link ToolbarConfig#isContentUnderToolbar()} 为 true 时：正文全屏铺在 Toolbar 下，
+     * 去掉 ScrollingViewBehavior，并把 AppBar 提到最前以免被内容盖住。
+     */
+    protected void applyContentUnderToolbarIfNeeded() {
+        if (!hasToolBar() || toolbarBind == null) {
+            return;
+        }
+        ToolbarConfig toolbarConfig = toolbarBind.getToolbarConfig();
+        if (toolbarConfig == null || !toolbarConfig.isContentUnderToolbar()) {
+            return;
+        }
+        ViewGroup.LayoutParams lp = toolbarBind.mainContainer.getLayoutParams();
+        if (lp instanceof CoordinatorLayout.LayoutParams) {
+            ((CoordinatorLayout.LayoutParams) lp).setBehavior(null);
+            toolbarBind.mainContainer.setLayoutParams(lp);
+        }
+        toolbarBind.appBar.bringToFront();
     }
 
     /**

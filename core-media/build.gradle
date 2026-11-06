@@ -85,7 +85,7 @@ dependencies {
 }
 
 
-// Publish: ./gradlew :commonmedia:publish (env: ALIYUN_USER_NAME / ALIYUN_PASSWORD)
+// Publish: ./gradlew :core-media:publish (env: ALIYUN_USER_NAME / ALIYUN_PASSWORD)
 apply plugin: 'maven-publish'
 
 afterEvaluate {

@@ -21,7 +21,7 @@ import io.coderf.arklab.user.databinding.FeedbackBinding;
 import io.coderf.arklab.base.gateway.MediaGateway;
 
 /**
- * 问题反馈（经 MediaGateway 选图，不直接依赖 commonmedia）
+ * 问题反馈（经 MediaGateway 选图，不直接依赖 core-media）
  *
  * @author fz
  * @version 1.0

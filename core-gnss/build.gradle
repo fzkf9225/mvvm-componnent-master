@@ -88,7 +88,7 @@ tasks.register('androidSourcesJar', Jar) {
 afterEvaluate {
     publishing {
         publications {
-            // 与 core-base / commonmedia 一致：from components.release，publish 时自动打包 AAR
+            // 与 core-base / core-media 一致：from components.release，publish 时自动打包 AAR
             plugin(MavenPublication) {
                 from components.release
                 groupId = 'io.coderf.arklab.gnss'

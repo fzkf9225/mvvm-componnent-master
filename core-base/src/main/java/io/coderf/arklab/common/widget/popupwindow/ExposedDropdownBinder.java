@@ -20,7 +20,7 @@ import io.coderf.arklab.core.utils.CollectionUtil;
  * Material3 Exposed Dropdown 与 {@link PopupWindowBean} 的轻量绑定。
  * <p>
  * 适用：独立 {@link TextInputLayout} + {@link MaterialAutoCompleteTextView} 简单单选。
- * 表单行内场景优先用 commonui {@code FormSpinner}；多选 / 级联 / 树仍用本包其它 Popup。
+ * 表单行内场景优先用 core-form {@code FormSpinner}；多选 / 级联 / 树仍用本包其它 Popup。
  *
  * @param <T> 选项类型
  * @author fz

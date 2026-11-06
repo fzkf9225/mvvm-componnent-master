@@ -25,7 +25,7 @@ import io.coderf.arklab.media.dialog.OpenMediaDialog;
 import io.coderf.arklab.media.dialog.OpenShootDialog;
 
 /**
- * 增强版 WebChromeClient：文件选择走 commonmedia {@link MediaHelper} 已有能力。
+ * 增强版 WebChromeClient：文件选择走 core-media {@link MediaHelper} 已有能力。
  *
  * @author fz
  * @version 1.0

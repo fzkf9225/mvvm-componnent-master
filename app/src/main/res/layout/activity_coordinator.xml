@@ -27,21 +27,21 @@
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/mIv"
-            android:scaleType="centerCrop"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop" />
 
                 <com.google.android.material.appbar.MaterialToolbar
                     android:id="@+id/detail_toolbar"
+                    style="@style/Widget.Material3.Toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?actionBarSize"
                     android:layout_below="@+id/view"
-                    style="@style/Widget.Material3.Toolbar"
-                    app:layout_collapseMode="pin"
                     android:textColor="@color/white"
-                    app:titleTextColor="@color/white"
+                    app:layout_collapseMode="pin"
                     app:navigationIcon="@drawable/icon_fh"
-                    app:title="结合CoordinatorLayout使用" />
+                    app:title="结合CoordinatorLayout使用"
+                    app:titleTextColor="@color/white" />
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         </com.google.android.material.appbar.AppBarLayout>

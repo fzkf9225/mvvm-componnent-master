@@ -11,7 +11,7 @@ namespace：`io.coderf.arklab.core.ui`
 ## 职责
 
 - Activity 生命周期与 UI 策略委托，降低基类膨胀
-- 与 `core-base` 配合，而不是替代表单 / 业务 UI 库（那是 `commonui`）
+- 与 `core-base` 配合，而不是替代表单 / 业务 UI 库（那是 `core-form`，原 `commonui`）
 
 ---
 
@@ -31,7 +31,7 @@ implementation 'io.coderf.arklab.core:ui:1.3.1'
 implementation project(':core-ui')
 ```
 
-> 勿与 `io.coderf.arklab.ui:ui`（`:commonui`）混淆。
+> 勿与 `io.coderf.arklab.ui:ui`（`:core-form`，原 `:commonui`）混淆。
 
 ---
 

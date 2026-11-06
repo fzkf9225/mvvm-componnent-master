@@ -180,7 +180,7 @@
 -keep class *BindingImpl { *; }
 
 # ==================== 依赖库相关 ====================
-# 保留 common 和 commonmedia 依赖的类
+# 保留 common 和 core-media 依赖的类
 -keep class io.coderf.arklab.common.** { *; }
 -dontwarn io.coderf.arklab.common.**
 -keep class io.coderf.arklab.media.** { *; }

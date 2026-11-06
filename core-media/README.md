@@ -1,4 +1,4 @@
-# commonmedia
+# core-media
 
 可选媒体能力库：选图 / 拍照 / 录像 / 压缩 / 水印 / 裁剪等（`MediaHelper` / `MediaBuilder` …）。
 
@@ -7,6 +7,9 @@
 | 当前版本 | **3.7.0** |
 | Maven | `io.coderf.arklab.media:media:3.7.0` |
 | namespace | `io.coderf.arklab.media` |
+| Gradle 模块 | `:core-media`（原 `:commonmedia`） |
+
+> **模块重命名**：工程模块由 `commonmedia` 改为 `core-media`；**包名与 Maven 坐标不变**（`io.coderf.arklab.media:media`）。依赖请写 `project(':core-media')` 或上述 Maven 坐标。
 
 ---
 
@@ -213,7 +216,7 @@ new ImageCropBuilder(this)
 ## 发布
 
 ```bash
-./gradlew :commonmedia:publish
+./gradlew :core-media:publish
 ```
 
 需配置环境变量：`ALIYUN_USER_NAME` / `ALIYUN_PASSWORD`。

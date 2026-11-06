@@ -10,12 +10,12 @@ import io.coderf.arklab.demo.helper.WebViewDemoFileHelper;
 /**
  * WebView <b>基础版</b>演示：仅依赖 common 模块的 {@link WebViewActivity}。
  * <p>
- * 与 {@link WebViewHybridDemoActivity}（commonui 增强版）对比：
+ * 与 {@link WebViewHybridDemoActivity}（core-form 增强版）对比：
  * </p>
  * <ul>
  *     <li>文件选择：系统选择器 + 拍照（{@link io.coderf.arklab.common.utils.common.NativeWebChromeClient}）</li>
  *     <li>定位：原生 {@link io.coderf.arklab.common.helper.WebViewNativeLocationHelper}</li>
- *     <li>不依赖 commonmedia / core-gnss</li>
+ *     <li>不依赖 core-media / core-gnss</li>
  * </ul>
  *
  * @author fz

@@ -19,7 +19,7 @@ import io.coderf.arklab.media.dialog.MediaProgressDialog;
  * 媒体模块专用 UI 辅助：Loading（{@link MediaProgressDialog}）、Toast。
  * <p>
  * 页面级请求 Loading / Toast 请使用 {@code io.coderf.arklab.common.helper.UIController}，
- * 本类仅服务 commonmedia 水印等媒体流程，避免与页面请求态混用。
+ * 本类仅服务 core-media 水印等媒体流程，避免与页面请求态混用。
  * <p>
  * 绑定 Lifecycle：ON_DESTROY 时清空主线程排队任务并关闭 Loading，避免 Window 泄漏。
  *

@@ -88,7 +88,7 @@ public enum UseCaseEnum {
     LOGIN_INTERCEPTION(TargetActivity.class, "登录拦截测试", "测试@NeedLogin注解自动拦截登录功能是否有效", createTargetBundle()),
     WEB_VIEW(WebViewNetworkDemoActivity.class, "WebView 网络示例", "加载 https 页面，MaterialToolbar 菜单复制/浏览器打开", null),
     WEB_VIEW_BASIC(WebViewBasicDemoActivity.class, "WebView 基础能力", "仅 common：原生选文件/定位/扫码 JSBridge，assets+沙盒演示页", null),
-    WEB_VIEW_HYBRID(WebViewHybridDemoActivity.class, "WebView 增强能力", "commonui：MediaHelper 相册选图 + 原生定位 + JSBridge，对比基础版", null),
+    WEB_VIEW_HYBRID(WebViewHybridDemoActivity.class, "WebView 增强能力", "core-form：MediaHelper 相册选图 + 原生定位 + JSBridge，对比基础版", null),
     CUSTOM_CAMERA(CustomCameraActivity.class, "自定义相机", "通过自定义相机实现拍照录像功能", null),
     MQTT(MqttDemoActivity.class, "MQTT 组件", "mqttcomponent：Java 接入 MqttConnection / Presence 心跳示例", null),
     WEB_SOCKET(WsDemoActivity.class, "WebSocket 组件", "core-ws：鉴权/匿名直连、频道 Session、有限重连弹窗、Presence", null),

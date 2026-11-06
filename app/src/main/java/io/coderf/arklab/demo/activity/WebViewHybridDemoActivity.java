@@ -8,7 +8,7 @@ import io.coderf.arklab.demo.helper.WebViewDemoFileHelper;
 import io.coderf.arklab.ui.activity.UiWebViewActivity;
 
 /**
- * WebView <b>增强版</b>演示：commonui {@link UiWebViewActivity}（MediaHelper 相册选图 + 原生定位）。
+ * WebView <b>增强版</b>演示：core-form {@link UiWebViewActivity}（MediaHelper 相册选图 + 原生定位）。
  * <p>对比基础版见 {@link WebViewBasicDemoActivity}。</p>
  *
  * @author fz

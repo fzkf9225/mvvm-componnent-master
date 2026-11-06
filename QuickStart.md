@@ -1,6 +1,6 @@
 # 五分钟快速入门
 
-> 对应框架 **common `4.7.0`** · **core-base `1.6.0`** · **core-network `1.7.0`** · **core-db `1.6.1`** · **core-ui `1.3.1`** · **core-utils `1.1.1`** · **commonui `3.7.4`** · **commonmedia `3.7.0`** · **core-ws `1.0.1`** · **core-gnss `4.0.0`**，主题为 **Material3 DayNight**。  
+> 对应框架 **common `4.7.0`** · **core-base `1.6.0`** · **core-network `1.7.0`** · **core-db `1.6.1`** · **core-ui `1.3.1`** · **core-utils `1.1.1`** · **core-form `3.7.4`** · **core-media `3.7.0`** · **core-ws `1.0.1`** · **core-gnss `4.0.0`**，主题为 **Material3 DayNight**。  
 > 模块说明见 [MODULES.md](MODULES.md)。升级见 [UPGRADE.md](UPGRADE.md)。控件包装类删除见 [core-base/README.md](core-base/README.md)。
 
 ## 创建项目
@@ -39,9 +39,9 @@
 ```toml
 annotation = "3.3.1"
 roomProcessor = "1.2.0"
-commonui = "3.7.4"
+coreForm = "3.7.4"
 coreGnss = "4.0.0"
-commonmedia = "3.7.0"
+coreMedia = "3.7.0"
 commonVersion = "4.7.0"
 coreNetwork = "1.7.0"
 coreDb = "1.6.1"
@@ -62,8 +62,8 @@ base-core-utils = { module = "io.coderf.arklab.core:utils", version.ref = "coreU
 base-core-autosize = { module = "io.coderf.arklab.core:autosize", version.ref = "coreAutosize" }
 base-core-ws = { module = "io.coderf.arklab.ws:ws", version.ref = "coreWs" }
 base-core-mqtt = { module = "io.coderf.arklab.mqtt:mqtt", version.ref = "coreMqtt" }
-base-media = { module = "io.coderf.arklab.media:media", version.ref = "commonmedia" }
-base-commonui = { module = "io.coderf.arklab.ui:ui", version.ref = "commonui" }
+base-media = { module = "io.coderf.arklab.media:media", version.ref = "coreMedia" }
+base-core-form = { module = "io.coderf.arklab.ui:ui", version.ref = "coreForm" }
 base-core-gnss = { module = "io.coderf.arklab.gnss:core-gnss", version.ref = "coreGnss" }
 base-annotation = { module = "io.coderf.arklab.annotation:annotation", version.ref = "annotation" }
 # Room KSP：配合 @RoomObservedEntity 生成 XxxDaoRawQueryBridge（配套 db ≥1.6.0）
@@ -90,7 +90,7 @@ implementation libs.base.common
 ```groovy
 implementation libs.base.common
 implementation libs.base.media      // 激活 MediaGateway Hilt 绑定
-implementation libs.base.commonui
+implementation libs.base.core.form
 implementation libs.base.core-gnss
 implementation libs.base.annotation
 ```
@@ -499,7 +499,7 @@ viewModel.getNetworkRequestUiHost().showToast("提示文案")
 
 ### Gateway（媒体 / MQTT，4.5.0 起）
 
-业务模块**禁止**直接依赖 `commonmedia` / `mqttcomponent`，只依赖 api 中的接口：
+业务模块**禁止**直接依赖 `core-media`（原 `commonmedia`）/ `mqttcomponent`，只依赖 api 中的接口：
 
 ```kotlin
 @Inject lateinit var mediaGateway: MediaGateway

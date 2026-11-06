@@ -31,7 +31,7 @@ import io.coderf.arklab.common.utils.permission.PermissionManager;
 import io.coderf.arklab.common.utils.permission.WebViewPermissionHelper;
 
 /**
- * 纯原生 {@link WebChromeClient} 实现，不依赖 commonmedia / core-gnss。
+ * 纯原生 {@link WebChromeClient} 实现，不依赖 core-media / core-gnss。
  * <p>
  * 能力：系统文件选择器（图/视频/任意文件）、拍照、录像、Geolocation 与 Web 相机/麦克风权限。
  * </p>

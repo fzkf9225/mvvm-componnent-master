@@ -1,6 +1,6 @@
 # ģ��˵����ʹ��ָ��
 
-> ��Ӧ�汾���Ը�ģ�� `build.gradle` Ϊ׼����**common `4.7.0`** �� **core-base `1.6.0`** �� **core-network `1.7.0`** �� **core-db `1.6.1`** �� **core-ui `1.3.1`** �� **core-utils `1.1.1`** �� **core-log `1.2.0`** �� **room-processor `1.2.0`** �� **core-ws `1.0.1`** �� **commonui `3.7.4`** �� **commonmedia `3.7.0`** �� **core-gnss `4.0.0`**  
+> ��Ӧ�汾���Ը�ģ�� `build.gradle` Ϊ׼����**common `4.7.0`** �� **core-base `1.6.0`** �� **core-network `1.7.0`** �� **core-db `1.6.1`** �� **core-ui `1.3.1`** �� **core-utils `1.1.1`** �� **core-log `1.2.0`** �� **room-processor `1.2.0`** �� **core-ws `1.0.1`** �� **core-form `3.7.4`** �� **core-media `3.7.0`** �� **core-gnss `4.0.0`**  
 > Options ���Ƽ� [UPGRADE.md ��0](./UPGRADE.md#0-160network--db����-options-����)���޳� `BaseView` �� [UPGRADE.md ��2](./UPGRADE.md#2-120�����޳�-baseview--mvp-ҳ���)��  
 > ����˵����ģ��ְ��������ϵ���ճ��÷��������뿴 [UPGRADE.md](./UPGRADE.md)��
 
@@ -15,8 +15,8 @@ app����װ��Hilt / Demo��
   ��                      ��
   ��                      �� ʵ�ְ��� app������ media / mqtt��
   ���� mqttcomponent �������������� MessageGateway
-  ���� commonmedia ������������������ MediaGateway
-  ���� commonui / core-gnss / core-ws / ��
+  ���� core-media ������������������ MediaGateway
+  ���� core-form / core-gnss / core-ws / ��
   ���� common��facade������ api ����? core-network / core-db / core-ui
                                       ��
                                       ��
@@ -137,8 +137,8 @@ Demo �ο���`app/.../SampleCoreNetworkRepository.kt`��
 | `userapi` | �û�ģ�������Լ��`UserService` / `UserInfo` / Router�� | `implementation project(':userapi')` |
 | `user` | �û�ҵ�� UI / �߼� | ���� `common` + `base` + `userapi`��**��ֹ**ֱ������ mqtt / media |
 | `mqttcomponent` | MQTT ʵ�֣�`MqttClient` �ȣ� | �� app ������Gateway ����д�� app |
-| `commonmedia` | ����/ѡͼ/ѹ����`MediaHelper` �ȣ� | �� app ������Gateway ����д�� app |
-| `commonui` | ������ͨ�� UI ��� | ���裻`FormHost.validateAll` / `formStyle` �� commonui README |
+| `core-media` | ����/ѡͼ/ѹ����`MediaHelper` �ȣ� | �� app ������Gateway ����д�� app |
+| `core-form` | ������ͨ�� UI ��� | ���裻`FormHost.validateAll` / `formStyle` �� core-form README |
 | `core-gnss` | ��λ���� | ���裻���·��߽� |
 
 #### core-gnss �����߽�
@@ -150,14 +150,14 @@ Demo �ο���`app/.../SampleCoreNetworkRepository.kt`��
 | ʵʱλ���ϱ� | **���ڱ���**���������н� `core-ws` / MQTT / HTTP��ԭ Netty `socket` ����ɾ���� |
 | ���̼� `getInstance()` ���� | ע���Ự���ţ�ֹͣ��λʱ���� Session `clear` |
 
-#### commonmedia �����߽�
+#### core-media �����߽�
 
 | ���� | ���� |
 |------|------|
 | `MediaHelper` ѡͼ/����/Ԥ�� + app �� `MediaGateway` | **����**���������·���� |
-| ���� `ImgCompressor` / `VideoCompress` / Crop | �����滻������� `commonmedia-compress`���� Demo ʹ������������ |
+| ���� `ImgCompressor` / `VideoCompress` / Crop | �����滻������� `core-media-compress`���� Demo ʹ������������ |
 | ƽ�� `UIController` / `DebugUtil` / `LogUtil` | �ƻ�ɾ���������� core |
-| `commonui` �� `implementation commonmedia` | ��֪��ϣ�����ý������Ҫʱ����������Ӧ��Ϊ Gateway/��ѡ���� |
+| `core-form` �� `implementation core-media` | ��֪��ϣ�����ý������Ҫʱ����������Ӧ��Ϊ Gateway/��ѡ���� |
 | `core-ws` | WebSocket��OkHttp������ core-mqtt �ֲ㣩 | ���裻ҵ���ŷ���д���� |
 | `annotation` / `room-processor` | У��ע���� Room ������ | ���� |
 | `app` | Demo ��װ��Hilt Module��Gateway ������� | �������� |
@@ -191,8 +191,8 @@ mediaGateway.pickImages(1, uris -> { /* �ϴ�ͷ��� */ });
 - ������󶨣�`app/.../media/MediaHelperGateway`��`app/.../di/MediaGatewayModule`
 - �ο���`MeFragment`��`FeedBackActivity`
 
-**��ֹ��** �� `user` ��ҵ�� module �� `build.gradle` ��д `mqttcomponent` / `commonmedia`��  
-**��ֹ��** `commonmedia` / `mqttcomponent` / `core-*` ���� `:base` / `userapi`��
+**��ֹ��** �� `user` ��ҵ�� module �� `build.gradle` ��д `mqttcomponent` / `core-media`��  
+**��ֹ��** `core-media` / `mqttcomponent` / `core-*` ���� `:base` / `userapi`��
 
 �ֵ���ö�٣���ҵ�� `DicTypeEnum`������Ŀ���ڸ��Ե� case `:base`��Demo ������ҵ���ֵ��롣
 
@@ -220,8 +220,8 @@ mediaGateway.pickImages(1, uris -> { /* �ϴ�ͷ��� */ });
 | room-processor | `io.coderf.arklab.room:room-processor:1.2.0`���� [room-processor/README.md](./room-processor/README.md)�� |
 | core-mqtt | `io.coderf.arklab.mqtt:mqtt:1.6.2` |
 | core-ws | `io.coderf.arklab.ws:ws:1.0.1` |
-| commonmedia | `io.coderf.arklab.media:media:3.7.0` |
-| commonui | `io.coderf.arklab.ui:ui:3.7.4`��`api` �� core-base / core-network�������� media�� |
+| core-media | `io.coderf.arklab.media:media:3.7.0` |
+| core-form | `io.coderf.arklab.ui:ui:3.7.4`��`api` �� core-base / core-network�������� media�� |
 | core-gnss | `io.coderf.arklab.gnss:core-gnss:4.0.0` |
 | annotation | `io.coderf.arklab.annotation:annotation:3.3.1` |
 
