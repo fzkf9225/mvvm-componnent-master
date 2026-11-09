@@ -19,7 +19,6 @@ import io.coderf.arklab.demo.activity.EmptyLayoutDemoActivity;
 import io.coderf.arklab.demo.activity.UiStateDemoActivity;
 import io.coderf.arklab.demo.activity.DownloadActivity;
 import io.coderf.arklab.demo.activity.FormDetailActivity;
-import io.coderf.arklab.demo.activity.FormTopDetailActivity;
 import io.coderf.arklab.demo.activity.GoogleGPSActivity;
 import io.coderf.arklab.demo.activity.HiltActivity;
 import io.coderf.arklab.demo.activity.Material3KitActivity;
@@ -74,14 +73,13 @@ public enum UseCaseEnum {
     SMART_PAGING_HEADER(DemoSmartPagingHeaderActivity.class, "SmartPaging带头布局", "Paging3 + Smart + 可选列表头（示例 16:9 图）", null),
     SMART_PAGING_TAIL(DemoSmartPagingLiveActivity.class, "SmartPaging本地发消息", "Room + Paging3：历史分页 + 本地 insert 单条 + reverse 贴底（模拟发消息）", null),
     SMART_FLOW_PAGING(DemoSmartFlowPagingActivity.class, "SmartFlowPaging列表示例", "Smart库+Jetpack Paging3+flow+协程综合列表封装", null),
-    ROOM_SMART_PAGING(RoomPagingActivity.class, "RoomSmartPaging列表示例", "room+Smart库+Jetpack Paging3综合列表封装", null),
+    ROOM_SMART_PAGING(RoomPagingActivity.class, "RoomSmartPaging列表示例", "room+Smart库+Jetpack Paging3：新增/点击编辑回显（含多类型附件）/保存刷新/长按删除", null),
     VIEW_PAGER(ViewPagerSampleActivity.class, "ViewPagerFragment", "侧滑标签页面", null),
     VIDEO_PLAYER(VideoPlayerActivity.class, "视频播放器(Activity)", "横屏 Activity 定制播放器，默认展示全部控制按钮", getVideoBundle()),
     VIDEO_PLAYER_EMBED(VideoPlayerEmbedDemoActivity.class, "视频播放器(嵌入)", "View 嵌入 Activity，非全屏仅全屏按钮", getVideoBundle()),
     COORDINATOR(CoordinatorActivity.class, "CoordinatorLayout沉浸式", "侧滑标签页面", null),
     ANNOTATION(VerifyActivity.class, "自定义注解测试", "表单注解校验：顶部可切换对齐方式、校验分组（Default/Create/Editor）与遇错即停/收集全部", null),
-    FORM_UI(FormDetailActivity.class, "表单样式-Left", "封装的表单样式，表单对齐方式为left，也是默认方式", null),
-    FORM_UI_TOP(FormTopDetailActivity.class, "表单样式-Top", "封装的表单样式，表单对齐方式为top", null),
+    FORM_UI(FormDetailActivity.class, "表单样式展示", "封装的表单预览样式，顶部可切换标签对齐（left/top）与正文对齐", null),
     SCAN_QR_CODE(ScanQrCodeActivity.class, "二维码能力", "ZXING 扫码/相册识码/生成二维码；相册识别与 WebView 文件选择共用 CaptureActivity", null),
     GOOGLE_GPS(GoogleGPSActivity.class, "谷歌GPS", "基于Github上的gpslogger工具的gps定位辅助类", null),
     HILT(HiltActivity.class, "Hilt依赖注入", "官方的Hilt依赖注入demo演示", null),

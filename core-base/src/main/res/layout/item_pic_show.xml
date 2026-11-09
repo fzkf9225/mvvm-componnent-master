@@ -11,14 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <io.coderf.arklab.common.widget.gallery.impl.PhotoView
-            android:id="@+id/pic_pv"
+        <io.coderf.arklab.common.widget.customview.LivePhotoView
+            android:id="@+id/live_photo"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
         <!-- 左侧百分比引导线 -->
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_left"
@@ -41,11 +42,11 @@
             android:layout_height="0dp"
             android:src="@mipmap/icon_play"
             android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/live_photo"
             app:layout_constraintDimensionRatio="h,1:1"
-            app:layout_constraintBottom_toBottomOf="@+id/pic_pv"
             app:layout_constraintEnd_toEndOf="@id/guideline_right"
             app:layout_constraintStart_toStartOf="@id/guideline_left"
-            app:layout_constraintTop_toTopOf="@+id/pic_pv" />
+            app:layout_constraintTop_toTopOf="@+id/live_photo" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

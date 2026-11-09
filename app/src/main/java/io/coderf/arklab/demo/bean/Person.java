@@ -43,7 +43,7 @@ public class Person extends BaseDaoBean {
     @VerifyField({
             @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class, VerifyGroup.Editor.class}, errorMsg = "姓名为空！"),
             @VerifyParams(type = VerifyType.LENGTH_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class, VerifyGroup.Editor.class}, minLength = 2, maxLength = 10, errorMsg = "姓名输入错误！"),
-            @VerifyParams(type = VerifyType.EQUALS, group = {VerifyGroup.Default.class}, errorMsg = "您只能填张三！", equalStr = "张三")
+            @VerifyParams(type = VerifyType.IN,values = {"张三","李四","王五","赵六"}, group = {VerifyGroup.Default.class}, errorMsg = "您只能填\"张三\",\"李四\",\"王五\",\"赵六\"！")
     })
     @VerifySort(1)
     @ColumnInfo
@@ -58,37 +58,37 @@ public class Person extends BaseDaoBean {
     @ColumnInfo
     private String sex;
 
-    /** 非 Room：FormSpinner 学历下拉演示 */
-    @Ignore
+    /** FormSpinner 学历下拉 */
     @VerifySort(16)
     @VerifyField({
             @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class, VerifyGroup.Editor.class}, errorMsg = "请选择学历！"),
             @VerifyParams(type = VerifyType.IN, group = {VerifyGroup.Default.class, VerifyGroup.Create.class, VerifyGroup.Editor.class},
                     values = {"本科", "硕士", "博士"}, errorMsg = "学历必须是本科/硕士/博士！")
     })
+    @ColumnInfo
     private String educationLevel;
 
-    /** 非 Room：FormSwitch 订阅演示 */
-    @Ignore
+    /** FormSwitch 订阅资讯 */
+    @ColumnInfo
     private Boolean acceptNewsletter;
 
-    /** 非 Room：FormCheckbox 协议演示 */
-    @Ignore
+    /** FormCheckbox 用户协议 */
     @VerifyParams(type = VerifyType.NOT_EMPTY, group = VerifyGroup.Default.class, errorMsg = "请勾选用户协议！")
+    @ColumnInfo
     private Boolean agreeProtocol;
 
-    /** 非 Room：FormRadio 联系方式偏好演示 */
-    @Ignore
+    /** FormRadio 联系方式偏好 */
     @VerifyParams(type = VerifyType.IN, group = {VerifyGroup.Default.class, VerifyGroup.Create.class, VerifyGroup.Editor.class},
             values = {"电话", "邮件", "微信"}, errorMsg = "联系偏好不在可选范围内！")
+    @ColumnInfo
     private String contactPreference;
 
-    /** 非 Room：FormStepper 步数演示 */
-    @Ignore
+    /** FormStepper 每日步数 */
+    @ColumnInfo
     private int dailySteps;
 
-    /** 非 Room：FormRating 评分演示 */
-    @Ignore
+    /** FormRating 服务评分 */
+    @ColumnInfo
     private float serviceRating;
 
     @VerifyField({
@@ -267,6 +267,22 @@ public class Person extends BaseDaoBean {
 
     @Ignore
     private List<Uri> imageList;
+
+    /** 本人照片附件 mobileId 逗号串（关联 AttachmentBean） */
+    @ColumnInfo
+    private String imageIds;
+
+    /** 本人视频附件 mobileId 逗号串 */
+    @ColumnInfo
+    private String videoIds;
+
+    /** 家庭照片视频附件 mobileId 逗号串 */
+    @ColumnInfo
+    private String mediaIds;
+
+    /** 荣誉证书等文件附件 mobileId 逗号串 */
+    @ColumnInfo
+    private String fileIds;
 
     @VerifySort(15)
     @Valid(notNull = true, group = VerifyGroup.Create.class, errorMsg = "请填写家庭信息！")
@@ -589,6 +605,38 @@ public class Person extends BaseDaoBean {
         this.imageList = imageList;
     }
 
+    public String getImageIds() {
+        return imageIds;
+    }
+
+    public void setImageIds(String imageIds) {
+        this.imageIds = imageIds;
+    }
+
+    public String getVideoIds() {
+        return videoIds;
+    }
+
+    public void setVideoIds(String videoIds) {
+        this.videoIds = videoIds;
+    }
+
+    public String getMediaIds() {
+        return mediaIds;
+    }
+
+    public void setMediaIds(String mediaIds) {
+        this.mediaIds = mediaIds;
+    }
+
+    public String getFileIds() {
+        return fileIds;
+    }
+
+    public void setFileIds(String fileIds) {
+        this.fileIds = fileIds;
+    }
+
     public Family getFamily() {
         return family;
     }
@@ -626,6 +674,10 @@ public class Person extends BaseDaoBean {
                 ", remark='" + remark + '\'' +
                 ", hobby=" + hobby +
                 ", imageList=" + imageList +
+                ", imageIds='" + imageIds + '\'' +
+                ", videoIds='" + videoIds + '\'' +
+                ", mediaIds='" + mediaIds + '\'' +
+                ", fileIds='" + fileIds + '\'' +
                 ", family=" + family +
                 ", familyList=" + familyList +
                 '}';

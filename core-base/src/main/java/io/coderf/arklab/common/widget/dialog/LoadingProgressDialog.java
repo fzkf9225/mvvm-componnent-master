@@ -1,15 +1,20 @@
 package io.coderf.arklab.common.widget.dialog;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextPaint;
+import android.text.style.ForegroundColorSpan;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import io.coderf.arklab.common.R;import io.coderf.arklab.common.databinding.LoadingDialogBinding;
+import io.coderf.arklab.common.R;
+import io.coderf.arklab.common.databinding.LoadingDialogBinding;
 import io.coderf.arklab.core.utils.ScreenUtil;
 
 /**
@@ -48,11 +53,10 @@ import io.coderf.arklab.core.utils.ScreenUtil;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
 
-    // 正确的循环动画：. → .. → ... → . → .. → ...
+    // 正确的循环动画：. → .. → ... → . → .. → ...（未显示的点用透明占位，避免文字抖动/偏移）
     private final Runnable updateTextRunnable = new Runnable() {
         private int dotCount = 0;
 
-        @SuppressLint("SetTextI18n")
         @Override
         public void run() {
             if (!enableDynamicEllipsis) {
@@ -67,11 +71,7 @@ import io.coderf.arklab.core.utils.ScreenUtil;
                 dotCount = 1;
             }
 
-            StringBuilder dots = new StringBuilder();
-            for (int i = 0; i < dotCount; i++) {
-                dots.append(".");
-            }
-            loadingDialogBinding.tipTextView.setText(baseMessage + dots);
+            applyEllipsisText(dotCount);
 
             // 设置统一的延迟时间，确保匀速动画
             handler.postDelayed(this, 500); // 每500毫秒更新一次
@@ -82,7 +82,6 @@ import io.coderf.arklab.core.utils.ScreenUtil;
     private final Runnable updateTextRunnableWithPause = new Runnable() {
         private int dotCount = 0;
 
-        @SuppressLint("SetTextI18n")
         @Override
         public void run() {
             if (!enableDynamicEllipsis) {
@@ -92,23 +91,15 @@ import io.coderf.arklab.core.utils.ScreenUtil;
             dotCount++;
 
             if (dotCount > maxDotCount) {
-                // 达到最大点数后，重置为0并稍作暂停
+                // 达到最大点数后，重置为0并稍作暂停（仍显示满点数）
                 dotCount = 0;
-                StringBuilder dots = new StringBuilder();
-                for (int i = 0; i < maxDotCount; i++) {
-                    dots.append(".");
-                }
-                loadingDialogBinding.tipTextView.setText(baseMessage + dots);
+                applyEllipsisText(maxDotCount);
                 // 在最大点数时暂停800ms
                 handler.postDelayed(this, 800);
                 return;
             }
 
-            StringBuilder dots = new StringBuilder();
-            for (int i = 0; i < dotCount; i++) {
-                dots.append(".");
-            }
-            loadingDialogBinding.tipTextView.setText(baseMessage + dots);
+            applyEllipsisText(dotCount);
 
             // 正常递增时的速度
             handler.postDelayed(this, 300);
@@ -206,7 +197,40 @@ import io.coderf.arklab.core.utils.ScreenUtil;
     }
 
     /**
-     * 计算最大文本宽度并设置固定宽度
+     * 构建带透明占位省略号的文案：始终保留 maxDotCount 个点的宽度，
+     * 仅前 visibleDotCount 个点可见，其余透明，避免居中抖动与偏左。
+     */
+    private CharSequence buildEllipsisText(int visibleDotCount) {
+        String safeBase = baseMessage != null ? baseMessage : "";
+        int dots = Math.max(maxDotCount, 0);
+        int visible = Math.max(0, Math.min(visibleDotCount, dots));
+
+        StringBuilder fullText = new StringBuilder(safeBase);
+        for (int i = 0; i < dots; i++) {
+            fullText.append('.');
+        }
+
+        SpannableString spannable = new SpannableString(fullText);
+        if (visible < dots) {
+            spannable.setSpan(
+                    new ForegroundColorSpan(Color.TRANSPARENT),
+                    safeBase.length() + visible,
+                    safeBase.length() + dots,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            );
+        }
+        return spannable;
+    }
+
+    private void applyEllipsisText(int visibleDotCount) {
+        if (loadingDialogBinding == null) {
+            return;
+        }
+        loadingDialogBinding.tipTextView.setText(buildEllipsisText(visibleDotCount));
+    }
+
+    /**
+     * 按最大文本（基础文案 + 满点数）计算并固定 TextView 宽度，配合透明占位双重防抖。
      */
     private void calculateAndSetFixedWidth() {
         if (!enableDynamicEllipsis) {
@@ -214,9 +238,9 @@ import io.coderf.arklab.core.utils.ScreenUtil;
         }
 
         // 创建最大文本（基础文本 + 最大点数个点）
-        StringBuilder maxText = new StringBuilder(baseMessage);
+        StringBuilder maxText = new StringBuilder(baseMessage != null ? baseMessage : "");
         for (int i = 0; i < maxDotCount; i++) {
-            maxText.append(".");
+            maxText.append('.');
         }
 
         // 使用Paint计算文本宽度
@@ -226,9 +250,8 @@ import io.coderf.arklab.core.utils.ScreenUtil;
         float textWidth = textPaint.measureText(maxText.toString());
 
         // 获取TextView的padding（如果View还未初始化，使用默认值）
-        int paddingLeft = 0;
-        int paddingRight = 0;
-
+        int paddingLeft;
+        int paddingRight;
         try {
             paddingLeft = loadingDialogBinding.tipTextView.getPaddingLeft();
             paddingRight = loadingDialogBinding.tipTextView.getPaddingRight();
@@ -252,16 +275,23 @@ import io.coderf.arklab.core.utils.ScreenUtil;
         );
         fixedWidth = Math.max(fixedWidth, minWidth);
         int screenWidth = ScreenUtil.getScreenWidth(getContext());
-        fixedWidth = Math.min(fixedWidth, (int)(screenWidth * 4.0 / 5));
-        // 设置TextView的固定宽度
+        fixedWidth = Math.min(fixedWidth, (int) (screenWidth * 4.0 / 5));
+
         ViewGroup.LayoutParams params = loadingDialogBinding.tipTextView.getLayoutParams();
         if (params == null) {
-            params = new LinearLayout.LayoutParams(fixedWidth,
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(fixedWidth,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
+            lp.gravity = Gravity.CENTER_HORIZONTAL;
+            params = lp;
         } else {
             params.width = fixedWidth;
+            if (params instanceof LinearLayout.LayoutParams) {
+                ((LinearLayout.LayoutParams) params).gravity = Gravity.CENTER_HORIZONTAL;
+            }
         }
         loadingDialogBinding.tipTextView.setLayoutParams(params);
+        loadingDialogBinding.tipTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        loadingDialogBinding.tipTextView.setTextAlignment(android.view.View.TEXT_ALIGNMENT_CENTER);
     }
 
     public LoadingProgressDialog setMessage(String message) {

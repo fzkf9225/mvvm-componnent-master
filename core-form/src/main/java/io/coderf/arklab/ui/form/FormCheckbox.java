@@ -199,8 +199,14 @@ public class FormCheckbox extends FormConstraintLayout {
      * 设置选中状态，同步更新 {@link #checkedSource} 与 {@link #dataSource}。
      */
     public void setChecked(boolean checked) {
+        Boolean old = checkedSource.get();
+        boolean same = old != null && old == checked;
         checkedSource.set(checked);
         dataSource.set(String.valueOf(checked));
+        // 同值时 ObservableField 不回调，编辑回显需强制刷图标
+        if (same) {
+            applyCheckboxIcon(checked);
+        }
     }
 
     /** 当前是否选中 */

@@ -28,6 +28,7 @@ import io.coderf.arklab.common.enums.AttachmentTypeEnum;
 import io.coderf.arklab.common.enums.UploadStatusEnum;
 import io.coderf.arklab.common.listener.OnUploadRetryClickListener;
 import io.coderf.arklab.common.utils.common.AttachmentUtil;
+import io.coderf.arklab.common.utils.common.LivePhotoInfo;
 import io.coderf.arklab.core.utils.CollectionUtil;
 import io.coderf.arklab.core.utils.FileUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
@@ -70,25 +71,28 @@ public class MediaAddAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean
             holder.getBinding().mediaAdd.setVisibility(View.VISIBLE);
             holder.getBinding().ivMediaShow.setVisibility(View.GONE);
             holder.getBinding().ivClearMedia.setVisibility(View.GONE);
+            holder.getBinding().tvLiveBadge.setVisibility(View.GONE);
         } else {
             holder.getBinding().ivClearMedia.setVisibility(View.VISIBLE);
             holder.getBinding().mediaAdd.setVisibility(View.GONE);
             holder.getBinding().ivMediaShow.setVisibility(View.VISIBLE);
-            AttachmentTypeEnum attachmentTypeEnum = AttachmentUtil.getMediaType(holder.getBinding().ivMediaShow.getContext(), mList.get(pos).getFileType(), mList.get(pos).getPath());
+            AttachmentBean item = mList.get(pos);
+            AttachmentTypeEnum attachmentTypeEnum = AttachmentUtil.getMediaType(
+                    holder.getBinding().ivMediaShow.getContext(), item.getFileType(), item.getPath());
             if (AttachmentTypeEnum.VIDEO == attachmentTypeEnum) {
                 holder.getBinding().ivPlayer.setVisibility(View.VISIBLE);
-            } else if (AttachmentTypeEnum.IMAGE == attachmentTypeEnum) {
-                holder.getBinding().ivPlayer.setVisibility(View.GONE);
             } else {
                 holder.getBinding().ivPlayer.setVisibility(View.GONE);
             }
+            LivePhotoInfo.applyBadge(holder.getBinding().tvLiveBadge,
+                    AttachmentTypeEnum.VIDEO == attachmentTypeEnum ? null : item);
             Glide.with(holder.getBinding().ivMediaShow.getContext())
-                    .load(getDisplayPath(mList.get(pos)))
+                    .load(getDisplayPath(item))
                     .apply(new RequestOptions().placeholder(placeholderImage == null ? getPlaceholderDefaultImage() : placeholderImage)
                             .error(errorImage == null ? getErrorDefaultImage() : errorImage))
                     .into(holder.getBinding().ivMediaShow);
-            holder.getBinding().uploadProcess.setText(mList.get(pos).getUploadingPercent());
-            updateUploadView(UploadStatusEnum.getInfo(mList.get(pos).getUploading()), holder.getBinding().uploadProcess, holder.getBinding().uploadMark);
+            holder.getBinding().uploadProcess.setText(item.getUploadingPercent());
+            updateUploadView(UploadStatusEnum.getInfo(item.getUploading()), holder.getBinding().uploadProcess, holder.getBinding().uploadMark);
         }
     }
 

@@ -17,7 +17,7 @@ import io.coderf.arklab.demo.bean.Person;
  * @since 1.0
  * @created 2024/11/6 10:44
  */
-@Database(entities = {Person.class}, version = 1, exportSchema = false)
+@Database(entities = {Person.class}, version = 3, exportSchema = false)
 public abstract class PersonDatabase extends RoomDatabase {
     // 规定格式的写法，(写成别的，根据room的版本的不同，可能有运行异常)
     // Java编码规范中的约定
@@ -35,6 +35,8 @@ public abstract class PersonDatabase extends RoomDatabase {
             personDatabase = RoomLog.attachTo(
                     Room.databaseBuilder(context.getApplicationContext(),
                                     PersonDatabase.class, "io_coderf_arklab_titan_demo")
+                            // Demo：表单字段/附件 ID 演进时允许重建本地库
+                            .fallbackToDestructiveMigration()
                             // 强制开启在主线程中操作数据库
                             .allowMainThreadQueries()
             ).build();

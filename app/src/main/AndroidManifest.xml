@@ -130,9 +130,6 @@
             android:name=".activity.CustomCameraActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.FormTopDetailActivity"
-            android:exported="false" />
-        <activity
             android:name=".activity.FormDetailActivity"
             android:exported="false" />
         <activity

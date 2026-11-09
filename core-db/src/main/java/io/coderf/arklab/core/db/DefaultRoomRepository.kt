@@ -8,6 +8,7 @@ import io.coderf.arklab.core.request.NoOpRequestUi
 import io.coderf.arklab.core.request.RequestUi
 import io.coderf.arklab.core.request.RequestUiHost
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -97,17 +98,16 @@ open class DefaultRoomRepository(
                     payload
                 )
                 if (options.isShowDialog) {
-                    withContext(Dispatchers.Main.immediate) {
-                        activeRequestUi.showLoading(
-                            options.dialogMessage,
-                            options.isEnableDynamicEllipsis
-                        )
-                    }
+                    activeRequestUi.showLoading(
+                        options.dialogMessage,
+                        options.isEnableDynamicEllipsis
+                    )
                 }
             }
             .onCompletion {
+                // first()/take(1) 等会取消收集；hide 必须 NonCancellable，否则弹框会卡住
                 if (options.isShowDialog) {
-                    withContext(Dispatchers.Main.immediate) {
+                    withContext(NonCancellable) {
                         activeRequestUi.hideLoading()
                     }
                 }
@@ -117,9 +117,7 @@ open class DefaultRoomRepository(
                 sessionHolder[0]?.error(throwable)
                 val error = AppError.from(throwable)
                 if (options.isDeliverErrorToUi && error !is AppError.Cancelled) {
-                    withContext(Dispatchers.Main.immediate) {
-                        activeRequestUi.showError(applyToastPolicy(error, options))
-                    }
+                    activeRequestUi.showError(applyToastPolicy(error, options))
                 }
                 emit(RequestResult.Error(error))
             }

@@ -15,6 +15,7 @@ import io.coderf.arklab.common.base.BaseViewHolder;
 import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.databinding.AdapterImageShowItemBinding;
 import io.coderf.arklab.common.helper.CornerShapeHelper;
+import io.coderf.arklab.common.utils.common.LivePhotoInfo;
 
 /**
  * 展示图片适配器
@@ -37,8 +38,10 @@ public class ImageShowAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBea
 
     @Override
     public void onBindHolder(BaseViewHolder<AdapterImageShowItemBinding> holder, int pos) {
+        AttachmentBean item = mList.get(pos);
+        LivePhotoInfo.applyBadge(holder.getBinding().tvLiveBadge, item);
         Glide.with(holder.getBinding().cornerImage.getContext())
-                .load(getDisplayPath(mList.get(pos)))
+                .load(getDisplayPath(item))
                 .apply(new RequestOptions().placeholder(placeholderImage == null ? getPlaceholderDefaultImage() : placeholderImage)
                         .error(errorImage == null ? getErrorDefaultImage() : errorImage))
                 .into(holder.getBinding().cornerImage);

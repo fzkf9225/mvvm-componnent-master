@@ -3,6 +3,7 @@ package io.coderf.arklab.demo.activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ import io.coderf.arklab.core.ui.delegate.ImeAdjustEnabled;
 import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.bean.Family;
 import io.coderf.arklab.demo.bean.Person;
+import io.coderf.arklab.demo.bean.PersonEditModel;
 import io.coderf.arklab.demo.bean.UseCase;
 import io.coderf.arklab.demo.databinding.ActivityVerifyBinding;
 import io.coderf.arklab.demo.viewmodel.VerifyViewModel;
@@ -44,15 +46,21 @@ import io.coderf.arklab.ui.form.FormConstraintLayout;
  *     <li>校验分组 Default / Create / Editor</li>
  *     <li>{@link EntityValidator#validate} 遇错即停 或 {@link EntityValidator#validateAll} 收集全部</li>
  * </ul>
+ * 支持列表传入 {@link #EXTRA_PERSON_ID} 进入编辑回显（含多类型附件）。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/8
+ * @updated 2026/11/9
  */
 @AndroidEntryPoint
 public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerifyBinding> {
+
+    public static final String EXTRA_PERSON_ID = "personId";
+
     private UseCase useCase;
+    @Nullable
+    private String editingPersonId;
 
     {
         imeInsetPolicy = ImeAdjustEnabled.INSTANCE;
@@ -96,11 +104,12 @@ public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerify
             }
         });
         mViewModel.liveData.observe(this, aBoolean -> {
-            if (aBoolean) {
+            if (Boolean.TRUE.equals(aBoolean)) {
                 setResult(RESULT_OK);
                 finish();
             }
         });
+        mViewModel.editModelLiveData.observe(this, this::bindEditModel);
         binding.verifySubmit.setOnClickListener(v -> submit());
         binding.tvSex.setOnClickListener(v ->
                 new MenuDialog<>(this)
@@ -120,7 +129,26 @@ public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerify
         } else {
             useCase = bundle.getParcelable("args");
         }
-        toolbarBind.getToolbarConfig().setTitle(useCase != null ? useCase.getName() : "自定义注解测试");
+        editingPersonId = bundle.getString(EXTRA_PERSON_ID);
+        boolean editing = !TextUtils.isEmpty(editingPersonId);
+        String title = useCase != null ? useCase.getName() : (editing ? "编辑人员" : "自定义注解测试");
+        if (editing && useCase == null) {
+            title = "编辑人员";
+        } else if (editing) {
+            title = useCase.getName() + "·编辑";
+        }
+        toolbarBind.getToolbarConfig().setTitle(title);
+        binding.verifySubmit.setText(editing ? "保存" : "提交校验并保存");
+        if (editing) {
+            binding.chipGroupEditor.setChecked(true);
+            mViewModel.loadEdit(editingPersonId);
+        } else {
+            bindCreateDemoPerson();
+        }
+        updateGroupHint();
+    }
+
+    private void bindCreateDemoPerson() {
         Person person = new Person("张三", "1999-06-05", "15210230000", "055162260000",
                 "18", "72.00", "172", "tencent@qq.com", Arrays.asList("篮球", "音乐"));
         person.setSex("男");
@@ -144,7 +172,86 @@ public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerify
         person.setRemark("编辑分组演示备注");
         binding.setData(person);
         binding.editHobby.setText("篮球、音乐");
-        updateGroupHint();
+    }
+
+    private void bindEditModel(PersonEditModel model) {
+        if (model == null || model.getPerson() == null) {
+            return;
+        }
+        Person person = model.getPerson();
+        // 仍为 @Ignore 的校验演示字段：空值时补默认可编辑值
+        fillTransientDemoFields(person);
+        binding.setData(person);
+        binding.executePendingBindings();
+        // 显式同步选择类控件，避免 dataSource 同值不刷新 / 选项尚未对齐
+        syncSelectableFormWidgets(person);
+        if (person.getHobby() != null && !person.getHobby().isEmpty()) {
+            binding.editHobby.setText(TextUtils.join("、", person.getHobby()));
+        } else {
+            binding.editHobby.setText("");
+        }
+        binding.formImage.setImages(model.getImages());
+        binding.formVideo.setVideos(model.getVideos());
+        binding.formImageVideo.setMedia(model.getMedia());
+        binding.formFile.setFiles(model.getFiles());
+    }
+
+    private void syncSelectableFormWidgets(Person person) {
+        binding.formEducation.setText(person.getEducationLevel());
+        binding.formContact.setText(person.getContactPreference());
+        binding.formNewsletter.setChecked(Boolean.TRUE.equals(person.getAcceptNewsletter()));
+        binding.formAgree.setChecked(Boolean.TRUE.equals(person.getAgreeProtocol()));
+        binding.formSteps.setValue(person.getDailySteps());
+        binding.formRating.setRating(person.getServiceRating());
+    }
+
+    private static void fillTransientDemoFields(Person person) {
+        if (person.getFamily() == null) {
+            person.setFamily(new Family("李四", "王五"));
+        }
+        if (person.getFamilyList() == null || person.getFamilyList().isEmpty()) {
+            person.setFamilyList(Collections.singletonList(person.getFamily()));
+        }
+        // 兼容旧库无这些列时的空值；已落库的值不再覆盖
+        if (TextUtils.isEmpty(person.getEducationLevel())) {
+            person.setEducationLevel("本科");
+        }
+        if (person.getAcceptNewsletter() == null) {
+            person.setAcceptNewsletter(true);
+        }
+        if (person.getAgreeProtocol() == null) {
+            person.setAgreeProtocol(true);
+        }
+        if (TextUtils.isEmpty(person.getContactPreference())) {
+            person.setContactPreference("微信");
+        }
+        if (TextUtils.isEmpty(person.getEducationalExperienceDate())) {
+            person.setEducationalExperienceDate("2024-01-01 ~ 2024-12-31");
+        }
+        if (TextUtils.isEmpty(person.getSchoolStartTime())) {
+            person.setSchoolStartTime("1999-09-01 09:00:00");
+        }
+        if (TextUtils.isEmpty(person.getClassStartTime())) {
+            person.setClassStartTime("08:30:00");
+        }
+        if (TextUtils.isEmpty(person.getEmergencyContact())) {
+            person.setEmergencyContact("紧急联系人");
+        }
+        if (TextUtils.isEmpty(person.getIdCard())) {
+            person.setIdCard("110101199003078515");
+        }
+        if (TextUtils.isEmpty(person.getHomepage())) {
+            person.setHomepage("https://www.example.com");
+        }
+        if (TextUtils.isEmpty(person.getPostalCode())) {
+            person.setPostalCode("100000");
+        }
+        if (TextUtils.isEmpty(person.getNickname())) {
+            person.setNickname("zhangsan");
+        }
+        if (TextUtils.isEmpty(person.getRemark())) {
+            person.setRemark("编辑回显备注");
+        }
     }
 
     private void setupConfigPanel() {
@@ -239,7 +346,13 @@ public class VerifyActivity extends BaseActivity<VerifyViewModel, ActivityVerify
             logVerifyErrors(verifyResult);
             return;
         }
-        mViewModel.add(data, binding.formImage.getImages());
+        mViewModel.save(
+                data,
+                binding.formImage.getImages(),
+                binding.formVideo.getVideos(),
+                binding.formImageVideo.getMedia(),
+                binding.formFile.getFiles()
+        );
     }
 
     private void setupDemoFormControls() {

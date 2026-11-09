@@ -68,6 +68,15 @@
             app:layout_constraintStart_toStartOf="@+id/upload_mark"
             app:layout_constraintTop_toTopOf="@+id/upload_mark" />
 
+        <include
+            android:id="@+id/tv_live_badge"
+            layout="@layout/view_live_photo_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/horizontal_margin_s"
+            app:layout_constraintBottom_toBottomOf="@id/iv_media_show"
+            app:layout_constraintStart_toStartOf="@id/iv_media_show" />
+
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_clear_media"
             android:layout_width="@dimen/image_m"

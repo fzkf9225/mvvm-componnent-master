@@ -70,7 +70,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'io.coderf.arklab.core'
                 artifactId = 'db'
-                version = '1.6.2'
+                version = '1.6.3'
             }
         }
         repositories {

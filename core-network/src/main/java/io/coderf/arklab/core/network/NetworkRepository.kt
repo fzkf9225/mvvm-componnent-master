@@ -13,6 +13,7 @@ import io.coderf.arklab.core.request.NoOpRequestUi
 import io.coderf.arklab.core.request.RequestUi
 import io.coderf.arklab.core.request.RequestUiHost
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -152,14 +153,13 @@ open class DefaultNetworkRepository(
             }
             .onStart {
                 if (options.showLoading) {
-                    withContext(Dispatchers.Main.immediate) {
-                        activeRequestUi.showLoading(options.loadingMessage, options.enableDynamicEllipsis)
-                    }
+                    activeRequestUi.showLoading(options.loadingMessage, options.enableDynamicEllipsis)
                 }
             }
             .onCompletion {
+                // first()/take(1) 取消收集时仍需关闭 Loading
                 if (options.showLoading) {
-                    withContext(Dispatchers.Main.immediate) {
+                    withContext(NonCancellable) {
                         activeRequestUi.hideLoading()
                     }
                 }
@@ -167,9 +167,7 @@ open class DefaultNetworkRepository(
             .catch { throwable ->
                 val error = toAppError(throwable)
                 if (options.deliverErrorToUi && error !is AppError.Cancelled) {
-                    withContext(Dispatchers.Main.immediate) {
-                        activeRequestUi.showError(applyToastPolicy(error, options))
-                    }
+                    activeRequestUi.showError(applyToastPolicy(error, options))
                 }
                 emit(RequestResult.Error(error))
             }

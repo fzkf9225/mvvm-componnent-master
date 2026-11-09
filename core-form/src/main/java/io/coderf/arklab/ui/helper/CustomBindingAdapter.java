@@ -212,7 +212,7 @@ public class CustomBindingAdapter {
 
     @BindingAdapter("checked")
     public static void setChecked(FormSwitch view, Boolean checked) {
-        view.checkedSource.set(checked != null && checked);
+        view.setChecked(checked != null && checked);
     }
 
     @InverseBindingAdapter(attribute = "checked")
@@ -236,7 +236,7 @@ public class CustomBindingAdapter {
 
     @BindingAdapter("checked")
     public static void setCheckboxChecked(FormCheckbox view, Boolean checked) {
-        view.checkedSource.set(checked != null && checked);
+        view.setChecked(checked != null && checked);
     }
 
     @InverseBindingAdapter(attribute = "checked")
@@ -277,7 +277,7 @@ public class CustomBindingAdapter {
 
     @BindingAdapter("stepperValue")
     public static void setStepperValue(FormStepper view, int value) {
-        view.stepperValue.set(value);
+        view.setValue(value);
     }
 
     @InverseBindingAdapter(attribute = "stepperValue")
@@ -300,7 +300,7 @@ public class CustomBindingAdapter {
 
     @BindingAdapter("ratingValue")
     public static void setRatingValue(FormRating view, float value) {
-        view.ratingValue.set(value);
+        view.setRating(value);
     }
 
     @InverseBindingAdapter(attribute = "ratingValue")

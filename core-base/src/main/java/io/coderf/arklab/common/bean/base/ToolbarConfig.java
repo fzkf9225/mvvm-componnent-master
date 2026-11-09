@@ -580,6 +580,17 @@ public class ToolbarConfig extends BaseObservable {
     // DataBinding adapters（供布局 app:bindXxx 使用）
     // -------------------------------------------------------------------------
 
+    /**
+     * 在 MaterialToolbar 子 View 中查找标题 TextView。
+     * <p>
+     * 优先匹配文本与 {@link MaterialToolbar#getTitle()} 一致的 TextView；
+     * 找不到时再回退到第一个非 {@code MaterialButton} 的 TextView。
+     * 导航/菜单按钮本身也可能是 TextView，需显式排除。
+     * </p>
+     *
+     * @param toolbar 目标 Toolbar
+     * @return 标题 TextView；尚未 inflate 或无标题时返回 {@code null}
+     */
     @Nullable
     public static TextView findToolbarTitleView(@NonNull MaterialToolbar toolbar) {
         CharSequence title = toolbar.getTitle();
@@ -602,6 +613,13 @@ public class ToolbarConfig extends BaseObservable {
         return null;
     }
 
+    /**
+     * 对 Toolbar 标题 TextView 执行操作；若当前尚未创建则 {@code post} 延迟再试一次。
+     * <p>
+     * MaterialToolbar 的标题 View 往往在 setTitle / 首次 layout 后才出现，
+     * BindingAdapter 绑定时可能尚不可用，因此需要延迟兜底。
+     * </p>
+     */
     private static void withTitleView(@NonNull MaterialToolbar toolbar, @NonNull TitleViewAction action) {
         TextView titleView = findToolbarTitleView(toolbar);
         if (titleView != null) {
@@ -616,10 +634,15 @@ public class ToolbarConfig extends BaseObservable {
         });
     }
 
+    /** 标题 TextView 上的一次性操作回调。 */
     private interface TitleViewAction {
         void apply(@NonNull TextView titleView);
     }
 
+    /**
+     * 绑定标题字号（sp）。
+     * <p>{@code sizeSp <= 0} 时忽略，避免覆盖系统默认。</p>
+     */
     @BindingAdapter("bindTitleTextSizeSp")
     public static void bindTitleTextSizeSp(MaterialToolbar toolbar, float sizeSp) {
         if (sizeSp <= 0f) {
@@ -628,6 +651,13 @@ public class ToolbarConfig extends BaseObservable {
         withTitleView(toolbar, tv -> tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, sizeSp));
     }
 
+    /**
+     * 绑定标题字形：加粗、字体族、字体资源。
+     * <p>
+     * 优先级：{@code bindTitleFontRes} &gt; {@code bindTitleFontFamily} &gt; 当前 Typeface。
+     * 三者均可选；资源加载失败时自动回退。
+     * </p>
+     */
     @BindingAdapter(value = {
             "bindTitleBold",
             "bindTitleFontFamily",
@@ -661,6 +691,9 @@ public class ToolbarConfig extends BaseObservable {
         });
     }
 
+    /**
+     * 绑定标题最大行数；小于 1 时按 1 处理，且仅 1 行时开启 {@code singleLine}。
+     */
     @BindingAdapter("bindTitleMaxLines")
     public static void bindTitleMaxLines(MaterialToolbar toolbar, int maxLines) {
         int lines = Math.max(1, maxLines);
@@ -670,12 +703,19 @@ public class ToolbarConfig extends BaseObservable {
         });
     }
 
+    /**
+     * 绑定标题水平对齐。
+     * <p>
+     * 水平居中时走 {@link MaterialToolbar#setTitleCentered(boolean)}；
+     * 其余方向改写标题 TextView 的 {@link Toolbar.LayoutParams#gravity}。
+     * </p>
+     */
     @BindingAdapter("bindTitleGravity")
     public static void bindTitleGravity(MaterialToolbar toolbar, int gravity) {
-        int hgrav = Gravity.getAbsoluteGravity(gravity, toolbar.getLayoutDirection())
+        int grave = Gravity.getAbsoluteGravity(gravity, toolbar.getLayoutDirection())
                 & Gravity.HORIZONTAL_GRAVITY_MASK;
-        toolbar.setTitleCentered(hgrav == Gravity.CENTER_HORIZONTAL);
-        if (hgrav == Gravity.CENTER_HORIZONTAL) {
+        toolbar.setTitleCentered(grave == Gravity.CENTER_HORIZONTAL);
+        if (grave == Gravity.CENTER_HORIZONTAL) {
             return;
         }
         withTitleView(toolbar, textView -> {
@@ -690,16 +730,22 @@ public class ToolbarConfig extends BaseObservable {
         });
     }
 
+    /** 绑定标题字间距（{@link TextView#setLetterSpacing(float)}）。 */
     @BindingAdapter("bindTitleLetterSpacing")
     public static void bindTitleLetterSpacing(MaterialToolbar toolbar, float letterSpacing) {
         withTitleView(toolbar, tv -> tv.setLetterSpacing(letterSpacing));
     }
 
+    /** 绑定标题是否全部大写。 */
     @BindingAdapter("bindTitleAllCaps")
     public static void bindTitleAllCaps(MaterialToolbar toolbar, boolean allCaps) {
         withTitleView(toolbar, tv -> tv.setAllCaps(allCaps));
     }
 
+    /**
+     * 绑定 Toolbar 阴影高度（dp）。
+     * <p>{@code elevationDp < 0} 时不修改，与 {@link #setElevationDp(float)} 默认 -1 语义一致。</p>
+     */
     @BindingAdapter("bindToolbarElevationDp")
     public static void bindToolbarElevationDp(MaterialToolbar toolbar, float elevationDp) {
         if (elevationDp < 0f) {

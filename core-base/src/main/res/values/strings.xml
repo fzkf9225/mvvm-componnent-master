@@ -277,4 +277,7 @@
     <string name="download_paused">Paused</string>
     <string name="install_now">Install Now</string>
     <string name="install_later">Install Later</string>
+
+    <!-- ========== Live Photo ========== -->
+    <string name="live_photo_badge">实况</string>
 </resources>

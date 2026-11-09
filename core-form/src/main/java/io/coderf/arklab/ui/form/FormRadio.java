@@ -280,7 +280,12 @@ public class FormRadio<T extends PopupWindowBean<?>> extends FormConstraintLayou
         @SuppressWarnings("unchecked")
         T item = (T) selected.getOptionItem();
         selectedItem = item;
-        dataSource.set(resolveBindValue(item));
+        String value = resolveBindValue(item);
+        dataSource.set(value);
+        // 通知 DataBinding 逆向绑定（@={...}），否则 Person 字段不会更新
+        if (formTextWatcherAfter != null) {
+            formTextWatcherAfter.onTextAfterChanged(value);
+        }
         if (onRadioItemSelectedListener != null) {
             int position = radioItems.indexOf(item);
             onRadioItemSelectedListener.onItemSelected(item, Math.max(position, 0));

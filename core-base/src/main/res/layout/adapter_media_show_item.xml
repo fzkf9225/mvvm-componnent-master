@@ -33,5 +33,14 @@
             app:layout_constraintStart_toStartOf="@+id/imageVideo"
             app:layout_constraintTop_toTopOf="@+id/imageVideo" />
 
+        <include
+            android:id="@+id/tv_live_badge"
+            layout="@layout/view_live_photo_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/horizontal_margin_s"
+            app:layout_constraintBottom_toBottomOf="@id/imageVideo"
+            app:layout_constraintStart_toStartOf="@id/imageVideo" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

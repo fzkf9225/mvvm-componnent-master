@@ -26,9 +26,9 @@ import io.coderf.arklab.core.db.RoomLog;
  * @version 1.0
  * @since 1.0
  * @created 2024/11/6 10:44
- * @updated 2026/11/4
+ * @updated 2026/11/9 版本 4：新增 liveInfo 实况扩展字段
  */
-@Database(entities = {AttachmentBean.class}, version = 3, exportSchema = false)
+@Database(entities = {AttachmentBean.class}, version = 4, exportSchema = false)
 @TypeConverters({RoomJsonConverters.class, RoomEnumConverters.class,
         RoomJavaTimeConverters.class, RoomScalarConverters.class})
 public abstract class AttachmentDatabase extends RoomDatabase {
@@ -113,6 +113,18 @@ public abstract class AttachmentDatabase extends RoomDatabase {
     };
 
     /**
+     * 版本 3 → 4：新增实况图专用字段 liveInfo（与业务 otherInfo 分离）。
+     */
+    public static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            if (shouldAddColumn(database, "AttachmentBean", "liveInfo")) {
+                database.execSQL("ALTER TABLE AttachmentBean ADD COLUMN liveInfo TEXT");
+            }
+        }
+    };
+
+    /**
      * 使用 PRAGMA table_info 判断列是否需要添加。
      *
      * @return true 表示列尚不存在，应执行 ADD COLUMN
@@ -150,7 +162,7 @@ public abstract class AttachmentDatabase extends RoomDatabase {
                     Room.databaseBuilder(context.getApplicationContext(),
                                     AttachmentDatabase.class, attachmentDatabaseName)
                             // 添加迁移策略
-                            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
                             // 强制开启在主线程中操作数据库
                             .allowMainThreadQueries()
             ).build();

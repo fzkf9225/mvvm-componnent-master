@@ -264,7 +264,16 @@ public class FormRating extends FormConstraintLayout {
 
     /** 设置当前评分 */
     public void setRating(float rating) {
-        ratingValue.set(rating);
+        float snapped = snapToStep(rating);
+        boolean changed = Math.abs(ratingValue.get() - snapped) > 0.01f;
+        if (changed) {
+            ratingValue.set(snapped);
+        }
+        // 同值时 ObservableFloat 不回调，编辑回显需强制刷星级
+        if (starBar != null && Math.abs(starBar.getStarMark() - snapped) > 0.01f) {
+            starBar.setStarMark(snapped, false);
+        }
+        dataSource.set(String.valueOf(snapped));
     }
 
     /** 获取当前评分 */

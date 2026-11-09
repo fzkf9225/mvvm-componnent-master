@@ -25,6 +25,7 @@ import io.coderf.arklab.common.databinding.AdapterImageAddItemBinding;
 import io.coderf.arklab.common.enums.UploadStatusEnum;
 import io.coderf.arklab.common.listener.OnUploadRetryClickListener;
 import io.coderf.arklab.common.utils.common.AttachmentUtil;
+import io.coderf.arklab.common.utils.common.LivePhotoInfo;
 import io.coderf.arklab.core.utils.CollectionUtil;
 import io.coderf.arklab.common.helper.CornerShapeHelper;
 import io.coderf.arklab.common.utils.theme.ThemeAttrs;
@@ -64,17 +65,20 @@ public class ImageAddAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean
             holder.getBinding().ivAdd.setVisibility(View.VISIBLE);
             holder.getBinding().ivImageShow.setVisibility(View.GONE);
             holder.getBinding().ivClearImg.setVisibility(View.GONE);
+            holder.getBinding().tvLiveBadge.setVisibility(View.GONE);
         } else {
             holder.getBinding().ivAdd.setVisibility(View.GONE);
             holder.getBinding().ivImageShow.setVisibility(View.VISIBLE);
             holder.getBinding().ivClearImg.setVisibility(View.VISIBLE);
+            AttachmentBean item = mList.get(pos);
+            LivePhotoInfo.applyBadge(holder.getBinding().tvLiveBadge, item);
             Glide.with(holder.getBinding().ivImageShow.getContext())
-                    .load(getDisplayPath(mList.get(pos)))
+                    .load(getDisplayPath(item))
                     .apply(new RequestOptions().placeholder(placeholderImage == null ? getPlaceholderDefaultImage() : placeholderImage)
                             .error(errorImage == null ? getErrorDefaultImage() : errorImage))
                     .into(holder.getBinding().ivImageShow);
-            holder.getBinding().uploadProcess.setText(mList.get(pos).getUploadingPercent());
-            updateUploadView(UploadStatusEnum.getInfo(mList.get(pos).getUploading()), holder.getBinding().uploadProcess, holder.getBinding().uploadMark);
+            holder.getBinding().uploadProcess.setText(item.getUploadingPercent());
+            updateUploadView(UploadStatusEnum.getInfo(item.getUploading()), holder.getBinding().uploadProcess, holder.getBinding().uploadMark);
         }
     }
 

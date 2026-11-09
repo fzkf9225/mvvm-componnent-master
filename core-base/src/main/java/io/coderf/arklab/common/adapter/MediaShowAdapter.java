@@ -20,6 +20,7 @@ import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.databinding.AdapterMediaShowItemBinding;
 import io.coderf.arklab.common.enums.AttachmentTypeEnum;
 import io.coderf.arklab.common.utils.common.AttachmentUtil;
+import io.coderf.arklab.common.utils.common.LivePhotoInfo;
 import io.coderf.arklab.core.utils.FileUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.helper.CornerShapeHelper;
@@ -46,16 +47,19 @@ public class MediaShowAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBea
 
     @Override
     public void onBindHolder(BaseViewHolder<AdapterMediaShowItemBinding> holder, int pos) {
-        AttachmentTypeEnum attachmentTypeEnum = AttachmentUtil.getMediaType(holder.getBinding().imageVideo.getContext(), mList.get(pos).getFileType(), mList.get(pos).getPath());
+        AttachmentBean item = mList.get(pos);
+        AttachmentTypeEnum attachmentTypeEnum = AttachmentUtil.getMediaType(
+                holder.getBinding().imageVideo.getContext(), item.getFileType(), item.getPath());
         if (AttachmentTypeEnum.VIDEO == attachmentTypeEnum) {
             holder.getBinding().mediaPlay.setVisibility(View.VISIBLE);
-        } else if (AttachmentTypeEnum.IMAGE == attachmentTypeEnum) {
-            holder.getBinding().mediaPlay.setVisibility(View.GONE);
         } else {
             holder.getBinding().mediaPlay.setVisibility(View.GONE);
         }
+        // 实况图显示 LIVE 角标，不走视频播放钮
+        LivePhotoInfo.applyBadge(holder.getBinding().tvLiveBadge,
+                AttachmentTypeEnum.VIDEO == attachmentTypeEnum ? null : item);
         Glide.with(holder.getBinding().imageVideo.getContext())
-                .load(getDisplayPath(mList.get(pos)))
+                .load(getDisplayPath(item))
                 .apply(new RequestOptions().placeholder(placeholderImage == null ? getPlaceholderDefaultImage() : placeholderImage)
                         .error(errorImage == null ? getErrorDefaultImage() : errorImage))
                 .into(holder.getBinding().imageVideo);

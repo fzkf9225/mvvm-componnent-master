@@ -6,17 +6,18 @@ import io.coderf.arklab.common.repository.AttachmentRepositoryImpl
 import io.coderf.arklab.core.bean.RequestResult
 import io.coderf.arklab.core.db.RoomDataRepository
 import io.coderf.arklab.demo.bean.Person
+import io.coderf.arklab.demo.bean.PersonEditModel
 import io.coderf.arklab.demo.database.PersonDao
 import kotlinx.coroutines.flow.Flow
 
 /**
  * Demo：人员表仓库（协程栈），可联合保存附件。
  *
- * 附件按自身 mobileId upsert；业务侧如需关联，应自行保存
+ * 附件按自身 mobileId upsert；业务侧通过 [Person.imageIds] 等字段保存
  * [io.coderf.arklab.common.utils.common.AttachmentUtil.getIds] 返回的 ID 串。
  *
  * ```
- * repository.saveOrUpdateInfo(person, attachments)
+ * repository.saveOrUpdateInfo(person, images, videos, media, files)
  *     .collect { it.onSuccess { }.onError { } }
  * ```
  *
@@ -25,7 +26,7 @@ import kotlinx.coroutines.flow.Flow
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/11/4
+ * @updated 2026/11/9
  */
 class RoomPagingRepositoryImpl : RoomDataRepository<Person, PersonDao> {
 
@@ -41,11 +42,14 @@ class RoomPagingRepositoryImpl : RoomDataRepository<Person, PersonDao> {
     constructor(roomDao: PersonDao) : super(roomDao)
 
     /**
-     * 保存人员，并可选 upsert 附件（保留附件 mobileId，不反向写入业务外键）。
+     * 保存/更新人员，并用最新附件列表替换旧 ID 集合后回写到 Person。
      */
     fun saveOrUpdateInfo(
         person: Person,
-        imageList: List<AttachmentBean>?
+        images: List<AttachmentBean>? = null,
+        videos: List<AttachmentBean>? = null,
+        media: List<AttachmentBean>? = null,
+        files: List<AttachmentBean>? = null
     ): Flow<RequestResult<Unit>> {
         val options = RoomRequestOptions.Builder()
             .setShowDialog(true)
@@ -54,8 +58,37 @@ class RoomPagingRepositoryImpl : RoomDataRepository<Person, PersonDao> {
             .setTimeoutSeconds(30)
             .build()
         return execute(options) {
-            getRoomDao().insertSuspend(person)
-            attachmentRepositoryImpl?.saveOrUpdate(imageList)
+            val attachmentRepo = attachmentRepositoryImpl
+            if (attachmentRepo != null) {
+                person.imageIds = attachmentRepo.replaceByMobileIds(images, person.imageIds)
+                person.videoIds = attachmentRepo.replaceByMobileIds(videos, person.videoIds)
+                person.mediaIds = attachmentRepo.replaceByMobileIds(media, person.mediaIds)
+                person.fileIds = attachmentRepo.replaceByMobileIds(files, person.fileIds)
+            }
+            getRoomDao().upsertSuspend(person)
+        }
+    }
+
+    /**
+     * 按主键加载人员及其关联的多类型附件，供编辑页回显。
+     */
+    fun loadEditModel(personId: String): Flow<RequestResult<PersonEditModel>> {
+        val options = RoomRequestOptions.Builder()
+            .setShowDialog(true)
+            // 动态省略号会自行追加 "."，文案不要自带 "..."
+            .setDialogMessage("正在加载")
+            .setEnableDynamicEllipsis(true)
+            .build()
+        return execute(options) {
+            val person = getRoomDao().findInfoByIdSuspend(personId)
+            val attachmentRepo = attachmentRepositoryImpl
+            PersonEditModel(
+                person = person,
+                images = attachmentRepo?.queryListByMobileIds(person.imageIds).orEmpty(),
+                videos = attachmentRepo?.queryListByMobileIds(person.videoIds).orEmpty(),
+                media = attachmentRepo?.queryListByMobileIds(person.mediaIds).orEmpty(),
+                files = attachmentRepo?.queryListByMobileIds(person.fileIds).orEmpty()
+            )
         }
     }
 }

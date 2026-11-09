@@ -12,15 +12,24 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/corner_image"
-            android:scaleType="centerCrop"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:shapeAppearanceOverlay="@style/RoundedShapeAppearanceS"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="w,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/RoundedShapeAppearanceS" />
+
+        <include
+            android:id="@+id/tv_live_badge"
+            layout="@layout/view_live_photo_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/horizontal_margin_s"
+            app:layout_constraintBottom_toBottomOf="@id/corner_image"
+            app:layout_constraintStart_toStartOf="@id/corner_image" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

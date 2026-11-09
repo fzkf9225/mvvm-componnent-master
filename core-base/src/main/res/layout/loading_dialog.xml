@@ -34,8 +34,11 @@
             android:id="@+id/tipTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/vertical_margin_l"
+            android:gravity="center_horizontal"
             android:text="@{message}"
+            android:textAlignment="center"
             android:textColor="?attr/loadingDialogContentColor"
             android:textSize="@dimen/font_size_xl" />
     </LinearLayout>

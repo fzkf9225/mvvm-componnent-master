@@ -69,9 +69,15 @@ public class AttachmentBean extends BaseObservable {
     private String createUser = "";
 
     /**
-     * 其他参数，存json
+     * 其他参数，存 json；预留给业务扩展，勿写入实况图信息。
      */
     private String otherInfo = "";
+
+    /**
+     * 实况图（Live / Motion Photo）扩展信息，存 json。
+     * <p>结构由 {@link io.coderf.arklab.common.utils.common.LivePhotoInfo} 约定，与 {@link #otherInfo} 分离。</p>
+     */
+    private String liveInfo = "";
 
     /**
      * 俯仰角
@@ -253,6 +259,18 @@ public class AttachmentBean extends BaseObservable {
         this.otherInfo = otherInfo == null? "" : otherInfo;
     }
 
+    /**
+     * 实况图扩展 JSON；无实况时为空串。
+     */
+    @Bindable
+    public String getLiveInfo() {
+        return liveInfo;
+    }
+
+    public void setLiveInfo(String liveInfo) {
+        this.liveInfo = liveInfo == null ? "" : liveInfo;
+    }
+
     public Map<String,Object> getUploadInfo() {
         return uploadInfo;
     }
@@ -331,6 +349,7 @@ public class AttachmentBean extends BaseObservable {
                 ", createTime=" + createTime +
                 ", createUser='" + createUser + '\'' +
                 ", otherInfo='" + otherInfo + '\'' +
+                ", liveInfo='" + liveInfo + '\'' +
                 ", uploading=" + uploading +
                 ", uploadingPercent='" + uploadingPercent + '\'' +
                 ", pitch=" + pitch +

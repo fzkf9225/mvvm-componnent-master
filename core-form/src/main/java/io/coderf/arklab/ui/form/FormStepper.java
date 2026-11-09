@@ -247,7 +247,16 @@ public class FormStepper extends FormConstraintLayout {
 
     private void updateValue(int value) {
         int clamped = Math.max(stepperMin, Math.min(stepperMax, value));
-        stepperValue.set(clamped);
+        if (stepperValue.get() != clamped) {
+            stepperValue.set(clamped);
+            return;
+        }
+        // 同值时 ObservableInt 不回调，编辑回显需强制刷到输入框
+        String text = String.valueOf(clamped);
+        if (etValue != null && (etValue.getText() == null || !text.contentEquals(etValue.getText()))) {
+            etValue.setText(text);
+        }
+        dataSource.set(text);
     }
 
     private int parseValue(@NonNull String raw) {

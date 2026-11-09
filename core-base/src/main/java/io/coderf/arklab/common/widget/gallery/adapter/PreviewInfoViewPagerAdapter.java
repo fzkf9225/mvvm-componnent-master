@@ -2,6 +2,7 @@ package io.coderf.arklab.common.widget.gallery.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,8 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
+import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -25,22 +25,26 @@ import io.coderf.arklab.common.base.BaseViewHolder;
 import io.coderf.arklab.common.databinding.ItemPicShowBinding;
 import io.coderf.arklab.common.enums.AttachmentTypeEnum;
 import io.coderf.arklab.common.utils.common.AttachmentUtil;
+import io.coderf.arklab.common.utils.common.LivePhotoInfo;
 import io.coderf.arklab.core.utils.FileUtil;
 import io.coderf.arklab.core.utils.ThreadExecutorBounded;
 import io.coderf.arklab.common.utils.download.DownLoadImageService;
 import io.coderf.arklab.common.utils.download.ImageDownLoadCallBack;
 import io.coderf.arklab.common.utils.log.LogUtil;
+import io.coderf.arklab.common.widget.customview.LivePhotoView;
 import io.coderf.arklab.common.widget.dialog.ImageSaveDialog;
 import io.coderf.arklab.common.widget.gallery.bean.PreviewInfoBean;
 import io.coderf.arklab.common.widget.gallery.PreviewInfoPhotoDialog;
+import io.coderf.arklab.common.widget.gallery.impl.PhotoView;
 
 /**
- * 信息大图预览 ViewPager 适配器。
+ * 信息大图预览 ViewPager 适配器。实况图按住播放动感片段。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
  * @created 2026/9/11
+ * @updated 2026/11/9 接入 LivePhotoView
  */
 public class PreviewInfoViewPagerAdapter extends BaseRecyclerViewAdapter<PreviewInfoBean, ItemPicShowBinding> {
 
@@ -72,56 +76,80 @@ public class PreviewInfoViewPagerAdapter extends BaseRecyclerViewAdapter<Preview
 
     @Override
     public void onBindHolder(BaseViewHolder<ItemPicShowBinding> holder, int pos) {
-        holder.getBinding().picPv.setAllowParentInterceptOnEdge(true);
-        holder.getBinding().picPv.applyZoomConfig(previewInfoPhotoDialog.getEffectiveZoomConfig());
+        LivePhotoView livePhoto = holder.getBinding().livePhoto;
+        livePhoto.setAllowParentInterceptOnEdge(true);
+        livePhoto.applyZoomConfig(previewInfoPhotoDialog.getEffectiveZoomConfig());
         holder.getBinding().clPic.setBackgroundColor(Color.TRANSPARENT);
+
         PreviewInfoBean item = mList.get(pos);
         AttachmentTypeEnum attachmentTypeEnum = AttachmentUtil.getMediaType(
                 holder.getBinding().getRoot().getContext(), item.getFileType(), item.getPath());
-        if (AttachmentTypeEnum.VIDEO == attachmentTypeEnum) {
-            holder.getBinding().videoPlay.setVisibility(View.VISIBLE);
+        LivePhotoInfo liveInfo = LivePhotoInfo.from(item);
+        boolean isVideo = AttachmentTypeEnum.VIDEO == attachmentTypeEnum;
+
+        holder.getBinding().videoPlay.setVisibility(isVideo ? View.VISIBLE : View.GONE);
+
+        Drawable placeholder = previewInfoPhotoDialog.getPlaceholderImage() == null
+                ? Config.getInstance().getDefaultPlaceholderDrawable(holder.itemView.getContext())
+                : previewInfoPhotoDialog.getPlaceholderImage();
+        Drawable error = previewInfoPhotoDialog.getErrorImage() == null
+                ? Config.getInstance().getDefaultErrorImageDrawable(holder.itemView.getContext())
+                : previewInfoPhotoDialog.getErrorImage();
+
+        PhotoView photoView = livePhoto.getPhotoView();
+        View.OnLongClickListener saveListener = v -> {
+            if (!previewInfoPhotoDialog.isCanSaveImage()) {
+                return false;
+            }
+            new ImageSaveDialog(holder.itemView.getContext())
+                    .setConfig(previewInfoPhotoDialog.getEffectiveImageSaveDialogConfig())
+                    .setOnImageSaveListener(dialog -> {
+                        dialog.dismiss();
+                        try {
+                            int adapterPos = holder.getAbsoluteAdapterPosition();
+                            if (adapterPos < 0 || adapterPos >= mList.size()) {
+                                return;
+                            }
+                            PreviewInfoBean current = mList.get(adapterPos);
+                            downloadImage(holder.itemView.getContext(), current.getPath(), current.getFileType());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    })
+                    .build()
+                    .show();
+            return true;
+        };
+
+        if (isVideo) {
+            livePhoto.setOnMotionAvailabilityListener(null);
+            livePhoto.bindStillOnly(item.getPath(), placeholder, error);
+            photoView.setOnLongClickListener(saveListener);
         } else {
-            holder.getBinding().videoPlay.setVisibility(View.GONE);
+            livePhoto.setOnMotionAvailabilityListener(available ->
+                    photoView.setOnLongClickListener(available ? null : saveListener));
+            livePhoto.bind(item.getPath(), liveInfo, placeholder, error, true);
         }
-        Glide.with(holder.itemView.getContext())
-                .asBitmap()
-                .load(item.getPath())
-                .apply(new RequestOptions().placeholder(previewInfoPhotoDialog.getPlaceholderImage() == null
-                                ? Config.getInstance().getDefaultPlaceholderDrawable(holder.itemView.getContext())
-                                : previewInfoPhotoDialog.getPlaceholderImage())
-                        .error(previewInfoPhotoDialog.getErrorImage() == null
-                                ? Config.getInstance().getDefaultErrorImageDrawable(holder.itemView.getContext())
-                                : previewInfoPhotoDialog.getErrorImage()))
-                .into(holder.getBinding().picPv);
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull BaseViewHolder<ItemPicShowBinding> holder) {
+        holder.getBinding().livePhoto.release();
+        super.onViewRecycled(holder);
     }
 
     private class ViewHolder extends BaseViewHolder<ItemPicShowBinding> {
 
         public <T> ViewHolder(@NotNull ItemPicShowBinding binding, PreviewInfoViewPagerAdapter adapter) {
             super(binding, adapter);
-            binding.picPv.setOnLongClickListener(v -> {
-                if (!previewInfoPhotoDialog.isCanSaveImage()) {
-                    return false;
-                }
-                new ImageSaveDialog(itemView.getContext())
-                        .setConfig(previewInfoPhotoDialog.getEffectiveImageSaveDialogConfig())
-                        .setOnImageSaveListener(dialog -> {
-                            dialog.dismiss();
-                            try {
-                                PreviewInfoBean item = mList.get(getAbsoluteAdapterPosition());
-                                downloadImage(itemView.getContext(), item.getPath(), item.getFileType());
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        })
-                        .build()
-                        .show();
-                return true;
-            });
-            binding.picPv.setOnPhotoTapListener((v, x, y) -> previewInfoPhotoDialog.dismiss());
+            binding.livePhoto.getPhotoView().setOnPhotoTapListener((v, x, y) -> previewInfoPhotoDialog.dismiss());
             binding.videoPlay.setOnClickListener(v -> {
                 try {
-                    PreviewInfoBean item = adapter.getList().get(getAbsoluteAdapterPosition());
+                    int pos = getAbsoluteAdapterPosition();
+                    if (pos < 0 || pos >= adapter.getList().size()) {
+                        return;
+                    }
+                    PreviewInfoBean item = adapter.getList().get(pos);
                     Bundle bundleVideo = new Bundle();
                     bundleVideo.putString(VideoPlayerActivity.VIDEO_TITLE,
                             TextUtils.isEmpty(item.getFileName())

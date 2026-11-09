@@ -1036,4 +1036,46 @@
         <attr name="iconWidth" />
         <attr name="iconHeight" />
     </declare-styleable>
+
+    <!--
+        实况预览 LivePhotoView：微信款「实况」胶囊样式。
+        胶囊相对控件四边的外边距拆成水平 / 垂直两项，不再用单一 margin 同时控制两向。
+    -->
+    <declare-styleable name="LivePhotoView">
+        <!-- 胶囊锚点：左上 / 右上 / 左下（默认）/ 右下 -->
+        <attr name="liveBadgePosition" format="enum">
+            <enum name="topLeft" value="0" />
+            <enum name="topRight" value="1" />
+            <enum name="bottomLeft" value="2" />
+            <enum name="bottomRight" value="3" />
+        </attr>
+        <!-- 胶囊与容器左/右边缘的外边距（水平方向） -->
+        <attr name="liveBadgeMarginHorizontal" format="dimension" />
+        <!-- 胶囊与容器上/下边缘的外边距（垂直方向） -->
+        <attr name="liveBadgeMarginVertical" format="dimension" />
+        <!-- 胶囊内静止态实况图标 drawable（未播放） -->
+        <attr name="liveBadgeIcon" format="reference" />
+        <!-- 胶囊内播放中实况图标 drawable，默认 ic_live_photo_playing -->
+        <attr name="liveBadgePlayingIcon" format="reference" />
+        <!-- 胶囊内实况图标边长（静止 / 播放中共用，默认相同） -->
+        <attr name="liveBadgeIconSize" format="dimension" />
+        <!-- 胶囊内播放中图标边长；未设置时与 liveBadgeIconSize 相同 -->
+        <attr name="liveBadgePlayingIconSize" format="dimension" />
+        <!-- 胶囊文案，默认「实况」 -->
+        <attr name="liveBadgeText" format="string" />
+        <!-- 胶囊文字字号 -->
+        <attr name="liveBadgeTextSize" format="dimension" />
+        <!-- 胶囊文字颜色（同时用于图标着色） -->
+        <attr name="liveBadgeTextColor" format="color" />
+        <!-- 图标与文字之间的间距 -->
+        <attr name="liveBadgeIconTextSpacing" format="dimension" />
+        <!-- 胶囊内容左右内边距 -->
+        <attr name="liveBadgePaddingHorizontal" format="dimension" />
+        <!-- 胶囊内容上下内边距 -->
+        <attr name="liveBadgePaddingVertical" format="dimension" />
+        <!-- 胶囊背景色，建议带透明度的深灰，避免在大图黑底上融为一体 -->
+        <attr name="liveBadgeBackgroundColor" format="color" />
+        <!-- 胶囊圆角；足够大（如 999dp）即为完全胶囊形 -->
+        <attr name="liveBadgeCornerRadius" format="dimension" />
+    </declare-styleable>
 </resources>
