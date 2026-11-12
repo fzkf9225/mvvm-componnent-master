@@ -2,16 +2,43 @@
 
 框架核心 UI / MVVM 基座：Activity / Fragment / ViewModel、历史 widget、helper，以及 **common 体系的资源与 DataBinding**（R 包名保持 `io.coderf.arklab.common`）。
 
-当前版本：**1.9.0**  
-Maven：`io.coderf.arklab.core:base:1.9.0`  
+当前版本：**1.10.0**  
+Maven：`io.coderf.arklab.core:base:1.10.0`  
 namespace：`io.coderf.arklab.common`
 
 > 注意：本模块 ≠ Demo case 的 Gradle `:base`。Maven 坐标是 `core:base`，对应工程模块是 **`:core-base`**。  
-> 业务工程升级见 [UPGRADE.md](../UPGRADE.md)；Loading 可取消见 [QuickStart.md](../QuickStart.md)。
+> 业务工程升级见 [UPGRADE.md](../UPGRADE.md)；协程下载见 [UPGRADE.md §0.2](../UPGRADE.md#02-协程下载真内核base-1100)；Loading 可取消见 [QuickStart.md](../QuickStart.md)。
 
 ---
 
 ## 版本
+
+### 1.10.0
+
+文件下载 / APK 更新：**协程真内核**（与网络栈双轨策略对齐，不是 Rx 外包一层 Flow）：
+
+| 能力 | 说明 |
+|------|------|
+| `DownloadClient` | 新推荐入口：`download` / `downloadAwait` / `downloadBatch*`，调度 / 权限 / 写盘不经 RxJava |
+| `DownloadEngine` + `DownloadWriter` + `DownloadCoroutineApi` | suspend 拉流 + 协程写盘、断点续传、通知栏进度 |
+| `DownloadHttpClients` / `DownloadFileNames` | OkHttp·Retrofit 构建与文件名解析，**Rx / 协程双栈共用** |
+| `DownloadOptions` + 可选 `RequestUi` | 按次注入（勿绑单例）；失败可自动 `showError`；默认无全屏 Loading（通知栏即可） |
+| `UpdateManager`（Kotlin） | 静默 / 对话框更新委托 `DownloadClient`；`update()` 返回 `Job`（原 `Disposable`） |
+| `DownloadManager`（Rx） | **冻结保留**，存量 `.subscribe` 可继续用；新代码请走 Client |
+
+推荐写法（业务通常只处理成功）：
+
+```kotlin
+launchUiRequest {
+    val file = DownloadClient.getInstance().downloadAwait(
+        config,
+        DownloadOptions.defaults(),
+        networkRequestUiHost // 失败自动 Toast；取消不报错
+    )
+}
+```
+
+兼容说明见 [UPGRADE.md §0.2](../UPGRADE.md#02-协程下载真内核base-1100)。
 
 ### 1.9.0
 
@@ -110,6 +137,7 @@ Material3 控件落地补丁：官方已经能表达的圆角 / 描边不再包�
 - `BaseActivity` / `BaseFragment` / `BaseViewModel` 等基类
 - Toolbar（`ActionToolbar` / `TitleBar`）、Loading、通用工具与大量历史 UI 组件
 - 统一资源、M3 色板（含 `values-night`）与 DataBinding（业务 `R` / Binding 仍指向本模块包名）
+- 文件下载 / APK 更新：`DownloadClient`（协程，推荐）与 `DownloadManager`（Rx，存量）
 
 ---
 
@@ -127,7 +155,7 @@ Material3 控件落地补丁：官方已经能表达的圆角 / 描边不再包�
 需要基类 / 通用 UI / DataBinding 资源时（推荐经 `common`）：
 
 ```gradle
-implementation 'io.coderf.arklab.core:base:1.9.0'
+implementation 'io.coderf.arklab.core:base:1.10.0'
 // 或
 implementation project(':core-base')
 ```

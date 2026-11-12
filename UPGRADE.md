@@ -1,12 +1,12 @@
 # 升级与迁移说明
 
 > **当前主干版本（以各模块 `build.gradle` 发布号为准，README 若滞后请以此为准）：**  
-> **common `4.8.0`** · **core-base `1.9.0`** · **core-network `1.8.0`** · **core-db `1.7.0`** · **core-ui `1.3.1`** · **core-utils `1.2.0`** · **core-log `1.2.0`** · **core-autosize `1.0.0`** · **room-processor `1.2.0`** · **core-mqtt `1.6.2`** · **core-ws `1.0.1`** · **core-form `3.7.7`** · **core-media `3.7.0`** · **core-gnss `4.0.0`** · **annotation `3.3.1`**  
+> **common `4.8.0`** · **core-base `1.10.0`** · **core-network `1.8.0`** · **core-db `1.7.0`** · **core-ui `1.3.1`** · **core-utils `1.2.0`** · **core-log `1.2.0`** · **core-autosize `1.0.0`** · **room-processor `1.2.0`** · **core-mqtt `1.6.2`** · **core-ws `1.0.1`** · **core-form `3.7.7`** · **core-media `3.7.0`** · **core-gnss `4.0.0`** · **annotation `3.3.1`**  
 >
-> **本轮重点：** Loading 可取消（[§0.3](#03-loading-可取消base-190--network-180--db-170)）；近期见 [§0.4.3](#043-附件小图优先缩略图base-172--ui-377)、[§0.4.2](#042-附件模型简化base-171--db-162)。  
+> **本轮重点：** 协程下载真内核（[§0.2](#02-协程下载真内核base-1100)）；Loading 可取消（[§0.3](#03-loading-可取消base-190--network-180--db-170)）；近期见 [§0.4.3](#043-附件小图优先缩略图base-172--ui-377)、[§0.4.2](#042-附件模型简化base-171--db-162)。  
 > Room 协程栈落地见 [§0.5](#05-历史core-db-150-协程栈若尚未跟上)；剔除 `BaseView` 见 [§2](#2-120彻底剔除-baseview--mvp-页面绑定)；AppCompat → Material3 见 [§1](#1-460appcompat-主题--material3)。  
 > 仍停留在 **common 4.4.x 单体**：先完成 [附录 A](#附录-a4451从-444x-单体拆到-core)。  
-> 模块职责见 [MODULES.md](./MODULES.md)；网络迁移细节见 [core-network/MIGRATION.md](./core-network/MIGRATION.md)、[core-network/README.md](./core-network/README.md)；Room 见 [core-db/README.md](./core-db/README.md)。
+> 模块职责见 [MODULES.md](./MODULES.md)；网络迁移细节见 [core-network/MIGRATION.md](./core-network/MIGRATION.md)、[core-network/README.md](./core-network/README.md)；Room 见 [core-db/README.md](./core-db/README.md)；下载见 [core-base/README.md](./core-base/README.md)。
 
 ---
 
@@ -16,7 +16,7 @@
 
 ```gradle
 implementation 'io.coderf.arklab.common:common:4.8.0'
-implementation 'io.coderf.arklab.core:base:1.9.0'
+implementation 'io.coderf.arklab.core:base:1.10.0'
 implementation 'io.coderf.arklab.core:network:1.8.0'
 implementation 'io.coderf.arklab.core:db:1.7.0'
 implementation 'io.coderf.arklab.core:ui:1.3.1'
@@ -59,29 +59,29 @@ implementation project(':core-media')
 implementation 'io.coderf.arklab.media:media:3.7.0'
 ```
 
-### core-gnss `4.0.0` �ƻ�����������ԭ googlegps��
+### core-gnss `4.0.0` 包名与模块重命名（原 googlegps）
 
-�޾����� / �ɰ������ݣ�������ͬ���滻��
+无旧坐标 / 包名兼容，请按下述同名替换：
 
 ```gradle
-// ��
+// 旧
 implementation project(':googlegps')
 implementation 'io.coderf.arklab.googlegps:googlegps:3.4.0'
-// ��
+// 新
 implementation project(':core-gnss')
 implementation 'io.coderf.arklab.gnss:core-gnss:4.0.0'
 ```
 
 ```text
-import io.coderf.arklab.googlegps.*  ��  import io.coderf.arklab.gnss.*
+import io.coderf.arklab.googlegps.*  →  import io.coderf.arklab.gnss.*
 ```
 
-������`GpsStarter` / `GpsService` �ȣ�����δ�ġ�
+对外类名（`GpsStarter` / `GpsService` 等）保持未改。
 
 | 模块 | 坐标 |
 |------|------|
 | common | `io.coderf.arklab.common:common:4.8.0` |
-| core-base | `io.coderf.arklab.core:base:1.9.0` |
+| core-base | `io.coderf.arklab.core:base:1.10.0` |
 | core-network | `io.coderf.arklab.core:network:1.8.0` |
 | core-db | `io.coderf.arklab.core:db:1.7.0` |
 | core-ui | `io.coderf.arklab.core:ui:1.3.1` |
@@ -95,6 +95,71 @@ import io.coderf.arklab.googlegps.*  ��  import io.coderf.arklab.gnss.*
 | core-media | `io.coderf.arklab.media:media:3.7.0`（原模块名 `commonmedia`；包名 / Maven 坐标不变） |
 | core-gnss | `io.coderf.arklab.gnss:core-gnss:4.0.0`（原 `googlegps`，包名 `io.coderf.arklab.gnss`，无旧坐标兼容） |
 | annotation | `io.coderf.arklab.annotation:annotation:3.3.1` |
+
+---
+
+## 0.2 协程下载真内核：base `1.10.0`
+
+**相对 1.9.0**：新增协程下载 / 更新执行路径；**不是**把 Rx `Observable` 包成 Flow。存量 `DownloadManager`（Rx）仍可用。
+
+| 模块 | 版本 | 要点 |
+|------|------|------|
+| core-base | **1.10.0** | `DownloadClient` 真内核；`UpdateManager` 迁 Kotlin 并委托 Client；Rx `DownloadManager` 冻结保留 |
+| common | **4.8.0** | Facade 未强制抬版本时，业务请**显式**钉 `base:1.10.0` |
+
+### 双栈对照
+
+| | 1.9.0 及以前（仍可用） | 1.10.0 推荐 |
+|--|------------------------|-------------|
+| 入口 | `DownloadManager` / `UpdateManager`（Java + Rx） | `DownloadClient` + `UpdateManager`（内部协程） |
+| 返回 | `Observable` / `Single` / `Disposable` | `Flow<DownloadEvent>` / `suspend` / `Job` |
+| 写盘 | `DownloadObservable` | `DownloadWriter`（同一套断点 / 文件名规则） |
+| 错误 UI | 业务自行 `subscribe` onError | 可选按次传入 `RequestUi`（如 `networkRequestUiHost`） |
+| APK 更新 | `UpdateManager.update` → Rx | 同 API 名，返回 **`Job`**（原 `Disposable`） |
+
+### 业务侧接入（推荐）
+
+```kotlin
+launchUiRequest {
+    val file = DownloadClient.getInstance().downloadAwait(
+        DownloadConfig.Builder(activity, url).build(),
+        DownloadOptions.defaults(),          // 默认无全屏 Loading；失败可交 RequestUi
+        networkRequestUiHost                 // 失败自动 Toast；取消不报错
+    )
+    // 通常只需处理成功；进度看通知栏，或自行 collect Progress
+}
+```
+
+```kotlin
+// 需要全屏 Loading（可取消）时
+DownloadClient.getInstance().downloadAwait(
+    config,
+    DownloadOptions.withLoading("正在下载…"),
+    networkRequestUiHost
+)
+```
+
+```kotlin
+// 完全静默（后台任务）
+DownloadClient.getInstance().downloadAwait(config, DownloadOptions.silent())
+```
+
+```kotlin
+// APK：对话框路径 API 不变；静默 update 若保存了返回值请改类型
+val job = UpdateManager.getInstance().update(config)
+// job.cancel()   // 原 Disposable.dispose()
+```
+
+### 兼容与注意
+
+1. **不必立刻改**现有 `DownloadManager.download(...).subscribe(...)`；功能与断点行为保持。
+2. **`UpdateManager.update(...)` 返回类型**：`Disposable` → `Job`。仓库内无强制使用返回值的调用点；若业务保存了 Disposable，改为 `Job` 并 `cancel()`。
+3. **防重复**：`UpdateManager.getDownloadingUrls()` 合并 Client + 存量 Manager，过渡期两端同一 URL 都能拦住。
+4. **RequestUi 按次传入**，不要 `DownloadClient.setRequestUi` 绑单例，避免页面 Host 串台。
+5. **取消语义不变**：主动取消 ≠ 失败；保留 `.download` 临时文件便于续传。
+6. 需要进度条 / 自定义失败文案时再 `collect DownloadEvent` 或设 `DownloadListener`；默认「只处理成功」即可。
+
+详见 [core-base/README.md](./core-base/README.md) `1.10.0`、`download` 包 `package-info`。
 
 ---
 
@@ -507,7 +572,7 @@ Repository ──RequestUi──? NetworkRequestUiHost ──LiveData──? Net
 | core-ws | — | **1.0.0** → 现 **1.0.1** |
 | core-form（原 commonui） | 3.5.1 | **3.6.0** → 3.7.0 → 现 **3.7.6** |
 | core-media（原 commonmedia） | 3.3.2 | **3.4.0** → 3.5.0 → 现 **3.7.0** |
-| core-gnss��ԭ googlegps�� | 3.1.7 | **3.2.0** �� 3.3.x �� 3.4.0 �� �� **4.0.0**��ģ��/�����ƻ����������� |
+| core-gnss（原 googlegps） | 3.1.7 | **3.2.0** → 3.3.x → 3.4.0 → 现 **4.0.0**（模块 / 包名与坐标重命名） |
 | annotation | 3.2.0 | **3.3.0** → 现 **3.3.1** |
 
 Maven 示例（仅升主题时的历史坐标；**当前请以文首为准**）：

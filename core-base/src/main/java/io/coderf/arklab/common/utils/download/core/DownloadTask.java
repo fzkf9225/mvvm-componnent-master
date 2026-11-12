@@ -5,19 +5,21 @@ import androidx.annotation.Nullable;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import io.coderf.arklab.common.utils.download.DownloadClient;
 import io.coderf.arklab.common.utils.download.DownloadManager;
 import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
  * 进行中的下载任务快照与控制句柄。
  * <p>
- * 由 {@link DownloadManager} 在入队时创建；业务侧以只读信息 + {@link #cancel()} 为主，
- * 请勿直接调用带 {@code Internal} 注释的写入方法。
+ * 由 {@link DownloadManager}（Rx）或 {@link DownloadClient}（协程）在入队时创建；
+ * 业务侧以只读信息 + {@link #cancel()} 为主。
  * 同一 URL 在 {@code verifyRepeatDownload=false} 时可能并存多个任务，此时用 {@link #getTaskId()} 区分。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
+ * @updated 2026/11/12
  */
 public final class DownloadTask {
 
@@ -33,12 +35,19 @@ public final class DownloadTask {
     /** 并行槽位只释放一次，避免 cancel 与 onError 双通道重复减计数 */
     private final AtomicBoolean slotReleased = new AtomicBoolean(false);
 
-    /** 轮到并行槽位时由 Manager 注入并执行 */
+    /** 轮到并行槽位时由 Manager/Client 注入并执行 */
     private volatile Runnable starter;
-    /** 任务被取消时通知外层 Observable（主动 cancel 时） */
+    /** 任务被取消时通知外层流（主动 cancel 时） */
     private volatile Runnable cancelNotifier;
+    /**
+     * 取消本任务时调用（由创建方注入，指向对应 Manager/Client 的 cancelTask）。
+     * 未设置时回退：先试协程 Client，再试 Rx Manager。
+     */
+    private volatile Runnable cancelAction;
+    /** 中断网络：Rx dispose 或 Job.cancel */
+    private volatile Runnable abortNetwork;
 
-    /** Internal：仅供 {@link DownloadManager} 创建 */
+    /** Internal：仅供 Manager / Client 创建 */
     public DownloadTask(@NonNull String taskId,
                         @NonNull String url,
                         @Nullable String saveBasePath,
@@ -84,8 +93,16 @@ public final class DownloadTask {
         return progress;
     }
 
-    /** 取消本任务（排队中直接出队；下载中 dispose 网络订阅） */
+    /** 取消本任务（排队中直接出队；下载中中断网络） */
     public void cancel() {
+        Runnable action = cancelAction;
+        if (action != null) {
+            action.run();
+            return;
+        }
+        if (DownloadClient.getInstance().cancelTask(taskId)) {
+            return;
+        }
         DownloadManager.getInstance().cancelTask(taskId);
     }
 
@@ -93,7 +110,7 @@ public final class DownloadTask {
         return state.isActive();
     }
 
-    // ========== Internal（DownloadManager） ==========
+    // ========== Internal ==========
 
     /** Internal */
     public void setState(@NonNull DownloadState state) {
@@ -104,7 +121,9 @@ public final class DownloadTask {
     public void setProgress(int progress) {
         if (progress < 0) {
             this.progress = 0;
-        } else this.progress = Math.min(progress, 100);
+        } else {
+            this.progress = Math.min(progress, 100);
+        }
     }
 
     /** Internal */
@@ -138,6 +157,26 @@ public final class DownloadTask {
     @Nullable
     public Runnable getCancelNotifier() {
         return cancelNotifier;
+    }
+
+    /** Internal：注入归属 Manager/Client 的取消实现 */
+    public void setCancelAction(@Nullable Runnable cancelAction) {
+        this.cancelAction = cancelAction;
+    }
+
+    /** Internal：中断网络（dispose / Job.cancel） */
+    public void setAbortNetwork(@Nullable Runnable abortNetwork) {
+        this.abortNetwork = abortNetwork;
+    }
+
+    /** Internal */
+    public void abortNetwork() {
+        Runnable abort = abortNetwork;
+        if (abort != null) {
+            abort.run();
+            return;
+        }
+        DownloadRetrofitFactory.cancel(disposable);
     }
 
     /**

@@ -10,7 +10,8 @@ namespace：`io.coderf.arklab.common.facade`
 
 ## 4.8.0
 
-透传 Loading 可取消能力：**core-base 1.9.0** · **core-network 1.8.0** · **core-db 1.7.0**。  
+透传 Loading 可取消能力：**core-base ≥1.9.0** · **core-network ≥1.8.0** · **core-db ≥1.7.0**。  
+协程下载真内核请显式钉 **core-base ≥1.10.0**（见 [UPGRADE.md §0.2](../UPGRADE.md#02-协程下载真内核base-1100)）。  
 用法见 [QuickStart.md](../QuickStart.md)、[UPGRADE.md §0.3](../UPGRADE.md#03-loading-可取消base-190--network-180--db-170)。
 
 ---

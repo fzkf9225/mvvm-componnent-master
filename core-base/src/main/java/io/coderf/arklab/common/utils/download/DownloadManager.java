@@ -44,19 +44,22 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
  * <p>
  * <b>API 分层</b>
  * <ul>
- *   <li>推荐：{@link #download(DownloadConfig)}、{@link #downloadBatch(BatchDownloadConfig)}</li>
+ *   <li>推荐（存量 Rx）：{@link #download(DownloadConfig)}、{@link #downloadBatch(BatchDownloadConfig)}</li>
  *   <li>兼容：{@code download(Activity, String, ...)} 等重载，内部均委托到 Config 入口</li>
  *   <li>扩展：{@link #getDownloadingTasks()}、{@link #getDownloadTask(String)}、{@link #cancel(String)} 等</li>
+ *   <li>协程新栈请用 {@link DownloadClient}（真内核，不包装本类）</li>
  * </ul>
  *
  * @see DownloadConfig
  * @see BatchDownloadConfig
  * @see DownloadTask
+ * @see DownloadClient
  *
  * @author fz
  * @version 1.0
  * @since 1.0
  * @created 2024/11/7
+ * @updated 2026/11/12
  */
 public class DownloadManager {
 
@@ -384,6 +387,7 @@ public class DownloadManager {
                     taskId, url, config.getSaveBasePath(), config.getSaveFileName());
             DownloadListener wrappedListener = wrapListener(config.getDownloadListener(), task);
 
+            task.setCancelAction(() -> cancelTaskInternal(task, true));
             task.setStarter(() -> startNetworkDownload(task, config, wrappedListener, emitter));
             task.setCancelNotifier(() -> notifyCanceled(emitter, wrappedListener));
 
@@ -434,9 +438,10 @@ public class DownloadManager {
                             }
                         });
         task.setDisposable(disposable);
+        task.setAbortNetwork(() -> DownloadRetrofitFactory.cancel(disposable));
         // 订阅过程中可能已被 cancel：补释放
         if (task.getState() == DownloadState.CANCELED) {
-            DownloadRetrofitFactory.cancel(disposable);
+            task.abortNetwork();
             releaseRunningSlot(task);
         }
     }
@@ -516,7 +521,7 @@ public class DownloadManager {
 
         if (state == DownloadState.RUNNING) {
             task.setState(DownloadState.CANCELED);
-            DownloadRetrofitFactory.cancel(task.getDisposable());
+            task.abortNetwork();
             releaseRunningSlot(task);
             if (fromApi) {
                 runCancelNotifier(task);

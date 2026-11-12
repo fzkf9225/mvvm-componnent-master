@@ -15,7 +15,7 @@ import okhttp3.ResponseBody;
  * OkHttp 下载拦截器。
  * <p>
  * 每次下载使用独立实例，在 {@link #intercept} 中缓存 {@link ResponseBody} 与 {@link Headers}，
- * 供 {@link DownloadObservable} 读取进度与推断文件名。
+ * 供 {@link DownloadObservable} / {@link DownloadWriter} 读取进度与推断文件名。
  * <p>
  * 断点续传容错：服务端返回 {@code 416 Range Not Satisfiable} 时，移除 {@code Range} 头重新请求全量文件。
  *

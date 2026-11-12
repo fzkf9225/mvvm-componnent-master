@@ -8,15 +8,14 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import io.coderf.arklab.common.api.Config;
-import io.coderf.arklab.common.base.BaseException;
+import io.coderf.arklab.common.utils.download.DownloadClient;
 import io.coderf.arklab.common.utils.download.DownloadManager;
 import io.coderf.arklab.common.utils.download.DownloadPermissionHelper;
+import io.coderf.arklab.common.utils.download.UpdateManager;
 import io.coderf.arklab.common.utils.download.core.DownloadConfig;
 import io.coderf.arklab.common.utils.download.core.UpdateConfig;
-import io.coderf.arklab.common.utils.download.util.DownloadNotificationUtil;
 import io.coderf.arklab.common.utils.download.util.DownloadUtil;
 import io.coderf.arklab.common.widget.dialog.ConfirmDialog;
 import io.coderf.arklab.common.widget.dialog.UpdateMessageDialog;
@@ -25,12 +24,12 @@ import io.coderf.arklab.core.utils.FileUtil;
 /**
  * {@link UpdateMessageDialog}「立即更新」按钮的默认实现。
  * <p>
- * 流程：权限检查 → 本地 APK 缓存检测（已下载则询问直接安装）→ 委托
- * {@link DownloadManager#download(DownloadConfig)} → 安装。
- * 防重复状态与静默更新、普通下载统一由 {@link DownloadManager#getDownloadingUrls()} 维护。
+ * 流程：权限检查 → 本地 APK 缓存检测（已下载则询问直接安装）→
+ * {@link UpdateManager#update(DownloadConfig)}（内部走 {@link DownloadClient}）→ 安装。
+ * 防重复查询 {@link DownloadClient}（并兼容存量 {@link DownloadManager}）。
  * <p>
- * 构造参数中的 {@code downloadMap} 仍保留以兼容旧调用；实际防重复以
- * {@link DownloadManager} 为准（推荐传入 {@link io.coderf.arklab.common.utils.download.UpdateManager#getDownloadingUrls()}）。
+ * 构造参数中的 {@code downloadMap} 仍保留以兼容旧调用；推荐传入
+ * {@link UpdateManager#getDownloadingUrls()}。
  *
  * @see io.coderf.arklab.common.utils.download.UpdateManager#checkUpdateInfo(UpdateConfig)
  *
@@ -38,14 +37,14 @@ import io.coderf.arklab.core.utils.FileUtil;
  * @version 1.0
  * @since 1.0
  * @created 2024/11/7
+ * @updated 2026/11/12
  */
 public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
 
     private final String apkUrl;
     private final Activity mContext;
     /**
-     * 兼容旧 API；推荐传入 {@link DownloadManager#getDownloadingUrls()}。
-     * 防重复以 {@link DownloadManager} 为准，此列表仅作补充判断。
+     * 兼容旧 API；推荐传入 {@link io.coderf.arklab.common.utils.download.UpdateManager#getDownloadingUrls()}。
      */
     private final List<String> downloadMap;
     private final String saveFileName;
@@ -119,13 +118,17 @@ public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
     }
 
     private boolean isApkDownloading() {
+        if (DownloadClient.getInstance().isDownloading(apkUrl)) {
+            return true;
+        }
+        // 过渡期：存量 Rx 栈同一 URL 也算进行中
         if (DownloadManager.getInstance().isDownloading(apkUrl)) {
             return true;
         }
         return downloadMap != null && downloadMap.contains(apkUrl);
     }
 
-    /** 委托 {@link DownloadManager} 下载 APK，完成后调起安装；失败时发送全屏通知 */
+    /** 委托 {@link UpdateManager#update(DownloadConfig)}（内部走 DownloadClient） */
     private void download() {
         DownloadConfig config = new DownloadConfig.Builder(mContext, apkUrl)
                 .setSaveFileName(saveFileName)
@@ -134,28 +137,6 @@ public class ApkUpdateListener implements UpdateMessageDialog.OnUpdateListener {
                 .setDownloadListener(downloadListener)
                 .setShowToast(showToast)
                 .build();
-        DownloadNotificationUtil downloadNotificationUtils =
-                new DownloadNotificationUtil(mContext.getApplicationContext());
-        DownloadManager.getInstance()
-                .download(config)
-                .subscribe(
-                        file -> DownloadUtil.installApk(mContext.getApplicationContext(), file),
-                        throwable -> {
-                            if (throwable instanceof BaseException) {
-                                BaseException baseException = (BaseException) throwable;
-                                String code = baseException.getErrorCode();
-                                if (BaseException.ErrorType.DOWNLOADING_ERROR.getCode().equals(code)
-                                        || BaseException.ErrorType.DOWNLOAD_URL_404.getCode().equals(code)
-                                        || BaseException.ErrorType.PERMISSION_DENIED.getCode().equals(code)) {
-                                    Toast.makeText(mContext, baseException.getErrorMsg(), Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-                                downloadNotificationUtils.sendNotificationFullScreen(
-                                        new Random().nextInt(), "新版本下载失败", baseException.getErrorMsg(), null);
-                                return;
-                            }
-                            downloadNotificationUtils.sendNotificationFullScreen(
-                                    new Random().nextInt(), "新版本下载失败", throwable.getMessage(), null);
-                        });
+        UpdateManager.getInstance().update(config);
     }
 }
