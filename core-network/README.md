@@ -2,9 +2,24 @@
 
 网络层：Retrofit / OkHttp、Repository 基类，以及推荐使用的请求 API（`RequestOptions` / `RequestResult` / `RequestUi` 等）。
 
-当前版本：**1.7.0**  
-Maven：`io.coderf.arklab.core:network:1.7.0`  
+当前版本：**1.8.0**  
+Maven：`io.coderf.arklab.core:network:1.8.0`  
 namespace：`io.coderf.arklab.core.network`
+
+---
+
+## 1.8.0 变更摘要
+
+Loading 可取消（配合 **core-base ≥1.9.0**）：
+
+| 项 | 说明 |
+|----|------|
+| `RequestOptions.loadingCancelPolicy` | 默认 `None`；工厂 `cancellable()` / `cancellableExit()` |
+| 协程 `DefaultNetworkRepository` | `showLoading` 下发 cancelPolicy |
+| Rx `RepositoryImpl` | 同步下发 policy，并 `trackCancellableIfNeeded` |
+| `ErrorConsumer` | 不再重复 `hideLoading`（改由 doFinally / 引用计数） |
+
+**兼容：** 默认仍不可取消；须 Options 显式策略 + ViewModel `launchUiRequest` 才真正取消请求。见 [QuickStart.md](../QuickStart.md)。
 
 ---
 
@@ -66,7 +81,7 @@ namespace：`io.coderf.arklab.core.network`
 需要 HTTP / Repository 网络栈时：
 
 ```gradle
-implementation 'io.coderf.arklab.core:network:1.7.0'
+implementation 'io.coderf.arklab.core:network:1.8.0'
 // 或
 implementation project(':core-network')
 ```
@@ -77,13 +92,19 @@ implementation project(':core-network')
 
 ---
 
-## 1.6.0 主要用法
+## 1.8.0 / 1.6.0 主要用法
 
 ### RequestOptions（协程栈）
 
 ```kotlin
-// 默认：Loading + 错误交 UI + 鉴权重试 + 瞬时失败退避
+// 默认：Loading + 错误交 UI + 鉴权重试 + 瞬时失败退避 + Loading 不可取消
 request { api.loadProfile() }
+
+// 可取消 Loading：取消请求后留在本页（须配合 ViewModel.launchUiRequest）
+request(RequestOptions.cancellable()) { api.getDetail(id) }
+
+// 可取消并离开当前页
+request(RequestOptions.cancellableExit()) { api.bootstrap() }
 
 // 静默：无 Loading、不交错误 UI（仍可 collect RequestResult.Error）
 request(RequestOptions.silent()) { api.heartbeat() }
@@ -91,7 +112,7 @@ request(RequestOptions.silent()) { api.heartbeat() }
 // 有 Loading，不弹 Toast（对齐旧 setShowToast(false)）
 request(RequestOptions.noToast()) { api.submit() }
 
-// 登录 / 验证码：关闭鉴权刷新，并关掉通用退避
+// 登录 / 验证码：关闭鉴权刷新；关键提交通常保持不可取消（None）
 request(
     RequestOptions.builder()
         .enableAuthRetry(false)
@@ -104,6 +125,7 @@ request(
     RequestOptions.builder()
         .errorToastMessage("提交失败，请稍后重试")
         .timeoutMs(15_000)
+        .loadingCancelPolicy(LoadingCancelPolicy.CancelRequest)
         .build()
 ) { api.submit() }
 ```
@@ -115,7 +137,9 @@ request(
 | `enableAuthRetry` | 是否走 `TokenRefresher` |
 | `retryPolicy` | 瞬时网络失败的指数退避；`null` → `RetryPolicy.Default`；业务错误不走 |
 | `timeoutMs` | 协程单次 attempt 超时；**不**改 OkHttp connect/read/write |
+| `loadingCancelPolicy` | Loading 用户取消策略；默认 `None` |
 | `silent()` / `noToast()` / `noAuthRetry()` | 常用工厂 |
+| `cancellable()` / `cancellableExit()` | 可取消 Loading（1.8.0+） |
 
 ### ApiRetrofit.Builder 增量
 

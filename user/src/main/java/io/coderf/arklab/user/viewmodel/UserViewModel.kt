@@ -2,14 +2,13 @@ package io.coderf.arklab.user.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.coderf.arklab.common.base.BaseViewModel
+import io.coderf.arklab.common.base.launchUiRequest
 import io.coderf.arklab.user.api.UserApiService
 import io.coderf.arklab.user.domain.usecase.RefreshUserProfileUseCase
 import io.coderf.arklab.user.repository.UserRepositoryImpl
 import io.coderf.arklab.userapi.bean.UserInfo
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -38,7 +37,8 @@ class UserViewModel @Inject constructor(
     }
 
     fun refreshUserInfo() {
-        viewModelScope.launch {
+        // 当前 Repository 无遮罩 Loading；统一用 launchUiRequest，便于日后打开可取消策略
+        launchUiRequest {
             refreshUserProfile.execute(iRepository).collect { result ->
                 result.onSuccess { userInfoLiveData.value = it }
             }

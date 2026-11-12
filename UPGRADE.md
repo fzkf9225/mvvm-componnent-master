@@ -1,9 +1,9 @@
 # 升级与迁移说明
 
 > **当前主干版本（以各模块 `build.gradle` 发布号为准，README 若滞后请以此为准）：**  
-> **common `4.7.0`** · **core-base `1.7.2`** · **core-network `1.7.1`** · **core-db `1.6.2`** · **core-ui `1.3.1`** · **core-utils `1.2.0`** · **core-log `1.2.0`** · **core-autosize `1.0.0`** · **room-processor `1.2.0`** · **core-mqtt `1.6.2`** · **core-ws `1.0.1`** · **core-form `3.7.7`** · **core-media `3.7.0`** · **core-gnss `4.0.0`** · **annotation `3.3.1`**  
+> **common `4.8.0`** · **core-base `1.9.0`** · **core-network `1.8.0`** · **core-db `1.7.0`** · **core-ui `1.3.1`** · **core-utils `1.2.0`** · **core-log `1.2.0`** · **core-autosize `1.0.0`** · **room-processor `1.2.0`** · **core-mqtt `1.6.2`** · **core-ws `1.0.1`** · **core-form `3.7.7`** · **core-media `3.7.0`** · **core-gnss `4.0.0`** · **annotation `3.3.1`**  
 >
-> **本轮重点：** [§0.4.3](#043-附件小图优先缩略图base-172--ui-377)；近期见 [§0.4.2](#042-附件模型简化base-171--db-162)、[§0.4.1](#041-core-form原-commonui376移除-forminputtype--formimeoptions)、[§0.4](#04-本轮补丁base-160--network-170--db-161--ws-101--ui-374--gps-340)。  
+> **本轮重点：** Loading 可取消（[§0.3](#03-loading-可取消base-190--network-180--db-170)）；近期见 [§0.4.3](#043-附件小图优先缩略图base-172--ui-377)、[§0.4.2](#042-附件模型简化base-171--db-162)。  
 > Room 协程栈落地见 [§0.5](#05-历史core-db-150-协程栈若尚未跟上)；剔除 `BaseView` 见 [§2](#2-120彻底剔除-baseview--mvp-页面绑定)；AppCompat → Material3 见 [§1](#1-460appcompat-主题--material3)。  
 > 仍停留在 **common 4.4.x 单体**：先完成 [附录 A](#附录-a4451从-444x-单体拆到-core)。  
 > 模块职责见 [MODULES.md](./MODULES.md)；网络迁移细节见 [core-network/MIGRATION.md](./core-network/MIGRATION.md)、[core-network/README.md](./core-network/README.md)；Room 见 [core-db/README.md](./core-db/README.md)。
@@ -15,10 +15,10 @@
 业务工程建议**显式**声明下表（勿只升 `common` 指望传递依赖一定最新）：
 
 ```gradle
-implementation 'io.coderf.arklab.common:common:4.7.0'
-implementation 'io.coderf.arklab.core:base:1.7.2'
-implementation 'io.coderf.arklab.core:network:1.7.1'
-implementation 'io.coderf.arklab.core:db:1.6.2'
+implementation 'io.coderf.arklab.common:common:4.8.0'
+implementation 'io.coderf.arklab.core:base:1.9.0'
+implementation 'io.coderf.arklab.core:network:1.8.0'
+implementation 'io.coderf.arklab.core:db:1.7.0'
 implementation 'io.coderf.arklab.core:ui:1.3.1'
 implementation 'io.coderf.arklab.core:utils:1.2.0'
 implementation 'io.coderf.arklab.core:log:1.2.0'
@@ -80,10 +80,10 @@ import io.coderf.arklab.googlegps.*  ��  import io.coderf.arklab.gnss.*
 
 | 模块 | 坐标 |
 |------|------|
-| common | `io.coderf.arklab.common:common:4.7.0` |
-| core-base | `io.coderf.arklab.core:base:1.7.2` |
-| core-network | `io.coderf.arklab.core:network:1.7.1` |
-| core-db | `io.coderf.arklab.core:db:1.6.2` |
+| common | `io.coderf.arklab.common:common:4.8.0` |
+| core-base | `io.coderf.arklab.core:base:1.9.0` |
+| core-network | `io.coderf.arklab.core:network:1.8.0` |
+| core-db | `io.coderf.arklab.core:db:1.7.0` |
 | core-ui | `io.coderf.arklab.core:ui:1.3.1` |
 | core-utils | `io.coderf.arklab.core:utils:1.2.0` |
 | core-log | `io.coderf.arklab.core:log:1.2.0` |
@@ -95,6 +95,35 @@ import io.coderf.arklab.googlegps.*  ��  import io.coderf.arklab.gnss.*
 | core-media | `io.coderf.arklab.media:media:3.7.0`（原模块名 `commonmedia`；包名 / Maven 坐标不变） |
 | core-gnss | `io.coderf.arklab.gnss:core-gnss:4.0.0`（原 `googlegps`，包名 `io.coderf.arklab.gnss`，无旧坐标兼容） |
 | annotation | `io.coderf.arklab.annotation:annotation:3.3.1` |
+
+---
+
+## 0.3 Loading 可取消：base `1.9.0` · network `1.8.0` · db `1.7.0`
+
+**兼容性**：默认 `LoadingCancelPolicy.None`，遮罩仍不可取消；仅显式 `cancellable()` / `cancellableExit()` / Builder 设 policy 后才开放。
+
+| 模块 | 版本 | 要点 |
+|------|------|------|
+| core-base | **1.9.0** | `LoadingCancelPolicy`；Host 引用计数；`launchUiRequest` / `cancelUiRequests`；Dialog OnCancel → `onLoadingCancelled` |
+| core-network | **1.8.0** | `RequestOptions.loadingCancelPolicy`；工厂 `cancellable()` / `cancellableExit()`；协程 / Rx 双栈接线 |
+| core-db | **1.7.0** | `RoomRequestOptions` 同上；协程 / Rx 双栈接线 |
+| common | **4.8.0** | Facade 发版号同步（透传上述 core-*） |
+
+### 业务侧接入（必读）
+
+```kotlin
+// 1) Repository 声明策略
+request(RequestOptions.cancellable()) { api.getDetail(id) }
+
+// 2) ViewModel 必须 launchUiRequest（否则只关框、请求不停）
+launchUiRequest {
+    iRepository.load().collect { result -> result.onSuccess { ... } }
+}
+```
+
+- **不要**在 Fragment/Activity `lifecycleScope.launch` 里 collect 带遮罩 Loading 的请求。
+- 登录提交 / 支付等关键写操作请保持默认 `None`。
+- 完整说明见 [QuickStart.md](./QuickStart.md)「Loading 可取消」、[core-network/README.md](./core-network/README.md)、[core-db/README.md](./core-db/README.md)。
 
 ---
 

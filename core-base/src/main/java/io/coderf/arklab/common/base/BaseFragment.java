@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import io.coderf.arklab.core.request.AppError;
+import io.coderf.arklab.core.request.LoadingCancelPolicy;
 import io.coderf.arklab.core.request.RequestUi;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -154,6 +155,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
 
     /**
      * 创建 Loading 委托；Dialog 挂 Activity，Lifecycle 跟 View；同步填充 {@link #uiController}。
+     * 并挂接 Loading 用户取消 → {@link #onLoadingCancelled(LoadingCancelPolicy)}。
      */
     protected void createUIController() {
         if (loadingDelegate == null) {
@@ -161,6 +163,31 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
             loadingDelegate = LoadingDelegate.forFragment(this, getViewLifecycleOwner());
         }
         uiController = loadingDelegate.getUiController();
+        loadingDelegate.setOnLoadingCancelListener(this::onLoadingCancelled);
+    }
+
+    /**
+     * Loading 被用户取消时的统一入口（与 {@link BaseActivity#onLoadingCancelled} 对齐）。
+     *
+     * @param policy 取消时 Dialog 上的策略
+     */
+    protected void onLoadingCancelled(@NonNull LoadingCancelPolicy policy) {
+        if (mViewModel != null) {
+            mViewModel.cancelUiRequests();
+        } else if (loadingDelegate != null) {
+            loadingDelegate.hideLoading();
+        }
+        if (policy != null && policy.shouldExitOnCancel() && isUiSafe()) {
+            finishAfterLoadingCancel();
+        }
+    }
+
+    /**
+     * {@link LoadingCancelPolicy#CancelRequestAndExit} 时离开本页。
+     * 默认走宿主 Activity 的 OnBackPressedDispatcher（通常 pop Fragment 或 finish）。
+     */
+    protected void finishAfterLoadingCancel() {
+        requireActivity().getOnBackPressedDispatcher().onBackPressed();
     }
 
     /**
@@ -266,14 +293,21 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     public void showLoading(String dialogMessage, boolean enableDynamicEllipsis) {
+        showLoading(dialogMessage, enableDynamicEllipsis, LoadingCancelPolicy.None);
+    }
+
+    @Override
+    public void showLoading(String dialogMessage, boolean enableDynamicEllipsis,
+                            @NonNull LoadingCancelPolicy cancelPolicy) {
+        LoadingCancelPolicy policy = cancelPolicy != null ? cancelPolicy : LoadingCancelPolicy.None;
         if (loadingDelegate != null) {
-            loadingDelegate.showLoading(dialogMessage, enableDynamicEllipsis);
+            loadingDelegate.showLoading(dialogMessage, enableDynamicEllipsis, policy);
             return;
         }
         if (!isUiSafe() || uiController == null) {
             return;
         }
-        uiController.showLoading(requireActivity(), dialogMessage, enableDynamicEllipsis, false);
+        uiController.showLoading(requireActivity(), dialogMessage, enableDynamicEllipsis, policy);
     }
 
     @Override

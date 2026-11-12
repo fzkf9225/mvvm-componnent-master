@@ -2,11 +2,25 @@
 
 本地持久化：Room Database / DAO / Entity，以及 Rx / 协程两套 Repository。
 
-当前版本：**1.6.2**  
-Maven：`io.coderf.arklab.core:db:1.6.2`  
+当前版本：**1.7.0**  
+Maven：`io.coderf.arklab.core:db:1.7.0`  
 namespace：`io.coderf.arklab.core.db`  
 配套 KSP：`io.coderf.arklab.room:room-processor:1.2.0`（见 [room-processor/README.md](../room-processor/README.md)）  
-升级说明：[UPGRADE.md §0.4.2](../UPGRADE.md#042-附件模型简化base-171--db-162)
+升级说明：[UPGRADE.md](../UPGRADE.md)；Loading 可取消见 [QuickStart.md](../QuickStart.md)
+
+---
+
+## 1.7.0 变更摘要
+
+Loading 可取消（配合 **core-base ≥1.9.0**），与网络 `RequestOptions` 对齐：
+
+| 项 | 说明 |
+|----|------|
+| `RoomRequestOptions.loadingCancelPolicy` | 默认 `None`；工厂 `cancellable()` / `cancellableExit()` |
+| 协程 `DefaultRoomRepository` | `showLoading` 下发 cancelPolicy |
+| Rx `RoomRepositorySupport` | 下发 policy + 登记可取消 Disposable/Subscription；hide 引用计数安全 |
+
+**兼容：** 默认仍不可取消；`insert/query(..., showLoading=true)` 等便捷工厂未改策略。须显式 `cancellable()` 或 Builder，且 ViewModel 用 `launchUiRequest`。
 
 ---
 
@@ -89,8 +103,9 @@ namespace：`io.coderf.arklab.core.db`
 class PersonRepository(dao: PersonDao) :
     RoomDataRepository<Person, PersonDao>(dao)
 
-viewModelScope.launch {
-    repository.insert(person, RoomRequestOptions.withLoading("保存中..."))
+// 带遮罩且可取消时请用 launchUiRequest（BaseViewModel 扩展）
+launchUiRequest {
+    repository.insert(person, RoomRequestOptions.cancellable())
         .collect { it.onSuccess { }.onError { } }
 }
 
@@ -111,11 +126,14 @@ Pager(pagingConfig) {
 
 ---
 
-## 1.6.0 RoomRequestOptions 用法
+## 1.7.0 / 1.6.0 RoomRequestOptions 用法
 
 ```kotlin
 // 静默：无 Loading；协程栈也不交错误 UI
 execute(RoomRequestOptions.silent()) { dao.findAllSuspend() }
+
+// 可取消 Loading（1.7.0+；须配合 launchUiRequest）
+execute(RoomRequestOptions.cancellable()) { dao.findInfoByIdSuspend(id) }
 
 // 有 Loading，不弹 Toast
 execute(
@@ -123,10 +141,11 @@ execute(
         .setShowDialog(true)
         .setDialogMessage("保存中...")
         .setShowErrorToast(false)
+        .setLoadingCancelPolicy(LoadingCancelPolicy.CancelRequest)
         .build()
 ) { dao.insertSuspend(entity) }
 
-// 或工厂：默认无 Loading + 关 Toast（需要 Loading 请用 Builder）
+// 或工厂：默认无 Loading + 关 Toast（需要 Loading 请用 Builder / withLoading / cancellable）
 execute(RoomRequestOptions.noToast()) { dao.countAllSuspend() }
 
 // 大批量：不超时
@@ -139,12 +158,14 @@ repository.findAll(RoomRequestOptions.query(false, true))
 | 字段 / 工厂 | 含义 |
 |-------------|------|
 | `showDialog` / `dialogMessage` / `enableDynamicEllipsis` | Loading |
+| `loadingCancelPolicy` | 用户取消策略；默认 `None`（1.7.0+） |
 | `timeoutSeconds` | ≤0 不超时；默认 15 |
 | `throwOnEmptyList` | 空 `List` → `NOT_FOUND` |
 | `deliverErrorToUi` | 协程栈是否 `RequestUi.showError` |
 | `showErrorToast` / `errorToastMessage` | Toast 开关与覆盖文案 |
 | `silent()` / `noToast()` / `noTimeout()` / `defaults()` / `withLoading(msg)` | 常用工厂 |
-| `query` / `insert` / `update` / `delete` | 按操作类型的默认文案 |
+| `cancellable()` / `cancellableExit()` | 可取消 Loading（1.7.0+） |
+| `query` / `insert` / `update` / `delete` | 按操作类型的默认文案（仍为不可取消） |
 
 **不要硬塞进 Options：** 事务、Dispatcher、鉴权重试等——本地库无鉴权；事务放在 Dao / `block` 内。
 
@@ -200,7 +221,7 @@ repo.deleteByMobileIds(bean.attachIds)
 - `ksp` → `:room-processor` **1.2.0**（或同源工程 `project(':room-processor')`）
 
 ```gradle
-implementation 'io.coderf.arklab.core:db:1.6.2'
+implementation 'io.coderf.arklab.core:db:1.7.0'
 ksp 'io.coderf.arklab.room:room-processor:1.2.0'
 // 或本仓库
 implementation project(':core-db')

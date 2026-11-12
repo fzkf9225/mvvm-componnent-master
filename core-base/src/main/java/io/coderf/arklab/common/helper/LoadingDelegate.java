@@ -8,6 +8,7 @@ import androidx.annotation.StringRes;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 
+import io.coderf.arklab.core.request.LoadingCancelPolicy;
 import io.coderf.arklab.core.ui.delegate.LoadingHost;
 import io.coderf.arklab.core.ui.delegate.UiMessageHost;
 import io.coderf.arklab.core.ui.delegate.UiSafety;
@@ -20,8 +21,9 @@ import io.coderf.arklab.core.ui.delegate.UiSafetyChecker;
  * 内部使用；对外仍可通过 {@link #getUiController()} 访问原 {@link UIController}，行为与改造前一致。
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.2.0
+ * @updated 2026/11/12
  */
 public class LoadingDelegate implements UiMessageHost {
 
@@ -86,16 +88,41 @@ public class LoadingDelegate implements UiMessageHost {
         return uiController;
     }
 
+    /**
+     * 设置用户取消 Loading 的监听（返回 / 点外侧）。
+     *
+     * @param listener 回调；传 null 清除
+     */
+    public void setOnLoadingCancelListener(@Nullable UIController.OnLoadingCancelListener listener) {
+        uiController.setOnLoadingCancelListener(listener);
+    }
+
     @Override
     public void showLoading(String message, boolean enableDynamicEllipsis) {
+        showLoading(message, enableDynamicEllipsis, LoadingCancelPolicy.None);
+    }
+
+    /**
+     * 展示 Loading，并应用取消策略。
+     *
+     * @param message               加载文案
+     * @param enableDynamicEllipsis 动态省略号
+     * @param cancelPolicy          用户取消策略
+     */
+    public void showLoading(
+            String message,
+            boolean enableDynamicEllipsis,
+            @NonNull LoadingCancelPolicy cancelPolicy
+    ) {
         if (!safety.isUiSafe()) {
             return;
         }
         String msg = message != null ? message : LoadingHost.DEFAULT_LOADING_MESSAGE;
+        LoadingCancelPolicy policy = cancelPolicy != null ? cancelPolicy : LoadingCancelPolicy.None;
         if (dialogContext != null) {
-            uiController.showLoading(dialogContext, msg, enableDynamicEllipsis, false);
+            uiController.showLoading(dialogContext, msg, enableDynamicEllipsis, policy);
         } else {
-            uiController.showLoading(msg, enableDynamicEllipsis, false);
+            uiController.showLoading(msg, enableDynamicEllipsis, policy);
         }
     }
 

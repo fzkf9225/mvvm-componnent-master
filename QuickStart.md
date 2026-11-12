@@ -442,7 +442,7 @@ mViewModel.iRepository?.getEventPageList(riverSectionCode)
 
 页面侧：`BaseActivity` / `BaseFragment` 实现 **`RequestUi`**，框架在创建 ViewModel 后自动 `ensureRepository()` + `NetworkRequestUiBinder.bind(...)`，把 Host 的 LiveData 落到对话框、Toast 与业务码处理（登录过期 / 无权限等）。
 
-**唯一契约**：`RequestUi`（`showLoading` / `hideLoading` / `refreshLoading` / `showError(AppError)` / `onBusinessCode`）。已删除旧版 `RequestUiCallback` 及桥接类（`RequestUiAdapters`、`RequestUiBridge`），勿再使用。
+**唯一契约**：`RequestUi`（`showLoading` / `hideLoading` / `refreshLoading` / `showError(AppError)` / `onBusinessCode`；另有带 `LoadingCancelPolicy` 的三参 `showLoading` 默认实现）。已删除旧版 `RequestUiCallback` 及桥接类，勿再使用。
 
 **新网络 API**：优先 `DefaultNetworkRepository` + `RequestUi` / `RequestResult`（见 [MODULES.md](MODULES.md)）。旧 `RepositoryImpl` 等已 `@Deprecated`，可继续编译但勿新增。
 
@@ -451,6 +451,42 @@ mViewModel.iRepository?.getEventPageList(riverSectionCode)
 继承 `BaseActivity` / `BaseFragment`，实现无参 `createRepository()` 即可。默认 `provideRequestUi()` 返回 `NetworkRequestUiHost`，业务侧一般**不需要**手写 `setRequestUi` 或 `bind`。
 
 需要自定义请求 UI 时：重写 `provideRequestUi()`，或重写 `bindNetworkRequestUi()` 为空后自行 observe `getNetworkRequestUiHost()`。
+
+### Loading 可取消（core-base ≥1.9.0 / network ≥1.8.0 / db ≥1.7.0）
+
+默认行为**不变**：`RequestOptions.defaults()` / `ApiRequestOptions.getDefault()` / 多数 `RoomRequestOptions` 工厂仍为 `LoadingCancelPolicy.None`（遮罩不可取消），避免登录提交、支付等被误取消。
+
+需要可取消时显式声明策略，并由 ViewModel 用 `launchUiRequest` 登记 Job（仅改 Options、在 Fragment `lifecycleScope.launch` collect **无法**取消请求）：
+
+| 策略 | 含义 | 工厂 |
+|------|------|------|
+| `None` | 不可取消（默认） | `defaults()` 等 |
+| `CancelRequest` | 取消请求，留在本页 | `RequestOptions.cancellable()` / `RoomRequestOptions.cancellable()` / `ApiRequestOptions.cancellable()` |
+| `CancelRequestAndExit` | 取消请求并 finish / 回退 | `cancellableExit()` |
+
+```kotlin
+// Repository：声明可取消 Loading
+fun loadDetail(id: String) = request(RequestOptions.cancellable()) {
+    api.getDetailSuspend(id)
+}
+
+// ViewModel：必须 launchUiRequest，取消 Loading 才会 Job.cancel
+fun loadDetail(id: String) {
+    launchUiRequest {
+        iRepository.loadDetail(id).collect { result ->
+            result.onSuccess { detailLiveData.value = it }
+        }
+    }
+}
+// Fragment / Activity：只 observe 结果，不要自己 launch + collect 带遮罩的请求
+```
+
+要点：
+
+1. **Options 管策略，ViewModel 管会话**：`cancelUiRequests()` 只取消已登记的 `launchUiRequest` Job 与 Rx 可取消组。
+2. **引用计数**：并发多个带 Loading 的请求共用一个遮罩，全部结束后才关闭；取消策略取更严格者。
+3. **场景建议**：按钮查询 / 详情 → `cancellable()`；进入页立刻拉数可中断 → `cancellableExit()`；登录提交 / 支付 / 关键写 → 保持 `None`。
+4. Room 协程 / Rx、网络协程 / Rx 均已接线；详见 [core-network/README.md](core-network/README.md)、[core-db/README.md](core-db/README.md)。
 
 ### 未经过 BaseViewModel 时自行持有 Repository
 
@@ -468,17 +504,17 @@ repository.setRequestUi(viewModel.getNetworkRequestUiHost())
 ### Repository 内如何触发 UI
 
 ```kotlin
-// Loading
+// Loading（第二参为动态省略号，不是「可取消」）
 getRequestUi()?.showLoading("加载中…", true)
+// 带取消策略（一般由 RequestOptions / Host 自动下发，业务少直接调）
+getRequestUi()?.showLoading("加载中…", true, LoadingCancelPolicy.CancelRequest)
 getRequestUi()?.hideLoading()
 
-// 错误（统一 AppError）
+// 错误（统一 AppError；Cancelled 全链路静默）
 getRequestUi()?.showError(AppError.Unknown("操作失败"))
 getRequestUi()?.showError(AppError.Business(code, message))
-// 或仅业务码
 getRequestUi()?.onBusinessCode(code, message)
 
-// 主动 Toast（非请求错误）：可用 Host 便捷方法
 viewModel.getNetworkRequestUiHost().showToast("提示文案")
 ```
 
@@ -490,6 +526,7 @@ viewModel.getNetworkRequestUiHost().showToast("提示文案")
 4. 仅工厂创建的仓库：记得 `setRequestUi`，否则无请求侧 UI。
 5. 业务导航用 `LiveData` / `SharedFlow`（参考登录页 `PostLoginRoute`），不要再写 MVP 式 View 接口。
 6. 全局搜并删除：`RequestUiCallback`、`RequestUiAdapters`、`RequestUiBridge`、`onErrorCode`、`provideRequestUiCallback`；错误改走 `showError(AppError)`。
+7. 需要可取消 Loading：Options 设 policy + ViewModel `launchUiRequest`；**不要**在 Fragment/Activity 里 `lifecycleScope.launch` collect 带遮罩请求。
 
 ## 各模块之间解耦方案说明
 一般`app`模块只包含基础启动页和`MainActivity`，其他都都要新建模块

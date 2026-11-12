@@ -16,12 +16,17 @@ import io.coderf.arklab.demo.viewmodel.DemoFlowPagingViewModel
 import kotlinx.coroutines.launch
 
 /**
- * DemoSmartFlowPagingFragment 类。
+ * Smart + Flow Paging Demo。
+ * <p>
+ * 分页 [dataFlow] 可在 Fragment collect；带遮罩 Loading 的详情请求必须由 ViewModel
+ * [DemoFlowPagingViewModel.loadInfoById]（内部 [io.coderf.arklab.common.base.launchUiRequest]）发起，
+ * 页面只 observe 结果，才能走 Loading 取消协议。
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  * @created 2023/12/1 16:40
+ * @updated 2026/11/12
  */
 @AndroidEntryPoint
 class DemoSmartFlowPagingFragment :
@@ -30,6 +35,7 @@ class DemoSmartFlowPagingFragment :
 
     override fun initData(bundle: Bundle?) {
         super.initData(bundle)
+        // 分页数据：无遮罩 Loading，可继续在 Fragment collect
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mViewModel.dataFlow.collect { pagingData ->
@@ -37,17 +43,18 @@ class DemoSmartFlowPagingFragment :
                 }
             }
         }
+        // 详情结果：只观察，不在此 launch 请求
+        mViewModel.itemClickToast.observe(viewLifecycleOwner) { toast ->
+            if (toast == null) {
+                return@observe
+            }
+            showToast("点击的是第" + toast.position + "行，内容是：" + toast.title)
+        }
     }
 
     override fun onItemClick(view: View?, item: NotificationMessageBean, position: Int) {
         super.onItemClick(view, item, position)
-        lifecycleScope.launch {
-            mViewModel.getInfoById(item.id).collect { result ->
-                result.onSuccess {
-                    showToast("点击的是第" + position + "行，内容是：" + it.title)
-                }
-            }
-        }
+        mViewModel.loadInfoById(item.id, position)
     }
 
     override fun onItemLongClick(view: View?, item: NotificationMessageBean?, position: Int) {

@@ -36,9 +36,12 @@ class DemoFlowPagingRepositoryImpl(
         return pageBean.list ?: emptyList()
     }
 
+    /**
+     * 按 id 查详情；默认可取消 Loading（取消后留在当前页）。
+     */
     fun getInfoById(id: String): Flow<RequestResult<NotificationMessageBean>> {
         return requestPage(
-            RequestOptions.defaults()
+            RequestOptions.cancellable()
         ) {
             api.getNewInfoByIdSuspend(id)
         }

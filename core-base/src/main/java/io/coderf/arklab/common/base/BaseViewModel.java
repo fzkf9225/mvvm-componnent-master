@@ -8,6 +8,8 @@ import androidx.annotation.Nullable;
 import io.coderf.arklab.common.repository.IRepository;
 import io.coderf.arklab.core.request.RequestUi;
 import io.coderf.arklab.core.request.RequestUiHost;
+import io.coderf.arklab.core.request.UiRequestTracker;
+import kotlinx.coroutines.Job;
 
 /**
  * ViewModel 基类（MVVM）。
@@ -19,11 +21,14 @@ import io.coderf.arklab.core.request.RequestUiHost;
  * <b>页面内容状态（可选）</b>：新页面可用 {@code io.coderf.arklab.core.ui.state.UiState} +
  * {@code UiStateHolder} 以单一 StateFlow 表达 Loading/Success/Empty/Error；
  * 与 RequestUi（遮罩 Loading / Toast）正交，旧 LiveData 路径不受影响。
+ * <p>
+ * <b>Loading 取消</b>：协程请用 {@link BaseViewModelRequestsKt#launchUiRequest} 启动以便登记 Job；
+ * 用户取消遮罩时调用 {@link #cancelUiRequests()}。
  *
  * @author fz
- * @version 2.1
+ * @version 2.2
  * @since 1.0
- * @updated 2026/9/21
+ * @updated 2026/11/12
  */
 public abstract class BaseViewModel<IR extends IRepository> extends BaseViewViewModel {
 
@@ -35,6 +40,12 @@ public abstract class BaseViewModel<IR extends IRepository> extends BaseViewView
     @NonNull
     private final NetworkRequestUiHost networkRequestUiHost = new NetworkRequestUiHost();
 
+    /**
+     * 与遮罩 Loading 绑定的协程 Job 登记表。
+     */
+    @NonNull
+    private final UiRequestTracker uiRequestTracker = new UiRequestTracker();
+
     public BaseViewModel(@NonNull Application application) {
         super(application);
     }
@@ -42,6 +53,7 @@ public abstract class BaseViewModel<IR extends IRepository> extends BaseViewView
     @Override
     protected void onCleared() {
         super.onCleared();
+        uiRequestTracker.clear();
         if (iRepository != null) {
             iRepository.clear();
         }
@@ -87,6 +99,36 @@ public abstract class BaseViewModel<IR extends IRepository> extends BaseViewView
     @NonNull
     public NetworkRequestUiHost getNetworkRequestUiHost() {
         return networkRequestUiHost;
+    }
+
+    /**
+     * UI 请求 Job 登记表（一般通过 {@code launchUiRequest} 间接使用）。
+     */
+    @NonNull
+    public UiRequestTracker getUiRequestTracker() {
+        return uiRequestTracker;
+    }
+
+    /**
+     * 登记一个与遮罩 Loading 关联的协程 Job。
+     * Kotlin 侧请优先使用扩展 {@code launchUiRequest}。
+     *
+     * @param job viewModelScope.launch 返回值
+     */
+    public void trackUiRequest(@NonNull Job job) {
+        uiRequestTracker.track(job);
+    }
+
+    /**
+     * 取消当前与遮罩 Loading 绑定的全部请求（协程 Job + Rx 可取消组），并强制关闭 Loading。
+     * 由页面在 Loading Dialog OnCancel / 返回取消时调用。
+     */
+    public void cancelUiRequests() {
+        uiRequestTracker.cancelAll();
+        if (iRepository instanceof BaseRepository) {
+            ((BaseRepository) iRepository).cancelCancellableRequests();
+        }
+        networkRequestUiHost.forceHideLoading();
     }
 
     public IR getIRepository() {

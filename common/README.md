@@ -2,9 +2,16 @@
 
 兼容门面（facade）：业务侧推荐的 **单一入口**，通过 `api` 透出 `core-*`，本身几乎无业务实现。
 
-当前版本：**4.7.0**  
-Maven：`io.coderf.arklab.common:common:4.7.0`  
+当前版本：**4.8.0**  
+Maven：`io.coderf.arklab.common:common:4.8.0`  
 namespace：`io.coderf.arklab.common.facade`
+
+---
+
+## 4.8.0
+
+透传 Loading 可取消能力：**core-base 1.9.0** · **core-network 1.8.0** · **core-db 1.7.0**。  
+用法见 [QuickStart.md](../QuickStart.md)、[UPGRADE.md §0.3](../UPGRADE.md#03-loading-可取消base-190--network-180--db-170)。
 
 ---
 
@@ -21,7 +28,7 @@ namespace：`io.coderf.arklab.common.facade`
 宿主 / 业务模块希望「一个依赖拿齐核心能力」时使用：
 
 ```gradle
-implementation 'io.coderf.arklab.common:common:4.7.0'
+implementation 'io.coderf.arklab.common:common:4.8.0'
 // 或工程内：
 implementation project(':common')
 ```

@@ -153,7 +153,11 @@ open class DefaultNetworkRepository(
             }
             .onStart {
                 if (options.showLoading) {
-                    activeRequestUi.showLoading(options.loadingMessage, options.enableDynamicEllipsis)
+                    activeRequestUi.showLoading(
+                        options.loadingMessage,
+                        options.enableDynamicEllipsis,
+                        options.loadingCancelPolicy
+                    )
                 }
             }
             .onCompletion {

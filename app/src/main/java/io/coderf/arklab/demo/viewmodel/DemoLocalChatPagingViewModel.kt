@@ -3,11 +3,11 @@ package io.coderf.arklab.demo.viewmodel
 import android.app.Application
 import android.text.TextUtils
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingData
 import androidx.paging.liveData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.coderf.arklab.common.base.launchUiRequest
 import io.coderf.arklab.common.viewmodel.PagingViewModel
 import io.coderf.arklab.core.bean.RequestResult
 import io.coderf.arklab.core.bean.RoomPagingQuery
@@ -16,7 +16,6 @@ import io.coderf.arklab.demo.bean.LocalChatMessage
 import io.coderf.arklab.demo.database.LocalChatDatabase
 import io.coderf.arklab.demo.repository.LocalChatPagingRepositoryImpl
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
@@ -65,12 +64,12 @@ class DemoLocalChatPagingViewModel @Inject constructor(
             onReady?.invoke()
             return
         }
-        viewModelScope.launch {
+        launchUiRequest {
             when (val countResult = iRepository.countAll().first()) {
                 is RequestResult.Success -> {
                     if (countResult.data > 0L) {
                         onReady?.invoke()
-                        return@launch
+                        return@launchUiRequest
                     }
                     when (val insertResult = iRepository.insert(buildSeedMessages()).first()) {
                         is RequestResult.Success -> onReady?.invoke()
@@ -99,7 +98,7 @@ class DemoLocalChatPagingViewModel @Inject constructor(
         val content = text.trim()
         if (TextUtils.isEmpty(content)) return
         val message = LocalChatMessage(content, System.currentTimeMillis(), true)
-        viewModelScope.launch {
+        launchUiRequest {
             when (val result = iRepository.insert(message).first()) {
                 is RequestResult.Success -> {
                     refreshData()
@@ -113,7 +112,7 @@ class DemoLocalChatPagingViewModel @Inject constructor(
     }
 
     fun deleteMessage(item: LocalChatMessage, onResult: (RequestResult<Unit>) -> Unit) {
-        viewModelScope.launch {
+        launchUiRequest {
             onResult(iRepository.delete(item).first())
         }
     }

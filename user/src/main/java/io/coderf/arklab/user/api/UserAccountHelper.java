@@ -168,9 +168,9 @@ public class UserAccountHelper {
     }
 
     /**
-     * 清理token值
+     * 清理 token / refreshToken（登录取消、退出等场景可调用）。
      */
-    static void clearToken() {
+    public static void clearToken() {
         MMKVHelper.getInstance().removeValuesForKeys(new String[]{TOKEN_DATA_STRING_REFRESH, TOKEN_DATA});
     }
 

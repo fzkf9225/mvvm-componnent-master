@@ -1,6 +1,6 @@
-# ģ��˵����ʹ��ָ��
+﻿# ģ��˵����ʹ��ָ��
 
-> ��Ӧ�汾���Ը�ģ�� `build.gradle` Ϊ׼����**common `4.7.0`** �� **core-base `1.6.0`** �� **core-network `1.7.0`** �� **core-db `1.6.1`** �� **core-ui `1.3.1`** �� **core-utils `1.1.1`** �� **core-log `1.2.0`** �� **room-processor `1.2.0`** �� **core-ws `1.0.1`** �� **core-form `3.7.4`** �� **core-media `3.7.0`** �� **core-gnss `4.0.0`**  
+> ��Ӧ�汾���Ը�ģ�� `build.gradle` Ϊ׼����**common `4.8.0`** �� **core-base `1.9.0`** �� **core-network `1.8.0`** �� **core-db `1.7.0`** �� **core-ui `1.3.1`** �� **core-utils `1.1.1`** �� **core-log `1.2.0`** �� **room-processor `1.2.0`** �� **core-ws `1.0.1`** �� **core-form `3.7.4`** �� **core-media `3.7.0`** �� **core-gnss `4.0.0`**  
 > Options ���Ƽ� [UPGRADE.md ��0](./UPGRADE.md#0-160network--db����-options-����)���޳� `BaseView` �� [UPGRADE.md ��2](./UPGRADE.md#2-120�����޳�-baseview--mvp-ҳ���)��  
 > ����˵����ģ��ְ��������ϵ���ճ��÷��������뿴 [UPGRADE.md](./UPGRADE.md)��
 
@@ -26,7 +26,7 @@ app����װ��Hilt / Demo��
 **ҵ����Ƽ���ڣ�**
 
 ```gradle
-implementation project(':common')   // �� Maven: common:4.7.0��������ʽ�� network 1.7.0��db 1.6.1��base 1.6.0 �ȣ��� UPGRADE ���ף�
+implementation project(':common')   // �� Maven: common:4.8.0��������ʽ�� network 1.8.0��db 1.7.0��base 1.9.0 �ȣ��� UPGRADE ���ף�
 implementation project(':base')     // Gateway / AppPropertiesConfig / BaseAppActivity ��
 implementation project(':userapi')  // ����Ҫ�û���Լʱ
 ```
@@ -209,10 +209,10 @@ mediaGateway.pickImages(1, uris -> { /* �ϴ�ͷ��� */ });
 
 | ģ�� | ���� |
 |------|------|
-| common | `io.coderf.arklab.common:common:4.7.0` |
-| core-base | `io.coderf.arklab.core:base:1.6.0` |
-| core-network | `io.coderf.arklab.core:network:1.7.0`���� [core-network/README.md](./core-network/README.md)�� |
-| core-db | `io.coderf.arklab.core:db:1.6.1`���� [core-db/README.md](./core-db/README.md)�� |
+| common | `io.coderf.arklab.common:common:4.8.0` |
+| core-base | `io.coderf.arklab.core:base:1.9.0` |
+| core-network | `io.coderf.arklab.core:network:1.8.0`���� [core-network/README.md](./core-network/README.md)�� |
+| core-db | `io.coderf.arklab.core:db:1.7.0`���� [core-db/README.md](./core-db/README.md)�� |
 | core-ui | `io.coderf.arklab.core:ui:1.3.1` |
 | core-utils | `io.coderf.arklab.core:utils:1.1.1` |
 | core-log | `io.coderf.arklab.core:log:1.2.0` |
@@ -238,3 +238,4 @@ mediaGateway.pickImages(1, uris -> { /* �ϴ�ͷ��� */ });
 5. ��Ҫ�� `APP_SECRET` ���ķŽ� HTTP Header��������ǩ������
 6. ����ʹ�� `AppBaseTheme`��Material3 DayNight����Ʒ��ɫ���ϵ����� `onPrimary`����Ҫд����ɫ��
 7. `Config.setDynamicColorEnabled` Ĭ�Ϲأ��������� `Config.init()` ֮ǰ����Ļ���䡢��������ҹ��ģʽ��Edge-to-Edge��Ĭ��ռλͼͬ���� `Config`�������� `init()` ǰ���á�
+

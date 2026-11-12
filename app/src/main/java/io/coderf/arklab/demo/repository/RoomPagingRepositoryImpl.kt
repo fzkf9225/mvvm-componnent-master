@@ -5,6 +5,7 @@ import io.coderf.arklab.common.bean.RoomRequestOptions
 import io.coderf.arklab.common.repository.AttachmentRepositoryImpl
 import io.coderf.arklab.core.bean.RequestResult
 import io.coderf.arklab.core.db.RoomDataRepository
+import io.coderf.arklab.core.request.LoadingCancelPolicy
 import io.coderf.arklab.demo.bean.Person
 import io.coderf.arklab.demo.bean.PersonEditModel
 import io.coderf.arklab.demo.database.PersonDao
@@ -56,6 +57,7 @@ class RoomPagingRepositoryImpl : RoomDataRepository<Person, PersonDao> {
             .setDialogMessage("正在保存,请稍后...")
             .setEnableDynamicEllipsis(true)
             .setTimeoutSeconds(30)
+            .setLoadingCancelPolicy(LoadingCancelPolicy.CancelRequest)
             .build()
         return execute(options) {
             val attachmentRepo = attachmentRepositoryImpl
@@ -78,6 +80,7 @@ class RoomPagingRepositoryImpl : RoomDataRepository<Person, PersonDao> {
             // 动态省略号会自行追加 "."，文案不要自带 "..."
             .setDialogMessage("正在加载")
             .setEnableDynamicEllipsis(true)
+            .setLoadingCancelPolicy(LoadingCancelPolicy.CancelRequest)
             .build()
         return execute(options) {
             val person = getRoomDao().findInfoByIdSuspend(personId)

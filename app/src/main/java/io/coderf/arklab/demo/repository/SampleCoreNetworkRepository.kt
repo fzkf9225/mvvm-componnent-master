@@ -13,19 +13,18 @@ import kotlinx.coroutines.flow.Flow
  * 新版 NetworkRepository 用法示例（真实 API）。
  *
  * ```
- * viewModelScope.launch {
+ * // ViewModel：launchUiRequest + RequestOptions.cancellable()
+ * launchUiRequest {
  *   sample.requestNewsDetail(id).collect { result ->
  *     result.onSuccess { data -> ... }
- *           .onError { /* 一般已由 RequestUi 展示；鉴权失败会自动刷 token 后重试
- *
- * @author fz
- * @version 1.0
- * @since 1.0
- * @updated 2026/9/1 22:51
- */ }
  *   }
  * }
  * ```
+ *
+ * @author fz
+ * @version 1.1
+ * @since 1.0
+ * @updated 2026/11/12
  */
 class SampleCoreNetworkRepository(
     private val api: ApiServiceHelper,
@@ -35,9 +34,12 @@ class SampleCoreNetworkRepository(
     boundApiService = api
 ) {
 
+    /**
+     * 详情默认 [RequestOptions.cancellable]（可取消 Loading）；无 Loading 场景请显式传入 Options。
+     */
     fun requestNewsDetail(
         id: String,
-        options: RequestOptions = RequestOptions.defaults()
+        options: RequestOptions = RequestOptions.cancellable()
     ): Flow<RequestResult<NotificationMessageBean>> {
         return request(options) {
             api.getNewInfoByIdSuspend(id)

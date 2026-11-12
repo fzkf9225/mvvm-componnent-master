@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
 
 import io.coderf.arklab.core.request.AppError;
+import io.coderf.arklab.core.request.LoadingCancelPolicy;
 import io.coderf.arklab.core.request.RequestUi;
 
 /**
@@ -21,9 +22,9 @@ import io.coderf.arklab.core.request.RequestUi;
  * </ul>
  *
  * @author fz
- * @version 2.0
+ * @version 2.1
  * @since 1.0
- * @updated 2026/9/12
+ * @updated 2026/11/12
  */
 public final class NetworkRequestUiBinder {
 
@@ -44,9 +45,13 @@ public final class NetworkRequestUiBinder {
                 return;
             }
             if (state.visible) {
+                LoadingCancelPolicy policy = state.cancelPolicy != null
+                        ? state.cancelPolicy
+                        : LoadingCancelPolicy.None;
                 ui.showLoading(
                         state.message != null ? state.message : "",
-                        state.enableDynamicEllipsis
+                        state.enableDynamicEllipsis,
+                        policy
                 );
             } else {
                 ui.hideLoading();

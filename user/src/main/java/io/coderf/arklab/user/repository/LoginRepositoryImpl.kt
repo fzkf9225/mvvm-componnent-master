@@ -3,11 +3,13 @@ package io.coderf.arklab.user.repository
 import io.coderf.arklab.core.network.BaseNetworkRepository
 import io.coderf.arklab.core.bean.RequestOptions
 import io.coderf.arklab.core.bean.RequestResult
+import io.coderf.arklab.core.request.LoadingCancelPolicy
 import io.coderf.arklab.user.api.UserAccountHelper
 import io.coderf.arklab.user.api.UserApiService
 import io.coderf.arklab.user.bean.GraphicVerificationCodeBean
 import io.coderf.arklab.user.bean.RequestLoginBean
 import io.coderf.arklab.userapi.bean.UserInfo
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -39,12 +41,19 @@ class LoginRepositoryImpl(
             RequestOptions.builder()
                 .loadingMessage("登录中，请稍后...")
                 .enableAuthRetry(false)
+                .loadingCancelPolicy(LoadingCancelPolicy.CancelRequest)
                 .build()
         ) {
-            val tokenBean = api.getTokenSuspend(requestLoginBean)
-            UserAccountHelper.setToken(tokenBean.tokenId ?: tokenBean.access_token)
-            UserAccountHelper.setRefreshToken(tokenBean.refresh_token)
-            api.getUserInfoSuspend()
+            try {
+                val tokenBean = api.getTokenSuspend(requestLoginBean)
+                UserAccountHelper.setToken(tokenBean.tokenId ?: tokenBean.access_token)
+                UserAccountHelper.setRefreshToken(tokenBean.refresh_token)
+                api.getUserInfoSuspend()
+            } catch (e: CancellationException) {
+                // 用户取消 Loading 时可能已写入 token，清掉避免「未跳转却已登录」
+                UserAccountHelper.clearToken()
+                throw e
+            }
         }
     }
 

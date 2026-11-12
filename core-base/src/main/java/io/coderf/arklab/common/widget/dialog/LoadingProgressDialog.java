@@ -24,12 +24,8 @@ import io.coderf.arklab.core.utils.ScreenUtil;
  * @version 1.0
  * @since 1.0
  * @created 2025/9/8
- */public class LoadingProgressDialog extends BaseDialog {
-    /**
-     * 单例字段已废弃：保留仅为兼容旧反射/调用，dismiss 时清空。
-     */
-    @Deprecated
-    private volatile static LoadingProgressDialog instance;
+ */
+public class LoadingProgressDialog extends BaseDialog {
     /**
      * 绑定布局
      */
@@ -46,14 +42,32 @@ import io.coderf.arklab.core.utils.ScreenUtil;
      * 加载提示文字
      */
     private String message = "正在加载,请稍后";
-    private String baseMessage = "正在加载,请稍后"; // 基础文本，不包含省略号
-    private boolean enableDynamicEllipsis = false; // 是否启用动态省略号效果
-    private int maxDotCount = 3; // 默认最大点数为3
-    private int fixedWidth = -1; // 固定宽度，-1表示未设置
+    /**
+     * 基础文本，不包含省略号
+     */
+    private String baseMessage = "正在加载,请稍后";
+    /**
+     * 是否启用动态省略号效果
+     */
+    private boolean enableDynamicEllipsis = false;
+    /**
+     * 默认的最大点数
+     */
+    private final static int DEFAULT_MAX_DOT_COUNT = 3;
+    /**
+     * 默认最大点数为3
+     */
+    private int maxDotCount = DEFAULT_MAX_DOT_COUNT;
+    /**
+     * 固定宽度，-1表示未设置
+     */
+    private int fixedWidth = -1;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
 
-    // 正确的循环动画：. → .. → ... → . → .. → ...（未显示的点用透明占位，避免文字抖动/偏移）
+    /**
+     * 正确的循环动画：. → .. → ... → . → .. → ...（未显示的点用透明占位，避免文字抖动/偏移）
+     */
     private final Runnable updateTextRunnable = new Runnable() {
         private int dotCount = 0;
 
@@ -75,34 +89,6 @@ import io.coderf.arklab.core.utils.ScreenUtil;
 
             // 设置统一的延迟时间，确保匀速动画
             handler.postDelayed(this, 500); // 每500毫秒更新一次
-        }
-    };
-
-    // 或者使用带暂停效果的版本：. → .. → ... → (暂停) → . → .. → ...
-    private final Runnable updateTextRunnableWithPause = new Runnable() {
-        private int dotCount = 0;
-
-        @Override
-        public void run() {
-            if (!enableDynamicEllipsis) {
-                return;
-            }
-
-            dotCount++;
-
-            if (dotCount > maxDotCount) {
-                // 达到最大点数后，重置为0并稍作暂停（仍显示满点数）
-                dotCount = 0;
-                applyEllipsisText(maxDotCount);
-                // 在最大点数时暂停800ms
-                handler.postDelayed(this, 800);
-                return;
-            }
-
-            applyEllipsisText(dotCount);
-
-            // 正常递增时的速度
-            handler.postDelayed(this, 300);
         }
     };
 
@@ -137,9 +123,18 @@ import io.coderf.arklab.core.utils.ScreenUtil;
     /**
      * 已在展示时原地刷新文案与行为，避免 dismiss 后再 show 造成闪烁。
      */
+    /**
+     * 已在展示时原地刷新文案、可取消状态与取消监听，避免 dismiss 后再 show 造成闪烁。
+     *
+     * @param message               加载文案
+     * @param enableDynamicEllipsis 是否动态省略号
+     * @param isCanCancel           是否允许返回 / 点外侧取消
+     */
     public void refreshShowing(String message, boolean enableDynamicEllipsis, boolean isCanCancel) {
         this.enableDynamicEllipsis = enableDynamicEllipsis;
         refreshCanCancel(isCanCancel);
+        // 刷新时同步 OnCancelListener（新建 Dialog 在 builder 里设置，复用实例时必须补上）
+        setOnCancelListener(isCanCancel ? onCancelListener : null);
         refreshMessage(message);
     }
 
@@ -158,8 +153,17 @@ import io.coderf.arklab.core.utils.ScreenUtil;
         setCanceledOnTouchOutside(isCanCancel);
     }
 
+    /**
+     * 设置取消监听；若 Dialog 已创建，立即应用到 {@link #setOnCancelListener}。
+     *
+     * @param onCancelListener 用户取消回调，可为 null
+     */
     public LoadingProgressDialog setCanCelListener(OnCancelListener onCancelListener) {
         this.onCancelListener = onCancelListener;
+        // builder 之后再设 listener 时需立刻生效
+        if (loadingDialogBinding != null) {
+            setOnCancelListener(onCancelListener);
+        }
         return this;
     }
 
@@ -323,12 +327,12 @@ import io.coderf.arklab.core.utils.ScreenUtil;
             } else {
                 // 末尾没有点或者点不在末尾
                 baseMessage = message;
-                maxDotCount = 3; // 默认3个点
+                maxDotCount = DEFAULT_MAX_DOT_COUNT; // 默认3个点
             }
         } else {
             // 不启用动态效果或者消息不包含点
             baseMessage = message;
-            maxDotCount = 3; // 默认3个点
+            maxDotCount = DEFAULT_MAX_DOT_COUNT; // 默认3个点
         }
     }
 
@@ -361,19 +365,18 @@ import io.coderf.arklab.core.utils.ScreenUtil;
             }
         }
     }
+
     @Override
     public void dismiss() {
         handler.removeCallbacks(updateTextRunnable);
         if (isShowing()) {
             super.dismiss();
         }
-        instance = null;
     }
 
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         handler.removeCallbacks(updateTextRunnable);
-        instance = null;
     }
 }

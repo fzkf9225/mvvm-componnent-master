@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.Lifecycle;
@@ -14,6 +15,7 @@ import androidx.lifecycle.LifecycleOwner;
 
 import io.coderf.arklab.common.widget.dialog.LoadingProgressDialog;
 import io.coderf.arklab.common.widget.feedback.ToastHelper;
+import io.coderf.arklab.core.request.LoadingCancelPolicy;
 
 /**
  * 页面级 UI 辅助：Loading、Toast；绑定 Lifecycle，在 ON_DESTROY 时自动关闭 Loading 并清空主线程排队任务，避免 Window 泄漏与销毁后误弹。
@@ -23,20 +25,46 @@ import io.coderf.arklab.common.widget.feedback.ToastHelper;
  * 主线程策略：已在主线程则直接执行，否则 {@link Handler#post}，减少多余一帧延迟。
  *
  * @author fz
- * @version 1.1
+ * @version 1.2
  * @since 1.0
- * @updated 2026/9/13
+ * @updated 2026/11/12
  */
 public class UIController implements DefaultLifecycleObserver {
 
+    /** 构造时传入的 Context（Activity 或 Application）。 */
     private final Context context;
+    /** 当前 Loading Dialog 实例；非展示时置 null。 */
     private LoadingProgressDialog loadingDialog;
+    /** 主线程 Handler。 */
     private final Handler mainHandler;
+    /** 当前 Dialog 对应的取消策略。 */
+    @NonNull
+    private LoadingCancelPolicy currentCancelPolicy = LoadingCancelPolicy.None;
+    /** 用户取消 Loading 时的回调（由 LoadingDelegate / Base 页面设置）。 */
+    @Nullable
+    private OnLoadingCancelListener onLoadingCancelListener;
 
     public UIController(Context context, Lifecycle lifecycle) {
         this.context = context;
         lifecycle.addObserver(this);
         mainHandler = new Handler(Looper.getMainLooper());
+    }
+
+    /**
+     * Loading 被用户取消（返回键 / 手势 / 点外侧）时的回调。
+     */
+    public interface OnLoadingCancelListener {
+        /**
+         * @param policy 取消时 Dialog 上的策略（决定是否离页）
+         */
+        void onLoadingCancelled(@NonNull LoadingCancelPolicy policy);
+    }
+
+    /**
+     * 设置用户取消 Loading 的监听；传 null 清除。
+     */
+    public void setOnLoadingCancelListener(@Nullable OnLoadingCancelListener listener) {
+        this.onLoadingCancelListener = listener;
     }
 
     @Override
@@ -63,22 +91,73 @@ public class UIController implements DefaultLifecycleObserver {
     }
 
     public void showLoading(String message) {
-        showLoading(message, false, false);
+        showLoading(message, false, LoadingCancelPolicy.None);
     }
 
+    /**
+     * @param message                 加载文案
+     * @param enableDynamicEllipsis   动态省略号
+     * @param isCancelable            是否可取消（兼容旧布尔调用；true 等价 {@link LoadingCancelPolicy#CancelRequest}）
+     */
     public void showLoading(String message, boolean enableDynamicEllipsis, boolean isCancelable) {
-        showLoading(context, message, enableDynamicEllipsis, isCancelable);
+        showLoading(
+                context,
+                message,
+                enableDynamicEllipsis,
+                isCancelable ? LoadingCancelPolicy.CancelRequest : LoadingCancelPolicy.None
+        );
     }
 
-    public void showLoading(Context dialogContext, String message, boolean enableDynamicEllipsis, boolean isCancelable) {
+    /**
+     * @param message               加载文案
+     * @param enableDynamicEllipsis 动态省略号
+     * @param cancelPolicy          用户取消策略
+     */
+    public void showLoading(
+            String message,
+            boolean enableDynamicEllipsis,
+            @NonNull LoadingCancelPolicy cancelPolicy
+    ) {
+        showLoading(context, message, enableDynamicEllipsis, cancelPolicy);
+    }
+
+    public void showLoading(
+            Context dialogContext,
+            String message,
+            boolean enableDynamicEllipsis,
+            boolean isCancelable
+    ) {
+        showLoading(
+                dialogContext,
+                message,
+                enableDynamicEllipsis,
+                isCancelable ? LoadingCancelPolicy.CancelRequest : LoadingCancelPolicy.None
+        );
+    }
+
+    /**
+     * 展示 Loading。
+     *
+     * @param dialogContext         Dialog 挂载用 Context（Fragment 场景传 Activity）
+     * @param message               加载文案
+     * @param enableDynamicEllipsis 动态省略号
+     * @param cancelPolicy          用户取消策略
+     */
+    public void showLoading(
+            Context dialogContext,
+            String message,
+            boolean enableDynamicEllipsis,
+            @NonNull LoadingCancelPolicy cancelPolicy
+    ) {
         if (!canShowUi(dialogContext)) {
             return;
         }
+        LoadingCancelPolicy policy = cancelPolicy != null ? cancelPolicy : LoadingCancelPolicy.None;
         runOnMain(() -> {
             if (!canShowUi(dialogContext)) {
                 return;
             }
-            showLoadingImmediate(dialogContext, message, enableDynamicEllipsis, isCancelable);
+            showLoadingImmediate(dialogContext, message, enableDynamicEllipsis, policy);
         });
     }
 
@@ -100,27 +179,50 @@ public class UIController implements DefaultLifecycleObserver {
     /**
      * 已在展示则复用同一实例并刷新内容；否则先清掉残留引用再创建，保证不会叠多层。
      */
-    private void showLoadingImmediate(Context dialogContext, String message,
-                                      boolean enableDynamicEllipsis, boolean isCancelable) {
+    private void showLoadingImmediate(
+            Context dialogContext,
+            String message,
+            boolean enableDynamicEllipsis,
+            @NonNull LoadingCancelPolicy cancelPolicy
+    ) {
+        currentCancelPolicy = cancelPolicy;
+        boolean cancelable = cancelPolicy.isCancelable();
         if (isLoadingShowing()) {
-            loadingDialog.refreshShowing(message, enableDynamicEllipsis, isCancelable);
+            loadingDialog.refreshShowing(message, enableDynamicEllipsis, cancelable);
+            loadingDialog.setCanCelListener(cancelable ? this::dispatchLoadingCancelled : null);
             return;
         }
         // 非展示中的旧实例已无法被 hide 命中窗口，必须丢掉后再建，避免泄漏或叠框
         hideLoadingImmediate();
+        currentCancelPolicy = cancelPolicy;
         loadingDialog = LoadingProgressDialog.getInstance(dialogContext)
-                .setCanCancel(isCancelable)
+                .setCanCancel(cancelable)
                 .setEnableDynamicEllipsis(enableDynamicEllipsis)
                 .setMessage(message)
+                .setCanCelListener(cancelable ? this::dispatchLoadingCancelled : null)
                 .builder();
         loadingDialog.show();
     }
 
+    /**
+     * Dialog OnCancel → 页面取消请求。
+     */
+    private void dispatchLoadingCancelled(android.content.DialogInterface dialog) {
+        LoadingCancelPolicy policy = currentCancelPolicy;
+        hideLoadingImmediate();
+        OnLoadingCancelListener listener = onLoadingCancelListener;
+        if (listener != null) {
+            listener.onLoadingCancelled(policy);
+        }
+    }
+
     private void hideLoadingImmediate() {
         if (isLoadingShowing()) {
+            loadingDialog.setCanCelListener(null);
             loadingDialog.dismiss();
         }
         loadingDialog = null;
+        currentCancelPolicy = LoadingCancelPolicy.None;
     }
 
     /**
@@ -128,6 +230,14 @@ public class UIController implements DefaultLifecycleObserver {
      */
     public boolean isLoadingShowing() {
         return loadingDialog != null && loadingDialog.isShowing();
+    }
+
+    /**
+     * 当前 Dialog 上的取消策略（未展示时为 {@link LoadingCancelPolicy#None}）。
+     */
+    @NonNull
+    public LoadingCancelPolicy getCurrentCancelPolicy() {
+        return currentCancelPolicy;
     }
 
     public void showToast(String message) {

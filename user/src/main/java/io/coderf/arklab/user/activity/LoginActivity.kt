@@ -161,6 +161,10 @@ class LoginActivity : BaseActivity<LoginViewModel, ActivityLoginBinding>() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+            // Loading 可取消时先交给 Dialog / OnBackPressed（取消请求），不要直接回桌面
+            if (loadingDelegate != null && loadingDelegate!!.isLoading()) {
+                return super.onKeyDown(keyCode, event)
+            }
             val mIntent = Intent(Intent.ACTION_MAIN)
             mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             mIntent.addCategory(Intent.CATEGORY_HOME)

@@ -42,7 +42,8 @@ public class ErrorConsumer implements Consumer<Throwable> {
     public void accept(Throwable e) throws Throwable {
         LogUtil.logger(ApiRetrofit.TAG, "ErrorConsumer|系统异常: " + e);
 
-        hideLoadingIfNeeded();
+        // Loading 关闭统一由 sendRequest 的 doFinally / Flow onCompletion 负责（引用计数）；
+        // 此处再 hide 会导致一次请求被减两次计数。
         AppError error = toAppError(e);
 
         LogUtil.logger(ApiRetrofit.TAG, "ErrorConsumer|异常消息: " + error.getMessage());
@@ -83,9 +84,4 @@ public class ErrorConsumer implements Consumer<Throwable> {
         return error.withMessage(messageForUi);
     }
 
-    private void hideLoadingIfNeeded() {
-        if (requestUi != null && apiRequestOptions != null && apiRequestOptions.isShowDialog()) {
-            requestUi.hideLoading();
-        }
-    }
 }

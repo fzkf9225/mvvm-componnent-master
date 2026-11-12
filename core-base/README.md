@@ -2,16 +2,28 @@
 
 框架核心 UI / MVVM 基座：Activity / Fragment / ViewModel、历史 widget、helper，以及 **common 体系的资源与 DataBinding**（R 包名保持 `io.coderf.arklab.common`）。
 
-当前版本：**1.7.2**  
-Maven：`io.coderf.arklab.core:base:1.7.2`  
+当前版本：**1.9.0**  
+Maven：`io.coderf.arklab.core:base:1.9.0`  
 namespace：`io.coderf.arklab.common`
 
 > 注意：本模块 ≠ Demo case 的 Gradle `:base`。Maven 坐标是 `core:base`，对应工程模块是 **`:core-base`**。  
-> 业务工程升级见 [UPGRADE.md](../UPGRADE.md)（含 §0.4.3 缩略图展示 / §0.4.2 附件模型 / §2）。
+> 业务工程升级见 [UPGRADE.md](../UPGRADE.md)；Loading 可取消见 [QuickStart.md](../QuickStart.md)。
 
 ---
 
 ## 版本
+
+### 1.9.0
+
+Loading 可取消闭环 + 遮罩引用计数（配合 **core-network ≥1.8.0** / **core-db ≥1.7.0**）：
+
+- `LoadingCancelPolicy`：`None` / `CancelRequest` / `CancelRequestAndExit`
+- `NetworkRequestUiHost`：Loading 引用计数；`forceHideLoading()`；`RequestLoadingState` 携带 cancelPolicy
+- `BaseViewModel`：`launchUiRequest` / `trackUiRequest` / `cancelUiRequests` + `UiRequestTracker`
+- `LoadingDelegate` / `UIController` / `LoadingProgressDialog`：可取消 + OnCancel → 页面 `onLoadingCancelled`
+- `BaseActivity` / `BaseFragment`：取消后按策略留页或 finish / 回退
+- `ApiRequestOptions`：`loadingCancelPolicy` + `cancellable()` / `cancellableExit()`
+- **默认仍为不可取消**（`None`），兼容历史行为
 
 ### 1.7.2
 
@@ -115,7 +127,7 @@ Material3 控件落地补丁：官方已经能表达的圆角 / 描边不再包�
 需要基类 / 通用 UI / DataBinding 资源时（推荐经 `common`）：
 
 ```gradle
-implementation 'io.coderf.arklab.core:base:1.7.1'
+implementation 'io.coderf.arklab.core:base:1.9.0'
 // 或
 implementation project(':core-base')
 ```

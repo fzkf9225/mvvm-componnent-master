@@ -2,11 +2,11 @@ package io.coderf.arklab.demo.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingData
 import androidx.paging.liveData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.coderf.arklab.common.base.launchUiRequest
 import io.coderf.arklab.common.viewmodel.PagingViewModel
 import io.coderf.arklab.core.bean.RequestResult
 import io.coderf.arklab.core.bean.RoomPagingQuery
@@ -15,7 +15,6 @@ import io.coderf.arklab.demo.bean.Person
 import io.coderf.arklab.demo.database.PersonDatabase
 import io.coderf.arklab.demo.repository.RoomPagingRepositoryImpl
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -56,9 +55,9 @@ class DemoRoomPagingViewModel @Inject constructor(
         }
     }
 
-    /** 删除一条；成功后由页面刷新列表 */
+    /** 删除一条；成功后由页面刷新列表（silent 无遮罩；统一 launchUiRequest） */
     fun deletePerson(person: Person, onResult: (RequestResult<Unit>) -> Unit) {
-        viewModelScope.launch {
+        launchUiRequest {
             onResult(iRepository.delete(person).first())
         }
     }

@@ -27,6 +27,7 @@ import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.common.bean.base.ToolbarConfig;
 import io.coderf.arklab.common.databinding.BaseActivityConstraintBinding;
 import io.coderf.arklab.core.request.AppError;
+import io.coderf.arklab.core.request.LoadingCancelPolicy;
 import io.coderf.arklab.core.request.RequestUi;
 import io.coderf.arklab.common.helper.AuthDelegate;
 import io.coderf.arklab.common.helper.AuthManager;
@@ -251,6 +252,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
 
     /**
      * 创建 Loading 委托；同步填充兼容字段 {@link #uiController}。
+     * 并挂接 Loading 用户取消 → {@link #onLoadingCancelled(LoadingCancelPolicy)}。
      */
     protected void createUIController() {
         if (loadingDelegate == null) {
@@ -258,6 +260,35 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
             loadingDelegate = new LoadingDelegate(this, getLifecycle(), uiSafetyChecker);
         }
         uiController = loadingDelegate.getUiController();
+        loadingDelegate.setOnLoadingCancelListener(this::onLoadingCancelled);
+    }
+
+    /**
+     * Loading 被用户取消（系统返回 / 手势返回 / 点外侧）时的统一入口。
+     * <p>
+     * 默认：取消 ViewModel 中与遮罩绑定的请求；若策略为
+     * {@link LoadingCancelPolicy#CancelRequestAndExit} 则离开本页。
+     * 子类可重写以定制（例如二次确认）。
+     *
+     * @param policy 取消时 Dialog 上的策略
+     */
+    protected void onLoadingCancelled(@NonNull LoadingCancelPolicy policy) {
+        if (mViewModel != null) {
+            mViewModel.cancelUiRequests();
+        } else if (loadingDelegate != null) {
+            loadingDelegate.hideLoading();
+        }
+        if (policy != null && policy.shouldExitOnCancel() && isUiSafe()) {
+            finishAfterLoadingCancel();
+        }
+    }
+
+    /**
+     * {@link LoadingCancelPolicy#CancelRequestAndExit} 时离开本页。
+     * 默认 {@link #finish()}；子类可改为 {@code finishAfterTransition()} 等。
+     */
+    protected void finishAfterLoadingCancel() {
+        finish();
     }
 
     /**
@@ -509,14 +540,21 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
 
     @Override
     public void showLoading(String dialogMessage, boolean enableDynamicEllipsis) {
+        showLoading(dialogMessage, enableDynamicEllipsis, LoadingCancelPolicy.None);
+    }
+
+    @Override
+    public void showLoading(String dialogMessage, boolean enableDynamicEllipsis,
+                            @NonNull LoadingCancelPolicy cancelPolicy) {
+        LoadingCancelPolicy policy = cancelPolicy != null ? cancelPolicy : LoadingCancelPolicy.None;
         if (loadingDelegate != null) {
-            loadingDelegate.showLoading(dialogMessage, enableDynamicEllipsis);
+            loadingDelegate.showLoading(dialogMessage, enableDynamicEllipsis, policy);
             return;
         }
         if (!isUiSafe() || uiController == null) {
             return;
         }
-        uiController.showLoading(dialogMessage, enableDynamicEllipsis, false);
+        uiController.showLoading(dialogMessage, enableDynamicEllipsis, policy);
     }
 
     @Override

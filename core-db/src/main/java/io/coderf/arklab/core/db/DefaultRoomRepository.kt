@@ -100,7 +100,8 @@ open class DefaultRoomRepository(
                 if (options.isShowDialog) {
                     activeRequestUi.showLoading(
                         options.dialogMessage,
-                        options.isEnableDynamicEllipsis
+                        options.isEnableDynamicEllipsis,
+                        options.loadingCancelPolicy
                     )
                 }
             }

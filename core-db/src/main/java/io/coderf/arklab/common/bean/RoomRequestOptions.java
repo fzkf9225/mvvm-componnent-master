@@ -3,6 +3,8 @@ package io.coderf.arklab.common.bean;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import io.coderf.arklab.core.request.LoadingCancelPolicy;
+
 /**
  * Room 数据仓库请求时的 UI 与行为配置，属于 {@code core-db}。
  * <p>
@@ -43,7 +45,7 @@ import androidx.annotation.Nullable;
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/10/30
+ * @updated 2026/11/12
  */
 public class RoomRequestOptions {
 
@@ -53,6 +55,11 @@ public class RoomRequestOptions {
     private String dialogMessage = "正在加载，请稍后...";
     /** 是否启用加载文案动态省略号 */
     private boolean enableDynamicEllipsis = true;
+    /**
+     * Loading 用户取消策略；默认 {@link LoadingCancelPolicy#None}。
+     */
+    @NonNull
+    private LoadingCancelPolicy loadingCancelPolicy = LoadingCancelPolicy.None;
     /**
      * 超时时间（秒）。≤0 表示不超时。
      * Rx 走 {@code timeout(seconds)}；协程栈走 {@code withTimeout(seconds)}。
@@ -96,6 +103,14 @@ public class RoomRequestOptions {
     /** @return 是否动态省略号 */
     public boolean isEnableDynamicEllipsis() {
         return enableDynamicEllipsis;
+    }
+
+    /**
+     * @return Loading 用户取消策略
+     */
+    @NonNull
+    public LoadingCancelPolicy getLoadingCancelPolicy() {
+        return loadingCancelPolicy;
     }
 
     /** @return 超时秒数；≤0 表示不超时 */
@@ -165,6 +180,28 @@ public class RoomRequestOptions {
         return new Builder()
                 .setShowDialog(true)
                 .setDialogMessage(message)
+                .build();
+    }
+
+    /**
+     * 可取消 Loading：取消请求后留在当前页（对齐网络 {@code RequestOptions.cancellable()}）。
+     */
+    @NonNull
+    public static RoomRequestOptions cancellable() {
+        return new Builder()
+                .setShowDialog(true)
+                .setLoadingCancelPolicy(LoadingCancelPolicy.CancelRequest)
+                .build();
+    }
+
+    /**
+     * 可取消 Loading：取消后离开当前页（对齐网络 {@code RequestOptions.cancellableExit()}）。
+     */
+    @NonNull
+    public static RoomRequestOptions cancellableExit() {
+        return new Builder()
+                .setShowDialog(true)
+                .setLoadingCancelPolicy(LoadingCancelPolicy.CancelRequestAndExit)
                 .build();
     }
 
@@ -245,6 +282,16 @@ public class RoomRequestOptions {
         /** @param enableDynamicEllipsis 动态省略号 */
         public Builder setEnableDynamicEllipsis(boolean enableDynamicEllipsis) {
             options.enableDynamicEllipsis = enableDynamicEllipsis;
+            return this;
+        }
+
+        /**
+         * @param loadingCancelPolicy Loading 用户取消策略
+         */
+        public Builder setLoadingCancelPolicy(@NonNull LoadingCancelPolicy loadingCancelPolicy) {
+            options.loadingCancelPolicy = loadingCancelPolicy != null
+                    ? loadingCancelPolicy
+                    : LoadingCancelPolicy.None;
             return this;
         }
 
