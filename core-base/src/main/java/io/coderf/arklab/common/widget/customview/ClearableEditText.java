@@ -3,6 +3,7 @@ package io.coderf.arklab.common.widget.customview;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.text.Editable;
@@ -34,6 +35,7 @@ import io.coderf.arklab.common.utils.theme.ThemeAttrs;
  * <ul>
  *   <li>{@code app:startIconSize} — 左侧图标宽高（0 表示 intrinsic）</li>
  *   <li>{@code app:clearIconSize} — 清除图标宽高</li>
+ *   <li>{@code app:clearIconAlwaysShow} — 清除按钮是否常驻；默认 false（有内容且获焦时显示）</li>
  *   <li>{@code app:iconPadding} — 图标与文字间距（compoundDrawablePadding）</li>
  *   <li>{@code app:bgColor / radius / stroke*} — 圆角背景</li>
  * </ul>
@@ -63,6 +65,11 @@ public class ClearableEditText extends TextInputEditText implements TextWatcher 
     private int clearIconSizePx;
     /** 图标与文字间距（px） */
     private int iconPaddingPx;
+    /**
+     * 清除按钮是否常驻显示。
+     * false（默认）：有内容且输入框获焦时才显示；true：有内容即常驻显示。
+     */
+    private boolean clearIconAlwaysShow = false;
 
     private OnClearListener onClearListener;
 
@@ -92,6 +99,7 @@ public class ClearableEditText extends TextInputEditText implements TextWatcher 
             radius = ta.getDimension(R.styleable.ClearableEditText_radius, 0);
             startIconSizePx = (int) ta.getDimension(R.styleable.ClearableEditText_startIconSize, 0);
             clearIconSizePx = (int) ta.getDimension(R.styleable.ClearableEditText_clearIconSize, 0);
+            clearIconAlwaysShow = ta.getBoolean(R.styleable.ClearableEditText_clearIconAlwaysShow, false);
             iconPaddingPx = (int) ta.getDimension(R.styleable.ClearableEditText_iconPadding, -1);
             ta.recycle();
         } else {
@@ -188,12 +196,26 @@ public class ClearableEditText extends TextInputEditText implements TextWatcher 
         return d;
     }
 
+    private boolean shouldShowClearIcon(@Nullable CharSequence text) {
+        boolean hasText = text != null && !StringUtil.isEmpty(text.toString());
+        if (!hasText) {
+            return false;
+        }
+        return clearIconAlwaysShow || hasFocus();
+    }
+
     private void updateCompoundDrawables(@Nullable CharSequence text) {
-        boolean showClear = text != null && !StringUtil.isEmpty(text.toString());
+        boolean showClear = shouldShowClearIcon(text);
         Drawable start = sizeDrawable(drawableStart, startIconSizePx);
         Drawable end = showClear ? sizeDrawable(drawableClear, clearIconSizePx) : null;
         // 使用 Relative 版本，RTL 友好；不再用 WithIntrinsicBounds 以免忽略我们设置的 bounds
         setCompoundDrawablesRelative(start, null, end, null);
+    }
+
+    @Override
+    protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
+        super.onFocusChanged(focused, direction, previouslyFocusedRect);
+        updateCompoundDrawables(getText());
     }
 
     private void applyBackgroundIfNeeded() {
@@ -213,8 +235,7 @@ public class ClearableEditText extends TextInputEditText implements TextWatcher 
         if (event.getAction() != MotionEvent.ACTION_DOWN) {
             return false;
         }
-        CharSequence text = getText();
-        if (text == null || text.toString().isEmpty()) {
+        if (!shouldShowClearIcon(getText())) {
             return false;
         }
         // 与修改前一致：用 compoundPaddingRight 判断右侧清除区域
@@ -293,6 +314,19 @@ public class ClearableEditText extends TextInputEditText implements TextWatcher 
     public void setClearIconSize(int sizePx) {
         this.clearIconSizePx = Math.max(0, sizePx);
         updateCompoundDrawables(getText());
+    }
+
+    /**
+     * 设置清除按钮是否常驻显示。
+     * {@code false}（默认）：有内容且获焦时显示；{@code true}：有内容即常驻显示。
+     */
+    public void setClearIconAlwaysShow(boolean alwaysShow) {
+        this.clearIconAlwaysShow = alwaysShow;
+        updateCompoundDrawables(getText());
+    }
+
+    public boolean isClearIconAlwaysShow() {
+        return clearIconAlwaysShow;
     }
 
     /**

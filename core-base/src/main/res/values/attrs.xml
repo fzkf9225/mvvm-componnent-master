@@ -45,6 +45,8 @@
     <attr name="startIconSize" format="dimension" />
     <!-- ClearableEditText / PasswordEditText 共用：清除图标尺寸（0=intrinsic） -->
     <attr name="clearIconSize" format="dimension" />
+    <!-- ClearableEditText / PasswordEditText 共用：清除按钮是否常驻；false=仅有焦点时显示，true=有内容即常驻 -->
+    <attr name="clearIconAlwaysShow" format="boolean" />
     <!-- PasswordEditText：明文/密文切换图标尺寸（0=intrinsic） -->
     <attr name="toggleIconSize" format="dimension" />
     <!-- ClearableEditText / PasswordEditText 共用：图标与文字间距 -->
@@ -592,6 +594,8 @@
         <attr name="startIconSize" />
         <!-- 清除图标尺寸，定义见全局 attr clearIconSize -->
         <attr name="clearIconSize" />
+        <!-- 清除按钮是否常驻，定义见全局 attr clearIconAlwaysShow；默认 false（按焦点显隐） -->
+        <attr name="clearIconAlwaysShow" />
         <!-- 图标与文字间距，定义见全局 attr iconPadding -->
         <attr name="iconPadding" />
     </declare-styleable>
@@ -985,6 +989,8 @@
         <attr name="startIconSize" />
         <!-- 清除图标尺寸，定义见全局 attr clearIconSize -->
         <attr name="clearIconSize" />
+        <!-- 清除按钮是否常驻，定义见全局 attr clearIconAlwaysShow；默认 false（按焦点显隐） -->
+        <attr name="clearIconAlwaysShow" />
         <!-- 切换图标尺寸，定义见全局 attr toggleIconSize -->
         <attr name="toggleIconSize" />
         <!-- 图标与文字间距，定义见全局 attr iconPadding -->

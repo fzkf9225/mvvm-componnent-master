@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.InputType;
@@ -41,6 +42,7 @@ import io.coderf.arklab.common.utils.theme.ThemeAttrs;
  * <ul>
  *   <li>{@code app:startIconSize} — 左侧图标宽高（0 表示 intrinsic）</li>
  *   <li>{@code app:clearIconSize} — 清除图标宽高</li>
+ *   <li>{@code app:clearIconAlwaysShow} — 清除按钮是否常驻；默认 false（有内容且获焦时显示）</li>
  *   <li>{@code app:toggleIconSize} — 眼睛切换图标宽高</li>
  *   <li>{@code app:iconPadding} — 图标与文字间距</li>
  *   <li>{@code app:endIconGap} — 清除与切换按钮之间的间距</li>
@@ -76,6 +78,11 @@ public class PasswordEditText extends TextInputEditText implements TextWatcher {
     private boolean enableClear = false;
     private boolean showingClear = false;
     private boolean showingToggle = false;
+    /**
+     * 清除按钮是否常驻显示。
+     * false（默认）：有内容且输入框获焦时才显示；true：有内容即常驻显示。
+     */
+    private boolean clearIconAlwaysShow = false;
 
     /** 左侧图标尺寸（px），0 = intrinsic */
     private int startIconSizePx;
@@ -121,6 +128,7 @@ public class PasswordEditText extends TextInputEditText implements TextWatcher {
             radius = ta.getDimension(R.styleable.PasswordEditText_radius, 0);
             startIconSizePx = (int) ta.getDimension(R.styleable.PasswordEditText_startIconSize, 0);
             clearIconSizePx = (int) ta.getDimension(R.styleable.PasswordEditText_clearIconSize, 0);
+            clearIconAlwaysShow = ta.getBoolean(R.styleable.PasswordEditText_clearIconAlwaysShow, false);
             toggleIconSizePx = (int) ta.getDimension(R.styleable.PasswordEditText_toggleIconSize, 0);
             iconPaddingPx = (int) ta.getDimension(R.styleable.PasswordEditText_iconPadding, -1);
             endIconGapPx = (int) ta.getDimension(R.styleable.PasswordEditText_endIconGap, endIconGapPx);
@@ -255,11 +263,22 @@ public class PasswordEditText extends TextInputEditText implements TextWatcher {
      * 右侧清除/眼睛逻辑与修改前保持一致（WithIntrinsicBounds），
      * 仅额外把左侧 start 图标一起设上。
      */
+    private boolean shouldShowClearIcon(@Nullable CharSequence text) {
+        if (!enableClear) {
+            return false;
+        }
+        boolean hasText = text != null && !StringUtil.isEmpty(text.toString());
+        if (!hasText) {
+            return false;
+        }
+        return clearIconAlwaysShow || hasFocus();
+    }
+
     private void updateRightDrawables(@Nullable CharSequence text) {
         Drawable toggle = null;
         Drawable clear = null;
         showingToggle = enableToggle;
-        showingClear = enableClear && text != null && !StringUtil.isEmpty(text.toString());
+        showingClear = shouldShowClearIcon(text);
         if (showingToggle) {
             toggle = passwordVisible ? drawableVisible : drawableInvisible;
         }
@@ -280,6 +299,12 @@ public class PasswordEditText extends TextInputEditText implements TextWatcher {
             endDrawable.setBounds(0, 0, ew, eh);
         }
         setCompoundDrawablesRelative(start, null, endDrawable, null);
+    }
+
+    @Override
+    protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
+        super.onFocusChanged(focused, direction, previouslyFocusedRect);
+        updateRightDrawables(getText());
     }
 
     @Nullable
@@ -452,6 +477,19 @@ public class PasswordEditText extends TextInputEditText implements TextWatcher {
     public void setEnableClear(boolean enableClear) {
         this.enableClear = enableClear;
         updateRightDrawables(getText());
+    }
+
+    /**
+     * 设置清除按钮是否常驻显示。
+     * {@code false}（默认）：有内容且获焦时显示；{@code true}：有内容即常驻显示。
+     */
+    public void setClearIconAlwaysShow(boolean alwaysShow) {
+        this.clearIconAlwaysShow = alwaysShow;
+        updateRightDrawables(getText());
+    }
+
+    public boolean isClearIconAlwaysShow() {
+        return clearIconAlwaysShow;
     }
 
     public void setPasswordVisibleIcon(@DrawableRes int resId) {
