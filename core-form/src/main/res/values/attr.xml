@@ -377,6 +377,16 @@
         <attr name="dialogBgDrawable"/>
         <!--input输入框背景-->
         <attr name="inputDrawable"/>
+        <!-- FormEditText 是否显示清空图标；默认 true。有内容且获焦时显示，失焦隐藏 -->
+        <attr name="showClearIcon" format="boolean"/>
+        <!-- FormEditText 清空图标，默认 core-base icon_clear；定义见 ClearableEditText 同名 attr -->
+        <attr name="clearIcon" />
+        <!-- FormEditText 清空图标尺寸（0=intrinsic） -->
+        <attr name="clearIconSize" />
+        <!-- FormEditText 清空图标是否常驻；false=仅获焦显示，true=有内容即显示 -->
+        <attr name="clearIconAlwaysShow" />
+        <!-- FormEditText 清空图标与文字间距 -->
+        <attr name="clearIconPadding" format="dimension"/>
         <!--日历选择样式-->
         <attr name="datePickModel" format="enum">
             <!--年月日-->
