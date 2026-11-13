@@ -85,13 +85,9 @@ public abstract class BaseRecyclerViewFragment<VM extends BaseRecyclerViewModel,
         emptyLayout.setOnEmptyLayoutClickListener(this);
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setOnLoadMoreListener(this);
-
-        if (NetworkStateUtil.isConnected(requireContext())) {
-            setViewState(EmptyLayout.State.NETWORK_LOADING);
-        } else {
-            setViewState(EmptyLayout.State.LOADING_ERROR);
-        }
+        setViewState(EmptyLayout.State.NETWORK_LOADING);
     }
+
     protected RecyclerView.ItemDecoration createDivider() {
         return new RecycleViewDivider(requireContext(),
                 LinearLayoutManager.VERTICAL,
