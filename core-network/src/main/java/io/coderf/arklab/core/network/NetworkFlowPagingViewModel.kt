@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 
 /**
  * 新版 Flow 分页 ViewModel，对接 [NetworkPagingRepository]。
@@ -90,8 +91,10 @@ abstract class NetworkFlowPagingViewModel<
     private var pagingCollectJob: Job? = null
 
     init {
-        // 延迟到子类构造完成后启动，替代旧 ensureRepository → refreshData
+        // 须 yield：Dispatchers.Main.immediate 下 launch 体可能仍在父类构造内同步执行，
+        // 此时子类 override 的 pagingConfig / startPage 等属性初始化器尚未跑完。
         viewModelScope.launch {
+            yield()
             refreshData()
         }
     }
