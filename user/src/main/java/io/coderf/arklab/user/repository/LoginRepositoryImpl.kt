@@ -1,9 +1,8 @@
 package io.coderf.arklab.user.repository
 
-import io.coderf.arklab.core.network.BaseNetworkRepository
 import io.coderf.arklab.core.bean.RequestOptions
 import io.coderf.arklab.core.bean.RequestResult
-import io.coderf.arklab.core.request.LoadingCancelPolicy
+import io.coderf.arklab.core.network.BaseNetworkRepository
 import io.coderf.arklab.user.api.UserAccountHelper
 import io.coderf.arklab.user.api.UserApiService
 import io.coderf.arklab.user.bean.GraphicVerificationCodeBean
@@ -11,17 +10,19 @@ import io.coderf.arklab.user.bean.RequestLoginBean
 import io.coderf.arklab.userapi.bean.UserInfo
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
 /**
- * 登录仓库（新版 [BaseNetworkRepository]）。
+ * 登录仓库（[BaseNetworkRepository]）。
  * 登录 / 验证码关闭鉴权刷新，避免与 refresh-token 递归。
+ * Loading / 错误 UI 由 ViewModel [io.coderf.arklab.common.base.BaseViewModel.launchRequest] 处理。
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
- * @updated 2026/9/12
+ * @updated 2026/11/13
  */
-class LoginRepositoryImpl(
+class LoginRepositoryImpl @Inject constructor(
     private val api: UserApiService
 ) : BaseNetworkRepository() {
 
@@ -29,6 +30,7 @@ class LoginRepositoryImpl(
         return request(
             RequestOptions.builder()
                 .showLoading(false)
+                .deliverErrorToUi(false)
                 .enableAuthRetry(false)
                 .build()
         ) {
@@ -39,9 +41,9 @@ class LoginRepositoryImpl(
     fun login(requestLoginBean: RequestLoginBean): Flow<RequestResult<UserInfo>> {
         return request(
             RequestOptions.builder()
-                .loadingMessage("登录中，请稍后...")
+                .showLoading(false)
+                .deliverErrorToUi(false)
                 .enableAuthRetry(false)
-                .loadingCancelPolicy(LoadingCancelPolicy.CancelRequest)
                 .build()
         ) {
             try {

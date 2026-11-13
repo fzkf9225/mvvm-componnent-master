@@ -10,9 +10,7 @@ import android.os.IBinder;
 
 import androidx.annotation.NonNull;
 
-import io.coderf.arklab.common.base.BaseRepository;
 import io.coderf.arklab.common.base.BaseViewModel;
-import io.coderf.arklab.common.repository.RepositoryImpl;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.gnss.service.GpsService;
 
@@ -24,7 +22,7 @@ import io.coderf.arklab.gnss.service.GpsService;
  * @since 1.0
  * @created 2024/3/26 10:56
  */
-public class GoogleGpsViewModel extends BaseViewModel<BaseRepository> {
+public class GoogleGpsViewModel extends BaseViewModel {
     /**
      * gps的Intent
      */
@@ -47,11 +45,6 @@ public class GoogleGpsViewModel extends BaseViewModel<BaseRepository> {
 
     public void setGetService(GpsService getService) {
         this.getService = getService;
-    }
-
-    @Override
-    protected RepositoryImpl createRepository() {
-        return null;
     }
 
     public Intent getGpsServiceIntent(Context context) {

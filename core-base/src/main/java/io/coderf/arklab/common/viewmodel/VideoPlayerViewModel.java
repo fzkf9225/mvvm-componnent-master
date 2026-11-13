@@ -4,7 +4,6 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 
-import io.coderf.arklab.common.base.BaseRepository;
 import io.coderf.arklab.common.base.BaseViewModel;
 
 /**
@@ -15,13 +14,8 @@ import io.coderf.arklab.common.base.BaseViewModel;
  * @since 1.0
  * @created 2021/5/26 14:16
  */
-public class VideoPlayerViewModel extends BaseViewModel<BaseRepository> {
+public class VideoPlayerViewModel extends BaseViewModel {
     public VideoPlayerViewModel(@NonNull Application application) {
         super(application);
     }
-    @Override
-    protected BaseRepository createRepository() {
-        return null;
-    }
-
 }

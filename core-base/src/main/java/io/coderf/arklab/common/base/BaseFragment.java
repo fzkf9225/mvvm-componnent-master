@@ -199,7 +199,6 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
             Class modelClass = ViewModelHelper.resolveViewModelClass(getClass());
             mViewModel = (VM) new ViewModelProvider(useActivityViewModel() ? requireActivity() : this).get(modelClass);
         }
-        mViewModel.ensureRepository();
     }
 
     @Override

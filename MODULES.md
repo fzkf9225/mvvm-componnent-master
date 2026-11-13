@@ -1,240 +1,251 @@
-﻿# 模块说明与使用指南
+# 模块说明与使用指南
+
+> 对应版本（以各模块 `build.gradle` 为准）：**common `4.8.0`** · **core-base `1.10.0`** · **core-network `1.8.0`** · **core-db `1.7.0`** · **core-ui `1.3.1`** · **core-utils `1.2.0`** · **core-log `1.2.0`** · **room-processor `1.2.0`** · **core-ws `1.0.1`** · **core-form `3.7.7`** · **core-media `3.7.0`** · **core-gnss `4.0.0`**  
+> Options 完善见 [UPGRADE.md §0](./UPGRADE.md#0-160network--db请求-options-完善)；剔除 `BaseView` 见 [UPGRADE.md §2](./UPGRADE.md#2-120彻底剔除-baseview--mvp-页面绑定)。  
+> 本文说明各模块职责、依赖关系与日常用法。升级请看 [UPGRADE.md](./UPGRADE.md)。
+
+> **升到 core-* 2.0.0：** 请读 [MIGRATION-2.0.0.md](./MIGRATION-2.0.0.md)。
 
-> 对应版本（以各模块 `build.gradle` 为准）：**common `4.8.0`** · **core-base `1.10.0`** · **core-network `1.8.0`** · **core-db `1.7.0`** · **core-ui `1.3.1`** · **core-utils `1.2.0`** · **core-log `1.2.0`** · **room-processor `1.2.0`** · **core-ws `1.0.1`** · **core-form `3.7.7`** · **core-media `3.7.0`** · **core-gnss `4.0.0`**  
-> Options 完善见 [UPGRADE.md §0](./UPGRADE.md#0-160network--db请求-options-完善)；剔除 `BaseView` 见 [UPGRADE.md §2](./UPGRADE.md#2-120彻底剔除-baseview--mvp-页面绑定)。  
-> 本文说明各模块职责、依赖关系与日常用法。升级请看 [UPGRADE.md](./UPGRADE.md)。
-
----
-
-## 1. 总览
-
-```
-app（组装：Hilt / Demo）
-  ├─ user（业务）──► userapi（UserService / UserInfo / Router）
-  │              └─► base（Gateway、配置、BaseApp* …）  ← case 基建，非框架
-  │                      ▲
-  │                      │ 实现绑定在 app（适配 media / mqtt）
-  ├─ mqttcomponent ──────┘ MessageGateway
-  ├─ core-media ──────────┘ MediaGateway
-  ├─ core-form / core-gnss / core-ws / …
-  └─ common（facade）── api ──► core-network / core-db / core-ui
-                                      │
-                                      ▼
-                               core-base ← core-utils / core-log / core-autosize
-```
-
-**业务侧推荐入口：**
-
-```gradle
-implementation project(':common')   // 或 Maven: common:4.8.0；建议显式钉 network 1.8.0、db 1.7.0、base 1.10.0 等（见 UPGRADE 文首）
-implementation project(':base')     // Gateway / AppPropertiesConfig / BaseAppActivity 等
-implementation project(':userapi')  // 仅需要用户契约时
-```
-
-`common` 是兼容门面：本身几乎无业务代码，通过 `api` 把 `core-*` 透传出去，便于旧工程继续只依赖一个坐标。
-
-> **命名注意：** Gradle 模块 `:base`（case）≠ Maven `io.coderf.arklab.core:base`（框架 `:core-base`）。
-
----
-
-## 2. 核心分层模块
-
-### `common`（facade）
-
-| 项 | 说明 |
-|----|------|
-| 职责 | 依赖聚合（facade，统一入口） |
-| 包名 / namespace | `io.coderf.arklab.common.facade` |
-| 何时用 | 宿主 / 业务模块统一依赖此入口即可 |
-| 注意 | Manifest 不要再声明相对类名组件；权限与 Activity 在 `core-base`，`InitProvider` 在 `core-autosize` |
-
-### `core-base`
-
-| 项 | 说明 |
-|----|------|
-| 职责 | `BaseActivity` / `BaseFragment` / `BaseViewModel`、历史 widget、helper、**全部 common 资源与 DataBinding** |
-| namespace | `io.coderf.arklab.common`（保留旧 R / 包名，业务 import 基本不用改） |
-| 何时用 | 一般通过 `common` 间接依赖；不要在业务里再拆第二份同名 R |
-| 现状 | 体积仍大；widget / 重工具二次迁出尚未完成。**4.6.0** 起主题为 Material3，`ActionToolbar` / `TitleBar` 为 `MaterialToolbar`。 |
-
-### `core-network`
-
-| 项 | 说明 |
-|----|------|
-| 职责 | Retrofit / OkHttp 封装、旧 `RepositoryImpl*`、新 `DefaultNetworkRepository` |
-| 依赖 | `api` → `core-base`；**不依赖** `core-db`（网络与 Room 分层独立） |
-| 新 API | `RequestOptions` / `RequestResult` / `AppError` / `RequestUi` |
-| 旧 API | `RepositoryImpl`（Rx）仍保留；过渡层 `FlowRepositoryImpl` **已删除**，协程请用 `DefaultNetworkRepository` |
-
-**新请求示例（Kotlin）：**
-
-```kotlin
-class XxxRepository(
-    private val api: XxxApi,
-    requestUi: RequestUi = NoOpRequestUi
-) : DefaultNetworkRepository(requestUi) {
-
-    fun load(): Flow<RequestResult<Xxx>> = request(
-        RequestOptions(showLoading = true)
-    ) { api.getXxx() }
-}
-```
-
-Demo 参考：`app/.../SampleCoreNetworkRepository.kt`。
-
-### `core-db`
-
-| 项 | 说明 |
-|----|------|
-| 职责 | Room DAO / Database / Entity / `RoomRepository*` |
-| 何时用 | 本地持久化；经 `common` 或直接 `api project(':core-db')` |
-
-### `core-ui`
-
-| 项 | 说明 |
-|----|------|
-| 职责 | Activity 委托：`ToolbarDelegate`、`InitDataPolicy` 等 |
-| 现状 | 代码量少；控件仍在 `core-base`（受 R/DataBinding 限制） |
-| 用法 | `BaseActivity` 已接入 `InitDataPolicy`（默认 `AlwaysInitData`） |
-
-### `core-utils`
-
-| 项 | 说明 |
-|----|------|
-| 职责 | 无 Android R 依赖的轻量工具与通用扩展（`CoreLogger`、日期/数值/密度/View 等） |
-| 包名 | `io.coderf.arklab.core.utils`；扩展统一在 `io.coderf.arklab.core.utils.ext` |
-| 现状 | 已从 `core-base` 下沉原 `Extensions.kt`；`DrawableUtil` 等带 R / 重 UI 的仍留在 `core-base` |
-| 新代码 | `import io.coderf.arklab.core.utils.ext.*`（勿再依赖 `common.utils.common` 下的旧扩展） |
-| 兼容 | `core-base` 的 `Extensions.kt` 仍保留同签名 `@Deprecated` 转发，旧 import 可编译 |
-
-#### util 说明（暂缓整批迁入 core-utils）
-
-整库工具迁 `core-utils` 暂不划算（`annotation` 为纯 Java，`core-utils` 为 Android Library；收益低于改包成本）。  
-当前约定：
-
-- 新 Kotlin 扩展可选用 `core-utils` `ext.*`；历史 Java 工具多数仍在 `core-base`
-- `DensityUtil.setDensity` 已废弃为空操作（防泄漏），屏幕适配走 AutoSize
-- `RegexUtils`：业务通用校验在 `core-utils`（`io.coderf.arklab.core.utils.RegexUtils`）；`annotation` 内仍有表单校验同源副本，双份收敛以后再说
-
-### `core-autosize`
-
-| 项 | 说明 |
-|----|------|
-| 职责 | 今日头条密度适配（AndroidAutoSize）：`AutoSize` / `AutoSizeConfig` / `InitProvider` |
-| Maven | `io.coderf.arklab.core:autosize:1.0.0` |
-| namespace | `io.coderf.arklab.core.autosize` |
-| Java 包 | `io.coderf.arklab.core.autosize`（与 namespace / Maven 对齐；子包 `strategy` / `lifecycle` / `external` / `unit` / `util`） |
-| 何时用 | 一般经 `core-base` / `common` 间接依赖；仅需适配时可显式依赖本模块 |
-| 开关 | `Config.setAutoSizeEnabled`（须在 `Config.init` 前）；宿主 meta：`design_width_in_dp` / `design_height_in_dp` |
-
----
-
-## 3. 业务与能力模块
-
-| 模块 | 职责 | 业务应如何依赖 |
-|------|------|----------------|
-| `base` | **Demo/case 基建**（非框架）：`MediaGateway` / `MessageGateway`、`AppPropertiesConfig`、`BaseAppActivity`、通用枚举等 | `api`/`implementation project(':base')` |
-| `userapi` | 用户模块对外契约（`UserService` / `UserInfo` / Router） | `implementation project(':userapi')` |
-| `user` | 用户业务 UI / 逻辑 | 依赖 `common` + `base` + `userapi`，**禁止**直接依赖 mqtt / media |
-| `mqttcomponent` | MQTT 实现（`MqttClient` 等） | 仅 app 依赖；Gateway 适配写在 app |
-| `core-media` | 拍照/选图/压缩（`MediaHelper` 等） | 仅 app 依赖；Gateway 适配写在 app |
-| `core-form` | 表单等通用 UI 组件 | 按需；`FormHost.validateAll` / `formStyle` 见 core-form README |
-| `core-gnss` | 定位能力 | 按需；见下方边界 |
-
-#### core-gnss 能力边界
-
-| 能力 | 建议 |
-|------|------|
-| FusedLocation + 权限 + GPS 开关检测 | **默认核心**，多数宿主只需这些 |
-| Session 轨迹缓冲 / GPX·CSV | 可选；`GpsSettingConfig.maxLocationHistorySize` 默认 **1000**（`0`=不限制） |
-| 实时位置上报 | **不在本库**；宿主自行接 `core-ws` / MQTT / HTTP（原 Netty `socket` 包已删除） |
-| 进程级 `getInstance()` 单例 | 注意跨会话串扰；停止定位时调用 Session `clear` |
-
-#### core-media 能力边界
-
-| 能力 | 建议 |
-|------|------|
-| `MediaHelper` 选图/拍照/预览 + app 侧 `MediaGateway` | **保留**（组件化主路径） |
-| 自研 `ImgCompressor` / `VideoCompress` / Crop | 评估替换成熟库或拆 `core-media-compress`；仅 Demo 使用则优先外置 |
-| 平行 `UIController` / `DebugUtil` / `LogUtil` | 计划删除，收敛到 core |
-| `core-form` → `implementation core-media` | 已知耦合；表单媒体行需要时再引，长期应改为 Gateway/可选依赖 |
-| `core-ws` | WebSocket（OkHttp，对齐 core-mqtt 分层） | 按需；业务信封勿写入框架 |
-| `annotation` / `room-processor` | 校验注解与 Room 处理器 | 按需 |
-| `app` | Demo 组装：Hilt Module、Gateway 适配与绑定 | 宿主样板 |
-
----
-
-## 4. Gateway 用法（组件解耦）
-
-业务模块**只依赖接口**，实现由 app 注入。
-
-### MessageGateway（MQTT）
-
-```kotlin
-@Inject lateinit var messageGateway: MessageGateway
-
-messageGateway.connect()
-messageGateway.subscribe("topic/x") { topic, payload -> /* … */ }
-```
-
-绑定示例见 `app/.../di/GatewayModule.kt`、`app/.../mqtt/MqttMessageGateway`。
-
-### MediaGateway（媒体）
-
-```java
-@Inject MediaGateway mediaGateway;
-
-mediaGateway.pickImages(1, uris -> { /* 上传头像等 */ });
-```
-
-- 接口：`base/.../MediaGateway`（case，非框架）
-- 适配与绑定：`app/.../media/MediaHelperGateway`、`app/.../di/MediaGatewayModule`
-- 参考：`MeFragment`、`FeedBackActivity`
-
-**禁止：** 在 `user` 等业务 module 的 `build.gradle` 里写 `mqttcomponent` / `core-media`。  
-**禁止：** `core-media` / `mqttcomponent` / `core-*` 依赖 `:base` / `userapi`。
-
-字典类枚举（如业务 `DicTypeEnum`）按项目放在各自的 case `:base`，Demo 不内置业务字典码。
-
----
-
-## 5. Maven 发布坐标
-
-推送需环境变量 `ALIYUN_USER_NAME` / `ALIYUN_PASSWORD`，例如：
-
-```bash
-./gradlew :common:publish
-./gradlew :core-base:publish :core-network:publish :core-db:publish :core-ui:publish :core-utils:publish :core-log:publish :core-autosize:publish
-```
-
-| 模块 | 坐标 |
-|------|------|
-| common | `io.coderf.arklab.common:common:4.8.0` |
-| core-base | `io.coderf.arklab.core:base:1.10.0` |
-| core-network | `io.coderf.arklab.core:network:1.8.0`（见 [core-network/README.md](./core-network/README.md)） |
-| core-db | `io.coderf.arklab.core:db:1.7.0`（见 [core-db/README.md](./core-db/README.md)） |
-| core-ui | `io.coderf.arklab.core:ui:1.3.1` |
-| core-utils | `io.coderf.arklab.core:utils:1.2.0` |
-| core-log | `io.coderf.arklab.core:log:1.2.0` |
-| core-autosize | `io.coderf.arklab.core:autosize:1.0.0` |
-| room-processor | `io.coderf.arklab.room:room-processor:1.2.0`（见 [room-processor/README.md](./room-processor/README.md)） |
-| core-mqtt | `io.coderf.arklab.mqtt:mqtt:1.6.2` |
-| core-ws | `io.coderf.arklab.ws:ws:1.0.1` |
-| core-media | `io.coderf.arklab.media:media:3.7.0`（原模块名 `commonmedia`；包名 / Maven 坐标不变） |
-| core-form | `io.coderf.arklab.ui:ui:3.7.7`（原模块名 `commonui`；包名 / Maven 坐标不变；`api` → core-base / core-network，另依赖 media） |
-| core-gnss | `io.coderf.arklab.gnss:core-gnss:4.0.0`（原 `googlegps`，包名 `io.coderf.arklab.gnss`，无旧坐标兼容） |
-| annotation | `io.coderf.arklab.annotation:annotation:3.3.1` |
-
-宿主若只引 `common`，会通过 POM / `api` 依赖带上对应 `core-*`（以实际发布 POM 为准）。Maven 工程请按 [UPGRADE.md 文首](./UPGRADE.md) **显式钉版本**，避免传递依赖解析到旧 POM。
-
----
-
-## 6. 新代码约定
-
-1. 业务不直接依赖 mqtt / media 实现模块，只依赖 Gateway。
-2. 新网络代码优先 `DefaultNetworkRepository.request`，勿再扩 `sendRequest` 重载。
-3. Repository 内不要持有页面；Loading / 错误只走 `getRequestUi()` / `RequestUi`（`showError(AppError)`）。
-4. `core-*` 禁止依赖 `user` / `app`。
-5. 不要把 `APP_SECRET` 明文放进 HTTP Header（仅本地签名）。
-6. 主题使用 `AppBaseTheme`（Material3 DayNight）；品牌色底上的字用 `onPrimary`，不要写死白色。
-7. `Config.setDynamicColorEnabled` 默认关；若打开须在 `Config.init()` 之前。屏幕适配、崩溃捕获、夜间模式、Edge-to-Edge、默认占位图同样走 `Config`，且须在 `init()` 前设置。
+---
+
+## 1. 总览
+
+```
+app（组装：Hilt / Demo）
+  ├─ user（业务）──? userapi（UserService / UserInfo / Router）
+  │              └─? base（Gateway、配置、BaseApp* …）  ← case 基建，非框架
+  │                      ▲
+  │                      │ 实现绑定在 app（适配 media / mqtt）
+  ├─ mqttcomponent ──────┘ MessageGateway
+  ├─ core-media ──────────┘ MediaGateway
+  ├─ core-form / core-gnss / core-ws / …
+  └─ common（facade）── api ──? core-network / core-db / core-ui
+                                      │
+                                      ▼
+                               core-base ← core-utils / core-log / core-autosize
+```
+
+**业务侧推荐入口：**
+
+```gradle
+implementation project(':common')   // 或 Maven: common:4.8.0；建议显式钉 network 1.8.0、db 1.7.0、base 1.10.0 等（见 UPGRADE 文首）
+implementation project(':base')     // Gateway / AppPropertiesConfig / BaseAppActivity 等
+implementation project(':userapi')  // 仅需要用户契约时
+```
+
+`common` 是兼容门面：本身几乎无业务代码，通过 `api` 把 `core-*` 透传出去，便于旧工程继续只依赖一个坐标。
+
+> **命名注意：** Gradle 模块 `:base`（case）≠ Maven `io.coderf.arklab.core:base`（框架 `:core-base`）。
+
+---
+
+## 2. 核心分层模块
+
+### `common`（facade）
+
+| 项 | 说明 |
+|----|------|
+| 职责 | 依赖聚合（facade，统一入口） |
+| 包名 / namespace | `io.coderf.arklab.common.facade` |
+| 何时用 | 宿主 / 业务模块统一依赖此入口即可 |
+| 注意 | Manifest 不要再声明相对类名组件；权限与 Activity 在 `core-base`，`InitProvider` 在 `core-autosize` |
+
+### `core-base`
+
+| 项 | 说明 |
+|----|------|
+| 职责 | `BaseActivity` / `BaseFragment` / `BaseViewModel`、历史 widget、helper、**全部 common 资源与 DataBinding** |
+| namespace | `io.coderf.arklab.common`（保留旧 R / 包名，业务 import 基本不用改） |
+| 何时用 | 一般通过 `common` 间接依赖；不要在业务里再拆第二份同名 R |
+| 现状 | 体积仍大；widget / 重工具二次迁出尚未完成。**4.6.0** 起主题为 Material3，`ActionToolbar` / `TitleBar` 为 `MaterialToolbar`。 |
+| 请求 | **无泛型** `BaseViewModel` + 唯一入口 `launchRequest`（推荐 Flow 重载 / Session+collectSuccess）；页面 bind `networkRequestUiHost`。**【已过时】** `BaseRxViewModel`（Rx 存量）。已删除 `createRepository` / `ensureRepository` / `launchUiRequest`。 |
+
+### `core-network`
+
+| 项 | 说明 |
+|----|------|
+| 职责 | Retrofit / OkHttp 封装、旧 `RepositoryImpl*`、新 `BaseNetworkRepository` |
+| 依赖 | `api` → `core-base`；**不依赖** `core-db`（网络与 Room 分层独立） |
+| 新 API | `RequestOptions`（在 core-base）/ `RequestResult` / `AppError` / `RequestUi` |
+| 旧 API | `RepositoryImpl`（Rx）仍保留；过渡层 `FlowRepositoryImpl` **已删除**，协程请用 `BaseNetworkRepository` |
+
+**推荐：ViewModel Flow 重载 `launchRequest` + Repository 只返回 Flow（无 UI）：**
+
+```kotlin
+class XxxRepository @Inject constructor(
+    private val api: XxxApi
+) : BaseNetworkRepository(boundApiService = api) {
+    fun load(): Flow<RequestResult<Xxx>> = request { api.getXxx() }
+}
+
+// ViewModel（内部强制 Host；showLoading / deliverErrorToUi 只写在这里）
+fun load() {
+    launchRequest(
+        options = RequestOptions.cancellable(),
+        flow = { xxxRepository.load() }
+    ) { /* 更新 LiveData / StateFlow */ }
+}
+```
+
+**分页**：列表翻页不走 `launchRequest`；用 `NetworkFlowPagingViewModel`（默认 `onAppError` → Host）。页内详情仍用上面的 `launchRequest`。
+
+**【已过时】Rx**：可用 `BaseRxViewModel.subscribeRequest`（Demo：`LegacyRxSampleViewModel`）；勿在新功能扩展 Repository 内 UI 耦合。
+
+Demo 参考：`SampleCoreNetworkRepository`、`LoginViewModel`、`DemoFlowPagingViewModel`。
+
+### `core-db`
+
+| 项 | 说明 |
+|----|------|
+| 职责 | Room DAO / Database / Entity / `RoomRepository*` / `DefaultRoomRepository`（无 RequestUi，对齐网络层） |
+| 何时用 | 本地持久化；经 `common` 或直接 `api project(':core-db')`；UI 走 ViewModel `launchRequest` |
+
+### `core-ui`
+
+| 项 | 说明 |
+|----|------|
+| 职责 | Activity 委托：`ToolbarDelegate`、`InitDataPolicy` 等 |
+| 现状 | 代码量少；控件仍在 `core-base`（受 R/DataBinding 限制） |
+| 用法 | `BaseActivity` 已接入 `InitDataPolicy`（默认 `AlwaysInitData`） |
+
+### `core-utils`
+
+| 项 | 说明 |
+|----|------|
+| 职责 | 无 Android R 依赖的轻量工具与通用扩展（`CoreLogger`、日期/数值/密度/View 等） |
+| 包名 | `io.coderf.arklab.core.utils`；扩展统一在 `io.coderf.arklab.core.utils.ext` |
+| 现状 | 已从 `core-base` 下沉原 `Extensions.kt`；`DrawableUtil` 等带 R / 重 UI 的仍留在 `core-base` |
+| 新代码 | `import io.coderf.arklab.core.utils.ext.*`（勿再依赖 `common.utils.common` 下的旧扩展） |
+| 兼容 | `core-base` 的 `Extensions.kt` 仍保留同签名 `@Deprecated` 转发，旧 import 可编译 |
+
+#### util 说明（暂缓整批迁入 core-utils）
+
+整库工具迁 `core-utils` 暂不划算（`annotation` 为纯 Java，`core-utils` 为 Android Library；收益低于改包成本）。  
+当前约定：
+
+- 新 Kotlin 扩展可选用 `core-utils` `ext.*`；历史 Java 工具多数仍在 `core-base`
+- `DensityUtil.setDensity` 已废弃为空操作（防泄漏），屏幕适配走 AutoSize
+- `RegexUtils`：业务通用校验在 `core-utils`（`io.coderf.arklab.core.utils.RegexUtils`）；`annotation` 内仍有表单校验同源副本，双份收敛以后再说
+
+### `core-autosize`
+
+| 项 | 说明 |
+|----|------|
+| 职责 | 今日头条密度适配（AndroidAutoSize）：`AutoSize` / `AutoSizeConfig` / `InitProvider` |
+| Maven | `io.coderf.arklab.core:autosize:1.0.0` |
+| namespace | `io.coderf.arklab.core.autosize` |
+| Java 包 | `io.coderf.arklab.core.autosize`（与 namespace / Maven 对齐；子包 `strategy` / `lifecycle` / `external` / `unit` / `util`） |
+| 何时用 | 一般经 `core-base` / `common` 间接依赖；仅需适配时可显式依赖本模块 |
+| 开关 | `Config.setAutoSizeEnabled`（须在 `Config.init` 前）；宿主 meta：`design_width_in_dp` / `design_height_in_dp` |
+
+---
+
+## 3. 业务与能力模块
+
+| 模块 | 职责 | 业务应如何依赖 |
+|------|------|----------------|
+| `base` | **Demo/case 基建**（非框架）：`MediaGateway` / `MessageGateway`、`AppPropertiesConfig`、`BaseAppActivity`、通用枚举等 | `api`/`implementation project(':base')` |
+| `userapi` | 用户模块对外契约（`UserService` / `UserInfo` / Router） | `implementation project(':userapi')` |
+| `user` | 用户业务 UI / 逻辑 | 依赖 `common` + `base` + `userapi`，**禁止**直接依赖 mqtt / media |
+| `mqttcomponent` | MQTT 实现（`MqttClient` 等） | 仅 app 依赖；Gateway 适配写在 app |
+| `core-media` | 拍照/选图/压缩（`MediaHelper` 等） | 仅 app 依赖；Gateway 适配写在 app |
+| `core-form` | 表单等通用 UI 组件 | 按需；`FormHost.validateAll` / `formStyle` 见 core-form README |
+| `core-gnss` | 定位能力 | 按需；见下方边界 |
+
+#### core-gnss 能力边界
+
+| 能力 | 建议 |
+|------|------|
+| FusedLocation + 权限 + GPS 开关检测 | **默认核心**，多数宿主只需这些 |
+| Session 轨迹缓冲 / GPX·CSV | 可选；`GpsSettingConfig.maxLocationHistorySize` 默认 **1000**（`0`=不限制） |
+| 实时位置上报 | **不在本库**；宿主自行接 `core-ws` / MQTT / HTTP（原 Netty `socket` 包已删除） |
+| 进程级 `getInstance()` 单例 | 注意跨会话串扰；停止定位时调用 Session `clear` |
+
+#### core-media 能力边界
+
+| 能力 | 建议 |
+|------|------|
+| `MediaHelper` 选图/拍照/预览 + app 侧 `MediaGateway` | **保留**（组件化主路径） |
+| 自研 `ImgCompressor` / `VideoCompress` / Crop | 评估替换成熟库或拆 `core-media-compress`；仅 Demo 使用则优先外置 |
+| 平行 `UIController` / `DebugUtil` / `LogUtil` | 计划删除，收敛到 core |
+| `core-form` → `implementation core-media` | 已知耦合；表单媒体行需要时再引，长期应改为 Gateway/可选依赖 |
+| `core-ws` | WebSocket（OkHttp，对齐 core-mqtt 分层） | 按需；业务信封勿写入框架 |
+| `annotation` / `room-processor` | 校验注解与 Room 处理器 | 按需 |
+| `app` | Demo 组装：Hilt Module、Gateway 适配与绑定 | 宿主样板 |
+
+---
+
+## 4. Gateway 用法（组件解耦）
+
+业务模块**只依赖接口**，实现由 app 注入。
+
+### MessageGateway（MQTT）
+
+```kotlin
+@Inject lateinit var messageGateway: MessageGateway
+
+messageGateway.connect()
+messageGateway.subscribe("topic/x") { topic, payload -> /* … */ }
+```
+
+绑定示例见 `app/.../di/GatewayModule.kt`、`app/.../mqtt/MqttMessageGateway`。
+
+### MediaGateway（媒体）
+
+```java
+@Inject MediaGateway mediaGateway;
+
+mediaGateway.pickImages(1, uris -> { /* 上传头像等 */ });
+```
+
+- 接口：`base/.../MediaGateway`（case，非框架）
+- 适配与绑定：`app/.../media/MediaHelperGateway`、`app/.../di/MediaGatewayModule`
+- 参考：`MeFragment`、`FeedBackActivity`
+
+**禁止：** 在 `user` 等业务 module 的 `build.gradle` 里写 `mqttcomponent` / `core-media`。  
+**禁止：** `core-media` / `mqttcomponent` / `core-*` 依赖 `:base` / `userapi`。
+
+字典类枚举（如业务 `DicTypeEnum`）按项目放在各自的 case `:base`，Demo 不内置业务字典码。
+
+---
+
+## 5. Maven 发布坐标
+
+推送需环境变量 `ALIYUN_USER_NAME` / `ALIYUN_PASSWORD`，例如：
+
+```bash
+./gradlew :common:publish
+./gradlew :core-base:publish :core-network:publish :core-db:publish :core-ui:publish :core-utils:publish :core-log:publish :core-autosize:publish
+```
+
+| 模块 | 坐标 |
+|------|------|
+| common | `io.coderf.arklab.common:common:4.8.0` |
+| core-base | `io.coderf.arklab.core:base:1.10.0` |
+| core-network | `io.coderf.arklab.core:network:1.8.0`（见 [core-network/README.md](./core-network/README.md)） |
+| core-db | `io.coderf.arklab.core:db:1.7.0`（见 [core-db/README.md](./core-db/README.md)） |
+| core-ui | `io.coderf.arklab.core:ui:1.3.1` |
+| core-utils | `io.coderf.arklab.core:utils:1.2.0` |
+| core-log | `io.coderf.arklab.core:log:1.2.0` |
+| core-autosize | `io.coderf.arklab.core:autosize:1.0.0` |
+| room-processor | `io.coderf.arklab.room:room-processor:1.2.0`（见 [room-processor/README.md](./room-processor/README.md)） |
+| core-mqtt | `io.coderf.arklab.mqtt:mqtt:1.6.2` |
+| core-ws | `io.coderf.arklab.ws:ws:1.0.1` |
+| core-media | `io.coderf.arklab.media:media:3.7.0`（原模块名 `commonmedia`；包名 / Maven 坐标不变） |
+| core-form | `io.coderf.arklab.ui:ui:3.7.7`（原模块名 `commonui`；包名 / Maven 坐标不变；`api` → core-base / core-network，另依赖 media） |
+| core-gnss | `io.coderf.arklab.gnss:core-gnss:4.0.0`（原 `googlegps`，包名 `io.coderf.arklab.gnss`，无旧坐标兼容） |
+| annotation | `io.coderf.arklab.annotation:annotation:3.3.1` |
+
+宿主若只引 `common`，会通过 POM / `api` 依赖带上对应 `core-*`（以实际发布 POM 为准）。Maven 工程请按 [UPGRADE.md 文首](./UPGRADE.md) **显式钉版本**，避免传递依赖解析到旧 POM。
+
+---
+
+## 6. 新代码约定
+
+1. 业务不直接依赖 mqtt / media 实现模块，只依赖 Gateway。
+2. 新网络代码优先 `BaseNetworkRepository.request` + ViewModel `launchRequest`，勿再扩 `sendRequest` 重载。
+3. Repository 不要持有页面、不要在 Flow 里 showLoading；Loading / 错误由 `launchRequest` 写 Host。
+4. `core-*` 禁止依赖 `user` / `app`。
+5. 不要把 `APP_SECRET` 明文放进 HTTP Header（仅本地签名）。
+6. 主题使用 `AppBaseTheme`（Material3 DayNight）；品牌色底上的字用 `onPrimary`，不要写死白色。
+7. `Config.setDynamicColorEnabled` 默认关；若打开须在 `Config.init()` 之前。屏幕适配、崩溃捕获、夜间模式、Edge-to-Edge、默认占位图同样走 `Config`，且须在 `init()` 前设置。

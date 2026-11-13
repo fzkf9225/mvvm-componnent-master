@@ -4,9 +4,8 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.coderf.arklab.common.base.launchUiRequest
+import io.coderf.arklab.core.bean.RequestOptions
 import io.coderf.arklab.core.network.NetworkFlowPagingViewModel
-import io.coderf.arklab.demo.api.ApiServiceHelper
 import io.coderf.arklab.demo.bean.NotificationMessageBean
 import io.coderf.arklab.demo.bean.RequestNotificationBean
 import io.coderf.arklab.demo.repository.DemoFlowPagingRepositoryImpl
@@ -14,20 +13,22 @@ import javax.inject.Inject
 
 /**
  * 新闻分页 ViewModel（新版 [NetworkFlowPagingViewModel]）。
- * <p>
- * 点击详情走 [launchUiRequest]，以便 Loading 取消协议能真正取消请求。
+ *
+ * 列表翻页走默认 [createPagingSource]（AppError → Host）；点击详情走 Flow 重载
+ * [launchRequest]（内部强制 Host 错误处理），Loading 可取消。
  *
  * @author fz
- * @version 1.1
+ * @version 1.3
  * @since 1.0
- * @updated 2026/11/12
+ * @updated 2026/11/13
  */
 @HiltViewModel
 class DemoFlowPagingViewModel @Inject constructor(
     application: Application,
-    private val apiServiceHelper: ApiServiceHelper
-) : NetworkFlowPagingViewModel<DemoFlowPagingRepositoryImpl, NotificationMessageBean, RequestNotificationBean>(
-    application
+    private val flowPagingRepository: DemoFlowPagingRepositoryImpl
+) : NetworkFlowPagingViewModel<NotificationMessageBean, RequestNotificationBean>(
+    application,
+    flowPagingRepository
 ) {
 
     /**
@@ -36,23 +37,15 @@ class DemoFlowPagingViewModel @Inject constructor(
     private val _itemClickToast = MutableLiveData<ItemClickToast>()
     val itemClickToast: LiveData<ItemClickToast> = _itemClickToast
 
-    override fun createRepository(): DemoFlowPagingRepositoryImpl {
-        return DemoFlowPagingRepositoryImpl(apiServiceHelper)
-    }
-
     /**
-     * 按 id 拉详情；必须经 [launchUiRequest] 登记 Job，取消 Loading 才会打断请求。
-     *
-     * @param id       条目 id
-     * @param position 列表行号（仅用于 Toast 文案）
+     * 按 id 拉详情；Flow 重载强制 Error 进 Host，成功只写 Toast 载荷。
      */
     fun loadInfoById(id: String, position: Int) {
-        launchUiRequest {
-            iRepository.getInfoById(id).collect { result ->
-                result.onSuccess { bean ->
-                    _itemClickToast.value = ItemClickToast(position, bean.title)
-                }
-            }
+        launchRequest(
+            options = RequestOptions.cancellable(),
+            flow = { flowPagingRepository.getInfoById(id) }
+        ) { bean ->
+            _itemClickToast.value = ItemClickToast(position, bean.title)
         }
     }
 

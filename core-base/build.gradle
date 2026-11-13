@@ -127,7 +127,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'io.coderf.arklab.core'
                 artifactId = 'base'
-                version = '1.10.0'
+                version = '2.0.0'
             }
         }
         repositories {

@@ -264,7 +264,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     /**
-     * Loading 被用户取消（系统返回 / 手势返回 / 点外侧）时的统一入口。
+     * Loading 被用户取消（系统返回 / 手势返回）时的统一入口；点外侧不取消。
      * <p>
      * 默认：取消 ViewModel 中与遮罩绑定的请求；若策略为
      * {@link LoadingCancelPolicy#CancelRequestAndExit} 则离开本页。
@@ -434,15 +434,13 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
      * 创建并绑定 ViewModel。沿继承链解析泛型，兼容 Hilt 生成类与子类只写 {@code extends XxxActivity} 的场景。
      * <p>
      * ViewModel 由 {@link ViewModelProvider} 缓存；每次 {@code onCreate} 都会
-     * {@link BaseViewModel#ensureRepository()} 装配仓库并注入请求 UI，并
-     * {@link NetworkRequestUiBinder#bind} 订阅请求 UI LiveData。
+     * {@link NetworkRequestUiBinder#bind} 订阅请求 UI LiveData（Host 在 ViewModel 内，配置变更不丢）。
      */
     public void createViewModel() {
         if (mViewModel == null) {
             Class modelClass = ViewModelHelper.resolveViewModelClass(getClass());
             mViewModel = (VM) new ViewModelProvider(this).get(modelClass);
         }
-        mViewModel.ensureRepository();
         bindNetworkRequestUi();
     }
 

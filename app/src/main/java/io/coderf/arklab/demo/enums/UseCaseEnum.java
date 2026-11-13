@@ -9,7 +9,6 @@ import io.coderf.arklab.common.activity.VideoPlayerActivity;
 import io.coderf.arklab.demo.activity.CheckBoxActivity;
 import io.coderf.arklab.demo.activity.CoordinatorActivity;
 import io.coderf.arklab.demo.activity.CustomCameraActivity;
-import io.coderf.arklab.demo.activity.DemoPagingActivity;
 import io.coderf.arklab.demo.activity.DemoSmartFlowPagingActivity;
 import io.coderf.arklab.demo.activity.DemoSmartPagingActivity;
 import io.coderf.arklab.demo.activity.DemoSmartPagingHeaderActivity;
@@ -68,7 +67,6 @@ public enum UseCaseEnum {
     COMPRESS(MediaCompressActivity.class, "文件压缩", "展示文件压缩能力", null),
     RECYCLER_VIEW(RecyclerViewSampleActivity.class, "列表示例", "自定义封装列表", null),
     CHECK_BOX(CheckBoxActivity.class, "单选复选框Adapter", "封装支持单选复选的选择框", null),
-    PAGING(DemoPagingActivity.class, "Paging列表示例", "Jetpack Paging3列表封装", null),
     SMART_PAGING(DemoSmartPagingActivity.class, "SmartPaging列表示例", "Smart库+Jetpack Paging3综合列表封装", null),
     SMART_PAGING_HEADER(DemoSmartPagingHeaderActivity.class, "SmartPaging带头布局", "Paging3 + Smart + 可选列表头（示例 16:9 图）", null),
     SMART_PAGING_TAIL(DemoSmartPagingLiveActivity.class, "SmartPaging本地发消息", "Room + Paging3：历史分页 + 本地 insert 单条 + reverse 贴底（模拟发消息）", null),

@@ -42,12 +42,12 @@ import java.util.concurrent.ConcurrentLinkedQueue
  * 可选接入 [RequestUi]（按次传入，勿绑单例），对齐网络栈错误 / Loading 交付。
  *
  * ```
- * launchUiRequest {
- *   val file = DownloadClient.getInstance().downloadAwait(
- *     config,
- *     requestUi = getNetworkRequestUiHost()
- *   )
- *   // 只需处理成功
+ * launchRequest(RequestOptions(showLoading = false, deliverErrorToUi = false), onSuccess = { file -> ... }) {
+ *   flow {
+ *     emit(RequestResult.Success(
+ *       DownloadClient.getInstance().downloadAwait(config, requestUi = networkRequestUiHost)
+ *     ))
+ *   }
  * }
  * ```
  *

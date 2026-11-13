@@ -17,7 +17,7 @@ import io.coderf.arklab.core.request.RequestUi;
  * <p>
  * 约定：
  * <ul>
- *   <li>Repository 只拿到 Host（写状态），绝不直接持有页面。</li>
+ *   <li>UI 副作用只在 ViewModel（{@code launchRequest} / Host），Repository 不持有页面。</li>
  *   <li>页面实现 {@link RequestUi} 仅作为 Binder 的渲染落点。</li>
  * </ul>
  *

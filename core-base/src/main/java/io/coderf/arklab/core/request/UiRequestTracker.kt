@@ -6,12 +6,12 @@ import java.util.Collections
 /**
  * 与遮罩 Loading 绑定的协程请求会话登记表。
  * <p>
- * 业务通过 [io.coderf.arklab.common.base.launchUiRequest] 启动请求时登记 [Job]；
+ * 业务通过 [io.coderf.arklab.common.base.BaseViewModel.launchRequest] 启动请求时登记 [Job]；
  * 用户取消 Loading 时由 [io.coderf.arklab.common.base.BaseViewModel.cancelUiRequests] 调用 [cancelAll]。
- * 旧栈 Rx Disposable 仍由 [io.coderf.arklab.common.base.BaseRepository] 的可取消组管理。
+ * Rx 存量 Disposable 由 [io.coderf.arklab.common.base.BaseRxViewModel] 管理。
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.2.0
  * @created 2026/11/12
  */

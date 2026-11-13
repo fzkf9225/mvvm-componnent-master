@@ -5,9 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.coderf.arklab.common.base.BaseViewModel
-import io.coderf.arklab.common.base.launchUiRequest
+import io.coderf.arklab.core.bean.RequestOptions
+import io.coderf.arklab.core.request.LoadingCancelPolicy
 import io.coderf.arklab.user.api.UserAccountHelper
-import io.coderf.arklab.user.api.UserApiService
 import io.coderf.arklab.user.bean.GraphicVerificationCodeBean
 import io.coderf.arklab.user.bean.RequestLoginBean
 import io.coderf.arklab.user.domain.model.LoginSubmitResult
@@ -30,18 +30,16 @@ import kotlin.random.Random
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/12
+ * @updated 2026/11/13
  */
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     application: Application,
+    private val loginRepository: LoginRepositoryImpl,
     private val validateLoginForm: ValidateLoginFormUseCase,
     private val hashLoginPassword: HashLoginPasswordUseCase,
     private val persistLoginAndDecideNavigation: PersistLoginAndDecideNavigationUseCase
-) : BaseViewModel<LoginRepositoryImpl>(application) {
-
-    @Inject
-    lateinit var userApiService: UserApiService
+) : BaseViewModel(application) {
 
     val liveData: MutableLiveData<UserInfo> by lazy { MutableLiveData() }
 
@@ -53,10 +51,6 @@ class LoginViewModel @Inject constructor(
     private val _postLoginRoute = MutableLiveData<PostLoginRoute>()
     /** 登录成功后的导航，页面 observe 后消费。 */
     val postLoginRoute: LiveData<PostLoginRoute> = _postLoginRoute
-
-    override fun createRepository(): LoginRepositoryImpl {
-        return LoginRepositoryImpl(userApiService)
-    }
 
     fun updateUserName(name: String) {
         _loginState.update { it.copy(userName = name) }
@@ -89,11 +83,14 @@ class LoginViewModel @Inject constructor(
         val plain = rawPassword ?: return LoginSubmitResult.Toast("请填写密码")
         val hashed = hashLoginPassword(plain)
         _loginState.update { it.copy(password = hashed) }
-        // 必须用 launchUiRequest：Loading 取消时才能 Job.cancel → 中断 Retrofit suspend
-        launchUiRequest {
-            iRepository.login(_loginState.value).collect { result ->
-                result.onSuccess { liveData.value = it }
-            }
+        // launchRequest：Loading 取消时才能 Job.cancel → 中断 Retrofit suspend
+        launchRequest(
+            RequestOptions(
+                loadingMessage = "登录中，请稍后...",
+                loadingCancelPolicy = LoadingCancelPolicy.CancelRequest
+            )
+        ) {
+            loginRepository.login(_loginState.value).collectSuccess { liveData.value = it }
         }
         return LoginSubmitResult.Submitted
     }
@@ -115,11 +112,8 @@ class LoginViewModel @Inject constructor(
     fun refreshCaptchaAndLoadImage() {
         val num = Random.nextInt(10000000, 100000000).toString()
         _loginState.update { it.copy(num = num) }
-        // 验证码无遮罩 Loading，不必登记可取消会话
-        launchUiRequest {
-            iRepository.getImageCode(num).collect { result ->
-                result.onSuccess { imageLiveData.value = it }
-            }
+        launchRequest(RequestOptions(showLoading = false)) {
+            loginRepository.getImageCode(num).collectSuccess { imageLiveData.value = it }
         }
     }
 }

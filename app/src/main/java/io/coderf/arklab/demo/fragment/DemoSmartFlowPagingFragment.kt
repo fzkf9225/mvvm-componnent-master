@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
  * Smart + Flow Paging Demo。
  * <p>
  * 分页 [dataFlow] 可在 Fragment collect；带遮罩 Loading 的详情请求必须由 ViewModel
- * [DemoFlowPagingViewModel.loadInfoById]（内部 [io.coderf.arklab.common.base.launchUiRequest]）发起，
+ * [DemoFlowPagingViewModel.loadInfoById]（内部 [io.coderf.arklab.common.base.BaseViewModel.launchRequest]）发起，
  * 页面只 observe 结果，才能走 Loading 取消协议。
  *
  * @author fz

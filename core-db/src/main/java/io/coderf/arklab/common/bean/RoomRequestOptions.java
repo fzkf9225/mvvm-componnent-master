@@ -6,46 +6,33 @@ import androidx.annotation.Nullable;
 import io.coderf.arklab.core.request.LoadingCancelPolicy;
 
 /**
- * Room 数据仓库请求时的 UI 与行为配置，属于 {@code core-db}。
+ * Room 数据仓库请求时的行为配置，属于 {@code core-db}。
  * <p>
- * Loading / 超时 / 空列表 等字段对 Rx 栈（{@link io.coderf.arklab.common.repository.RoomRepositoryImpl}）
- * 与协程栈（{@link io.coderf.arklab.core.db.DefaultRoomRepository}）均生效；
- * {@code deliverErrorToUi} / Toast 相关字段主要服务协程栈（对齐网络
- * {@link io.coderf.arklab.core.bean.RequestOptions}）。Rx 错误展示仍由订阅方负责。
+ * <b>协程栈</b>（{@link io.coderf.arklab.core.db.BaseRoomRepository}）：仅超时 / 空列表等字段生效；
+ * {@code showDialog} / {@code deliverErrorToUi} / Toast 字段<strong>无效</strong>，UI 由 ViewModel
+ * {@code launchRequest} + {@code collectSuccess} 使用网络侧 {@link io.coderf.arklab.core.bean.RequestOptions}。
+ * <p>
+ * <b>Rx 栈</b>（{@link io.coderf.arklab.common.repository.RoomRepositoryImpl}）：Loading 仍经
+ * {@link io.coderf.arklab.core.request.RequestUi}；错误展示由订阅方负责。
  *
  * <p><b>典型用法：</b></p>
  * <pre>{@code
- * // 1. 静默：无 Loading，协程栈也不把错误交给 RequestUi
- * repository.findAll(RoomRequestOptions.silent());
+ * // 协程：仓库 silent；UI 在 ViewModel
+ * repository.execute(RoomRequestOptions.silent(), () -> dao.findAllSuspend());
+ * // ViewModel: launchRequest(RequestOptions.cancellable()) { repo.execute(...).collectSuccess { } }
  *
- * // 2. 兼容老代码：仍可用 showLoading 布尔参数，内部会转成对应 Options
+ * // Rx 存量：showLoading 仍走 RequestUi
  * repository.insert(person, true);
- *
- * // 3. 有 Loading，不弹 Toast
- * repository.execute(RoomRequestOptions.noToast(), () -> dao.findAllSuspend());
- *
- * // 4. 自定义 Loading 文案与超时
- * RoomRequestOptions options = new RoomRequestOptions.Builder()
- *         .setShowDialog(true)
- *         .setDialogMessage("正在同步本地数据...")
- *         .setEnableDynamicEllipsis(true)
- *         .setTimeoutSeconds(60)
- *         .build();
- * repository.findAll(options);
  * }</pre>
  *
- * <p>Loading 仅通过 Repository 注入的
- * {@link io.coderf.arklab.core.request.RequestUi} 展示，
- * 需由 {@link io.coderf.arklab.common.base.BaseViewModel} 注入，勿绕过 RequestUi 直接弹 Loading。</p>
- *
  * @see io.coderf.arklab.common.repository.RoomRepositoryImpl
- * @see io.coderf.arklab.core.db.DefaultRoomRepository
+ * @see io.coderf.arklab.core.db.BaseRoomRepository
  * @see ApiRequestOptions
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
- * @updated 2026/11/12
+ * @updated 2026/11/13
  */
 public class RoomRequestOptions {
 

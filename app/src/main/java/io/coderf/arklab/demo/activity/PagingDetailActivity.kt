@@ -28,10 +28,9 @@ class PagingDetailActivity : BaseActivity<EmptyViewModel, ActivityPagingDetailBi
     override fun initView(savedInstanceState: Bundle?) {
     }
 
-    override fun initData(bundle: Bundle?) {
-        val args = PagingDetailActivityArgs.fromBundle(intent.extras ?: Bundle())
-        val title: String = args.args
-        val position: Int = args.line
+    override fun initData(args: Bundle?) {
+        val title: String? = args?.getString("args")
+        val position: Int? = args?.getInt("line")
         binding.tvArgs.text = "这是第${position}个页面传递过来的参数：$title"
     }
 

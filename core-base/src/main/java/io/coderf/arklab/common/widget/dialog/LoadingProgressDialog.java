@@ -128,7 +128,7 @@ public class LoadingProgressDialog extends BaseDialog {
      *
      * @param message               加载文案
      * @param enableDynamicEllipsis 是否动态省略号
-     * @param isCanCancel           是否允许返回 / 点外侧取消
+     * @param isCanCancel           是否允许系统返回 / 手势返回取消（点外侧永不取消）
      */
     public void refreshShowing(String message, boolean enableDynamicEllipsis, boolean isCanCancel) {
         this.enableDynamicEllipsis = enableDynamicEllipsis;
@@ -147,10 +147,14 @@ public class LoadingProgressDialog extends BaseDialog {
         return this;
     }
 
+    /**
+     * 更新是否可取消。可取消时仅系统返回 / 手势返回生效，
+     * {@link #setCanceledOnTouchOutside(boolean)} 始终为 false，避免误点外侧取消请求。
+     */
     public void refreshCanCancel(boolean isCanCancel) {
         this.isCanCancel = isCanCancel;
         setCancelable(isCanCancel);
-        setCanceledOnTouchOutside(isCanCancel);
+        setCanceledOnTouchOutside(false);
     }
 
     /**
@@ -191,7 +195,8 @@ public class LoadingProgressDialog extends BaseDialog {
         } else {
             loadingDialogBinding.setMessage(message);
         }
-        setCanceledOnTouchOutside(isCanCancel);
+        // 仅返回键 / 手势返回可取消；点外侧不取消，降低误触
+        setCanceledOnTouchOutside(false);
         setCancelable(isCanCancel);
         setOnCancelListener(onCancelListener);
 

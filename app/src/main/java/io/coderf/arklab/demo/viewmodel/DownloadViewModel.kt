@@ -4,34 +4,31 @@ import android.app.Activity
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import io.coderf.arklab.common.base.BaseRepository
 import io.coderf.arklab.common.base.BaseViewModel
-import io.coderf.arklab.common.base.launchUiRequest
 import io.coderf.arklab.common.utils.download.DownloadClient
 import io.coderf.arklab.common.utils.download.DownloadOptions
 import io.coderf.arklab.common.utils.download.core.BatchDownloadConfig
 import io.coderf.arklab.common.utils.download.core.DownloadConfig
+import io.coderf.arklab.core.bean.RequestOptions
 import kotlinx.coroutines.CancellationException
 
 /**
  * 下载 Demo：走协程 [DownloadClient] + 可选 [io.coderf.arklab.core.request.RequestUi]。
- * <p>
- * 传入 [networkRequestUiHost] 后，失败由框架 Toast；业务通常只处理成功。
+ * DownloadClient 自行管理 RequestUi，故 [launchRequest] 使用 silent。
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.2.0
+ * @updated 2026/11/13
  */
-class DownloadViewModel(application: Application) : BaseViewModel<BaseRepository>(application) {
+class DownloadViewModel(application: Application) : BaseViewModel(application) {
 
     private val _toast = MutableLiveData<String>()
     val toast: LiveData<String> = _toast
 
-    override fun createRepository(): BaseRepository? = null
-
     fun download(activity: Activity, url: String) {
         val config = DownloadConfig.Builder(activity, url.trim()).build()
-        launchUiRequest {
+        launchRequest(RequestOptions.silent()) {
             try {
                 val file = DownloadClient.getInstance().downloadAwait(
                     config = config,
@@ -47,7 +44,7 @@ class DownloadViewModel(application: Application) : BaseViewModel<BaseRepository
 
     fun downloadBatch(activity: Activity, urls: List<String>) {
         val config = BatchDownloadConfig.Builder(activity, urls).build()
-        launchUiRequest {
+        launchRequest(RequestOptions.silent()) {
             try {
                 val files = DownloadClient.getInstance().downloadBatchAwait(
                     config = config,

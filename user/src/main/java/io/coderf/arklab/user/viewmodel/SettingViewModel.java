@@ -17,7 +17,6 @@ import androidx.core.app.NotificationManagerCompat;
 
 import io.coderf.arklab.common.activity.WebViewActivity;
 import io.coderf.arklab.common.api.ConstantsHelper;
-import io.coderf.arklab.common.base.BaseRepository;
 import io.coderf.arklab.common.base.BaseViewModel;
 import io.coderf.arklab.common.enums.WebViewUrlTypeEnum;
 import io.coderf.arklab.common.utils.common.CacheUtil;
@@ -38,17 +37,12 @@ import io.coderf.arklab.user.api.UserAccountHelper;
  * @since 1.0
  * @updated 2026/11/5
  */
-public class SettingViewModel extends BaseViewModel<BaseRepository> {
+public class SettingViewModel extends BaseViewModel {
 
     private static final String AGREEMENT_HOST = "io.coderf.arklab.demo";
 
     public SettingViewModel(@NonNull Application application) {
         super(application);
-    }
-
-    @Override
-    protected BaseRepository createRepository() {
-        return null;
     }
 
     @SuppressLint("BatteryLife")

@@ -15,10 +15,8 @@ import javax.inject.Provider;
 import dagger.Lazy;
 import dagger.hilt.android.EntryPointAccessors;
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import io.coderf.arklab.common.base.BaseRepository;
 import io.coderf.arklab.common.base.BaseViewModel;
 import io.coderf.arklab.common.inter.RetryService;
-import io.coderf.arklab.common.repository.RepositoryImpl;
 import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.bean.HiltExpensiveService;
 import io.coderf.arklab.demo.bean.HiltSingletonCounter;
@@ -38,7 +36,7 @@ import io.coderf.arklab.demo.module.HiltUserServiceModule;
  * @created 2024/5/31 11:31
  */
 @HiltViewModel
-public class TestHiltViewModel extends BaseViewModel<BaseRepository> {
+public class TestHiltViewModel extends BaseViewModel {
     @Inject
     @HiltUserServiceModule.HiltUser
     HiltUserService hiltUserService;
@@ -91,11 +89,6 @@ public class TestHiltViewModel extends BaseViewModel<BaseRepository> {
     @Inject
     public TestHiltViewModel(@NonNull Application application) {
         super(application);
-    }
-
-    @Override
-    protected RepositoryImpl createRepository() {
-        return null;
     }
 
     public void onClick(View view) {

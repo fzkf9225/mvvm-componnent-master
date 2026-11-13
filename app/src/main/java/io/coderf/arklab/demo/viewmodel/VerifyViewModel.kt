@@ -6,12 +6,12 @@ import dagger.hilt.EntryPoints
 import io.coderf.arklab.base.api.AppPropertiesConfig
 import io.coderf.arklab.common.api.ApiRetrofit
 import io.coderf.arklab.common.base.BaseViewModel
-import io.coderf.arklab.common.base.launchUiRequest
 import io.coderf.arklab.common.bean.AttachmentBean
 import io.coderf.arklab.common.database.AttachmentDatabase
 import io.coderf.arklab.common.repository.AttachmentRepositoryImpl
 import io.coderf.arklab.common.utils.log.LogUtil
-import io.coderf.arklab.core.bean.RequestResult
+import io.coderf.arklab.core.bean.RequestOptions
+import io.coderf.arklab.core.request.LoadingCancelPolicy
 import io.coderf.arklab.demo.bean.Person
 import io.coderf.arklab.demo.bean.PersonEditModel
 import io.coderf.arklab.demo.database.PersonDatabase
@@ -24,9 +24,9 @@ import io.coderf.arklab.demo.repository.RoomPagingRepositoryImpl
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/11/9
+ * @updated 2026/11/13
  */
-class VerifyViewModel(application: Application) : BaseViewModel<RoomPagingRepositoryImpl>(application) {
+class VerifyViewModel(application: Application) : BaseViewModel(application) {
 
     @JvmField
     val liveData = MutableLiveData<Boolean>()
@@ -34,38 +34,41 @@ class VerifyViewModel(application: Application) : BaseViewModel<RoomPagingReposi
     @JvmField
     val editModelLiveData = MutableLiveData<PersonEditModel>()
 
-    private var attachmentRoomRepositoryImpl: AttachmentRepositoryImpl? = null
+    private val roomRepository: RoomPagingRepositoryImpl
 
-    override fun createRepository(): RoomPagingRepositoryImpl {
+    init {
         val config: AppPropertiesConfig = EntryPoints.get(
             getApplication(),
             AppPropertiesEntryPoint::class.java
         ).appPropertiesConfig()
-        attachmentRoomRepositoryImpl = AttachmentRepositoryImpl(
+        val attachmentRoomRepositoryImpl = AttachmentRepositoryImpl(
             AttachmentDatabase.getInstance(
                 getApplication(),
                 config.attachmentDataBase
             ).attachmentDao
         )
-        return RoomPagingRepositoryImpl(
+        roomRepository = RoomPagingRepositoryImpl(
             PersonDatabase.getInstance(getApplication()).personDao,
-            attachmentRoomRepositoryImpl!!
+            attachmentRoomRepositoryImpl
         )
     }
 
     fun loadEdit(personId: String) {
-        // launchUiRequest：Loading 取消时可打断请求；用 collect 让 Flow 正常结束
-        launchUiRequest {
-            iRepository.loadEditModel(personId).collect { result ->
-                when (result) {
-                    is RequestResult.Success -> editModelLiveData.value = result.data
-                    is RequestResult.Error -> {
-                        LogUtil.logger(ApiRetrofit.TAG, "加载失败：${result.error}")
-                        networkRequestUiHost.showToast(result.error.message)
-                        liveData.value = false
-                    }
+        launchRequest(
+            RequestOptions(
+                loadingMessage = "正在加载",
+                loadingCancelPolicy = LoadingCancelPolicy.CancelRequest,
+                deliverErrorToUi = false
+            )
+        ) {
+            roomRepository.loadEditModel(personId).collectRequest(
+                onSuccess = { editModelLiveData.value = it },
+                onError = { error ->
+                    LogUtil.logger(ApiRetrofit.TAG, "加载失败：$error")
+                    networkRequestUiHost.showToast(error.message)
+                    liveData.value = false
                 }
-            }
+            )
         }
     }
 
@@ -76,17 +79,21 @@ class VerifyViewModel(application: Application) : BaseViewModel<RoomPagingReposi
         media: List<AttachmentBean>?,
         files: List<AttachmentBean>?
     ) {
-        launchUiRequest {
-            iRepository.saveOrUpdateInfo(person, images, videos, media, files).collect { result ->
-                when (result) {
-                    is RequestResult.Success -> liveData.value = true
-                    is RequestResult.Error -> {
-                        LogUtil.logger(ApiRetrofit.TAG, "错误：${result.error}")
-                        networkRequestUiHost.showToast(result.error.message)
-                        liveData.value = false
-                    }
+        launchRequest(
+            RequestOptions(
+                loadingMessage = "正在保存,请稍后...",
+                loadingCancelPolicy = LoadingCancelPolicy.CancelRequest,
+                deliverErrorToUi = false
+            )
+        ) {
+            roomRepository.saveOrUpdateInfo(person, images, videos, media, files).collectRequest(
+                onSuccess = { liveData.value = true },
+                onError = { error ->
+                    LogUtil.logger(ApiRetrofit.TAG, "错误：$error")
+                    networkRequestUiHost.showToast(error.message)
+                    liveData.value = false
                 }
-            }
+            )
         }
     }
 

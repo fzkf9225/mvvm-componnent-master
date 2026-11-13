@@ -51,7 +51,7 @@ public class UIController implements DefaultLifecycleObserver {
     }
 
     /**
-     * Loading 被用户取消（返回键 / 手势 / 点外侧）时的回调。
+     * Loading 被用户取消（系统返回 / 手势返回）时的回调；点外侧不会触发。
      */
     public interface OnLoadingCancelListener {
         /**

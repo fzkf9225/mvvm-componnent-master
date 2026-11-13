@@ -89,7 +89,7 @@ public class LoadingDelegate implements UiMessageHost {
     }
 
     /**
-     * 设置用户取消 Loading 的监听（返回 / 点外侧）。
+     * 设置用户取消 Loading 的监听（系统返回 / 手势返回；点外侧不取消）。
      *
      * @param listener 回调；传 null 清除
      */

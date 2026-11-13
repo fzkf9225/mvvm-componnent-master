@@ -137,7 +137,6 @@
     <public name="base_tablayout_viewpager" type="layout"/>
     <public name="empty_fragment" type="layout"/>
     <public name="paging_footer" type="layout"/>
-    <public name="paging_recycler_view" type="layout"/>
     <public name="search_smartrecyclerview" type="layout"/>
     <public name="smartrecyclerview" type="layout"/>
     <public name="web_view" type="layout"/>

@@ -43,11 +43,9 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.coderf.arklab.common.base.BaseRepository;
 import io.coderf.arklab.common.base.BaseViewModel;
 import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.enums.DateMode;
-import io.coderf.arklab.common.repository.RepositoryImpl;
 import io.coderf.arklab.core.utils.DateUtil;
 import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.common.utils.common.DrawableUtil;
@@ -88,7 +86,7 @@ import io.coderf.arklab.common.utils.theme.ThemeAttrs;
  * @since 1.0
  * @created 2023/8/14 10:56
  */
-public class DialogViewModel extends BaseViewModel<BaseRepository> {
+public class DialogViewModel extends BaseViewModel {
     List<PopupWindowBean> dataList = Arrays.asList(
             new PopupWindowBean("1", "北京"),
             new PopupWindowBean("2", "上海"),
@@ -109,11 +107,6 @@ public class DialogViewModel extends BaseViewModel<BaseRepository> {
 
     public DialogViewModel(@NonNull Application application) {
         super(application);
-    }
-
-    @Override
-    protected RepositoryImpl createRepository() {
-        return null;
     }
 
     public void onClick(View view) {

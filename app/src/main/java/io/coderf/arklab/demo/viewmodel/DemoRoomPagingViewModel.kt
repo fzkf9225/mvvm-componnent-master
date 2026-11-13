@@ -6,29 +6,37 @@ import androidx.paging.Pager
 import androidx.paging.PagingData
 import androidx.paging.liveData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.coderf.arklab.common.base.launchUiRequest
 import io.coderf.arklab.common.viewmodel.PagingViewModel
+import io.coderf.arklab.core.bean.RequestOptions
 import io.coderf.arklab.core.bean.RequestResult
 import io.coderf.arklab.core.bean.RoomPagingQuery
 import io.coderf.arklab.core.db.RoomPagingSource
 import io.coderf.arklab.demo.bean.Person
 import io.coderf.arklab.demo.database.PersonDatabase
 import io.coderf.arklab.demo.repository.RoomPagingRepositoryImpl
-import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 /**
  * Room + Paging3 Demo（协程栈 [RoomPagingSource] / [RoomPagingRepositoryImpl]）。
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
- * @updated 2026/10/28
+ * @updated 2026/11/13
  */
 @HiltViewModel
 class DemoRoomPagingViewModel @Inject constructor(
     application: Application
-) : PagingViewModel<RoomPagingRepositoryImpl, Person, RoomPagingQuery>(application) {
+) : PagingViewModel<Person, RoomPagingQuery>(
+    application,
+    RoomPagingRepositoryImpl(
+        PersonDatabase.getInstance(application).personDao
+    )
+) {
+
+    @Suppress("UNCHECKED_CAST")
+    private val personRepository: RoomPagingRepositoryImpl
+        get() = pagingRepository as RoomPagingRepositoryImpl
 
     fun setKeywords(keywords: String?) {
         pagingQuery.keywords = keywords
@@ -36,17 +44,12 @@ class DemoRoomPagingViewModel @Inject constructor(
 
     override fun createPagingData(): LiveData<PagingData<Person>> {
         return Pager(pagingConfig) {
-            RoomPagingSource(iRepository, pagingQuery)
+            RoomPagingSource(personRepository, pagingQuery)
         }.liveData
     }
 
-    override fun createRepository(): RoomPagingRepositoryImpl {
-        return RoomPagingRepositoryImpl(
-            PersonDatabase.getInstance(getApplication()).personDao
-        )
-    }
-
-    override fun getStartPage(): Int = 0
+    override val startPage: Int
+        get() = 0
 
     override fun createPagingQuery(): RoomPagingQuery {
         return RoomPagingQuery().apply {
@@ -55,10 +58,13 @@ class DemoRoomPagingViewModel @Inject constructor(
         }
     }
 
-    /** 删除一条；成功后由页面刷新列表（silent 无遮罩；统一 launchUiRequest） */
+    /** 删除一条；成功后由页面刷新列表（silent 无遮罩） */
     fun deletePerson(person: Person, onResult: (RequestResult<Unit>) -> Unit) {
-        launchUiRequest {
-            onResult(iRepository.delete(person).first())
+        launchRequest(RequestOptions.silent()) {
+            personRepository.delete(person).collectRequest(
+                onSuccess = { onResult(RequestResult.Success(Unit)) },
+                onError = { error -> onResult(RequestResult.Error(error)) }
+            )
         }
     }
 }

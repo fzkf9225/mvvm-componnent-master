@@ -10,9 +10,7 @@ import androidx.lifecycle.LifecycleOwner;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import io.coderf.arklab.common.base.BaseRepository;
 import io.coderf.arklab.common.base.BaseViewModel;
-import io.coderf.arklab.common.repository.RepositoryImpl;
 import io.coderf.arklab.demo.api.ApiServiceHelper;
 
 /**
@@ -24,18 +22,13 @@ import io.coderf.arklab.demo.api.ApiServiceHelper;
  * @created 2023/4/27 14:58
  */
 @HiltViewModel
-public class MainViewModel extends BaseViewModel<BaseRepository> implements DefaultLifecycleObserver {
+public class MainViewModel extends BaseViewModel implements DefaultLifecycleObserver {
     @Inject
     ApiServiceHelper apiServiceHelper;
 
     @Inject
     public MainViewModel(@NonNull Application application) {
         super(application);
-    }
-
-    @Override
-    protected RepositoryImpl createRepository() {
-        return null;
     }
 
     @Override

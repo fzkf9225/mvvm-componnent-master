@@ -10,20 +10,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import io.coderf.arklab.common.base.BaseActivity
-import io.coderf.arklab.common.base.launchUiRequest
-import io.coderf.arklab.core.request.LoadingCancelPolicy
 import io.coderf.arklab.core.ui.state.UiState
 import io.coderf.arklab.core.ui.state.collectUiState
 import io.coderf.arklab.demo.R
 import io.coderf.arklab.demo.databinding.ActivityUiStateDemoBinding
 import io.coderf.arklab.demo.viewmodel.UiStateDemoViewModel
-import kotlinx.coroutines.delay
 
 /**
  * UiState 用法演示：整页内容状态 vs RequestUi 遮罩。
  *
  * - 上方内容区由 [UiState] 驱动（Loading / Success / Empty / Error）
- * - 「仅 RequestUi 遮罩」只调 [showLoading]/[hideLoading]，不改变 UiState
+ * - 「仅 RequestUi 遮罩」走 ViewModel [UiStateDemoViewModel.demoRequestUiMask]，不改变 UiState
  */
 @AndroidEntryPoint
 class UiStateDemoActivity :
@@ -94,19 +91,10 @@ class UiStateDemoActivity :
 
 /**
      * 只走 RequestUi：遮罩 Loading，内容区 UiState 不变。
-     * 演示可取消遮罩：返回 / 点外侧会 cancelUiRequests，留在本页。
+     * 演示可取消遮罩：系统返回 / 手势返回会 cancelUiRequests，留在本页（点外侧不取消）。
      */
     private fun demoRequestUiOnly() {
-        // 经 Host 引用计数 + CancelRequest，便于验证取消闭环
-        mViewModel.networkRequestUiHost.showLoading(
-            "RequestUi 遮罩中（可返回取消）…",
-            true,
-            LoadingCancelPolicy.CancelRequest
-        )
-        mViewModel.launchUiRequest {
-            delay(2500)
-            // 若用户已取消，forceHide 后此处 hide 为空操作（引用计数已清）
-            mViewModel.networkRequestUiHost.hideLoading()
+        mViewModel.demoRequestUiMask {
             showToast("遮罩已关闭，UiState 未变：${mViewModel.currentStateLabel()}")
         }
     }

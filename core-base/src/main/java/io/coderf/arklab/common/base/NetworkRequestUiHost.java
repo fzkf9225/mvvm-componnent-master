@@ -14,7 +14,7 @@ import io.coderf.arklab.core.request.RequestUi;
 /**
  * ViewModel 侧请求 UI 状态宿主（只写状态，不碰页面）。
  * <p>
- * 实现 {@link RequestUi}，由 {@link BaseViewModel} 注入 Repository。
+ * 实现 {@link RequestUi}，由 {@link BaseViewModel} 持有并通过 {@link BaseViewModel#launchRequest} 写入。
  * 页面通过 {@link NetworkRequestUiBinder} 订阅 LiveData，落到页面自身的 {@link RequestUi} 实现。
  * <p>
  * Loading 使用引用计数：并发请求各自 show/hide 一次，计数归零才真正关闭遮罩；

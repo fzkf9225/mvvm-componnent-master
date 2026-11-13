@@ -7,15 +7,14 @@ import androidx.paging.Pager
 import androidx.paging.PagingData
 import androidx.paging.liveData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.coderf.arklab.common.base.launchUiRequest
 import io.coderf.arklab.common.viewmodel.PagingViewModel
+import io.coderf.arklab.core.bean.RequestOptions
 import io.coderf.arklab.core.bean.RequestResult
 import io.coderf.arklab.core.bean.RoomPagingQuery
 import io.coderf.arklab.core.db.RoomPagingSource
 import io.coderf.arklab.demo.bean.LocalChatMessage
 import io.coderf.arklab.demo.database.LocalChatDatabase
 import io.coderf.arklab.demo.repository.LocalChatPagingRepositoryImpl
-import kotlinx.coroutines.flow.first
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
@@ -23,14 +22,19 @@ import javax.inject.Inject
  * Room + Paging3 本地发消息 Demo（协程栈）：insert 后 [refreshData] 重建 PagingSource。
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
- * @updated 2026/10/28
+ * @updated 2026/11/13
  */
 @HiltViewModel
 class DemoLocalChatPagingViewModel @Inject constructor(
     application: Application
-) : PagingViewModel<LocalChatPagingRepositoryImpl, LocalChatMessage, RoomPagingQuery>(application) {
+) : PagingViewModel<LocalChatMessage, RoomPagingQuery>(
+    application,
+    LocalChatPagingRepositoryImpl(
+        LocalChatDatabase.getInstance(application).localChatMessageDao
+    )
+) {
 
     companion object {
         private const val SEED_COUNT = 48
@@ -38,19 +42,18 @@ class DemoLocalChatPagingViewModel @Inject constructor(
 
     private val seedStarted = AtomicBoolean(false)
 
+    @Suppress("UNCHECKED_CAST")
+    private val chatRepository: LocalChatPagingRepositoryImpl
+        get() = pagingRepository as LocalChatPagingRepositoryImpl
+
     override fun createPagingData(): LiveData<PagingData<LocalChatMessage>> {
         return Pager(pagingConfig) {
-            RoomPagingSource(iRepository, pagingQuery)
+            RoomPagingSource(chatRepository, pagingQuery)
         }.liveData
     }
 
-    override fun createRepository(): LocalChatPagingRepositoryImpl {
-        return LocalChatPagingRepositoryImpl(
-            LocalChatDatabase.getInstance(getApplication()).localChatMessageDao
-        )
-    }
-
-    override fun getStartPage(): Int = 0
+    override val startPage: Int
+        get() = 0
 
     override fun createPagingQuery(): RoomPagingQuery {
         return RoomPagingQuery().apply { orderBy = "createdAt" }
@@ -64,28 +67,26 @@ class DemoLocalChatPagingViewModel @Inject constructor(
             onReady?.invoke()
             return
         }
-        launchUiRequest {
-            when (val countResult = iRepository.countAll().first()) {
-                is RequestResult.Success -> {
-                    if (countResult.data > 0L) {
+        launchRequest(RequestOptions.silent()) {
+            chatRepository.countAll().collectRequest(
+                onSuccess = { count ->
+                    if (count > 0L) {
                         onReady?.invoke()
-                        return@launchUiRequest
+                        return@collectRequest
                     }
-                    when (val insertResult = iRepository.insert(buildSeedMessages()).first()) {
-                        is RequestResult.Success -> onReady?.invoke()
-                        is RequestResult.Error -> {
+                    chatRepository.insert(buildSeedMessages()).collectRequest(
+                        onSuccess = { onReady?.invoke() },
+                        onError = { error ->
                             seedStarted.set(false)
-                            onError?.invoke(
-                                insertResult.error.cause ?: Exception(insertResult.error.message)
-                            )
+                            onError?.invoke(error.cause ?: Exception(error.message))
                         }
-                    }
-                }
-                is RequestResult.Error -> {
+                    )
+                },
+                onError = { error ->
                     seedStarted.set(false)
-                    onError?.invoke(countResult.error.cause ?: Exception(countResult.error.message))
+                    onError?.invoke(error.cause ?: Exception(error.message))
                 }
-            }
+            )
         }
     }
 
@@ -98,22 +99,25 @@ class DemoLocalChatPagingViewModel @Inject constructor(
         val content = text.trim()
         if (TextUtils.isEmpty(content)) return
         val message = LocalChatMessage(content, System.currentTimeMillis(), true)
-        launchUiRequest {
-            when (val result = iRepository.insert(message).first()) {
-                is RequestResult.Success -> {
+        launchRequest(RequestOptions.silent()) {
+            chatRepository.insert(message).collectRequest(
+                onSuccess = {
                     refreshData()
                     onSuccess?.invoke()
+                },
+                onError = { error ->
+                    onError?.invoke(error.cause ?: Exception(error.message))
                 }
-                is RequestResult.Error -> {
-                    onError?.invoke(result.error.cause ?: Exception(result.error.message))
-                }
-            }
+            )
         }
     }
 
     fun deleteMessage(item: LocalChatMessage, onResult: (RequestResult<Unit>) -> Unit) {
-        launchUiRequest {
-            onResult(iRepository.delete(item).first())
+        launchRequest(RequestOptions.silent()) {
+            chatRepository.delete(item).collectRequest(
+                onSuccess = { onResult(RequestResult.Success(Unit)) },
+                onError = { error -> onResult(RequestResult.Error(error)) }
+            )
         }
     }
 

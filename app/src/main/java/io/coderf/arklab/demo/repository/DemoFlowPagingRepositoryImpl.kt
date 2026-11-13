@@ -7,6 +7,7 @@ import io.coderf.arklab.demo.api.ApiServiceHelper
 import io.coderf.arklab.demo.bean.NotificationMessageBean
 import io.coderf.arklab.demo.bean.RequestNotificationBean
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
 /**
  * 新闻分页仓库（新版 [NetworkPagingRepository]）。
@@ -15,9 +16,9 @@ import kotlinx.coroutines.flow.Flow
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/12
+ * @updated 2026/11/13
  */
-class DemoFlowPagingRepositoryImpl(
+class DemoFlowPagingRepositoryImpl @Inject constructor(
     private val api: ApiServiceHelper
 ) : NetworkPagingRepository<NotificationMessageBean, RequestNotificationBean>(
     boundApiService = api
@@ -37,11 +38,11 @@ class DemoFlowPagingRepositoryImpl(
     }
 
     /**
-     * 按 id 查详情；默认可取消 Loading（取消后留在当前页）。
+     * 按 id 查详情；静默 UI（Loading / 错误由 ViewModel launchRequest 处理）。
      */
     fun getInfoById(id: String): Flow<RequestResult<NotificationMessageBean>> {
         return requestPage(
-            RequestOptions.cancellable()
+            RequestOptions.silent()
         ) {
             api.getNewInfoByIdSuspend(id)
         }

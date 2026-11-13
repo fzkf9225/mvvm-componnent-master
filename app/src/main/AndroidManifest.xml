@@ -157,9 +157,6 @@
             android:name=".activity.DemoSmartFlowPagingActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.DemoPagingActivity"
-            android:exported="false" />
-        <activity
             android:name=".activity.ScanQrCodeActivity"
             android:exported="false" />
         <activity

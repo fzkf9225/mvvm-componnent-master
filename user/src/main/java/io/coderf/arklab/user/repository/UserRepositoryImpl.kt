@@ -1,23 +1,24 @@
 package io.coderf.arklab.user.repository
 
-import io.coderf.arklab.core.network.BaseNetworkRepository
 import io.coderf.arklab.core.bean.RequestOptions
 import io.coderf.arklab.core.bean.RequestResult
+import io.coderf.arklab.core.network.BaseNetworkRepository
 import io.coderf.arklab.user.api.UserApiService
 import io.coderf.arklab.user.domain.repository.UserProfileRepository
 import io.coderf.arklab.userapi.bean.UserInfo
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
 /**
- * ç”¨æˆ·èµ„æ–™ä»“åº“ï¼ˆæ–°ç‰ˆ [BaseNetworkRepository]ï¼‰ã€‚
- * é‰´æƒï¼šä¼˜å…ˆæ„é€  [tokenRefresher]ï¼Œå¦åˆ™ç”¨ [api] æ‰€å± ApiRetrofit.Builder ä¸Šçš„é…ç½®ã€‚
+ * ÓÃ»§×ÊÁÏ²Ö¿â£¨[BaseNetworkRepository]£©¡£
+ * ¼øÈ¨£ºÓÅÏÈ¹¹Ôì [tokenRefresher]£¬·ñÔòÓÃ [api] ËùÊô ApiRetrofit.Builder ÉÏµÄÅäÖÃ¡£
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/11/13
  */
-class UserRepositoryImpl(
+class UserRepositoryImpl @Inject constructor(
     private val apiService: UserApiService,
 ) : BaseNetworkRepository(
     boundApiService = apiService
@@ -28,6 +29,7 @@ class UserRepositoryImpl(
         return request(
             RequestOptions.builder()
                 .showLoading(false)
+                .deliverErrorToUi(false)
                 .build()
         ) {
             apiService.getUserInfoSuspend()

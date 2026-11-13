@@ -26,12 +26,15 @@ import kotlinx.coroutines.flow.MutableStateFlow;
 
 /**
  * <p>
- * 网络请求的加载与错误展示仅通过 {@link BaseRepository#getRequestUi()}，由 {@link io.coderf.arklab.common.base.BaseViewModel} 统一注入。
+ * Rx 存量：Loading / 错误仍经 {@link BaseRepository#getRequestUi()}。
+ * 框架已删除 {@code ensureRepository} 自动注入；请改用已过时的
+ * {@link io.coderf.arklab.common.base.BaseRxViewModel#subscribeRequest}（UI 由 ViewModel Host 管理），
+ * 或自行 {@code setRequestUi(viewModel.getNetworkRequestUiHost())}。
  * <p>
- * <b>迁移提示</b>：新代码请使用 {@link io.coderf.arklab.core.network.DefaultNetworkRepository#request}，
- * 本类 Rx {@code sendRequest} 重载仅作兼容，将逐步移除。
+ * <b>迁移提示</b>：新代码请使用 {@link io.coderf.arklab.core.network.BaseNetworkRepository#request}
+ * + ViewModel {@code launchRequest} / {@code collectSuccess}。
  *
- * @deprecated 请改用 {@link io.coderf.arklab.core.network.DefaultNetworkRepository}
+ * @deprecated 请改用 {@link io.coderf.arklab.core.network.BaseNetworkRepository}
  *
  * @author fz
  * @version 1.0

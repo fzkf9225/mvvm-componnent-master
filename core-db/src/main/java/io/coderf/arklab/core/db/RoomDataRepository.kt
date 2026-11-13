@@ -3,36 +3,34 @@ package io.coderf.arklab.core.db
 import io.coderf.arklab.common.bean.RoomRequestOptions
 import io.coderf.arklab.common.dao.BaseRoomDao
 import io.coderf.arklab.core.bean.RequestResult
-import io.coderf.arklab.core.request.NoOpRequestUi
-import io.coderf.arklab.core.request.RequestUi
 import kotlinx.coroutines.flow.Flow
 
 /**
  * 带实体类型的 Room 协程数据仓库：在 [BaseRoomRepository] 上封装常用 CRUD。
  *
  * 与 Rx 栈 [io.coderf.arklab.common.repository.RoomRepositoryImpl] **并行独立**，内部只调 Dao 的
- * Room 原生 `*Suspend`，无 Rx / blocking 桥接。
+ * Room 原生 `*Suspend`，无 Rx / blocking 桥接。UI 由 ViewModel `launchRequest` + `collectSuccess` 处理。
  *
  * ```
  * class PersonRepository(dao: PersonDao) : RoomDataRepository<Person, PersonDao>(dao)
  *
  * // ViewModel
- * repository.insert(person, RoomRequestOptions.withLoading("保存中..."))
- *     .collect { result -> result.onSuccess { }.onError { } }
+ * launchRequest(RequestOptions.cancellable()) {
+ *     repository.insert(person).collectSuccess { }
+ * }
  * ```
  *
  * @param T  实体类型
  * @param DB 继承 [BaseRoomDao] 的 Dao
  *
  * @author fz
- * @version 1.0
+ * @version 2.0
  * @since 1.0
- * @created 2026/10/28
+ * @updated 2026/11/13
  */
 open class RoomDataRepository<T : Any, DB : BaseRoomDao<T>>(
-    private val roomDao: DB,
-    requestUi: RequestUi = NoOpRequestUi
-) : BaseRoomRepository(requestUi) {
+    private val roomDao: DB
+) : BaseRoomRepository() {
 
     fun getRoomDao(): DB = roomDao
 

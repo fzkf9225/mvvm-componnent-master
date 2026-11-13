@@ -5,7 +5,6 @@ import io.coderf.arklab.common.bean.RoomRequestOptions
 import io.coderf.arklab.common.repository.AttachmentRepositoryImpl
 import io.coderf.arklab.core.bean.RequestResult
 import io.coderf.arklab.core.db.RoomDataRepository
-import io.coderf.arklab.core.request.LoadingCancelPolicy
 import io.coderf.arklab.demo.bean.Person
 import io.coderf.arklab.demo.bean.PersonEditModel
 import io.coderf.arklab.demo.database.PersonDao
@@ -14,20 +13,13 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Demo：人员表仓库（协程栈），可联合保存附件。
  *
- * 附件按自身 mobileId upsert；业务侧通过 [Person.imageIds] 等字段保存
- * [io.coderf.arklab.common.utils.common.AttachmentUtil.getIds] 返回的 ID 串。
- *
- * ```
- * repository.saveOrUpdateInfo(person, images, videos, media, files)
- *     .collect { it.onSuccess { }.onError { } }
- * ```
- *
- * 分页走 [io.coderf.arklab.core.db.RoomPagingSource]。
+ * Loading / 错误 UI 由 ViewModel [io.coderf.arklab.common.base.BaseViewModel.launchRequest] 处理；
+ * 此处 [RoomRequestOptions] 只保留超时等数据面选项。
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
- * @updated 2026/11/9
+ * @updated 2026/11/13
  */
 class RoomPagingRepositoryImpl : RoomDataRepository<Person, PersonDao> {
 
@@ -53,11 +45,9 @@ class RoomPagingRepositoryImpl : RoomDataRepository<Person, PersonDao> {
         files: List<AttachmentBean>? = null
     ): Flow<RequestResult<Unit>> {
         val options = RoomRequestOptions.Builder()
-            .setShowDialog(true)
-            .setDialogMessage("正在保存,请稍后...")
-            .setEnableDynamicEllipsis(true)
+            .setShowDialog(false)
+            .setDeliverErrorToUi(false)
             .setTimeoutSeconds(30)
-            .setLoadingCancelPolicy(LoadingCancelPolicy.CancelRequest)
             .build()
         return execute(options) {
             val attachmentRepo = attachmentRepositoryImpl
@@ -76,11 +66,8 @@ class RoomPagingRepositoryImpl : RoomDataRepository<Person, PersonDao> {
      */
     fun loadEditModel(personId: String): Flow<RequestResult<PersonEditModel>> {
         val options = RoomRequestOptions.Builder()
-            .setShowDialog(true)
-            // 动态省略号会自行追加 "."，文案不要自带 "..."
-            .setDialogMessage("正在加载")
-            .setEnableDynamicEllipsis(true)
-            .setLoadingCancelPolicy(LoadingCancelPolicy.CancelRequest)
+            .setShowDialog(false)
+            .setDeliverErrorToUi(false)
             .build()
         return execute(options) {
             val person = getRoomDao().findInfoByIdSuspend(personId)

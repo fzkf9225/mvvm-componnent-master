@@ -1,14 +1,35 @@
 # 升级与迁移说明
 
-> **当前主干版本（以各模块 `build.gradle` 发布号为准，README 若滞后请以此为准）：**  
-> **common `4.8.0`** · **core-base `1.10.0`** · **core-network `1.8.0`** · **core-db `1.7.0`** · **core-ui `1.3.1`** · **core-utils `1.2.0`** · **core-log `1.2.0`** · **core-autosize `1.0.0`** · **room-processor `1.2.0`** · **core-mqtt `1.6.2`** · **core-ws `1.0.1`** · **core-form `3.7.7`** · **core-media `3.7.0`** · **core-gnss `4.0.0`** · **annotation `3.3.1`**  
+> **当前主干（以各模块 `build.gradle` 发布号为准）：**  
+> **core-base / core-network / core-db `2.0.0`（破坏性，须同升）** · **common `4.8.0`** · **core-ui `1.3.1`** · **core-utils `1.2.2`** · **core-log `1.2.0`** · **core-autosize `1.0.0`** · **room-processor `1.2.0`** · **core-mqtt `1.6.2`** · **core-ws `1.0.1`** · **core-form `3.8.1`** · **core-media `3.7.0`** · **core-gnss `4.0.0`** · **annotation `3.3.1`**
 >
-> **本轮重点：** 协程下载真内核（[§0.2](#02-协程下载真内核base-1100)）；Loading 可取消（[§0.3](#03-loading-可取消base-190--network-180--db-170)）；近期见 [§0.4.3](#043-附件小图优先缩略图base-172--ui-377)、[§0.4.2](#042-附件模型简化base-171--db-162)。  
-> Room 协程栈落地见 [§0.5](#05-历史core-db-150-协程栈若尚未跟上)；剔除 `BaseView` 见 [§2](#2-120彻底剔除-baseview--mvp-页面绑定)；AppCompat → Material3 见 [§1](#1-460appcompat-主题--material3)。  
-> 仍停留在 **common 4.4.x 单体**：先完成 [附录 A](#附录-a4451从-444x-单体拆到-core)。  
-> 模块职责见 [MODULES.md](./MODULES.md)；网络迁移细节见 [core-network/MIGRATION.md](./core-network/MIGRATION.md)、[core-network/README.md](./core-network/README.md)；Room 见 [core-db/README.md](./core-db/README.md)；下载见 [core-base/README.md](./core-base/README.md)。
+> **本轮重点（2.0.0）：** MVVM 请求路径加固 —— 无泛型 `BaseViewModel`、`launchRequest`（Flow 重载 / Session）、仓库无 UI、分页 `onAppError` → Host、`trackUiRequest` protected。  
+> **业务工程请优先阅读：** [**MIGRATION-2.0.0.md**](./MIGRATION-2.0.0.md)（完整迁移步骤 / 对照 / 验收）。  
+> 用法速查：[QuickStart.md](./QuickStart.md)；模块职责：[MODULES.md](./MODULES.md)；网络细项：[core-network/MIGRATION.md](./core-network/MIGRATION.md)；Room：[core-db/README.md](./core-db/README.md)。  
+> 历史：协程下载 [§0.2](#02-协程下载真内核base-1100)；Loading 可取消 [§0.3](#03-loading-可取消base-190--network-180--db-170)；剔除 BaseView [§2](#2-120彻底剔除-baseview--mvp-页面绑定)；Material3 [§1](#1-460appcompat-主题--material3)；4.4.x 拆分 [附录 A](#附录-a4451从-444x-单体拆到-core)。
 
 ---
+
+## 0. MVVM 请求路径 2.0.0（破坏性 · 须同升）
+
+**详细迁移请看 [MIGRATION-2.0.0.md](./MIGRATION-2.0.0.md)。** 本节为索引摘要。
+
+| 模块 | 版本 | 要点 |
+|------|------|------|
+| core-base | **2.0.0** | 无泛型 VM；`launchRequest` Flow 重载 + Session；`trackUiRequest` protected；Loading 仅返回取消 |
+| core-network | **2.0.0** | 仓库无 UI；分页 `onAppError` 非空 → Host；Rx 保留 |
+| core-db | **2.0.0** | 协程 Room 无 RequestUi；Rx Room 保留 |
+
+```gradle
+implementation 'io.coderf.arklab.core:base:2.0.0'
+implementation 'io.coderf.arklab.core:network:2.0.0'
+implementation 'io.coderf.arklab.core:db:2.0.0'
+```
+
+**必删：** `createRepository` / `ensureRepository` / `launchUiRequest` / `BaseViewModel<IR>`。  
+**推荐：** `launchRequest(flow = { repo.xxx() }) { data -> … }`；多步用 Session + `collectSuccess`。  
+**禁止：** Session 内对 `RequestResult` 裸 collect；分页每页 `launchRequest`。
+
 
 ## 当前推荐 Maven 钉版本
 
@@ -16,15 +37,15 @@
 
 ```gradle
 implementation 'io.coderf.arklab.common:common:4.8.0'
-implementation 'io.coderf.arklab.core:base:1.10.0'
-implementation 'io.coderf.arklab.core:network:1.8.0'
-implementation 'io.coderf.arklab.core:db:1.7.0'
+implementation 'io.coderf.arklab.core:base:2.0.0'
+implementation 'io.coderf.arklab.core:network:2.0.0'
+implementation 'io.coderf.arklab.core:db:2.0.0'
 implementation 'io.coderf.arklab.core:ui:1.3.1'
-implementation 'io.coderf.arklab.core:utils:1.2.0'
+implementation 'io.coderf.arklab.core:utils:1.2.2'
 implementation 'io.coderf.arklab.core:log:1.2.0'
 ksp 'io.coderf.arklab.room:room-processor:1.2.0'   // 使用 @RoomObservedEntity 时
 // 按需：
-implementation 'io.coderf.arklab.ui:ui:3.7.7'
+implementation 'io.coderf.arklab.ui:ui:3.8.1'
 implementation 'io.coderf.arklab.media:media:3.7.0'
 implementation 'io.coderf.arklab.mqtt:mqtt:1.6.2'
 implementation 'io.coderf.arklab.ws:ws:1.0.1'
@@ -43,7 +64,7 @@ implementation project(':commonui')
 // 新
 implementation project(':core-form')
 // Maven 仍为：
-implementation 'io.coderf.arklab.ui:ui:3.7.7'
+implementation 'io.coderf.arklab.ui:ui:3.8.1'
 ```
 
 ### core-media（原 commonmedia）
@@ -81,17 +102,17 @@ import io.coderf.arklab.googlegps.*  →  import io.coderf.arklab.gnss.*
 | 模块 | 坐标 |
 |------|------|
 | common | `io.coderf.arklab.common:common:4.8.0` |
-| core-base | `io.coderf.arklab.core:base:1.10.0` |
-| core-network | `io.coderf.arklab.core:network:1.8.0` |
-| core-db | `io.coderf.arklab.core:db:1.7.0` |
+| core-base | `io.coderf.arklab.core:base:2.0.0` |
+| core-network | `io.coderf.arklab.core:network:2.0.0` |
+| core-db | `io.coderf.arklab.core:db:2.0.0` |
 | core-ui | `io.coderf.arklab.core:ui:1.3.1` |
-| core-utils | `io.coderf.arklab.core:utils:1.2.0` |
+| core-utils | `io.coderf.arklab.core:utils:1.2.2` |
 | core-log | `io.coderf.arklab.core:log:1.2.0` |
 | core-autosize | `io.coderf.arklab.core:autosize:1.0.0` |
 | room-processor | `io.coderf.arklab.room:room-processor:1.2.0` |
 | core-mqtt | `io.coderf.arklab.mqtt:mqtt:1.6.2` |
 | core-ws | `io.coderf.arklab.ws:ws:1.0.1` |
-| core-form | `io.coderf.arklab.ui:ui:3.7.7`（原模块名 `commonui`；包名 / Maven 坐标不变） |
+| core-form | `io.coderf.arklab.ui:ui:3.8.1`（原模块名 `commonui`；包名 / Maven 坐标不变） |
 | core-media | `io.coderf.arklab.media:media:3.7.0`（原模块名 `commonmedia`；包名 / Maven 坐标不变） |
 | core-gnss | `io.coderf.arklab.gnss:core-gnss:4.0.0`（原 `googlegps`，包名 `io.coderf.arklab.gnss`，无旧坐标兼容） |
 | annotation | `io.coderf.arklab.annotation:annotation:3.3.1` |
@@ -285,7 +306,7 @@ flag 名与系统一致，可全局替换。非输入类 Form 控件上的旧 `f
 | 模块 | 版本 | 要点 |
 |------|------|------|
 | core-base | **1.6.0** | M3 night 状态色；Dialog 按钮 style 与页面对齐；`ToolbarConfig.setLightMode` 废弃（新增 `setStatusBarIconsLight`）；`DensityUtil` 弃用 `scaledDensity`；软键盘监听可销毁；删除死代码 `SoftHideKeyBoardUtil` |
-| core-network | **1.7.0** | **删除**过渡层 `FlowRepositoryImpl` / `PagingFlowRepositoryImpl` / `FlowPaging*`（协程请用 `DefaultNetworkRepository`）；保留 Rx `RepositoryImpl`；拦截器 header 快照防并发；签名 body one-shot 安全；`o-appMac`/`o-mediaDrmId` 默认不写（`setLegacyDeviceHeaders(true)` 兼容）；Rx Loading 改主线程 |
+| core-network | **1.7.0** | **删除**过渡层 `FlowRepositoryImpl` / `PagingFlowRepositoryImpl` / `FlowPaging*`（协程请用 `BaseNetworkRepository`）；保留 Rx `RepositoryImpl`；拦截器 header 快照防并发；签名 body one-shot 安全；`o-appMac`/`o-mediaDrmId` 默认不写（`setLegacyDeviceHeaders(true)` 兼容）；Rx Loading 改主线程 |
 | core-db | **1.6.1** | Room Rx Loading 改主线程（与 network 对齐） |
 | core-ws | **1.0.1** | `onOpen` 过期连接 early-return，避免乱序回调 |
 | core-form（原 commonui） | **3.7.4** | `FormHost.validateAll` / `validate()`；Form dataSource 回调防泄漏；`FormMedia.itemBg` 走主题色 |
@@ -295,7 +316,7 @@ flag 名与系统一致，可全局替换。非输入类 Form 控件上的旧 `f
 
 迁移提示：
 
-- 仍继承 `FlowRepositoryImpl` 的工程 → 改 `DefaultNetworkRepository` / `NetworkPagingRepository`（见 [core-network/MIGRATION.md](./core-network/MIGRATION.md)）。
+- 仍继承 `FlowRepositoryImpl` 的工程 → 改 `BaseNetworkRepository` / `NetworkPagingRepository`（见 [core-network/MIGRATION.md](./core-network/MIGRATION.md)）。
 - 引用 `core-gnss.socket.*` → 删除调用；定位能力不受影响。
 
 ---
@@ -472,7 +493,7 @@ Repository ──写──? NetworkRequestUiHost（RequestUi）──Binder─�
 
 分页 / Flow / Room 同理：类型参数里的「页面」位全部去掉，例如：
 
-- `RepositoryImpl<API>`（Rx，保留）/ ~~`FlowRepositoryImpl`~~（过渡层已删除 → `DefaultNetworkRepository`）
+- `RepositoryImpl<API>`（Rx，保留）/ ~~`FlowRepositoryImpl`~~（过渡层已删除 → `BaseNetworkRepository`）
 - `PagingRepositoryImpl<API, T, Q>`（Rx，保留）/ ~~`PagingFlowRepositoryImpl`~~（已删除 → `NetworkPagingRepository`）
 - `NetworkPagingRepository<T, Q>`
 - `PagingViewModel`（Rx）/ ~~`FlowPagingViewModel`~~（已删除）/ `NetworkFlowPagingViewModel`（新栈）
@@ -545,7 +566,7 @@ Repository ──RequestUi──? NetworkRequestUiHost ──LiveData──? Net
 ### 2.7 与 §1 / 网络迁移的关系
 
 - 若宿主仍在 **AppCompat 主题线**，先完成 §1（升到 Material3 + 控件补丁），再做本节。
-- 旧 `RepositoryImpl.sendRequest` 仍可用但已 `@Deprecated`；新代码优先 `DefaultNetworkRepository`，见 [core-network/MIGRATION.md](./core-network/MIGRATION.md)。**本节不强制迁网络栈**，只强制去掉页面绑定。
+- 旧 `RepositoryImpl.sendRequest` 仍可用但已 `@Deprecated`；新代码优先 `BaseNetworkRepository`，见 [core-network/MIGRATION.md](./core-network/MIGRATION.md)。**本节不强制迁网络栈**，只强制去掉页面绑定。
 - network / db Options 行为见 [§0](#0-160network--db请求-options-完善)。
 
 ---
@@ -652,7 +673,7 @@ implementation 'io.coderf.arklab.core:network:1.7.1'
 |------|------|
 | 模块 | 新增 `core-utils` / `core-base` / `core-network` / `core-db` / `core-ui`；`common` 改为 facade |
 | 包名 | 业务仍使用 `io.coderf.arklab.common.*`（一般 **import 不用改**） |
-| 网络 | 新增 `DefaultNetworkRepository` + `RequestResult`；旧 Repository **已 Deprecated，未删除** |
+| 网络 | 新增 `BaseNetworkRepository` + `RequestResult`；旧 Repository **已 Deprecated，未删除** |
 | 解耦 | `user` 去掉对 `mqttcomponent` / `commonmedia`（现 `core-media`）的直接依赖，改走 Gateway |
 | 发布 | `common` 与各 `core-*` 补齐 `maven-publish`；混淆规则按模块拆到 `consumer-rules.pro` |
 

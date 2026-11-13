@@ -13,13 +13,13 @@ import io.coderf.arklab.common.inter.FlowRetryService
  * **新业务接入只需实现本接口**，无需再实现 [FlowRetryService]：
  * 兼容方法（[shouldRetry] / [refreshToken] / [setMaxRetryCount] / [getMaxRetryCount]）
  * 均有默认实现并委托给新方法；[io.coderf.arklab.common.api.ApiRetrofit.Builder.setTokenRefresher]
- * 会经 [asFlowRetryService] 同步写入 Builder，供 [DefaultNetworkRepository] 解析。
+ * 会经 [asFlowRetryService] 同步写入 Builder，供 [BaseNetworkRepository] 解析。
  *
  * **作用域：按 ApiRetrofit / ApiService 实例，不是整个 App 进程全局。**
  * 在 Module 里对某个 Builder `setTokenRefresher` 或 `setFlowRetryService` 后，只有使用该
- * ApiService 的 [DefaultNetworkRepository]（构造传入 boundApiService）才会鉴权重试。
+ * ApiService 的 [BaseNetworkRepository]（构造传入 boundApiService）才会鉴权重试。
  *
- * 解析顺序见 [DefaultNetworkRepository.resolveTokenRefresher]：
+ * 解析顺序见 [BaseNetworkRepository.resolveTokenRefresher]：
  * 1. Repository 构造局部 TokenRefresher
  * 2. boundApiService.retrofit.builder.tokenRefresher（或 FlowRetryService as TokenRefresher）
  *
@@ -39,7 +39,7 @@ interface TokenRefresher {
 
     /**
      * 执行刷新；并发调用必须复用同一次网络请求（Single-Flight）。
-     * 刷新失败应抛出异常，由 [DefaultNetworkRepository] 转为 [io.coderf.arklab.core.bean.RequestResult.Error]。
+     * 刷新失败应抛出异常，由 [BaseNetworkRepository] 转为 [io.coderf.arklab.core.bean.RequestResult.Error]。
      */
     suspend fun refresh()
 

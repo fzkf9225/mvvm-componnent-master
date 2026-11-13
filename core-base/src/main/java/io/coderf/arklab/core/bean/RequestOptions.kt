@@ -3,51 +3,58 @@ package io.coderf.arklab.core.bean
 import io.coderf.arklab.core.request.LoadingCancelPolicy
 
 /**
- * 统一请求选项，替代旧版 [io.coderf.arklab.common.bean.ApiRequestOptions] 的多构造与散落参数。
+ * 统一请求选项。
+ *
+ * **UI 相关字段**（[showLoading] / [loadingMessage] / [enableDynamicEllipsis] /
+ * [loadingCancelPolicy] / [deliverErrorToUi] / [showErrorToast] / [errorToastMessage]）
+ * **仅**供 ViewModel [io.coderf.arklab.common.base.BaseViewModel.launchRequest] /
+ * `collectSuccess` 使用；传入 [io.coderf.arklab.core.network.BaseNetworkRepository.request]
+ * 或 Room `execute` **会被忽略**（仓库层不负责 UI）。
+ *
+ * 仓库侧仍生效：[retryPolicy] / [timeoutMs] / [enableAuthRetry]。
  *
  * @author fz
- * @version 1.1
+ * @version 1.2
  * @since 1.0
- * @created 2026/8/27 15:07
- * @updated 2026/11/12
+ * @updated 2026/11/13
  */
 data class RequestOptions(
     /**
-     * 是否展示加载 dialog
+     * 是否展示加载 dialog（仅 [io.coderf.arklab.common.base.BaseViewModel.launchRequest] 生效）。
      */
     val showLoading: Boolean = true,
     /**
-     * 加载框文字内容
+     * 加载框文字内容（仅 launchRequest 生效）。
      */
     val loadingMessage: String = "正在加载，请稍后...",
     /**
-     * 是否显示加载框文中尾部追加动态...的效果
+     * 是否显示加载框文中尾部追加动态...的效果（仅 launchRequest 生效）。
      */
     val enableDynamicEllipsis: Boolean = true,
     /**
-     * Loading 用户取消策略；默认 [LoadingCancelPolicy.None]（兼容历史：不可取消）。
+     * Loading 用户取消策略（仅 launchRequest 生效）；默认 [LoadingCancelPolicy.None]。
      */
     val loadingCancelPolicy: LoadingCancelPolicy = LoadingCancelPolicy.None,
     /**
-     * null 表示使用全局默认重试策略
+     * null 表示使用全局默认重试策略（仓库 request 生效）。
      */
     val retryPolicy: RetryPolicy? = null,
     /**
-     * 协程层单次 attempt 超时（毫秒）。null 表示不额外限制。
+     * 协程层单次 attempt 超时（毫秒）。null 表示不额外限制（仓库 request 生效）。
      * 注意：不改写 OkHttp connect/read/write，长连接仍以 [io.coderf.arklab.common.api.ApiRetrofit.Builder] 超时为准。
      */
     val timeoutMs: Long? = null,
     /**
-     * 是否把业务错误交给 RequestUi 展示（Toast / onErrorCode 等）
+     * 是否把业务错误交给 Host 展示（仅 `collectSuccess` / `collectRequest` 生效）。
      */
     val deliverErrorToUi: Boolean = true,
     /**
-     * 是否弹出错误 Toast（对齐旧版 [io.coderf.arklab.common.bean.ApiRequestOptions.isShowToast]）。
-     * 仅在 [deliverErrorToUi] 为 true 时生效；为 false 时仍会走 RequestUi.showError，但文案置空以免 Host 弹 Toast。
+     * 是否弹出错误 Toast（仅 Host 路径生效）。
+     * 仅在 [deliverErrorToUi] 为 true 时生效；为 false 时仍会走 showError，但文案置空以免弹 Toast。
      */
     val showErrorToast: Boolean = true,
     /**
-     * 覆盖错误 Toast 文案（对齐旧版 toastMsg）；null / 空则用服务端或转换后的原文。
+     * 覆盖错误 Toast 文案；null / 空则用服务端或转换后的原文（仅 Host 路径生效）。
      */
     val errorToastMessage: String? = null,
     /**

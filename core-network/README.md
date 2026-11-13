@@ -2,9 +2,25 @@
 
 网络层：Retrofit / OkHttp、Repository 基类，以及推荐使用的请求 API（`RequestOptions` / `RequestResult` / `RequestUi` 等）。
 
-当前版本：**1.8.0**  
-Maven：`io.coderf.arklab.core:network:1.8.0`  
+当前版本：**2.0.0**  
+Maven：`io.coderf.arklab.core:network:2.0.0`  
 namespace：`io.coderf.arklab.core.network`
+
+---
+
+## 2.0.0
+
+**破坏性**（须与 **base / db 2.0.0** 同升）。业务迁移见 [MIGRATION-2.0.0.md](../MIGRATION-2.0.0.md)。
+
+| 项 | 说明 |
+|----|------|
+| 仓库 | BaseNetworkRepository **无 UI**；
+equest(options) 忽略 showLoading / deliverErrorToUi |
+| 分页 | NetworkPagingSource.onAppError **非空**；默认 NetworkFlowPagingViewModel.defaultPagingAppErrorHandler → Host |
+| 分页约定 | 列表翻页**不**走 launchRequest；override createPagingSource 必须接 Host |
+| Rx | RepositoryImpl 保留 @Deprecated；勿再依赖 ensureRepository 注 RequestUi |
+
+旧版网络栈细项仍见 [MIGRATION.md](./MIGRATION.md)（其中 1.x 写法请按 2.0 改为 ViewModel 侧 UI）。
 
 ---
 
@@ -15,7 +31,7 @@ Loading 可取消（配合 **core-base ≥1.9.0**）：
 | 项 | 说明 |
 |----|------|
 | `RequestOptions.loadingCancelPolicy` | 默认 `None`；工厂 `cancellable()` / `cancellableExit()` |
-| 协程 `DefaultNetworkRepository` | `showLoading` 下发 cancelPolicy |
+| 协程 `BaseNetworkRepository` | `showLoading` 下发 cancelPolicy |
 | Rx `RepositoryImpl` | 同步下发 policy，并 `trackCancellableIfNeeded` |
 | `ErrorConsumer` | 不再重复 `hideLoading`（改由 doFinally / 引用计数） |
 
@@ -27,7 +43,7 @@ Loading 可取消（配合 **core-base ≥1.9.0**）：
 
 | 项 | 说明 |
 |----|------|
-| 删除过渡层 | **删除** `FlowRepositoryImpl` / `PagingFlowRepositoryImpl` / `FlowPaging*`；协程请用 `DefaultNetworkRepository` / `NetworkPagingRepository` |
+| 删除过渡层 | **删除** `FlowRepositoryImpl` / `PagingFlowRepositoryImpl` / `FlowPaging*`；协程请用 `BaseNetworkRepository` / `NetworkPagingRepository` |
 | 保留 | Rx `RepositoryImpl` / `PagingRepositoryImpl` |
 | 并发 / body | 拦截器 header 快照；签名 body one-shot 安全 |
 | 设备头 | 默认不写 `o-appMac` / `o-mediaDrmId`（`setLegacyDeviceHeaders(true)` 兼容旧行为） |
@@ -61,7 +77,7 @@ Loading 可取消（配合 **core-base ≥1.9.0**）：
 ## 职责
 
 - `ApiRetrofit`、拦截器、错误与重试扩展点
-- `DefaultNetworkRepository` 与统一请求封装
+- `BaseNetworkRepository` 与统一请求封装
 - 新写法优先 `request(RequestOptions) { … }`，避免再扩 `sendRequest` 重载
 
 ---

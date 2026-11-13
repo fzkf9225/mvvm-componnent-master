@@ -5,7 +5,7 @@ package io.coderf.arklab.core.db
  *
  * ## 两套并行栈（互不桥接）
  * - **RxJava3**：`common.repository.RoomRepositoryImpl` + Dao 的 Completable / Flowable / Single
- * - **协程**：本包 [RoomDataRepository] / [DefaultRoomRepository] + Dao 的 Room 原生 `*Suspend`
+ * - **协程**：本包 [RoomDataRepository] / [BaseRoomRepository] + Dao 的 Room 原生 `*Suspend`
  *
  * 新 Kotlin 代码优先协程栈；存量 Java / Rx 继续用 RoomRepositoryImpl。
  *

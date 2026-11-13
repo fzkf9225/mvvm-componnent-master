@@ -17,24 +17,27 @@ package io.coderf.arklab.core.request
  */
 enum class LoadingCancelPolicy {
     /**
-     * 不可取消：屏蔽系统返回、手势返回与点外侧（默认，兼容历史行为）。
+     * 不可取消：屏蔽系统返回与手势返回（默认，兼容历史行为）。
      * 适用于登录提交、支付、关键写操作。
+     * 点外侧始终不关闭 Loading（与可取消策略一致）。
      */
     None,
 
     /**
      * 可取消当前请求，停留在当前页。
+     * 仅系统返回 / 手势返回触发；点外侧不取消，避免误触。
      * 适用于按钮触发的查询 / 刷新。
      */
     CancelRequest,
 
     /**
      * 可取消当前请求，并离开当前页（Activity finish / Fragment 回退）。
+     * 仅系统返回 / 手势返回触发；点外侧不取消。
      * 适用于进入页立刻拉数且可中断的场景。
      */
     CancelRequestAndExit;
 
-    /** 是否允许用户通过返回 / 点外侧关闭 Loading。 */
+    /** 是否允许用户通过系统返回 / 手势返回关闭 Loading（点外侧永不关闭）。 */
     fun isCancelable(): Boolean = this != None
 
     /** 取消后是否应离开当前页。 */

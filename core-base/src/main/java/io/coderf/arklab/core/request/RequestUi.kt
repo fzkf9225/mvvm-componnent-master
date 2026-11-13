@@ -26,7 +26,7 @@ interface RequestUi {
      *
      * @param message 加载文案
      * @param enableDynamicEllipsis 是否尾部动态省略号
-     * @param cancelPolicy 返回 / 点外侧时的取消行为
+     * @param cancelPolicy 系统返回 / 手势返回时的取消行为（点外侧不取消）
      */
     fun showLoading(
         message: String,

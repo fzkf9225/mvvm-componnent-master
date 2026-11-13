@@ -2,11 +2,26 @@
 
 本地持久化：Room Database / DAO / Entity，以及 Rx / 协程两套 Repository。
 
-当前版本：**1.7.0**  
-Maven：`io.coderf.arklab.core:db:1.7.0`  
+当前版本：**2.0.0**  
+Maven：`io.coderf.arklab.core:db:2.0.0`  
 namespace：`io.coderf.arklab.core.db`  
 配套 KSP：`io.coderf.arklab.room:room-processor:1.2.0`（见 [room-processor/README.md](../room-processor/README.md)）  
 升级说明：[UPGRADE.md](../UPGRADE.md)；Loading 可取消见 [QuickStart.md](../QuickStart.md)
+
+---
+
+## 2.0.0
+
+**破坏性**（须与 **base / network 2.0.0** 同升）。业务迁移见 [MIGRATION-2.0.0.md](../MIGRATION-2.0.0.md)。
+
+| 项 | 说明 |
+|----|------|
+| 协程栈 | DefaultRoomRepository / RoomDataRepository **无 RequestUi**；UI 走 ViewModel launchRequest |
+| Options | RoomRequestOptions 的 showDialog / deliverErrorToUi 对协程栈**无效**（超时 / 空列表仍有效） |
+| Rx | RoomRepositoryImpl 保留；Loading 仍可走 RequestUi（需业务自行注入） |
+| processor | 本版未强制抬 room-processor；沿用 1.2.0 即可 |
+
+> 注意：1.6.x / 1.7.x README 中「协程栈 deliverErrorToUi」描述已过时，以 2.0.0 为准。
 
 ---
 

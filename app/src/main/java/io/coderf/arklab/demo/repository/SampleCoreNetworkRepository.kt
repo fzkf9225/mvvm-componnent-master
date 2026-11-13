@@ -1,8 +1,8 @@
 package io.coderf.arklab.demo.repository
 
-import io.coderf.arklab.core.network.BaseNetworkRepository
 import io.coderf.arklab.core.bean.RequestOptions
 import io.coderf.arklab.core.bean.RequestResult
+import io.coderf.arklab.core.network.BaseNetworkRepository
 import io.coderf.arklab.core.network.TokenRefresher
 import io.coderf.arklab.demo.api.ApiServiceHelper
 import io.coderf.arklab.demo.bean.NotificationMessageBean
@@ -10,21 +10,18 @@ import io.coderf.arklab.demo.bean.RequestNotificationBean
 import kotlinx.coroutines.flow.Flow
 
 /**
- * 新版 NetworkRepository 用法示例（真实 API）。
+ * 示例 NetworkRepository：只返回 Flow，不含 UI。
  *
  * ```
- * // ViewModel：launchUiRequest + RequestOptions.cancellable()
- * launchUiRequest {
- *   sample.requestNewsDetail(id).collect { result ->
- *     result.onSuccess { data -> ... }
- *   }
+ * launchRequest(RequestOptions.cancellable()) {
+ *   sample.requestNewsDetail(id).collectSuccess { data -> ... }
  * }
  * ```
  *
  * @author fz
- * @version 1.1
+ * @version 1.2
  * @since 1.0
- * @updated 2026/11/12
+ * @updated 2026/11/13
  */
 class SampleCoreNetworkRepository(
     private val api: ApiServiceHelper,
@@ -35,11 +32,11 @@ class SampleCoreNetworkRepository(
 ) {
 
     /**
-     * 详情默认 [RequestOptions.cancellable]（可取消 Loading）；无 Loading 场景请显式传入 Options。
+     * Loading / 错误 UI 由 ViewModel `launchRequest` 处理；此处 options 仅 retry/timeout/auth 生效。
      */
     fun requestNewsDetail(
         id: String,
-        options: RequestOptions = RequestOptions.cancellable()
+        options: RequestOptions = RequestOptions.defaults()
     ): Flow<RequestResult<NotificationMessageBean>> {
         return request(options) {
             api.getNewInfoByIdSuspend(id)
@@ -49,7 +46,7 @@ class SampleCoreNetworkRepository(
     fun requestNewsPage(
         page: Int,
         pageSize: Int,
-        options: RequestOptions = RequestOptions.builder().showLoading(false).build()
+        options: RequestOptions = RequestOptions.defaults()
     ): Flow<RequestResult<List<NotificationMessageBean>>> {
         return request(options) {
             api.getNewListSuspend(

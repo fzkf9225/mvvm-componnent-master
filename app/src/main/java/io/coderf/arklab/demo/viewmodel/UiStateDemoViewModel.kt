@@ -3,8 +3,9 @@ package io.coderf.arklab.demo.viewmodel
 import android.app.Application
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.coderf.arklab.common.base.BaseRepository
 import io.coderf.arklab.common.base.BaseViewModel
+import io.coderf.arklab.core.bean.RequestOptions
+import io.coderf.arklab.core.request.LoadingCancelPolicy
 import io.coderf.arklab.core.ui.state.UiState
 import io.coderf.arklab.core.ui.state.UiStateHolder
 import kotlinx.coroutines.delay
@@ -20,14 +21,12 @@ import javax.inject.Inject
 @HiltViewModel
 class UiStateDemoViewModel @Inject constructor(
     application: Application
-) : BaseViewModel<BaseRepository>(application) {
+) : BaseViewModel(application) {
 
     private val holder = UiStateHolder<List<String>>(UiState.Loading("首次加载…"))
 
     /** 页面收集此 Flow 即可驱动内容区。 */
     val uiState = holder.state
-
-    override fun createRepository(): BaseRepository? = null
 
     /** 模拟成功：返回若干条数据。 */
     fun loadSuccess() {
@@ -63,6 +62,22 @@ class UiStateDemoViewModel @Inject constructor(
                 message = "网络异常，请稍后重试",
                 retryable = true
             )
+        }
+    }
+
+    /**
+     * 仅演示 RequestUi 遮罩（不改变 UiState）。
+     * 可取消：系统返回 / 手势返回会 cancelUiRequests（点外侧不取消）。
+     */
+    fun demoRequestUiMask(onDone: () -> Unit) {
+        launchRequest(
+            RequestOptions(
+                loadingMessage = "RequestUi 遮罩中（可返回取消）…",
+                loadingCancelPolicy = LoadingCancelPolicy.CancelRequest
+            )
+        ) {
+            delay(2500)
+            onDone()
         }
     }
 

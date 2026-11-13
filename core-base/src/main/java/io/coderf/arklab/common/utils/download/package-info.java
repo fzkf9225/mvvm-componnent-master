@@ -20,13 +20,16 @@
  * <p>
  * <b>推荐用法（协程 + 可选 RequestUi）</b>
  * <pre>{@code
- * launchUiRequest {
- *     val file = DownloadClient.getInstance().downloadAwait(
- *         DownloadConfig.Builder(activity, url).build(),
- *         DownloadOptions.defaults(),
- *         getNetworkRequestUiHost() // 失败自动 Toast；取消不报错
- *     )
- *     // 只需处理成功
+ * launchRequest(RequestOptions(showLoading = false, deliverErrorToUi = false), onSuccess = { file -> ... }) {
+ *     flow {
+ *         emit(RequestResult.Success(
+ *             DownloadClient.getInstance().downloadAwait(
+ *                 DownloadConfig.Builder(activity, url).build(),
+ *                 DownloadOptions.defaults(),
+ *                 networkRequestUiHost // 失败自动 Toast；取消不报错
+ *             )
+ *         ))
+ *     }
  * }
  * // 需要进度条 / 自定义失败时再 collect DownloadEvent
  * }</pre>

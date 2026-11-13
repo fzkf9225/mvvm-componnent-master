@@ -1,29 +1,19 @@
 package io.coderf.arklab.demo.module;
 
 import dagger.Module;
-import dagger.Provides;
 import dagger.hilt.InstallIn;
 import dagger.hilt.android.components.ViewModelComponent;
-import io.coderf.arklab.demo.api.ApiServiceHelper;
-import io.coderf.arklab.demo.repository.KtDemoPagingRepositoryImpl;
 
 /**
- * ViewModel 作用域仓库提供。
- * Token 刷新使用 [io.coderf.arklab.core.request.TokenRefresherHolder] 全局默认，无需再注入 TokenRefresher。
+ * ViewModel 作用域仓库 Module。
+ * KtDemoPagingRepositoryImpl / DemoFlowPagingRepositoryImpl 已用 {@code @Inject} 构造器，无需再 {@code @Provides}。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/11/13
  */
 @Module
 @InstallIn(ViewModelComponent.class)
 public class AppRepositoryModule {
-
-    @Provides
-    public KtDemoPagingRepositoryImpl provideKtDemoPagingRepositoryImpl(
-            ApiServiceHelper apiServiceHelper
-    ) {
-        return new KtDemoPagingRepositoryImpl(apiServiceHelper);
-    }
 }

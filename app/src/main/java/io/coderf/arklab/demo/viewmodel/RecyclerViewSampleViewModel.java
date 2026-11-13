@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.coderf.arklab.common.base.BaseRecyclerViewModel;
-import io.coderf.arklab.common.base.BaseRepository;
 import io.coderf.arklab.common.bean.PopupWindowBean;
 import io.coderf.arklab.common.bean.base.PageBean;
 
@@ -20,15 +19,10 @@ import io.coderf.arklab.common.bean.base.PageBean;
  * @since 1.0
  * @created 2023/8/14 10:56
  */
-public class RecyclerViewSampleViewModel extends BaseRecyclerViewModel<BaseRepository, PopupWindowBean> {
+public class RecyclerViewSampleViewModel extends BaseRecyclerViewModel<PopupWindowBean> {
 
     public RecyclerViewSampleViewModel(@NonNull Application application) {
         super(application);
-    }
-
-    @Override
-    protected BaseRepository createRepository() {
-        return null;
     }
 
     public void loadData(int mCurrentPage) {

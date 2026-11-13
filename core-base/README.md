@@ -2,12 +2,26 @@
 
 框架核心 UI / MVVM 基座：Activity / Fragment / ViewModel、历史 widget、helper，以及 **common 体系的资源与 DataBinding**（R 包名保持 `io.coderf.arklab.common`）。
 
-当前版本：**1.10.0**  
-Maven：`io.coderf.arklab.core:base:1.10.0`  
+当前版本：**2.0.0**  
+Maven：`io.coderf.arklab.core:base:2.0.0`  
 namespace：`io.coderf.arklab.common`
 
 > 注意：本模块 ≠ Demo case 的 Gradle `:base`。Maven 坐标是 `core:base`，对应工程模块是 **`:core-base`**。  
-> 业务工程升级见 [UPGRADE.md](../UPGRADE.md)；协程下载见 [UPGRADE.md §0.2](../UPGRADE.md#02-协程下载真内核base-1100)；Loading 可取消见 [QuickStart.md](../QuickStart.md)。
+> 业务工程升级见 [MIGRATION-2.0.0.md](../MIGRATION-2.0.0.md)、[UPGRADE.md](../UPGRADE.md)；协程下载见 [UPGRADE.md §0.2](../UPGRADE.md#02-协程下载真内核base-1100)；Loading 可取消见 [QuickStart.md](../QuickStart.md)。
+
+---
+
+## 2.0.0
+
+**破坏性**（须与 **network / db 2.0.0** 同升）。业务迁移见仓库根目录 [MIGRATION-2.0.0.md](../MIGRATION-2.0.0.md)。
+
+| 项 | 说明 |
+|----|------|
+| ViewModel | 无泛型 `BaseViewModel`；删除 `createRepository` / `ensureRepository` / `launchUiRequest` |
+| 请求入口 | `launchRequest`：推荐 Flow 重载（强制 Host）；多步用 Session + `collectSuccess` |
+| 可见性 | `trackUiRequest` → `protected` |
+| Loading 取消 | 仅系统返回 / 手势返回；点外侧不取消 |
+| Options | `RequestOptions` UI 字段仅对 `launchRequest` / `collect*` 生效 |
 
 ---
 
@@ -46,7 +60,7 @@ Loading 可取消闭环 + 遮罩引用计数（配合 **core-network ≥1.8.0** 
 
 - `LoadingCancelPolicy`：`None` / `CancelRequest` / `CancelRequestAndExit`
 - `NetworkRequestUiHost`：Loading 引用计数；`forceHideLoading()`；`RequestLoadingState` 携带 cancelPolicy
-- `BaseViewModel`：`launchUiRequest` / `trackUiRequest` / `cancelUiRequests` + `UiRequestTracker`
+- `BaseViewModel`：`launchRequest`（Flow 重载 / Session）/ `cancelUiRequests`；`trackUiRequest` 为 protected
 - `LoadingDelegate` / `UIController` / `LoadingProgressDialog`：可取消 + OnCancel → 页面 `onLoadingCancelled`
 - `BaseActivity` / `BaseFragment`：取消后按策略留页或 finish / 回退
 - `ApiRequestOptions`：`loadingCancelPolicy` + `cancellable()` / `cancellableExit()`
