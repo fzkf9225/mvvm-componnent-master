@@ -6,7 +6,7 @@
     </data>
 
     <io.coderf.arklab.common.widget.empty.EmptyLayout
-        android:id="@+id/mEmptyLayout"
+        android:id="@id/mEmptyLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </layout>

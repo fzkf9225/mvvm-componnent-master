@@ -28,7 +28,6 @@ import io.coderf.arklab.demo.activity.MqttDemoActivity;
 import io.coderf.arklab.demo.activity.PopupWindowSampleActivity;
 import io.coderf.arklab.demo.activity.WsDemoActivity;
 import io.coderf.arklab.demo.activity.PreviewInfoPhotoActivity;
-import io.coderf.arklab.demo.activity.RecyclerViewSampleActivity;
 import io.coderf.arklab.demo.activity.RoomPagingActivity;
 import io.coderf.arklab.demo.activity.ScanQrCodeActivity;
 import io.coderf.arklab.demo.activity.TargetActivity;
@@ -65,7 +64,6 @@ public enum UseCaseEnum {
     MEDIA(MediaActivity.class, "媒体访问", "自定义媒体dialog可以实现选择图片、视频等", null),
     DOWNLOAD(DownloadActivity.class, "文件下载", "自定义断点续传下载功能", null),
     COMPRESS(MediaCompressActivity.class, "文件压缩", "展示文件压缩能力", null),
-    RECYCLER_VIEW(RecyclerViewSampleActivity.class, "列表示例", "自定义封装列表", null),
     CHECK_BOX(CheckBoxActivity.class, "单选复选框Adapter", "封装支持单选复选的选择框", null),
     SMART_PAGING(DemoSmartPagingActivity.class, "SmartPaging列表示例", "Smart库+Jetpack Paging3综合列表封装", null),
     SMART_PAGING_HEADER(DemoSmartPagingHeaderActivity.class, "SmartPaging带头布局", "Paging3 + Smart + 可选列表头（示例 16:9 图）", null),

@@ -41,9 +41,9 @@ import kotlinx.coroutines.yield
  * @param Q  查询参数类型
  *
  * @author fz
- * @version 2.1
+ * @version 2.2
  * @since 1.0
- * @updated 2026/11/13
+ * @updated 2026/11/16 创建 PagingSource 时传入 [BasePagingViewModel.isLoadMoreEnabled]
  */
 abstract class NetworkFlowPagingViewModel<
         T : Any,
@@ -148,6 +148,7 @@ abstract class NetworkFlowPagingViewModel<
      * **override 约定**：必须把失败 [AppError] 交 [networkRequestUiHost.showError]
      *（推荐复用 [defaultPagingAppErrorHandler]），或页面自管登录 / 业务码；
      * **禁止**创建不带 [NetworkPagingSource.onAppError] 的 Source。
+     * 自建 Source 时传入 [isLoadMoreEnabled]，与页面开关一致。
      * 分页不经 [launchRequest]。
      */
     protected open fun createPagingSource(): PagingSource<Int, T> {
@@ -155,7 +156,8 @@ abstract class NetworkFlowPagingViewModel<
             pagingRepository,
             startPage,
             pagingQuery,
-            defaultPagingAppErrorHandler()
+            defaultPagingAppErrorHandler(),
+            isLoadMoreEnabled()
         )
     }
 }

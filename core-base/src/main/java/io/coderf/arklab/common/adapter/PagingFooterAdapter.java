@@ -33,9 +33,9 @@ import io.coderf.arklab.common.widget.empty.EmptyLayoutConfig;
  * @see EmptyLayoutConfig
  *
  * @author fz
- * @version 1.1
+ * @version 1.2
  * @since 1.0
- * @updated 2026/9/20 接入 EmptyLayoutConfig Footer 样式配置
+ * @updated 2026/11/16 关闭加载更多时不展示底部状态行
  */
 public class PagingFooterAdapter extends LoadStateAdapter<BaseViewHolder<PagingFooterBinding>> {
 
@@ -45,6 +45,8 @@ public class PagingFooterAdapter extends LoadStateAdapter<BaseViewHolder<PagingF
     /** 进程级或页面级配置；为 null 时使用 defaults() */
     @Nullable
     private EmptyLayoutConfig config;
+    /** 为 false 时不占行。单页失败由页面 EmptyLayout 承接。 */
+    private boolean loadMoreEnabled = true;
 
     /**
      * @param retry 加载失败时的重试回调，一般为 {@code adapter::retry}
@@ -81,6 +83,18 @@ public class PagingFooterAdapter extends LoadStateAdapter<BaseViewHolder<PagingF
      */
     public void setConfig(@Nullable EmptyLayoutConfig config) {
         this.config = config;
+    }
+
+    /**
+     * 是否展示加载更多状态。须在装上 RecyclerView 之前设置。
+     * 为 false 时不展示「正在加载 / 暂无更多」。
+     */
+    public void setLoadMoreEnabled(boolean loadMoreEnabled) {
+        this.loadMoreEnabled = loadMoreEnabled;
+    }
+
+    public boolean isLoadMoreEnabled() {
+        return loadMoreEnabled;
     }
 
     @Nullable
@@ -168,7 +182,7 @@ public class PagingFooterAdapter extends LoadStateAdapter<BaseViewHolder<PagingF
      */
     @Override
     public boolean displayLoadStateAsItem(@NonNull LoadState loadState) {
-        if (!hasContentItems()) {
+        if (!loadMoreEnabled || !hasContentItems()) {
             return false;
         }
         return loadState instanceof LoadState.Loading

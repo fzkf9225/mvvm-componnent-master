@@ -35,9 +35,10 @@ import io.coderf.arklab.common.utils.theme.ThemeAttrs;
  * 子类可通过 {@link #enableSkeletonLoading()} 或 XML {@code app:loadingStyle="skeleton"} 开启骨架屏（默认关闭）。
  *
  * @author fz
- * @version 1.0
+ * @version 1.2
  * @since 1.0
  * @created 2017/11/17
+ * @updated 2026/11/16 列表壳控件改为引用 ids.xml 中的稳定 id
  */
 public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VDB extends ViewDataBinding, T> extends BaseFragment<VM, VDB>
         implements PagingAdapterListener<T>, EmptyLayout.OnEmptyLayoutClickListener, OnRefreshListener {
@@ -56,25 +57,11 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
 
     }
 
-    /**
-     * 在 binding 根布局中按 id 查找；兼容布局在 app 模块、与 core {@code R.id} 数值不一致的情况。
-     */
-    @SuppressWarnings("unchecked")
-    protected <V extends View> V findBindView(int coreId, String name) {
-        View root = binding.getRoot();
-        V v = root.findViewById(coreId);
-        if (v != null) {
-            return v;
-        }
-        int alt = root.getResources().getIdentifier(name, "id", requireContext().getPackageName());
-        return alt != 0 ? root.findViewById(alt) : null;
-    }
-
     @Override
     protected void initView(Bundle savedInstanceState) {
-        mRecyclerView = findBindView(R.id.mRecyclerview, "mRecyclerview");
-        emptyLayout = findBindView(R.id.mEmptyLayout, "mEmptyLayout");
-        refreshLayout = findBindView(R.id.smartFreshLayout, "smartFreshLayout");
+        mRecyclerView = binding.getRoot().findViewById(R.id.mRecyclerview);
+        emptyLayout = binding.getRoot().findViewById(R.id.mEmptyLayout);
+        refreshLayout = binding.getRoot().findViewById(R.id.smartFreshLayout);
         applyEmptyLayoutLoadingConfig();
         adapter = getRecyclerAdapter();
         getRecyclerView().setLayoutManager(createLayoutManager());
@@ -97,6 +84,7 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
     protected ConcatAdapter createdHeaderFootAdapter() {
         PagingFooterAdapter footer = new PagingFooterAdapter(
                 () -> adapter.retry(), adapter, emptyLayout.getConfig());
+        footer.setLoadMoreEnabled(mViewModel.isLoadMoreEnabled());
         RecyclerView.Adapter<? extends RecyclerView.ViewHolder> header = adapter.getPagingHeaderAdapter();
         ConcatAdapter mainWithFooter = adapter.withLoadStateFooter(footer);
         if (header != null) {

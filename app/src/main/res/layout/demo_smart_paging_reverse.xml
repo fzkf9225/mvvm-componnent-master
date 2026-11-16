@@ -2,31 +2,31 @@
 <!--
   聊天式「最新在底部」列表用：不在顶部放 ClassicsHeader，改在底部放 ClassicsFooter。
   reverseLayout 贴底；底部上拉可映射为 Room 全量 refresh（本地数据不丢）。
-  id 与 base_smart_paging 对齐，便于 BaseSmartPagingFragment findViewById。
+  四个壳 id 引用 core-base 的 @id/，与 BaseSmartPagingFragment 查找的是同一个资源。
 -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data />
 
     <com.scwang.smart.refresh.layout.SmartRefreshLayout
-        android:id="@+id/smartFreshLayout"
+        android:id="@id/smartFreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <FrameLayout
-            android:id="@+id/fl_container"
+            android:id="@id/fl_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?android:attr/colorBackground">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/mRecyclerview"
+                android:id="@id/mRecyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:overScrollMode="never" />
 
             <io.coderf.arklab.common.widget.empty.EmptyLayout
-                android:id="@+id/mEmptyLayout"
+                android:id="@id/mEmptyLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"

@@ -20,16 +20,19 @@ import kotlinx.coroutines.flow.firstOrNull
  * 默认由 [NetworkFlowPagingViewModel.createPagingSource] /
  * [NetworkFlowPagingViewModel.defaultPagingAppErrorHandler] 注入。
  *
+ * [loadMoreEnabled] 为 false 时，本次成功加载后不再 append（全量接口走这一支）。
+ *
  * @author fz
- * @version 1.2
+ * @version 1.3
  * @since 1.0
- * @updated 2026/11/13
+ * @updated 2026/11/16 增加 loadMoreEnabled，关闭时 nextKey 恒为 null
  */
 class NetworkPagingSource<T : Any, Q : PagingQuery>(
     private val repository: NetworkPagingRepository<T, Q>,
     private val startPage: Int = 1,
     private val query: Q,
-    private val onAppError: (AppError) -> Unit
+    private val onAppError: (AppError) -> Unit,
+    private val loadMoreEnabled: Boolean = true
 ) : PagingSource<Int, T>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, T> {
@@ -38,7 +41,7 @@ class NetworkPagingSource<T : Any, Q : PagingQuery>(
             val page = repository.loadPage(currentPage, params.loadSize, query).firstOrNull()
                 ?: emptyList()
             val prevKey = if (currentPage == startPage) null else currentPage - 1
-            val endReached = page.isEmpty() || page.size < params.loadSize
+            val endReached = !loadMoreEnabled || page.isEmpty() || page.size < params.loadSize
             val nextKey = if (endReached) null else currentPage + 1
             LoadResult.Page(
                 data = page,

@@ -3,4 +3,10 @@
     <item name="title_bar_right" type="id" />
     <!-- CenteredIconContainer 内部图标，供 ConstraintSet 定位 -->
     <item name="centered_icon_view" type="id" />
+
+    <!-- 分页列表壳。业务重写 layout 时引用 @id/，不要再写 @+id/。 -->
+    <item name="smartFreshLayout" type="id" />
+    <item name="fl_container" type="id" />
+    <item name="mRecyclerview" type="id" />
+    <item name="mEmptyLayout" type="id" />
 </resources>

@@ -139,9 +139,6 @@
             android:name=".activity.TargetActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.PagingDetailActivity"
-            android:exported="false" />
-        <activity
             android:name=".activity.HiltActivity"
             android:exported="false" />
         <activity
@@ -173,9 +170,6 @@
             android:exported="false" />
         <activity
             android:name=".activity.ViewPagerSampleActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.RecyclerViewSampleActivity"
             android:exported="false" />
         <activity
             android:name=".activity.CoordinatorActivity"

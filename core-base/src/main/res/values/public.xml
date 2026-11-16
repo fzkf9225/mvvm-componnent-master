@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 分页列表壳，供业务布局 @id/ 引用 -->
+    <public name="smartFreshLayout" type="id" />
+    <public name="fl_container" type="id" />
+    <public name="mRecyclerview" type="id" />
+    <public name="mEmptyLayout" type="id" />
+
     <!--dimen资源文件-->
     <public name="horizontal_margin_xxxxl" type="dimen" />
     <public name="vertical_margin_xxxxl" type="dimen" />
@@ -137,8 +143,6 @@
     <public name="base_tablayout_viewpager" type="layout"/>
     <public name="empty_fragment" type="layout"/>
     <public name="paging_footer" type="layout"/>
-    <public name="search_smartrecyclerview" type="layout"/>
-    <public name="smartrecyclerview" type="layout"/>
     <public name="web_view" type="layout"/>
     <public name="adapter_grid_menu_item" type="layout"/>
     <public name="adapter_image_add_item" type="layout"/>
