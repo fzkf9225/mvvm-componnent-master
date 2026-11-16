@@ -22,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
-import io.coderf.arklab.common.helper.AuthDelegate;
 import io.coderf.arklab.common.helper.AuthManager;
 import io.coderf.arklab.common.helper.LoadingDelegate;
 import io.coderf.arklab.common.helper.UIController;
@@ -38,9 +37,10 @@ import io.coderf.arklab.core.ui.delegate.UiSafetyChecker;
 /**
  * Fragment MVVM 基类，生命周期约定与 {@link BaseActivity} 对齐。
  * <p>
- * UI 策略委托与 Activity 对称：{@link InitDataPolicy}、{@link PageArgumentsResolver}、{@link UiSafetyChecker}；
- * Loading / Auth 由 {@link LoadingDelegate} / {@link AuthDelegate} 承担，兼容字段
- * {@link #authManager} / {@link #uiController} 仍可用。
+ * UI 策略与 Activity 对称：{@link InitDataPolicy}、{@link PageArgumentsResolver}、{@link UiSafetyChecker}。
+ * 换预设给 policy 字段赋值；要写分支则重写 {@code shouldXxx()}，重写覆盖字段。
+ * Loading 由 {@link LoadingDelegate} 承担，登录 / 权限由 {@link AuthManager} 承担。
+ * {@link #authManager} / {@link #uiController} 仍可直接使用。
  * 需要「仅首次创建时 initData」可继承 {@link BaseStatefulFragment}，或设置
  * {@link io.coderf.arklab.core.ui.delegate.FirstCreateOnlyInitData}。
  *
@@ -49,7 +49,7 @@ import io.coderf.arklab.core.ui.delegate.UiSafetyChecker;
  * @author fz
  * @version 1.1
  * @since 1.0
- * @updated 2026/9/21
+ * @updated 2026/11/16
  */
 public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDataBinding> extends Fragment implements RequestUi, AuthManager.AuthCallback {
     protected String TAG = this.getClass().getSimpleName();
@@ -65,21 +65,17 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
     @Inject
     public ErrorService errorService;
     /**
-     * 认证管理（兼容字段），由 {@link #authDelegate} 持有同一实例。
+     * 登录 / 权限管理。子类可在 {@code super.onCreateView} 之前赋值以替换实例。
      */
     protected AuthManager authManager;
     /**
-     * UI 控制器（兼容字段），由 {@link #loadingDelegate} 持有同一实例。
+     * Loading / Toast 控制器，与 {@link #loadingDelegate} 持有同一实例。
      */
     protected UIController uiController;
 
-    /** Loading / Toast 委托。 */
+    /** Loading / Toast 委托。子类可在 {@code super.onCreateView} 之前赋值以替换实例。 */
     @Nullable
     protected LoadingDelegate loadingDelegate;
-
-    /** 登录 / 权限委托。 */
-    @Nullable
-    protected AuthDelegate authDelegate;
 
     /**
      * initData 是否在配置变更后再次执行；默认每次都执行（历史行为）。
@@ -142,15 +138,14 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     /**
-     * 创建 Auth 委托；同步填充兼容字段 {@link #authManager}。
+     * 创建 {@link AuthManager}。子类可在 {@code super.onCreateView} 之前赋值 {@link #authManager} 以替换实例。
      */
     protected void createAuthManager() {
-        if (authDelegate == null) {
+        if (authManager == null) {
             boolean unify = errorService == null || errorService.unifyHandling();
-            authDelegate = AuthDelegate.forFragment(this, unify);
+            authManager = new AuthManager(this, unify);
         }
-        authManager = authDelegate.getAuthManager();
-        authDelegate.setLoginCallback(this);
+        authManager.setLoginCallback(this);
     }
 
     /**
@@ -274,8 +269,6 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
     public void onDestroyView() {
         if (loadingDelegate != null) {
             loadingDelegate.hideLoading();
-        } else if (uiController != null) {
-            uiController.hideLoading();
         }
         super.onDestroyView();
     }
@@ -283,9 +276,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (authDelegate != null) {
-            authDelegate.unregister();
-        } else if (authManager != null) {
+        if (authManager != null) {
             authManager.unregister();
         }
     }
@@ -299,60 +290,40 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
     public void showLoading(String dialogMessage, boolean enableDynamicEllipsis,
                             @NonNull LoadingCancelPolicy cancelPolicy) {
         LoadingCancelPolicy policy = cancelPolicy != null ? cancelPolicy : LoadingCancelPolicy.None;
-        if (loadingDelegate != null) {
-            loadingDelegate.showLoading(dialogMessage, enableDynamicEllipsis, policy);
+        if (loadingDelegate == null) {
             return;
         }
-        if (!isUiSafe() || uiController == null) {
-            return;
-        }
-        uiController.showLoading(requireActivity(), dialogMessage, enableDynamicEllipsis, policy);
+        loadingDelegate.showLoading(dialogMessage, enableDynamicEllipsis, policy);
     }
 
     @Override
     public void hideLoading() {
-        if (loadingDelegate != null) {
-            loadingDelegate.hideLoading();
+        if (loadingDelegate == null) {
             return;
         }
-        if (uiController == null) {
-            return;
-        }
-        uiController.hideLoading();
+        loadingDelegate.hideLoading();
     }
 
     @Override
     public void refreshLoading(String dialogMessage) {
-        if (loadingDelegate != null) {
-            loadingDelegate.refreshLoading(dialogMessage);
+        if (loadingDelegate == null) {
             return;
         }
-        if (!isUiSafe() || uiController == null) {
-            return;
-        }
-        uiController.refreshLoading(dialogMessage);
+        loadingDelegate.refreshLoading(dialogMessage);
     }
 
     public void showToast(String msg) {
-        if (loadingDelegate != null) {
-            loadingDelegate.showToast(msg);
+        if (loadingDelegate == null) {
             return;
         }
-        if (!isUiSafe() || uiController == null) {
-            return;
-        }
-        uiController.showToast(msg);
+        loadingDelegate.showToast(msg);
     }
 
     public void showToast(@StringRes int strRes) {
-        if (loadingDelegate != null) {
-            loadingDelegate.showToast(strRes);
+        if (loadingDelegate == null) {
             return;
         }
-        if (!isUiSafe() || uiController == null) {
-            return;
-        }
-        uiController.showToast(strRes);
+        loadingDelegate.showToast(strRes);
     }
 
     /**
@@ -363,31 +334,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
         if (error == null || !isUiSafe()) {
             return;
         }
-        if (error instanceof AppError.Business) {
-            AppError.Business business = (AppError.Business) error;
-            if (errorService == null) {
-                return;
-            }
-            ActivityResultLauncher<Intent> loginLauncher =
-                    authDelegate != null ? authDelegate.getLoginLauncher() : authManager.getLoginLauncher();
-            ActivityResultLauncher<Intent> permissionLauncher =
-                    authDelegate != null ? authDelegate.getPermissionLauncher() : authManager.getPermissionLauncher();
-            if (errorService.isLoginPast(business.getCode())) {
-                errorService.toLogin(requireContext(), loginLauncher);
-                return;
-            }
-            if (!errorService.hasPermission(business.getCode())) {
-                errorService.toNoPermission(requireContext(), permissionLauncher);
-            }
-            return;
-        }
-        if (error == AppError.Cancelled.INSTANCE) {
-            return;
-        }
-        String msg = error.getMessage();
-        if (msg != null && !msg.isEmpty()) {
-            showToast(msg);
-        }
+        RequestErrorPresenter.show(error, requireContext(), errorService, authManager, this::showToast);
     }
 
     @Override

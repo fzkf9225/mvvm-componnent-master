@@ -29,7 +29,6 @@ import io.coderf.arklab.common.databinding.BaseActivityConstraintBinding;
 import io.coderf.arklab.core.request.AppError;
 import io.coderf.arklab.core.request.LoadingCancelPolicy;
 import io.coderf.arklab.core.request.RequestUi;
-import io.coderf.arklab.common.helper.AuthDelegate;
 import io.coderf.arklab.common.helper.AuthManager;
 import io.coderf.arklab.common.helper.LoadingDelegate;
 import io.coderf.arklab.common.helper.UIController;
@@ -58,10 +57,11 @@ import io.coderf.arklab.core.ui.delegate.UiSafetyChecker;
 /**
  * Activity MVVM 基类：统一 MaterialToolbar、DataBinding、ViewModel、登录/权限与 Loading。
  * <p>
- * UI 行为策略来自 {@code core-ui} 委托（{@link InitDataPolicy}、{@link EdgeToEdgePolicy}、
- * {@link HideKeyboardOnTouchOutsideDelegate} 等）；Loading / Auth / Toolbar 分别由
- * {@link LoadingDelegate}、{@link AuthDelegate}、{@link ToolbarDelegate} 承担，子类可通过改
- * policy 字段或重写钩子方法定制。对外字段 {@link #authManager} / {@link #uiController} 保持兼容。
+ * UI 行为策略来自 {@code core-ui}（{@link InitDataPolicy}、{@link EdgeToEdgePolicy}、
+ * {@link HideKeyboardOnTouchOutsidePolicy} 等）。换预设给 policy 字段赋值；要写分支则重写
+ * {@code shouldXxx()}，重写覆盖字段。Loading 由 {@link LoadingDelegate} 承担，登录 / 权限由
+ * {@link AuthManager} 承担。DataBinding 外壳的 Toolbar 走 {@link ToolbarConfig}；自带
+ * MaterialToolbar 可用 {@link ToolbarDelegate}。
  * <p>
  * <b>生命周期约定（与历史行为兼容）</b>
  * <ul>
@@ -77,7 +77,7 @@ import io.coderf.arklab.core.ui.delegate.UiSafetyChecker;
  * @author fz
  * @version 1.1
  * @since 1.0
- * @updated 2026/9/21
+ * @updated 2026/11/16
  */
 public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDataBinding> extends AppCompatActivity
         implements RequestUi, AuthManager.AuthCallback {
@@ -98,22 +98,18 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     public ErrorService errorService;
 
     /**
-     * 登录 / 权限管理（兼容字段）。由 {@link #authDelegate} 持有同一实例。
+     * 登录 / 权限管理。子类可在 {@code super.onCreate} 之前赋值以替换实例。
      */
     protected AuthManager authManager;
 
     /**
-     * Loading / Toast 控制器（兼容字段）。由 {@link #loadingDelegate} 持有同一实例。
+     * Loading / Toast 控制器，与 {@link #loadingDelegate} 持有同一实例。
      */
     protected UIController uiController;
 
-    /** Loading / Toast 委托（1.2+ 推荐经此访问）。 */
+    /** Loading / Toast 委托。子类可在 {@code super.onCreate} 之前赋值以替换实例。 */
     @Nullable
     protected LoadingDelegate loadingDelegate;
-
-    /** 登录 / 权限委托（1.2+ 推荐经此访问）。 */
-    @Nullable
-    protected AuthDelegate authDelegate;
 
     /** MaterialToolbar 轻量委托（自带 Toolbar 或菜单操作时可复用）。 */
     @Nullable
@@ -137,9 +133,6 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     /** 点击空白收键盘策略；默认跟随 {@link Config#isHideKeyboardOnTouchOutside()}。 */
     @Nullable
     protected HideKeyboardOnTouchOutsidePolicy hideKeyboardOnTouchOutsidePolicy;
-
-    @Nullable
-    private HideKeyboardOnTouchOutsideDelegate hideKeyboardDelegate;
 
     /**
      * Edge-to-Edge；未赋值时跟随 {@link Config#isEdgeToEdgeEnabled()}（默认开启）。
@@ -194,9 +187,6 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         if (hideKeyboardOnTouchOutsidePolicy == null) {
             hideKeyboardOnTouchOutsidePolicy = () -> Config.getInstance().isHideKeyboardOnTouchOutside();
         }
-        if (hideKeyboardDelegate == null) {
-            hideKeyboardDelegate = new HideKeyboardOnTouchOutsideDelegate(this, hideKeyboardOnTouchOutsidePolicy);
-        }
         ensureEdgeToEdgePolicy();
     }
 
@@ -239,19 +229,18 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     /**
-     * 创建 Auth 委托；同步填充兼容字段 {@link #authManager}。
+     * 创建 {@link AuthManager}。子类可在 {@code super.onCreate} 之前赋值 {@link #authManager} 以替换实例。
      */
     protected void createAuthManager() {
-        if (authDelegate == null) {
+        if (authManager == null) {
             boolean unify = errorService == null || errorService.unifyHandling();
-            authDelegate = AuthDelegate.forActivity(this, unify);
+            authManager = new AuthManager(this, unify);
         }
-        authManager = authDelegate.getAuthManager();
-        authDelegate.setLoginCallback(this);
+        authManager.setLoginCallback(this);
     }
 
     /**
-     * 创建 Loading 委托；同步填充兼容字段 {@link #uiController}。
+     * 创建 Loading 委托；同步填充 {@link #uiController}。
      * 并挂接 Loading 用户取消 → {@link #onLoadingCancelled(LoadingCancelPolicy)}。
      */
     protected void createUIController() {
@@ -303,9 +292,9 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     /**
-     * @deprecated 请改用 {@link #hideKeyboardOnTouchOutsidePolicy}。本方法仅作兼容转发。
+     * 点击输入框外是否收起软键盘。默认读 {@link #hideKeyboardOnTouchOutsidePolicy}。
+     * 子类可重写本方法；只换开关时给 policy 字段赋值，重写优先。
      */
-    @Deprecated
     protected boolean hideKeyboardOnTouchOutside() {
         ensureDelegates();
         return hideKeyboardOnTouchOutsidePolicy.isEnabled();
@@ -314,7 +303,6 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         ensureDelegates();
-        // 经 hideKeyboardOnTouchOutside()，兼容仍重写该方法的子类；新代码请改 policy 字段
         if (hideKeyboardOnTouchOutside()) {
             HideKeyboardOnTouchOutsideDelegate.handleTouch(this, ev);
         }
@@ -523,15 +511,11 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     protected void onDestroy() {
         if (loadingDelegate != null) {
             loadingDelegate.hideLoading();
-        } else if (uiController != null) {
-            uiController.hideLoading();
         }
         super.onDestroy();
         // 仅从栈移除；不可 finish()，否则旋转屏等配置变更后 Activity 无法重建
         AppManager.getAppManager().removeActivity(this);
-        if (authDelegate != null) {
-            authDelegate.unregister();
-        } else if (authManager != null) {
+        if (authManager != null) {
             authManager.unregister();
         }
     }
@@ -545,60 +529,40 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     public void showLoading(String dialogMessage, boolean enableDynamicEllipsis,
                             @NonNull LoadingCancelPolicy cancelPolicy) {
         LoadingCancelPolicy policy = cancelPolicy != null ? cancelPolicy : LoadingCancelPolicy.None;
-        if (loadingDelegate != null) {
-            loadingDelegate.showLoading(dialogMessage, enableDynamicEllipsis, policy);
+        if (loadingDelegate == null) {
             return;
         }
-        if (!isUiSafe() || uiController == null) {
-            return;
-        }
-        uiController.showLoading(dialogMessage, enableDynamicEllipsis, policy);
+        loadingDelegate.showLoading(dialogMessage, enableDynamicEllipsis, policy);
     }
 
     @Override
     public void refreshLoading(String dialogMessage) {
-        if (loadingDelegate != null) {
-            loadingDelegate.refreshLoading(dialogMessage);
+        if (loadingDelegate == null) {
             return;
         }
-        if (!isUiSafe() || uiController == null) {
-            return;
-        }
-        uiController.refreshLoading(dialogMessage);
+        loadingDelegate.refreshLoading(dialogMessage);
     }
 
     @Override
     public void hideLoading() {
-        if (loadingDelegate != null) {
-            loadingDelegate.hideLoading();
+        if (loadingDelegate == null) {
             return;
         }
-        if (uiController == null) {
-            return;
-        }
-        uiController.hideLoading();
+        loadingDelegate.hideLoading();
     }
 
     public void showToast(String msg) {
-        if (loadingDelegate != null) {
-            loadingDelegate.showToast(msg);
+        if (loadingDelegate == null) {
             return;
         }
-        if (!isUiSafe() || uiController == null) {
-            return;
-        }
-        uiController.showToast(msg);
+        loadingDelegate.showToast(msg);
     }
 
     public void showToast(@StringRes int strRes) {
-        if (loadingDelegate != null) {
-            loadingDelegate.showToast(strRes);
+        if (loadingDelegate == null) {
             return;
         }
-        if (!isUiSafe() || uiController == null) {
-            return;
-        }
-        uiController.showToast(strRes);
+        loadingDelegate.showToast(strRes);
     }
 
     /**
@@ -610,30 +574,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         if (error == null || !isUiSafe()) {
             return;
         }
-        if (error instanceof AppError.Business business) {
-            if (errorService == null) {
-                return;
-            }
-            ActivityResultLauncher<Intent> loginLauncher =
-                    authDelegate != null ? authDelegate.getLoginLauncher() : authManager.getLoginLauncher();
-            ActivityResultLauncher<Intent> permissionLauncher =
-                    authDelegate != null ? authDelegate.getPermissionLauncher() : authManager.getPermissionLauncher();
-            if (errorService.isLoginPast(business.getCode())) {
-                errorService.toLogin(this, loginLauncher);
-                return;
-            }
-            if (!errorService.hasPermission(business.getCode())) {
-                errorService.toNoPermission(this, permissionLauncher);
-            }
-            return;
-        }
-        if (error == AppError.Cancelled.INSTANCE) {
-            return;
-        }
-        String msg = error.getMessage();
-        if (msg != null && !msg.isEmpty()) {
-            showToast(msg);
-        }
+        RequestErrorPresenter.show(error, this, errorService, authManager, this::showToast);
     }
 
     @Override
