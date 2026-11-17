@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:attr/colorBackground"
+        android:fillViewport="true"
+        tools:context=".activity.ToolbarTitleBarDemoActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="24dp">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="16dp"
+                android:text="TitleBar 是放在页面里的 MaterialToolbar，不走 BaseActivity 外壳。XML 属性和代码 setter 都能配。上面这条 Activity 标题栏仍然是 ToolbarConfig。"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="12sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="8dp"
+                android:text="XML：标题、右侧文字、颜色、字号、返回图标。未设置返回监听时，点击会关闭本页。"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="13sp" />
+
+            <io.coderf.arklab.common.widget.customview.TitleBar
+                android:id="@+id/title_bar_xml"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/themeColor"
+                app:titleBarBackIcon="@drawable/icon_fh"
+                app:titleBarRightText="保存"
+                app:titleBarRightTextColor="@color/theme_yellow"
+                app:titleBarShowBack="true"
+                app:titleBarTitle="XML 属性标题"
+                app:titleBarTitleColor="@color/onPrimary"
+                app:titleBarTitleSize="16sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingTop="20dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="8dp"
+                android:text="XML：titleBarShowBack=false，只留右侧操作。"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="13sp" />
+
+            <io.coderf.arklab.common.widget.customview.TitleBar
+                android:id="@+id/title_bar_no_back"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/cardSurface"
+                app:titleBarRightText="更多"
+                app:titleBarRightTextColor="@color/themeColor"
+                app:titleBarShowBack="false"
+                app:titleBarTitle="没有返回按钮"
+                app:titleBarTitleColor="@color/cardOnSurface"
+                app:titleBarTitleSize="17sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingTop="20dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="8dp"
+                android:text="代码：setTitle / setTitleColor / setBackIcon / setBackIconTint / setRightText / setRightTextColor。"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="13sp" />
+
+            <io.coderf.arklab.common.widget.customview.TitleBar
+                android:id="@+id/title_bar_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/themeColor" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_toggle_right"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:text="清空上面这条的右侧文字" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingTop="20dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="8dp"
+                android:text="代码：bind(标题, 返回监听)，再补右侧点击。下面的按钮切换 setShowBackButton。"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="13sp" />
+
+            <io.coderf.arklab.common.widget.customview.TitleBar
+                android:id="@+id/title_bar_bind"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/cardSurface" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_toggle_back"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:text="隐藏 bind 这条的返回按钮" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

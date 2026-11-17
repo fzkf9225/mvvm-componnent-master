@@ -196,6 +196,18 @@
             android:name=".activity.MaterialCardViewActivity"
             android:exported="false" />
         <activity
+            android:name=".activity.ToolbarDemoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ToolbarPreviewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ToolbarTitleBarDemoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ToolbarSearchDemoActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.DialogActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="false" />

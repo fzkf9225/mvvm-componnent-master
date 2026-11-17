@@ -1,86 +1,86 @@
 # mvvm-componnent-master
-# �ĵ�����
+# 文档索引
 
-| �ĵ� | ˵�� |
+| 文档 | 说明 |
 |------|------|
-| [MODULES.md](MODULES.md) | ��ģ��ְ��������ϵ��Maven ���ꡢGateway / ������ API �÷� |
-| [UPGRADE.md](UPGRADE.md) | **��2��core-* 1.2.0 �޳� BaseView / MVP**����1��4.6.0 Material3����¼��4.4.x �� 4.5.1 ��� |
+| [MODULES.md](MODULES.md) | 各模块职责、依赖关系、Maven 坐标、Gateway / 新网络 API 用法 |
+| [UPGRADE.md](UPGRADE.md) | **§2：core-* 1.2.0 剔除 BaseView / MVP**；§1：4.6.0 Material3；附录：4.4.x → 4.5.1 拆分 |
 | [MIGRATION-2.0.0.md](MIGRATION-2.0.0.md) | core-base/network/db **2.0.0** breaking migration (CN) |
-| [QuickStart.md](QuickStart.md) | ����ӽ��루������Manifest�����⡢���á�ҳ����ּܣ� |
-| [core-base/README.md](core-base/README.md) | ����ģ�飻�ؼ������ⲹ�� |
-| [core-db/README.md](core-db/README.md) | Room��**1.5.0** Э��ջ / Rx ���У����� processor |
-| [room-processor/README.md](room-processor/README.md) | KSP Bridge��**1.2.0**���� suspend RawQuery�� |
-| [core-form/README.md](core-form/README.md) | ��� / �����ȣ�ԭ commonui�� |
-| [core-media/README.md](core-media/README.md) | ý��ѡͼ / ѹ���ȣ�ԭ commonmedia�� |
-| [core-gnss/README.md](core-gnss/README.md) | GNSS / �켣��ԭ googlegps�� |
+| [QuickStart.md](QuickStart.md) | 五分钟接入（依赖、Manifest、主题、配置、页面脚手架） |
+| [core-base/README.md](core-base/README.md) | 基座模块；控件与主题补丁 |
+| [core-db/README.md](core-db/README.md) | Room：**1.5.0** 协程栈 / Rx 并行；配套 processor |
+| [room-processor/README.md](room-processor/README.md) | KSP Bridge：**1.2.0**（含 suspend RawQuery） |
+| [core-form/README.md](core-form/README.md) | 表单 / 日历等（原 commonui） |
+| [core-media/README.md](core-media/README.md) | 媒体选图 / 压缩等（原 commonmedia） |
+| [core-gnss/README.md](core-gnss/README.md) | GNSS / 轨迹（原 googlegps） |
 
-��ǰ���ɰ汾��**common `4.7.0`** �� **core-base `1.7.2`** �� **core-network `1.7.1`** �� **core-db `1.6.2`** �� **core-ui `1.3.1`** �� **core-utils `1.2.0`** �� **core-form `3.7.7`** �� **core-media `3.7.0`** �� **core-ws `1.0.1`** �� **core-gnss `4.0.0`**������Ϊ **Material3 DayNight**��Views + MDC 1.14����ҵ����Կ����� `common`���� Maven �밴 [UPGRADE.md ����](UPGRADE.md) **��ʽ��ס** core / ui / media / gps��������Ϊ `io.coderf.arklab.common.*`������˵���� [UPGRADE.md](UPGRADE.md)����������ͼ�� ��0.4.3������ģ�ͼ� ��0.4.2����
+当前主干版本：**common `4.7.0`** · **core-base `1.7.2`** · **core-network `1.7.1`** · **core-db `1.6.2`** · **core-ui `1.3.1`** · **core-utils `1.2.0`** · **core-form `3.7.7`** · **core-media `3.7.0`** · **core-ws `1.0.1`** · **core-gnss `4.0.0`**，主题为 **Material3 DayNight**（Views + MDC 1.14）。业务侧仍可依赖 `common`，但 Maven 请按 [UPGRADE.md 文首](UPGRADE.md) **显式钉住** core / ui / media / gps。包名多为 `io.coderf.arklab.common.*`。升级说明见 [UPGRADE.md](UPGRADE.md)（附件缩略图见 §0.4.3，附件模型见 §0.4.2）。
 
-**1.2.0**��ɾ�� `BaseView` �� Repository/ViewModel �ϵ�ҳ�淺�ͣ����� UI �� `NetworkRequestUiHost` + **`RequestUi`**����ɾ���ɰ� `RequestUiCallback`����ҵ�񵼺��� LiveData/Flow��
+**1.2.0**：删除 `BaseView` 与 Repository/ViewModel 上的页面泛型；请求 UI 走 `NetworkRequestUiHost` + **`RequestUi`**（已删除旧版 `RequestUiCallback`）；业务导航用 LiveData/Flow。
 
-**1.1.x / 3.6.x �ؼ�����**����ʷ�����ٷ�����Բ�ǡ���ߵİ�װ����ȥ������� `MaterialButton` / `ShapeableImageView` / `TextInputLayout`������� [core-base/README.md](core-base/README.md)��
+**1.1.x / 3.6.x 控件补丁**（历史）：官方已有圆角、描边的包装类已去掉，改用 `MaterialButton` / `ShapeableImageView` / `TextInputLayout`。详情见 [core-base/README.md](core-base/README.md)。
 
-# ��ܼ��
-���ȫ�����`MVVM`�ܹ����JetPackȫ��Ͱ���з�װ���������Ҫ��װ�˳��ù��ܣ����������������ݿ⡢���ݴ洢�������ࡢUI�����ҵ���߼���װ�ȵ�,����90%Ϊ`Java`,10%Ϊ`Kotlin`����ͼ��ݵ�`Android 8` ��`targetSdk` ���� Demo����ǰ 35����
-�Ӽܹ��ϸ����Ľ��в�⣬��ַ��ӽ����˼·����ԭʼ��`Activity`�������¼�����ֳɸ����ֿ���ģ�飬����`ViewModel`����ר��ʹ��`Repository`�������ݴ�����ӿ�ͨ��`Hilt`����ע��ķ�ʽ����һ��ע��ʡȥ������`New`������
+# 框架简介
+框架全面采用`MVVM`架构结合JetPack全家桶进行封装，框架中主要封装了常用功能，比如网络请求、数据库、数据存储、工具类、UI组件、业务逻辑封装等等,其中90%为`Java`,10%为`Kotlin`，最低兼容到`Android 8` ，`targetSdk` 对齐 Demo（当前 35）。
+从架构上根本的进行拆解，充分发挥解耦的思路，从原始的`Activity`干所有事件，拆分成各个分开的模块，发挥`ViewModel`特性专门使用`Repository`进行数据处理，接口通过`Hilt`依赖注入的方式进行一键注入省去大量的`New`操作。
 
-**4.5.0 ��**��ԭ���� `common` ��Ϊ `core-utils` / `core-base` / `core-network` / `core-db` / `core-ui`��`common` ��Ϊ **facade**��`api` �ۺ� core����MQTT / ý���ʵ�ֿ⾭ **Gateway**��case ģ�� `:base`��ע�룬ҵ��ģ�鲻Ҫֱ������ `mqttcomponent` / `core-media`��ԭ `commonmedia`����
+**4.5.0 起**：原单体 `common` 拆为 `core-utils` / `core-base` / `core-network` / `core-db` / `core-ui`，`common` 变为 **facade**（`api` 聚合 core）。MQTT / 媒体等实现库经 **Gateway**（case 模块 `:base`）注入，业务模块不要直接依赖 `mqttcomponent` / `core-media`（原 `commonmedia`）。
 
-**4.6.0**��`AppBaseTheme` �� AppCompat Light ����Ϊ `Theme.Material3.DayNight.NoActionBar`����ɫ�� `values-night` tonal ɫ�壨�ر�ϵͳ `forceDarkAllowed`�����ؼ����� Views������ Compose������ API ��ɹ��̶��룬��� [UPGRADE.md](UPGRADE.md)��
+**4.6.0**：`AppBaseTheme` 从 AppCompat Light 升级为 `Theme.Material3.DayNight.NoActionBar`；暗色走 `values-night` tonal 色板（关闭系统 `forceDarkAllowed`）。控件仍是 Views，不是 Compose。对外 API 与旧工程对齐，详见 [UPGRADE.md](UPGRADE.md)。
 
-**core-base 1.1.1 / core-form��ԭ commonui��3.6.1**���� 4.6.0 ����֮�����ؼ���ء������ùٷ� Material3 �ؼ��Ĳ��ٰ�һ�㣻��Ҫ XML `radius` / `bgColor` / `stroke*` ����������/���ֿؼ���Ϊ `MaterialShapeDrawable`������Ĭ�ϰ�ť `inset`/`minHeight` ���㣬`layout_height` ���Ӿ��߶ȡ�
+**core-base 1.1.1 / core-form（原 commonui）3.6.1**：在 4.6.0 主题之上做控件落地——能用官方 Material3 控件的不再包一层；需要 XML `radius` / `bgColor` / `stroke*` 的三个容器/文字控件改为 `MaterialShapeDrawable`。主题默认按钮 `inset`/`minHeight` 清零，`layout_height` 即视觉高度。
 
-��Ҫ��װ���ܣ�
-1. ����`BaseActivity`��`BaseFragment`��Ҫ��ҳ��UI�Ļ����ࣨλ�� `core-base`��
-2. �Զ�����`����ͷ��UI���䷽��`������ģ�� `:core-autosize`���� `core-base` ���ݣ�
-3. ���������װ��`OkHttp`+`RxJava`+`Retrofit`���Լ�Э�� `Flow`��**�Ƽ�**�� API `BaseNetworkRepository`��`core` �������� Rx `RepositoryImpl` �Ա�������ɲ� `FlowRepositoryImpl` ��ɾ��
-4. �������ݿ��װ��ʹ��`Room`+`RxJava` / `Flow`��`core-db`��
-5. �������洢��ܣ�ʹ��`MMKV`���滻�Դ���`SharedPreferences`
-6. ����`Paging3`��ҳ���������ܻ��ķ�ҳ�б��ͬʱҲ�ṩԭʼ�ķ�ҳ����
-7. ���`Media`ģ��`core-media`��ԭ `commonmedia`����ר�Ŵ���ý�����ݣ�ҵ���ע�� `MediaGateway`
-8. ��ֳ��ñ����������� module `core-form`��ԭ `commonui`����������У�飬�����֤������ύ�ȵ�
-9. ��ֵ�����`GPS`������ģ��`core-gnss`���ṩGPS���񣬴Ӽ��GPS�Ƿ�򿪵���ȡȨ�޵���ȡ��γ��һ������
-10. ʹ��`properties`�����ļ��������ļ����Զ���ֻ�������ֹƵ���л��������µ�һϵ������
-11. �������`annotation`ģ�飬һ��ע��У���ֶα�������Ƿ�����Լ������
-12. �ܹ���ͨ��ģ���� + Gateway ���ҵ��ֻ���� `*api`��ʵ���� app ��װ���
-13. Material3 ������ Top App Bar / ��ť / Բ��ɫ��`AppBaseTheme`����̬ȡɫĬ�Ϲأ�
+主要封装功能：
+1. 基础`BaseActivity`、`BaseFragment`主要的页面UI的基础类（位于 `core-base`）
+2. 自动集成`今日头条UI适配方案`（独立模块 `:core-autosize`，经 `core-base` 传递）
+3. 网络请求封装：`OkHttp`+`RxJava`+`Retrofit`，以及协程 `Flow`；**推荐**新 API `BaseNetworkRepository`（`core` 包）；旧 Rx `RepositoryImpl` 仍保留；过渡层 `FlowRepositoryImpl` 已删除
+4. 本地数据库封装，使用`Room`+`RxJava` / `Flow`（`core-db`）
+5. 轻量化存储框架，使用`MMKV`，替换自带的`SharedPreferences`
+6. 集成`Paging3`分页，更加智能化的分页列表，同时也提供原始的分页功能
+7. 拆分`Media`模块`core-media`（原 `commonmedia`），专门处理媒体数据；业务侧注入 `MediaGateway`
+8. 拆分常用表单组件，单独 module `core-form`（原 `commonui`），比如表单校验，表单验证，表单提交等等
+9. 拆分单独的`GPS`服务处理模块`core-gnss`，提供GPS服务，从检测GPS是否打开到获取权限到获取经纬度一键集成
+10. 使用`properties`配置文件，配置文件会自动拆分环境，防止频繁切换环境导致的一系列问题
+11. 单独拆分`annotation`模块，一键注解校验字段表单参数是否满足约束条件
+12. 架构上通过模块拆分 + Gateway 解耦，业务只依赖 `*api`，实现由 app 组装层绑定
+13. Material3 主题与 Top App Bar / 按钮 / 圆角色（`AppBaseTheme`，动态取色默认关）
 
-# ���̽���
-    - **core-utils**���� R �������������ߣ�Ԥ��ֲ㣩
-    - **core-base**��Base* / widget / helper / res��namespace ��Ϊ `io.coderf.arklab.common`���������� Material �ؼ�����ڴ�
-    - **core-network**��Retrofit / Repository / `BaseNetworkRepository`
-    - **core-db**��Room DAO / Database / RoomRepository
-    - **core-ui**��Activity ί�У��� `InitDataPolicy`��
-    - **common**���������棨facade����ҵ���Ƽ�ֻ������
-    - annotation��ע���ܣ���Ҫ��������У���ע��
-    - app����� case ʾ������ Gateway Hilt �󶨣�
-    - core-media������ͷ����ᡢý����ط�װ��ԭ commonmedia������ Gateway��
-    - core-form��UI �����װ����ҪΪ��������ԭ commonui��
-    - core-gnss��GPS������
-    - mqttcomponent��MQTT ��װ������ Gateway��
-    - base��Demo/case ������Gateway��AppPropertiesConfig��BaseAppActivity �ȣ�**�ǿ��**������ core-base ������
-    - userapi���û�ģ�����ӿڣ�UserService / UserInfo / Router��
-    - user��ʾ��ҵ�� module������ common + base + userapi��
-    - core-ws��WebSocket �����OkHttp������ core-mqtt��
-    - room-processor��`@RoomObservedEntity` KSP ������
+# 工程介绍
+    - **core-utils**：无 R 依赖的轻量工具（预留分层）
+    - **core-base**：Base* / widget / helper / res（namespace 仍为 `io.coderf.arklab.common`）；主题与 Material 控件入口在此
+    - **core-network**：Retrofit / Repository / `BaseNetworkRepository`
+    - **core-db**：Room DAO / Database / RoomRepository
+    - **core-ui**：Activity 委托（如 `InitDataPolicy`）
+    - **common**：兼容门面（facade），业务推荐只依赖它
+    - annotation：注解框架，主要用于数据校验的注解
+    - app：框架 case 示例（含 Gateway Hilt 绑定）
+    - core-media：摄像头、相册、媒体相关封装（原 commonmedia；不含 Gateway）
+    - core-form：UI 组件封装，主要为表单组件（原 commonui）
+    - core-gnss：GPS工具类
+    - mqttcomponent：MQTT 封装（不含 Gateway）
+    - base：Demo/case 基建（Gateway、AppPropertiesConfig、BaseAppActivity 等；**非框架**，勿与 core-base 混淆）
+    - userapi：用户模块对外接口（UserService / UserInfo / Router）
+    - user：示例业务 module（依赖 common + base + userapi）
+    - core-ws：WebSocket 组件（OkHttp，对齐 core-mqtt）
+    - room-processor：`@RoomObservedEntity` KSP 处理器
 
-ȫ��ʹ��``ksp``
+全面使用``ksp``
 
-# ����ӿ����ʼ
-[����ӿ����ʼ](QuickStart.md)�������Ѳ��� **���� UI��`NetworkRequestUiHost` / `RequestUi`��** ˵����ʾ������  
-�Ӿɰ��������ȶ� [UPGRADE.md](UPGRADE.md)��
+# 五分钟快读开始
+[五分钟快读开始](QuickStart.md)（文内已补充 **请求 UI（`NetworkRequestUiHost` / `RequestUi`）** 说明与示例。）  
+从旧版升级请先读 [UPGRADE.md](UPGRADE.md)。
 
-## MVVM�ܹ�ʾ�����룬�ع��汾
+## MVVM架构示例代码，重构版本
 
-### ҵ���������ڣ������� `common`��4.7.0 facade��
+### 业务侧依赖入口：继续用 `common`（4.7.0 facade）
 
-#### �������ã�Maven��
+#### 在线引用（Maven）
 
-�ֿ���ƾ֤ͬǰ��`ALIYUN_USER_NAME` / `ALIYUN_PASSWORD`�����Ƽ����꣨��������� [UPGRADE.md](UPGRADE.md) / [MODULES.md](MODULES.md)����
+仓库与凭证同前（`ALIYUN_USER_NAME` / `ALIYUN_PASSWORD`）。推荐坐标（完整矩阵见 [UPGRADE.md](UPGRADE.md) / [MODULES.md](MODULES.md)）：
 
 ```gradle
 implementation 'io.coderf.arklab.common:common:4.7.0'
-// һ����� common POM ���ݣ�Maven ����������ʽ����
+// 一般可由 common POM 传递；Maven 宿主建议显式钉：
 // implementation 'io.coderf.arklab.core:base:2.0.0'
 // implementation 'io.coderf.arklab.core:network:1.7.0'
 // implementation 'io.coderf.arklab.core:db:2.0.0'
@@ -88,58 +88,58 @@ implementation 'io.coderf.arklab.common:common:4.7.0'
 // implementation 'io.coderf.arklab.core:utils:1.1.1'
 ```
 
-���ֿⷢ����`./gradlew :common:publish` / `:core-*:publish`����� [MODULES.md](MODULES.md)����
+本仓库发布：`./gradlew :common:publish` / `:core-*:publish`（详见 [MODULES.md](MODULES.md)）。
 
-������������
+工程内依赖：
 
 ```gradle
 implementation project(':common')
-implementation project(':base')      // Gateway / ���� / BaseApp*
-implementation project(':userapi')   // ��Ҫ�û���Լʱ
+implementation project(':base')      // Gateway / 配置 / BaseApp*
+implementation project(':userapi')   // 需要用户契约时
 ```
 
 ### mqttcomponent / core-media / websocket
 
-ʵ�ֿ��Կɵ����������� **ҵ�� module ��Ҫֱ������**��Ӧע�룺
+实现库仍可单独依赖，但 **业务 module 不要直接依赖**。应注入：
 
-- `MessageGateway`��MQTT��
-- `MediaGateway`��ý�壩
+- `MessageGateway`（MQTT）
+- `MediaGateway`（媒体）
 
-�� **app** �� Hilt ��ʵ�֣��ο� `GatewayModule`��`MediaGatewayModule`�����ӿ��� **`:base`**��
+在 **app** 中 Hilt 绑定实现（参考 `GatewayModule`、`MediaGatewayModule`）。接口在 **`:base`**。
 
 ### userapi
 
-Ϊ **user ģ��** �Ĺ��� api���ӿڡ�ʵ�塢·�ɡ���Ҫ�� Gateway / ȫ�����á�
+为 **user 模块** 的公共 api：接口、实体、路由。不要放 Gateway / 全局配置。
 
-### base��case��
+### base（case）
 
-��Ŀ����ģ�����壺Gateway��`AppPropertiesConfig`��`PropertiesKeyEnum`��`FileTypeEnum`��`BasePage`��`BaseAppActivity` �ȡ��������ɰ� serm-app �� `:base` ˼·��չ�ֵ䡢�ļ�����ȣ�**��Ҫ��ҵ���ֵ�Ӳ�������**��
+项目基础模块样板：Gateway、`AppPropertiesConfig`、`PropertiesKeyEnum`、`FileTypeEnum`、`BasePage`、`BaseAppActivity` 等。各宿主可按 serm-app 的 `:base` 思路扩展字典、文件服务等，**不要把业务字典硬塞进框架**。
 
 ### user
 
-�����ʾ�������� `common` + `base` + `userapi`������ҵ�� module ��Ҫ���� `user` ʵ��ģ�顣
-## ��װ˼·���ģ�ע��ۿ�˳���
+组件化示例：依赖 `common` + `base` + `userapi`；其他业务 module 不要依赖 `user` 实现模块。
+## 封装思路博文，注意观看顺序哈
 
-һ��https://blog.csdn.net/fzkf9225/article/details/105197996
+一：https://blog.csdn.net/fzkf9225/article/details/105197996
 
-����https://blog.csdn.net/fzkf9225/article/details/105200803
+二：https://blog.csdn.net/fzkf9225/article/details/105200803
 
-����https://blog.csdn.net/fzkf9225/article/details/132182449
+三：https://blog.csdn.net/fzkf9225/article/details/132182449
 
-## �鿴��������������־
+## 查看网络请求等相关日志
 
-### ��ʼ���ʹ���־
+### 初始化和打开日志
 
-��app�е�Application�е��ó�ʼ������
+在app中的Application中调用初始化方法
 
 ```
-        // ���¾����� init ֮ǰ����д����Ĭ��ֵ
-        // Config.getInstance().setDynamicColorEnabled(true);          // Material You��Ĭ�Ϲ�
-        // Config.getInstance().setAutoSizeEnabled(false);             // ��Ļ���䣬Ĭ�Ͽ�
-        // Config.getInstance().setCrashHandlerEnabled(false);         // �Դ���������Ĭ�Ͽ�
-        // Config.getInstance().setCrashLogRetainDays(7);              // ������־����������Ĭ�� 5��<=0 ������
+        // 以下均须在 init 之前；不写则用默认值
+        // Config.getInstance().setDynamicColorEnabled(true);          // Material You，默认关
+        // Config.getInstance().setAutoSizeEnabled(false);             // 屏幕适配，默认开
+        // Config.getInstance().setCrashHandlerEnabled(false);         // 自带崩溃捕获，默认开
+        // Config.getInstance().setCrashLogRetainDays(7);              // 崩溃日志保留天数，默认 5；<=0 不清理
         // Config.getInstance().setNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        // Config.getInstance().setEdgeToEdgeEnabled(false);           // BaseActivity ȫ��Ĭ�ϣ�Ĭ�Ͽ�
+        // Config.getInstance().setEdgeToEdgeEnabled(false);           // BaseActivity 全局默认，默认开
         // Config.getInstance().setDefaultPlaceholderRes(R.drawable.my_placeholder);
         // Config.getInstance().setDefaultErrorImageRes(R.drawable.my_error);
         Config.getInstance().init(this);
@@ -147,163 +147,163 @@ implementation project(':userapi')   // ��Ҫ�û���Լʱ
             Config.getInstance().enableDebug(true);
         }
 ```
-### ����Api
+### 常用Api
 
-#### ϵͳ����
-1. �̳�`BaseApplication`��Ȼ���ʼ��`Config.getInstance().init(this)`����Ļ���䡢��������ҹ��ģʽ��Edge-to-Edge��ռλͼ��ȫ�ֿ������� `init` ǰ���á������Ҫ��ȡȫ�ֵ�`Application`������Ե���`Config`�ķ���
-2. `ErrorService`���ṩȫ�ֵ�api��������������ص���һЩ�������ת��¼���ص����⣬����ͳһ��������ͷ�����õ�
+#### 系统配置
+1. 继承`BaseApplication`，然后初始化`Config.getInstance().init(this)`；屏幕适配、崩溃捕获、夜间模式、Edge-to-Edge、占位图等全局开关须在 `init` 前设置。如果需要获取全局的`Application`对象可以调用`Config`的方法
+2. `ErrorService`：提供全局的api，处理网络请求回调的一些错误和跳转登录拦截等问题，还有统一网络请求头的配置等
 
-#### UI���
-1. ��ͨ`Activity`�̳�`BaseActivity`����
-2. ��ͨ`Fragment`�̳�`BaseFragment`����
-3. ��ͨ`Adapter`�̳�`BaseRecyclerViewAdapter`����
-4. �����Ҫ`pinging`��ҳ��`Adapter`�Ļ����̳�`BasePagingAdapter`
+#### UI相关
+1. 普通`Activity`继承`BaseActivity`即可
+2. 普通`Fragment`继承`BaseFragment`即可
+3. 普通`Adapter`继承`BaseRecyclerViewAdapter`即可
+4. 如果需要`pinging`分页的`Adapter`的话，继承`BasePagingAdapter`
 5. 列表分页请继承 `BaseSmartPagingFragment`（原 SwipeRefreshLayout 版 `BasePagingFragment` 已移除）
-6. ����`pinging`��ҳ���б�`Fragment`�̳�`BaseRecyclerViewFragment`
-7. ��õķ�ҳ�б�`Fragment`��֧�ֶ���ʽˢ�£����ظ��࣬`paging3`��ҳ�̳�`BaseSmartPagingFragment`
-8. ����� UI�����ؿ� / ���� / ҵ���룩�� `BaseActivity` / `BaseFragment` ʵ�� **`RequestUi`**���� `NetworkRequestUiBinder` ���� ViewModel �� `NetworkRequestUiHost`������ͳһ `showError(AppError)`��ҵ�񵼺��� LiveData/Flow�����¼ `PostLoginRoute`����ViewModel/Repository ������ҳ��
-9. `adapter`�����Ҫʵ���Զ�����¼��ؼ��ȣ������Զ���`BaseViewHolder`��Ȼ����adapter����дcreateViewHold����
-10. ��ͨ`ViewModel`����ֱ�Ӽ̳�`BaseViewModel`
-11. ��ҳ�б��`ViewModel`�̳�`PagingViewModel`
-12. ֧��tab��ǩ�໬���ܵ�`Fragment`�̳�`BaseViewPagerFragment`���������Ҫ`Fragment`�Ļ�ֱ��`Activity`�̳�`BaseViewPagerActivity`
-13. �Զ����������ֱ�ӵ���`CameraActivity`����Ƶ���ſ���ֱ�ӵ���`VideoPlayerActivity`����ά��ɨ�����ֱ�ӵ���`CaptureActivity`��WebView����ֱ�ӵ���`WebViewActivity`
+6. 不带`pinging`分页的列表`Fragment`继承`BaseRecyclerViewFragment`
+7. 最常用的分页列表`Fragment`，支持多样式刷新，加载更多，`paging3`分页继承`BaseSmartPagingFragment`
+8. 请求侧 UI（加载框 / 错误 / 业务码）由 `BaseActivity` / `BaseFragment` 实现 **`RequestUi`**，经 `NetworkRequestUiBinder` 订阅 ViewModel 内 `NetworkRequestUiHost`；错误统一 `showError(AppError)`；业务导航用 LiveData/Flow（如登录 `PostLoginRoute`），ViewModel/Repository 不持有页面
+9. `adapter`如果需要实现自定义的事件控件等，可以自定义`BaseViewHolder`，然后在adapter中重写createViewHold方法
+10. 普通`ViewModel`可以直接继承`BaseViewModel`
+11. 分页列表的`ViewModel`继承`PagingViewModel`
+12. 支持tab标签侧滑功能的`Fragment`继承`BaseViewPagerFragment`，如果不需要`Fragment`的话直接`Activity`继承`BaseViewPagerActivity`
+13. 自定义相机可以直接调用`CameraActivity`，视频播放可以直接调用`VideoPlayerActivity`，二维码扫描可以直接调用`CaptureActivity`，WebView可以直接调用`WebViewActivity`
 
-#### ���ݴ洢�������������
-1. ���������´����Ƽ� `BaseNetworkRepository`��`core` ����`Flow<RequestResult<T>>`������ Rx `RepositoryImpl` �Ա�������ɲ� `FlowRepositoryImpl` ��ɾ����Demo �� `SampleCoreNetworkRepository`
-2. ���������װ`ApiRetrofit`��ͨ��`Builder`ģʽ����������`Api`�ο�`ApiRetrofit.Builder`
-3. ������ش洢���ݵĻ�����ʹ��`MMKVHelper`����`SharedPreferences`�����ݿ�Ļ������Լ̳�`BaseRoomDao`��**Rx ջ**�� `RoomRepositoryImpl`��**Э��ջ**�� `io.coderf.arklab.core.db.RoomDataRepository`����������� `BaseNetworkRepository`��Room ԭ�� `*Suspend`������ `Flow<RequestResult>`�����ײ��в��Žӣ�������ģ��� `AttachmentDao` / `AttachmentDatabase` / `AttachmentRepositoryImpl`��ҵ����� `mobileId`��������� `fileId`�������� `mainId`/`fieldName` ���顣DAO �� `@RoomObservedEntity` �� KSP ���� `XxxDaoRawQueryBridge`��Maven��`core-base:1.7.2` + `core-db:1.6.2` + `room-processor:1.2.0`����� [core-db/README.md](core-db/README.md)��[UPGRADE.md ��0.4.2](UPGRADE.md#042-����ģ�ͼ�base-171--db-162) / [��0.4.3](UPGRADE.md#043-����Сͼ��������ͼbase-172--ui-377)
-4. ���е�`Retrofit`�������������ӿڶ���Ҫ����`BaseApiService`
-5. ���������ҳ`PagingSource`�̳�`PagingSource`��Э��`flow`��ʽ�̳�`FlowPagingSource`������ `core-network`�������ݿ�洢��ҳ�̳�`RxRoomPagingSource`��`core-db`����ѯ������ `RoomPagingQuery`��
-6. `RetryService`����װ�����������������Ի��ƣ�������`Repository`�����û���`ApiRetrofit`�����ã�`ApiRetrofit`����ΪĬ�ϵģ�`Repository`��Ϊ��ǰ�า��Ĭ�ϵ�����
-7. `FlowRetryService`��Э�̷�ʽ�������������ԣ�������`Repository`�����û���`ApiRetrofit`�����ã�`ApiRetrofit`����ΪĬ�ϵģ�`Repository`��Ϊ��ǰ�า��Ĭ�ϵ�����
-8. `RoomRepositoryImpl`�����ݿ��һЩ���÷���
-9. `PagingRepositoryImpl`��`paging3`��ҳ��`Repository`���װ
-10. Э�̷�ҳ��`NetworkPagingRepository` + `NetworkFlowPagingViewModel`��`core` ����
-11. Rx ��ҳ��`PagingRepositoryImpl` + `PagingViewModel`��`common.repository`���Ա����
-#### ���ù�����
-1. `AppManager`����ȡ`Activity`ջ��Ϣ�ͻ�ȡApp�汾�š��汾���ơ�App�Ƿ���ǰ̨���е�API
-2. `AppSettingHelper`���������û�����app�Ƿ��״����еȷ���
-3. `ConstantsHelper`��������һЩ���þ�̬����
-4. `MobileHelper`����ȡ�ֻ���һЩ��Ϣ�������ȡ�ֻ���IMEI��MAC��ַ���ֻ��ͺš��ֻ�ϵͳ�汾���ֻ��ֱ��ʡ��ֻ�Ψһ��ʶ����
-5. `RegexUtils`��������ʽ��λ�� `core-utils`������ `io.coderf.arklab.core.utils`��
-6. `AuthManager`����¼��ص�һЩ���ã�`Fragment`��`Activity`���еĶ��󣬿���ֱ�ӻ�ȡʹ��
-7. `UIController`������`Fragment`��`Activity`һЩ`dialog`��`toast`��`loading`��
-8. `PropertiesModule`������Properties������Ի�ȡ�����ļ���Ĳ���
-9. `CacheUtil`�����湤��
-10. `CollectionUtil`�����Ϲ�����
-11. `DownloadManger`�����ع������
-12. `PermissionManager`��ϵͳȨ�޹��������
-13. `NetworkStateUtil`������״̬������
-14. `StringUtil`: �ַ���������
-15. `RxMenuView`��`Toolbar`�˵��ؼ��������ʱ�䣬�����ؿ��ٵ���¼�
-16. `RxView`��`View`�������ʱ�䣬�����ؿ��ٵ���¼�
-17. `QRCodeUtil`����ά�빤����
-18. `MathUtil`����ѧ���㹤���࣬�Ӽ��˳���һЩ��ʽ��������С��λ����
-19. `NumberUtil`�����ִ�Сдת�������ָ�ʽ����
-20. `KeyBoardUtil`������̿��ơ����ѡ��رպͼ�����
-21. `GeoMapUtil`������ת������
-22. `FastBlur`����˹ģ��������
-23. `ThreadExecutor`���̳߳ع�����
-24. `ThreadExecutorBounded`���̳߳ع����࣬�߽����Ĭ��Ϊ128
+#### 数据存储和网络请求相关
+1. 网络请求：新代码推荐 `BaseNetworkRepository`（`core` 包，`Flow<RequestResult<T>>`）。旧 Rx `RepositoryImpl` 仍保留；过渡层 `FlowRepositoryImpl` 已删除。Demo 见 `SampleCoreNetworkRepository`
+2. 网络请求封装`ApiRetrofit`，通过`Builder`模式创建，具体`Api`参考`ApiRetrofit.Builder`
+3. 如果本地存储数据的话可以使用`MMKVHelper`代替`SharedPreferences`，数据库的话，可以继承`BaseRoomDao`。**Rx 栈**用 `RoomRepositoryImpl`；**协程栈**用 `io.coderf.arklab.core.db.RoomDataRepository`（对齐网络层 `BaseNetworkRepository`，Room 原生 `*Suspend`，返回 `Flow<RequestResult>`，两套并行不桥接）。附件模版见 `AttachmentDao` / `AttachmentDatabase` / `AttachmentRepositoryImpl`：业务持有 `mobileId`，服务端用 `fileId`，不再用 `mainId`/`fieldName` 反查。DAO 加 `@RoomObservedEntity` 后 KSP 生成 `XxxDaoRawQueryBridge`。Maven：`core-base:1.7.2` + `core-db:1.6.2` + `room-processor:1.2.0`，详见 [core-db/README.md](core-db/README.md)、[UPGRADE.md §0.4.2](UPGRADE.md#042-附件模型简化base-171--db-162) / [§0.4.3](UPGRADE.md#043-附件小图优先缩略图base-172--ui-377)
+4. 所有的`Retrofit`的网络请求代理接口都需要集成`BaseApiService`
+5. 网络请求分页`PagingSource`继承`PagingSource`，协程`flow`方式继承`FlowPagingSource`（均在 `core-network`）；数据库存储分页继承`RxRoomPagingSource`（`core-db`，查询参数用 `RoomPagingQuery`）
+6. `RetryService`：封装了网络请求拦截重试机制，可以在`Repository`中设置或者`ApiRetrofit`中配置，`ApiRetrofit`配置为默认的，`Repository`中为当前类覆盖默认的配置
+7. `FlowRetryService`：协程方式的网络请求重试，可以在`Repository`中设置或者`ApiRetrofit`中配置，`ApiRetrofit`配置为默认的，`Repository`中为当前类覆盖默认的配置
+8. `RoomRepositoryImpl`：数据库的一些常用方法
+9. `PagingRepositoryImpl`：`paging3`分页的`Repository`层封装
+10. 协程分页：`NetworkPagingRepository` + `NetworkFlowPagingViewModel`（`core` 包）
+11. Rx 分页：`PagingRepositoryImpl` + `PagingViewModel`（`common.repository`，仍保留）
+#### 常用工具类
+1. `AppManager`：获取`Activity`栈信息和获取App版本号、版本名称、App是否在前台运行等API
+2. `AppSettingHelper`：可以设置基础的app是否首次运行等方法
+3. `ConstantsHelper`：基础的一些常用静态常量
+4. `MobileHelper`：获取手机的一些信息，比如获取手机的IMEI、MAC地址、手机型号、手机系统版本、手机分辨率、手机唯一标识符等
+5. `RegexUtils`：正则表达式（位于 `core-utils`，包名 `io.coderf.arklab.core.utils`）
+6. `AuthManager`：登录相关的一些调用，`Fragment`、`Activity`持有的对象，可以直接获取使用
+7. `UIController`：控制`Fragment`、`Activity`一些`dialog`、`toast`、`loading`等
+8. `PropertiesModule`：加载Properties对象可以获取配置文件里的参数
+9. `CacheUtil`：缓存工具
+10. `CollectionUtil`：集合工具类
+11. `DownloadManger`：下载管理工具
+12. `PermissionManager`：系统权限管理工具类
+13. `NetworkStateUtil`：网络状态工具类
+14. `StringUtil`: 字符串工具类
+15. `RxMenuView`：`Toolbar`菜单控件点击拦截时间，可拦截快速点击事件
+16. `RxView`：`View`点击拦截时间，可拦截快速点击事件
+17. `QRCodeUtil`：二维码工具类
+18. `MathUtil`：数学计算工具类，加减乘除和一些格式化，保留小数位数等
+19. `NumberUtil`：数字大小写转化，数字格式化等
+20. `KeyBoardUtil`：软键盘控制、唤醒、关闭和监听等
+21. `GeoMapUtil`：坐标转化工具
+22. `FastBlur`：高斯模糊工具类
+23. `ThreadExecutor`：线程池工具类
+24. `ThreadExecutorBounded`：线程池工具类，边界更大默认为128
 
-#### �Զ���View���
+#### 自定义View相关
 
-�ٷ�����Բ�� / ��ߵĳ�����ֱ���� Material3 �ؼ���**1.1.1 ��ɾ����Ӧ��װ��**����
+官方已有圆角 / 描边的场景，直接用 Material3 控件（**1.1.1 已删除对应包装类**）：
 
-| ���� | ʹ�� |
+| 场景 | 使用 |
 |------|------|
-| Բ�� / ��߰�ť | `MaterialButton`��`app:cornerRadius` / `app:backgroundTint` / `app:stroke*`�� |
-| Բ�� / Բ��ͼƬ | `ShapeableImageView`��`app:shapeAppearanceOverlay`���� `CircleShapeAppearance` / `RoundedShapeAppearanceL`����� `app:strokeColor` / `app:strokeWidth`����**��ɫ�� `android:background`����Ҫ�� `app:backgroundTint`** |
-| ��������� | `TextInputLayout` + `TextInputEditText`������ `Widget.App.TextInputLayout.Dense`�� |
-| ����������� View ��Բ�ǵ� | `CornerShapeHelper.apply` / `applyFromAttributes`���� `ShapeView`��`radius` / `bgColor` / `stroke*`�� |
+| 圆角 / 描边按钮 | `MaterialButton`（`app:cornerRadius` / `app:backgroundTint` / `app:stroke*`） |
+| 圆角 / 圆形图片 | `ShapeableImageView`（`app:shapeAppearanceOverlay`，如 `CircleShapeAppearance` / `RoundedShapeAppearanceL`；描边 `app:strokeColor` / `app:strokeWidth`）。**填色用 `android:background`，不要用 `app:backgroundTint`** |
+| 密铺输入框 | `TextInputLayout` + `TextInputEditText`（可用 `Widget.App.TextInputLayout.Dense`） |
+| 代码里给任意 View 铺圆角底 | `CornerShapeHelper.apply` / `applyFromAttributes`（读 `ShapeView`：`radius` / `bgColor` / `stroke*`） |
 
-�ٷ� **û��** XML Բ�ǡ���䡢������ԣ�����Ա����װ������Ϊ `MaterialShapeDrawable`����
+官方 **没有** XML 圆角、填充、描边属性，因此仍保留封装（背景为 `MaterialShapeDrawable`）：
 
-1. `AutoNextLineLinearlayout`���Զ����е�`ViewGroup`
-2. `CircleTextView`��Բ�� `MaterialTextView`��XML `bgColor` / `stroke*`�����ְ�Բ�ľ���
-3. `CirclePaddingImageView`��Բ��**����** + `android:padding` ����ͼ�꣨���� `AppCompatImageView`�����ǲ�Բͷ��ͷ���� `ShapeableImageView` + `CircleShapeAppearance`��
-4. `CustomScrollView`��֧�������ص�Ч���� `ScrollView`
-5. `Code`������ͼ����֤��Ĺ����࣬�ɻ�������ַ��͸�����
-6. `DividerView`���ɻ��ƺ��߻����ߵ����߿ؼ���Kotlin ʵ�֣�
-7. `CircleProgressBar`��Բ�ν�������֧��������ʾ���������ȸ���
-8. `GradationRectTextView`��֧�ֽ��䱳��������������ʽ��ͬ�� `TextView`
-9. `GridMenuView`����ҳ����˵����̳� `CornerConstraintLayout`��`Kotlin`��
-10. `ClearableEditText` / `PasswordEditText`��Բ������ + ��� / �����л���compound drawable���ٷ� `TextInputLayout` �޷�ͬʱ�� + �ۣ�
-11. `CornerLabelView`�������νǱ�ؼ�������ʾ���ĸ����䣬֧�����ֺͱ���ɫ
-12. `CornerTextView`��Բ�� `MaterialTextView`��XML `radius` / `bgColor` / `stroke*`
-13. `HorizontalProgressBar`��ˮƽ�����������֧��Բ�Ǳ�����������ʾ
-14. `ConfigurableWebView`�������õ� `WebView`��֧�ּ��ر��� assets ������ URL
-15. `AutoTextView`���� 3D ��ת�����������л��ؼ������� `TextSwitcher`��
-16. `CustomSearchEditText`��������ͼ���������ܵ� `EditText`��֧��Բ�Ǳ���
-17. `CornerConstraintLayout`��Բ�� `ConstraintLayout`��XML `radius` / `bgColor` / `stroke*`
-18. `BannerView`���ֲ�ͼ�ؼ���֧��Բ��ָʾ�����Զ��ֲ���Բ�ǲü�
-19. `StarBar`���Զ����������ֿؼ���֧��ʵ��/��������ǡ�����/С�����֡������������ֵȹ���
-20. `IconDotTextView`��ͼ��+����+���ֽǱ����Ͽؼ���֧�ֶ��ֲ��ַ���ͼ������λ�ã��ͽǱ��Զ���
-21. `SquareLabelView`�����������`TextView`������ģ�����Ƶȳ�����֧�ַ�����״�����Ρ���Բ��Բ�Ǿ��Σ���λ���Զ���
-22. `IconLabelValueView`��ͼ��-��ǩ-ֵ-ͼ��Ĳ�����ͼ�������������������չʾ��֧������ͼ�꿪�ء��ײ��߿�ֵ���뷽ʽ������
-23. `VerificationCodeInputView`����֤������ؼ���֧�ֶ���������򡢹����˸�������������ƣ����֡���ĸ�ȣ����߿���ʽ�Զ���
-24. `ScalingTextView`����չ��/������ı��ؼ���Ĭ����ʾָ��������֧�֡��鿴ȫ��/����ȫ�ġ�����л�
-25. `LoadingProgressDialog`�����ؽ��ȶԻ���֧�ֶ�̬ʡ�ԺŶ���Ч�����Զ�����ʾ���֡��������Ƿ��ȡ��
-26. `DatePickDialog`��������ѡ��Ի���֧�ֶ�������ģʽ�������ա����¡���ݡ�ʱ��ȣ����Զ������ڷ�Χ�ͱ�ǩ
-27. `BottomSheetDialog`���ײ�ѡ���Material `BottomSheetDialog`����֧���б�ѡ����ʾ���Զ���ָ�����ʽ��ȡ����ť
-28. `MenuDialog`���ײ��˵��Ի��򣬹������ơ�BottomSheetDialog����ʹ�ô�ͳDialogʵ�֣�֧���Զ���λ�ú���ʽ
-29. `ImageSaveDialog`��ͼƬ����ѡ��Ի����ṩ�����浽���ء���ѡ�����ͼƬ���泡��
-30. `EmptyLayout`���հ�ռλ���ֿؼ�������ʾ�����С�����ʧ�ܡ������ݵ�״̬��֧���Զ���ͼ��͵������
-31. `InputDialog`����������Ի���֧���ı����롢����������ơ������������ú���ʾ����
-32. `EditAreaDialog`�������ı�����Ի��򣬹�������`InputDialog`��֧�ֶ����ı��༭
-33. `UpdateMessageDialog`��Ӧ�ø�����ʾ�Ի�����ʾ�汾��Ϣ�͸������ݣ�֧������ʶ�����������
-34. `ConfirmDialog`��ȷ�϶Ի����ṩȷ����ȡ����ť��֧�ָ��ı�������ʾ�Ͱ�ť�ɼ��Կ���
-35. `ProgressBarDialog`���������Ի���֧��Բ�κ�ˮƽ���ֽ�������ʽ�����Զ����������ۺͰ�ť
-36. `MessageDialog`����Ϣ��ʾ�Ի��򣬵���ť��ƣ����ڼ���Ϣ��ʾ����
-37. `ProtectionGuidelinesDialog`�����ҳ���û�Ȩ����˽ָ��������Ȩ����ʾ����֧�ָ��ı����ݡ��Զ��尴ť���ֺ���ʽ������Ȩ�����볡��
-38. `CascadeSinglePopupWindow`����ѡ�������
-39. `PopupView`����ͨ����ѡ�񵯴�����ѡ��
-40. `TextPopupView`���Զ����ı�+ͼ����Ͽؼ�
-41. `MultiPopupView`����ѡ���Ǽ���������
-42. `TreePopupView`����������ѡ�񵯴�
-43. `CascadeMultiPopupWindow`����ѡ�������
-44. `TxSlideRecyclerView`��֧�ֲ໬��`RecyclerView`
-45. `SpeakButton`����΢�ŵĳ���˵��View
-46. `VoiceView`������������ؼ�
+1. `AutoNextLineLinearlayout`：自动换行的`ViewGroup`
+2. `CircleTextView`：圆形 `MaterialTextView`，XML `bgColor` / `stroke*`，文字按圆心居中
+3. `CirclePaddingImageView`：圆形**背景** + `android:padding` 内缩图标（父类 `AppCompatImageView`，不是裁圆头像；头像用 `ShapeableImageView` + `CircleShapeAppearance`）
+4. `CustomScrollView`：支持下拉回弹效果的 `ScrollView`
+5. `Code`：生成图形验证码的工具类，可绘制随机字符和干扰线
+6. `DividerView`：可绘制横线或竖线的虚线控件（Kotlin 实现）
+7. `CircleProgressBar`：圆形进度条，支持文字显示、动画进度更新
+8. `GradationRectTextView`：支持渐变背景、左右文字样式不同的 `TextView`
+9. `GridMenuView`：分页网格菜单，继承 `CornerConstraintLayout`（`Kotlin`）
+10. `ClearableEditText` / `PasswordEditText`：圆角输入 + 清除 / 明文切换（compound drawable；官方 `TextInputLayout` 无法同时清 + 眼）
+11. `CornerLabelView`：三角形角标控件，可显示在四个角落，支持文字和背景色
+12. `CornerTextView`：圆角 `MaterialTextView`，XML `radius` / `bgColor` / `stroke*`
+13. `HorizontalProgressBar`：水平横向进度条，支持圆角背景和文字显示
+14. `ConfigurableWebView`：可配置的 `WebView`，支持加载本地 assets 或网络 URL
+15. `AutoTextView`：带 3D 翻转动画的文字切换控件（基于 `TextSwitcher`）
+16. `CustomSearchEditText`：带搜索图标和清除功能的 `EditText`，支持圆角背景
+17. `CornerConstraintLayout`：圆角 `ConstraintLayout`，XML `radius` / `bgColor` / `stroke*`
+18. `BannerView`：轮播图控件，支持圆点指示器、自动轮播、圆角裁剪
+19. `StarBar`：自定义星星评分控件，支持实心/空心五角星、整数/小数评分、触摸滑动评分等功能
+20. `IconDotTextView`：图标+文字+数字角标的组合控件，支持多种布局方向（图标上下位置）和角标自定义
+21. `SquareLabelView`：左侧带方块的`TextView`，用于模块名称等场景，支持方块形状（矩形、椭圆、圆角矩形）和位置自定义
+22. `IconLabelValueView`：图标-标签-值-图标的布局视图，常用于设置项或详情展示，支持左右图标开关、底部边框、值对齐方式等配置
+23. `VerificationCodeInputView`：验证码输入控件，支持多格独立输入框、光标闪烁、输入类型限制（数字、字母等）、边框样式自定义
+24. `ScalingTextView`：可展开/收起的文本控件，默认显示指定行数，支持“查看全文/收起全文”点击切换
+25. `LoadingProgressDialog`：加载进度对话框，支持动态省略号动画效果、自定义提示文字、可设置是否可取消
+26. `DatePickDialog`：年月日选择对话框，支持多种日期模式（年月日、年月、年份、时间等）、自定义日期范围和标签
+27. `BottomSheetDialog`：底部选择框（Material `BottomSheetDialog`），支持列表选项显示、自定义分割线样式和取消按钮
+28. `MenuDialog`：底部菜单对话框，功能类似·BottomSheetDialog·但使用传统Dialog实现，支持自定义位置和样式
+29. `ImageSaveDialog`：图片保存选择对话框，提供“保存到本地”等选项，用于图片保存场景
+30. `EmptyLayout`：空白占位布局控件，可显示加载中、加载失败、无数据等状态，支持自定义图标和点击重试
+31. `InputDialog`：单行输入对话框，支持文本输入、最大字数限制、输入类型设置和提示文字
+32. `EditAreaDialog`：多行文本输入对话框，功能类似`InputDialog`但支持多行文本编辑
+33. `UpdateMessageDialog`：应用更新提示对话框，显示版本信息和更新内容，支持链接识别和流量提醒
+34. `ConfirmDialog`：确认对话框，提供确定和取消按钮，支持富文本内容显示和按钮可见性控制
+35. `ProgressBarDialog`：进度条对话框，支持圆形和水平两种进度条样式，可自定义进度条外观和按钮
+36. `MessageDialog`：信息提示对话框，单按钮设计，用于简单信息提示场景
+37. `ProtectionGuidelinesDialog`：启动页的用户权限隐私指引，请求权限提示弹框，支持富文本内容、自定义按钮文字和样式，用于权限申请场景
+38. `CascadeSinglePopupWindow`：单选项级联弹窗
+39. `PopupView`：普通下拉选择弹窗（单选）
+40. `TextPopupView`：自定义文本+图标组合控件
+41. `MultiPopupView`：多选（非级联）弹窗
+42. `TreePopupView`：二级树形选择弹窗
+43. `CascadeMultiPopupWindow`：多选项级联弹窗
+44. `TxSlideRecyclerView`：支持侧滑的`RecyclerView`
+45. `SpeakButton`：仿微信的长按说话View
+46. `VoiceView`：语音播放条控件
 
-#### Form�����ؿؼ�
-��Ҫ���ڳ�����һЩ�������ͻ������
-1. `FormDate`������ѡ��ؼ�
-2. `FormDateRange`�����ڷ�Χѡ��ؼ�
-3. `FormDateTime`������+ʱ��ѡ��ؼ�
-4. `FormEditArea`���ı�������ؼ�
-5. `FormEditText`�������ı�����ؼ�
-6. `FormFile`���ļ�ѡ��ؼ�������ȫ����ʽ���ļ�ѡ��
-7. `FormFilePreview`���ļ�Ԥ���ؼ�
-8. `FormImage`��ͼƬѡ��ؼ�
-9. `FormImageAndVideo`��ͼƬ+��Ƶѡ��ؼ�
-10. `FormImageAndVideoPreview`��ͼƬ+��ƵԤ���ؼ�
-11. `FormImagePreview`��ͼƬԤ���ؼ�
-12. `FormRichText`�����ı��ؼ�
-13. `FormSelection`������ѡ��ؼ�
-14. `FormTextView`���ı�Ԥ���ؼ���֧�ֵ��ж�����ʾ����Ҫ��������ҳ�ı������
-15. `FormTime`��ʱ��ѡ��ؼ�
-16. `FormVideo`����Ƶѡ��ؼ�
-17. `FormVideoPreview`����ƵԤ���ؼ�
-18. `DateRangePickDialog`�����ڷ�Χѡ��`dialog`
-19. `TickViewMessageDialog`���Թ���������
-20. `CalendarView`���Զ�������
+#### Form表单相关控件
+主要用于常见的一些表单输入和回显情况
+1. `FormDate`：日期选择控件
+2. `FormDateRange`：日期范围选择控件
+3. `FormDateTime`：日期+时间选择控件
+4. `FormEditArea`：文本域输入控件
+5. `FormEditText`：单行文本输入控件
+6. `FormFile`：文件选择控件，包含全部格式的文件选择
+7. `FormFilePreview`：文件预览控件
+8. `FormImage`：图片选择控件
+9. `FormImageAndVideo`：图片+视频选择控件
+10. `FormImageAndVideoPreview`：图片+视频预览控件
+11. `FormImagePreview`：图片预览控件
+12. `FormRichText`：富文本控件
+13. `FormSelection`：下拉选择控件
+14. `FormTextView`：文本预览控件，支持单行多行显示，主要用于详情页的表单回显
+15. `FormTime`：时间选择控件
+16. `FormVideo`：视频选择控件
+17. `FormVideoPreview`：视频预览控件
+18. `DateRangePickDialog`：日期范围选择`dialog`
+19. `TickViewMessageDialog`：对勾动画弹窗
+20. `CalendarView`：自定义日历
 
-#### GPS���api
-1. `GpsService`: GPS��̨����
-2. `GpsLifecycleObserver`��GPS�������ڹ۲��ߣ�����ֱ���������۲��ߣ�����GPS�Ƿ����Ȩ���жϵȵ�
-### ��������������־
+#### GPS相关api
+1. `GpsService`: GPS后台服务
+2. `GpsLifecycleObserver`：GPS生命周期观察者，可以直接添加这个观察者，包括GPS是否开启、权限判断等等
+### 过滤网络请求日志
 
-����ApiRetrofit�µ�TAG
-TAGֵΪ������`ApiRetrofit`
+调用ApiRetrofit下的TAG
+TAG值为类名：`ApiRetrofit`
 
-## ����ָ����
+## 接入指引：
 
-### ���빫��������
+### 导入公共依赖包
 
-���ڼ��ɵ�aar���и���Ч�������Ҫ�ڼ̳�base��ʱ�������ǵİ�����Ȼ�ͻ��Ҳ������õĵ������⣬���������û����aar���ö���ֱ��module���õĻ�������ֱ�ӽ�
-`implementation` �ĳ�`api`����
-�ɲο�appģ���demo������
+由于集成的aar包有隔离效果因此需要在继承base类时导入他们的包，不然就会找不到引用的第三方库，但是如果你没有以aar引用而是直接module引用的话，可以直接将
+`implementation` 改成`api`即可
+可参考app模块的demo依赖库
 
 ```
     implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
@@ -321,7 +321,7 @@ TAGֵΪ������`ApiRetrofit`
     implementation project(':userapi')
     implementation project(':core-form')
     implementation project(':core-gnss')
-    // ��װ�������ʵ�ֿ⣻ҵ�� module ͨ�� Gateway ע��
+    // 组装层才依赖实现库；业务 module 通过 Gateway 注入
     implementation project(':core-media')
     implementation project(':core-mqtt')
     implementation project(':user')
@@ -356,8 +356,8 @@ TAGֵΪ������`ApiRetrofit`
     implementation libs.zxing.android.embedded
     //paging3
     implementation libs.androidx.paging.runtime
-    // ���ڲ���
-    testImplementation libs.androidx.paging.common// [��ѡ] RxJava ֧��
+    // 用于测试
+    testImplementation libs.androidx.paging.common// [可选] RxJava 支持
     implementation libs.paging.rxjava3
     implementation libs.swiperefreshlayout
 
@@ -375,59 +375,59 @@ TAGֵΪ������`ApiRetrofit`
     implementation libs.room.paging
 ```
 
-### ��������
+### 混淆配置
 
 ```
 # ==================== MVVM Common / Core Library ====================
-# common facade + core-*�������Զ�Ϊ io.coderf.arklab.common.*��
+# common facade + core-*（包名仍多为 io.coderf.arklab.common.*）
 -keep class io.coderf.arklab.common.** { *; }
 -dontwarn io.coderf.arklab.common.**
 -keep class io.coderf.arklab.core.** { *; }
 -dontwarn io.coderf.arklab.core.**
 -keep class io.coderf.arklab.base.gateway.** { *; }
 
-# �������ݰ������
+# 保留数据绑定相关类
 -keep class io.coderf.arklab.common.bean.** { *; }
 -keepclassmembers class io.coderf.arklab.common.bean.** {
     void set*(***);
     *** get*();
 }
 
-# ���� BaseResponse �� ViewModel
+# 保留 BaseResponse 和 ViewModel
 -keep class io.coderf.arklab.common.base.BaseResponse { *; }
 -keep class io.coderf.arklab.common.viewmodel.** { *; }
 
-# ����ע�⴦�������ɵ���
+# 保留注解处理器生成的类
 -keep class * extends io.coderf.arklab.common.base.** { *; }
 
-# ������Դ������ࣨ������Զ����ɵİ��ࣩ
+# 保留资源绑定相关类（如果有自动生成的绑定类）
 -keep class *Binding { *; }
 -keep class *BindingImpl { *; }
 ```
 ```
 # ==================== Media Common Library ====================
-# ���� Media ��ܺ�����
+# 保留 Media 框架核心类
 -keep class io.coderf.arklab.media.** { *; }
 -dontwarn io.coderf.arklab.media.**
 -keep class io.coderf.arklab.media.gateway.** { *; }
 
-# ��������ģ����
+# 保留数据模型类
 -keep class io.coderf.arklab.media.bean.** { *; }
 -keepclassmembers class io.coderf.arklab.media.bean.** {
     void set*(***);
     *** get*();
 }
 
-# ������Ĺ�����͹�����
+# 保留核心工具类和构建器
 -keep class io.coderf.arklab.media.MediaBuilder { *; }
 -keep class io.coderf.arklab.media.MediaHelper { *; }
 -keep class io.coderf.arklab.media.utils.** { *; }
 
-# ����ص��ӿ�
+# 保留回调接口
 -keep class io.coderf.arklab.media.callback.** { *; }
 -keep interface io.coderf.arklab.media.callback.** { *; }
 
-# �����ý�崦�����
+# 保留多媒体处理方法
 -keepclassmembers class io.coderf.arklab.media.** {
     public * compress*(...);
     public * process*(...);
@@ -437,69 +437,69 @@ TAGֵΪ������`ApiRetrofit`
 ```
 
 ```
-# ==================== core-form Library��ԭ commonui��====================
-# ���� core-form ��ܺ����ࣨ���� io.coderf.arklab.ui��
+# ==================== core-form Library（原 commonui）====================
+# 保留 core-form 框架核心类（包名 io.coderf.arklab.ui）
 -keep class io.coderf.arklab.ui.** { *; }
 -dontwarn io.coderf.arklab.ui.**
 
-# ȷ������ģ�Ͳ�������
+# 确保数据模型不被混淆
 -keep class io.coderf.arklab.ui.bean.** { *; }
 -keepclassmembers class io.coderf.arklab.ui.bean.** {
     void set*(***);
     *** get*();
 }
 
-# �����Զ��� Widget ���
+# 保留自定义 Widget 组件
 -keep class io.coderf.arklab.ui.widget.** { *; }
 -keepclassmembers class io.coderf.arklab.ui.widget.** {
     public <init>(android.content.Context);
     public <init>(android.content.Context, android.util.AttributeSet);
 }
 
-# ���� Fragment
+# 保留 Fragment
 -keep class io.coderf.arklab.ui.fragment.** { *; }
 
-# ����������
+# 保留适配器
 -keep class io.coderf.arklab.ui.adapter.** { *; }
 
-# ��������ع���
+# 保留表单相关功能
 -keep class io.coderf.arklab.ui.form.** { *; }
 
-# ����ӿںͻص�
+# 保留接口和回调
 -keep interface io.coderf.arklab.ui.inter.** { *; }
 -keep class io.coderf.arklab.ui.impl.** { *; }
 
-# �������ݰ������
+# 保留数据绑定相关类
 -keep class *Binding { *; }
 -keep class *BindingImpl { *; }
 ```
 
 ```
 # ==================== Google GPS Library ====================
-# ���¹����������� core-gnss �� consumer-rules.pro �У��� AAR �Զ���Ч�����������ظ�������
-# ���ṹ��api(���� API) / service(����+Session) / permission(Ȩ������) / track(�켣�ļ�)
-#          / utils(����)  ���� �������location / ui Ϊ�ڲ�ʵ�֣����������ԭ socket �ϴ����Ƴ���
+# 以下规则已内置在 core-gnss 的 consumer-rules.pro 中，随 AAR 自动生效，宿主无需重复声明。
+# 包结构：api(对外 API) / service(服务+Session) / permission(权限引导) / track(轨迹文件)
+#          / utils(工具)  —— 均保留；location / ui 为内部实现，允许混淆（原 socket 上传已移除）
 -dontwarn io.coderf.arklab.gnss.**
 
-# ���� API��GpsStarter / GpsCallback / GpsSettingConfig / LocationFilter
+# 对外 API：GpsStarter / GpsCallback / GpsSettingConfig / LocationFilter
 -keep class io.coderf.arklab.gnss.api.** { *; }
 -keepnames class * implements io.coderf.arklab.gnss.api.LocationFilter
 
-# ��λ���� GpsService / GpsBinder / Session
+# 定位服务 GpsService / GpsBinder / Session
 -keep class io.coderf.arklab.gnss.service.** { *; }
 
-# Ȩ������ GpsLifecycleObserver / PermissionsChecker
+# 权限引导 GpsLifecycleObserver / PermissionsChecker
 -keep class io.coderf.arklab.gnss.permission.** { *; }
 
-# �켣�ļ� IFileLogger / Files / GpsFileParser
+# 轨迹文件 IFileLogger / Files / GpsFileParser
 -keep class io.coderf.arklab.gnss.track.** { *; }
 
-# ������ DebugUtil / LogUtil / EsriUtil
+# 工具类 DebugUtil / LogUtil / EsriUtil
 -keep class io.coderf.arklab.gnss.utils.** { *; }
 ```
-### hilt�������
+### hilt框架依赖
 
-����Ŀ��Ŀ¼��build.gradle���
+在项目根目录下build.gradle添加
 
 ```
 plugins {
@@ -510,7 +510,7 @@ plugins {
 }
 ```
 
-�ڸ���ģ����Ӳ�����ã��Ǹ�ģ���õ����ĸ�ģ����ӣ�ÿ���õ��ĶҪ���
+在各个模块添加插件引用，那个模块用到在哪个模块添加，每个用到的额都要添加
 
 ```
 plugins {
@@ -520,81 +520,81 @@ plugins {
 }
 ```
 
-�ڸ���ģ����Ӳ�����ã��Ǹ�ģ���õ����ĸ�ģ����ӣ�ÿ���õ��ĶҪ���
+在各个模块添加插件引用，那个模块用到在哪个模块添加，每个用到的额都要添加
 
 ```
     implementation libs.google.hilt.android
     ksp libs.google.hilt.android.compiler
 ```
 
-### �½�assetsĿ¼
+### 新建assets目录
 
-�����½�dev.properties��release.properties��������һЩ�������ã���commonģ�����Ѿ������ˣ�����key����ο�demo�еĵ�properties�����ļ���Ҳ�����Զ���һЩ����
+下面新建dev.properties和release.properties，里面有一些基础配置，在common模块里已经配置了，参数key具体参考demo中的的properties配置文件，也可以自定义一些配置
 
-����Ĭ�����ã�ע�����key���ܴ��󣬲ο�demo�е�
+调用默认配置，注意参数key不能错误，参考demo中的
 
 ```
     PropertiesUtil.getInstance().loadConfig(application).getBaseUrl()
 ```
 
-�����Զ����ļ��е��Զ�������
+调用自定义文件中的自定义配置
 
 ```
     PropertiesUtil.getInstance().loadConfig(application).getPropertyValue(key,defaultValue)
 ```
 
-����Ĭ�ϼ��ص���'prod.properties'�����ļ��е����������Ҫ���ر��ֱ����builde.gradle���������resValue���ü���
+上面默认加载的是'prod.properties'配置文件中的配置如果需要加载别的直接再builde.gradle中添加如下resValue配置即可
 
 ```
     buildTypes {
         release {
-            resValue "string", "app_config_file", "prod.properties"//ָ���ļ�����app_config_file�����޸ģ������prod.properties"�����޸�
-            minifyEnabled true// ����
-            shrinkResources true // �Ƴ����õ�resource
+            resValue "string", "app_config_file", "prod.properties"//指定文件名，app_config_file不能修改，后面的prod.properties"可以修改
+            minifyEnabled true// 混淆
+            shrinkResources true // 移除无用的resource
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            resValue "string", "app_config_file", "dev.properties"//ָ���ļ�����app_config_file�����޸ģ������dev.properties"�����޸�
-            minifyEnabled false// ����
-            shrinkResources false // �Ƴ����õ�resource
+            resValue "string", "app_config_file", "dev.properties"//指定文件名，app_config_file不能修改，后面的dev.properties"可以修改
+            minifyEnabled false// 混淆
+            shrinkResources false // 移除无用的resource
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 ```
 
-### �½�Application�̳�BaseApplication
+### 新建Application继承BaseApplication
 
-һ��Ҫ���ã���Ȼcommon�кܶ����ᱨ�����application�г�ʼ��һЩ�����������磺MMKV�������ܡ�WebSocket��mqtt��
-�����Ҫ��ӡ��־�Ļ������Config�ӿ�
-���ó�ʼ������
+一定要配置，不然common中很多代码会报错，在application中初始化一些基础配置例如：MMKV、网络框架、WebSocket、mqtt等
+如果需要打印日志的话请调用Config接口
+调用初始化方法
 
 ```
-    // ����ȫ�ֿ��ؼ����ġ�ϵͳ���á������� init ǰ����
+    // 其他全局开关见上文「系统配置」，须在 init 前设置
     Config.getInstance().init(this);
 ```
 
-### CommonUI�и����������ͳһ���ϴ�����
+### CommonUI中附件组件配置统一的上传服务
 ```
         MediaUploadConfig.getInstance()
                 .setFileApiService(fileApiService)
                 .setUploadUrl("minioc/upload");
 ```
 
-### �½�ErrorServiceImplʵ��ErrorService�ӿ�
+### 新建ErrorServiceImpl实现ErrorService接口
 
-�����кܶ��װ�õ�api��Ҫʵ�֣���Ȼ��Ҳ���Բ��ã�������ֱ���޸�common�������Ϊ��������ľ��ǽ����ʲô����common��ʵ��������Ա�Ȼ�ͻ�ܸߣ���ȻҲҪ�½�ErrorServiceModule������hilt�÷������������Լ��ٶ���
+里面有很多封装好的api需要实现，当然你也可以不用，不建议直接修改common组件，因为组件化讲的就是解耦，你什么都在common离实现那耦合性必然就会很高，当然也要新建ErrorServiceModule，这是hilt用法，具体你们自己百度了
 
-### ǿ��һ��
+### 强调一下
 
-�ڽ���hiltʱÿ��module��Ҫ�������������������٣����˵Ļ�����Ա��뵫���޷����У������㻹�Ҳ���������
-ÿ���õ���ģ�鶼Ҫ��������������ʹ��api
+在接入hilt时每个module都要导入这两个包，不能少，少了的话你可以编译但是无法运行，而且你还找不到错在哪
+每个用到的模块都要加这两个，不能使用api
 
 ``` 
     implementation libs.google.hilt.android
     ksp libs.google.hilt.android.compiler
 ```
 
-### ��Ŀ���Զ�Ϊ�������˽���ͷ�������䷽���������Ҫ���������ļ�����������
+### 项目中自动为您集成了今日头条的适配方案，因此需要你在配置文件中新增属性
 
     <meta-data
         android:name="design_width_in_dp"
@@ -603,21 +603,21 @@ plugins {
         android:name="design_height_in_dp"
         android:value="640" />
 
-### ���������������
+### 关于网络访问重试
 
-�ڸ�ʵ��`RetryService`�ӿڣ��ýӿڻ��Զ�ʵ��������û�ģ��ʵ�֣���Ϊ�ýӿ���Ҫ����ʵ�ֹ������¼������ڵ�¼ģ��ʵ����Ϊ�����ʾ����������ʾ�����˹��ܹ���hilt��ʹ�ã������Ҫ�˽�hilt����÷�,��Ҫ��ViewModel�����ע��@HiltViewModel,
-��Ȼ��Ҳ���Գ����д����ָ���������Է��������Բ���д��Ҳ���Բ���ע�⣬ϵͳ��Ĭ��һ�������������벻Ҫ��дΪnull
+在各实现`RetryService`接口，该接口会自动实现最好在用户模块实现，因为该接口主要用于实现过期免登录，因此在登录模块实现最为合理，示例代码里有示例，此功能关于hilt的使用，因此需要了解hilt框架用法,需要再ViewModel上添加注解@HiltViewModel,
+当然你也可以冲过重写方法指定错误重试方法，可以不重写，也可以不加注解，系统会默认一个方法，但是请不要重写为null
 
-### ����ͬ��ߴ������
+### 关于同意尺寸的配置
 
-��dimens��Դ�ļ���������ͳһ�ĳߴ��С������ά��
+在dimens资源文件下配置了统一的尺寸大小，方便维护
 
-### ����һЩ��װ�����ĵ���
+### 关于一些封装方法的调用
 
-#### ͼƬ��Ƶѡ���
+#### 图片视频选择库
 
-��ʱͼƬ��Ƶѡ��û�������������ƣ���ҿ�������ʵ�֣������һ����
-ѡ��ͼƬ��
+暂时图片视频选择没有增加数量限制，大家可以自行实现，后期我会更新
+选择图片：
 
 ```
     new OpenImageDialog(requireActivity())
@@ -627,7 +627,7 @@ plugins {
         .show();
 ```
 
-ѡ����Ƶ
+选择视频
 
 ```
     new OpenShootDialog(requireActivity())
@@ -637,28 +637,28 @@ plugins {
         .show();
 ```
 
-��ʼ������ȡ��ص���Ϣ
+初始化及获取其回调信息
 
 ```
-//��ͳ��ʼ����ʽ
+//传统初始化方式
     mediaHelper = new MediaBuilder(this, this)
         .setImageMaxSelectedCount(1)
         .builder();
     mediaHelper.getMutableLiveData().observe(this, mediaBean -> {
-            
+
     });
-//hilt��ʼ����ʽ��activity��
+//hilt初始化方式，activity中
     @Inject
     @MediaModule.ActivityMediaHelper
     MediaHelper mediaHelper;
-    
-//hilt��ʼ����ʽ��fragment��
+
+//hilt初始化方式，fragment中
     @Inject
     @MediaModule.FragmentMediaHelper
     MediaHelper mediaHelper;
 ```
 
-#### ��ӭҳ��˽Ȩ��dialog
+#### 欢迎页隐私权限dialog
 ```
         new ProtectionGuidelinesDialog(this)
                 .setCanOutSide(false)
@@ -666,7 +666,7 @@ plugins {
                 .setSpannableContent(getSpannableContent())
                 .setOnNegativeClickListener(dialog -> {
 
-                    showToast("�ܾ����ܻᵼ�²��ֹ���ʹ���쳣");
+                    showToast("拒绝可能会导致部分功能使用异常");
                     keepOnScreenCondition.compareAndSet(false, true);
                     startCountDown();
                 })
@@ -682,7 +682,7 @@ plugins {
                 .builder()
                 .show();
 ```
-### �Զ���ע��ʹ��
+### 自定义注解使用
 
 ```java
 import android.net.Uri;
@@ -712,23 +712,23 @@ import io.coderf.arklab.common.converter.RoomListStringConverter;
 @VerifyEntity(sort = true)
 public class Person extends BaseDaoBean {
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "����Ϊ�գ�"),
-            @VerifyParams(type = VerifyType.LENGTH_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, minLength = 2, maxLength = 10, errorMsg = "�����������"),
-            @VerifyParams(type = VerifyType.EQUALS, group = {VerifyGroup.Default.class}, errorMsg = "��ֻ����������", equalStr = "����")
+            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "姓名为空！"),
+            @VerifyParams(type = VerifyType.LENGTH_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, minLength = 2, maxLength = 10, errorMsg = "姓名输入错误！"),
+            @VerifyParams(type = VerifyType.EQUALS, group = {VerifyGroup.Default.class}, errorMsg = "您只能填张三！", equalStr = "张三")
     })
     @VerifySort(1)
     @ColumnInfo
     private String name;
 
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "��ѡ���Ա�"),
+            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "请选择性别！"),
     })
     @VerifySort(2)
     @ColumnInfo
     private String sex;
 
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "��ѡ�����գ�"),
+            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "请选择生日！"),
     })
     @VerifySort(3)
     @ColumnInfo
@@ -744,74 +744,73 @@ public class Person extends BaseDaoBean {
     private String classStartTime;
 
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "����д�ֻ����룡"),
-            @VerifyParams(type = VerifyType.MOBILE_PHONE, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "�ֻ������ʽ���벻��ȷ��")
+            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "请填写手机号码！"),
+            @VerifyParams(type = VerifyType.MOBILE_PHONE, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "手机号码格式输入不正确！")
     })
     @VerifySort(4)
     @ColumnInfo
     private String mobile;
 
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "����д�̻����룡"),
-            @VerifyParams(type = VerifyType.TEL_PHONE, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "�̻������ʽ���벻��ȷ��")
+            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "请填写固话号码！"),
+            @VerifyParams(type = VerifyType.TEL_PHONE, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "固话号码格式输入不正确！")
     })
     @VerifySort(5)
     @ColumnInfo
     private String tel;
 
     @VerifySort(6)
-    @VerifyParams(type = VerifyType.NUMBER_RANGE, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, minNumber = 0, maxNumber = 120, errorMsg = "����������")
+    @VerifyParams(type = VerifyType.NUMBER_RANGE, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, minNumber = 0, maxNumber = 120, errorMsg = "您是神仙吗？")
     @ColumnInfo
     private String age;
 
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOTNULL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "����Ϊ��"),
-            @VerifyParams(type = VerifyType.NUMBER_00, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "���������ʽ����ȷ"),
-            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, maxNumber = 200, errorMsg = "��ü����ˣ�����"),
-            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, minNumber = 40, errorMsg = "���Ѿ��ݳ�����ˣ�����")
+            @VerifyParams(type = VerifyType.NOTNULL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "体重为空"),
+            @VerifyParams(type = VerifyType.NUMBER_00, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "体重输入格式不正确"),
+            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, maxNumber = 200, errorMsg = "你该减肥了！！！"),
+            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, minNumber = 40, errorMsg = "你已经瘦成竹竿了！！！")
     })
     @VerifySort(7)
     @ColumnInfo
     private String weight;
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOTNULL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "���Ϊ��"),
-            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, maxNumber = 300, errorMsg = "Ҧ����û��ߣ�����"),
-            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, minNumber = 40, errorMsg = "�����������ƣ���ɹɹ̫�������")
+            @VerifyParams(type = VerifyType.NOTNULL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "身高为空"),
+            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, maxNumber = 300, errorMsg = "姚明都没你高！！！"),
+            @VerifyParams(type = VerifyType.NUMBER_RANGE_EQUAL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, minNumber = 40, errorMsg = "建议您补补钙，多晒晒太阳！！！")
 
     })
     @VerifySort(8)
     @ColumnInfo
     private String height;
     @VerifyField({
-            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Create.class}, errorMsg = "�����ַΪ�գ�"),
-            @VerifyParams(type = VerifyType.EMAIL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "�����ַ����")
+            @VerifyParams(type = VerifyType.NOT_EMPTY, group = {VerifyGroup.Create.class}, errorMsg = "邮箱地址为空！"),
+            @VerifyParams(type = VerifyType.EMAIL, group = {VerifyGroup.Default.class, VerifyGroup.Create.class}, errorMsg = "邮箱地址错误！")
     })
     @VerifySort(9)
     @ColumnInfo
     private String email;
 
     @VerifySort(10)
-    @VerifyParams(type = VerifyType.NOT_EMPTY, errorMsg = "������д���İ��ã�")
+    @VerifyParams(type = VerifyType.NOT_EMPTY, errorMsg = "您填填写您的爱好！")
     @ColumnInfo
     @TypeConverters({RoomListStringConverter.class})
     private List<String> hobby;
 
     //    @VerifyFieldSort(11)
-//    @VerifyParams(type = VerifyType.NOTNULL, notNull = true, errorMsg = "��ѡ�����ı�����Ƭ��")
+//    @VerifyParams(type = VerifyType.NOTNULL, notNull = true, errorMsg = "您选择您的本人照片！")
     @Ignore
     private List<Uri> imageList;
 
     //    @VerifyFieldSort(12)
-//    @Valid(notNull = true, errorMsg = "��ѡ�����ļ�ͥ��Ϣ��")
+//    @Valid(notNull = true, errorMsg = "请选择您的家庭信息！")
     @Ignore
     public Family family;
 
     //    @VerifyFieldSort(13)
-//    @Valid(notNull = true, errorMsg = "��ѡ�����ļ�ͥ������Ϣ��")
+//    @Valid(notNull = true, errorMsg = "请选择您的家庭集合信息！")
     @ColumnInfo
     @Ignore
     public List<Family> familyList;
-
 
     public Person() {
     }
@@ -957,7 +956,6 @@ public class Person extends BaseDaoBean {
         notifyPropertyChanged(io.coderf.arklab.demo.BR.sex);
     }
 
-
     public List<Uri> getImageList() {
         return imageList;
     }
@@ -1001,42 +999,42 @@ public class Person extends BaseDaoBean {
     }
 }
 ```
-��ʼУ��
+开始校验
 ```
             VerifyResult verifyResult = EntityValidator.validate(binding.getData());
-            showToast((verifyResult.isOk() ? "��֤�ɹ�" : "��֤ʧ�ܣ�") + StringUtil.filterNull(verifyResult.getErrorMsg()));
+            showToast((verifyResult.isOk() ? "验证成功" : "验证失败：") + StringUtil.filterNull(verifyResult.getErrorMsg()));
             if (!verifyResult.isOk()) {
                 return;
             }
 ```
 
-#### �Զ������
-�ο�ʾ������`CustomCameraActivity`
+#### 自定义相机
+参考示例代码`CustomCameraActivity`
 
-#### Dialog������װʾ��
-�ο�ʾ������`DialogActivity`
+#### Dialog常见封装示例
+参考示例代码`DialogActivity`
 
-#### �Զ��������װʾ��
-�ο�ʾ������`WightActivity`
+#### 自定义组件封装示例
+参考示例代码`WightActivity`
 
-#### ��ά������ʾ��
-�ο�ʾ������`ScanQrCodeActivity`
+#### 二维码能力示例
+参考示例代码`ScanQrCodeActivity`
 
-#### GPS����ʾ��
-�ο�ʾ������`GoogleGPSActivity`
+#### GPS能力示例
+参考示例代码`GoogleGPSActivity`
 
-#### �Զ��������
-�ο�ʾ������`VerifyActivity`
+#### 自定义表单组件
+参考示例代码`VerifyActivity`
 
-#### �ϵ���������
+#### 断点续传下载
 
-��ͨ�ļ�����ʾ����
+普通文件下载示例：
 
 ```
                Disposable disposable = DownloadManger.getInstance().download(this, binding.editUrl.getText().toString().trim())
                     .subscribe(file -> {
-                        LogUtil.show(ApiRetrofit.TAG, "���سɹ���" + file.getAbsolutePath());
-                        showToast("���سɹ���");
+                        LogUtil.show(ApiRetrofit.TAG, "下载成功：" + file.getAbsolutePath());
+                        showToast("下载成功！");
                     }, throwable -> {
                         if (throwable instanceof BaseException baseException) {
                             showToast(baseException.getErrorMsg());
@@ -1046,20 +1044,20 @@ public class Person extends BaseDaoBean {
                     });
 ```
 
-�汾����ʾ����
+版本更新示例：
 
 ```
     UpdateManger.getInstance().checkUpdateInfo((Activity) view.getContext(),
                         "http://softfile.3g.qq.com:8080/msoft/179/24659/43549/qq_hd_mini_1.4.apk",
-                        "1���޸���֪bug",
+                        "1、修复已知bug",
                         "1.0.1");
 ```
 
-#### ��Ƶ����
+#### 视频播放
 
-��Ŀ�м�����github�ϵ�gsy��Ƶ���ſ⣬Ŀǰ���Ҿ��ÿ�Դ���м�������õ��˰�ֱ�ӵ���VideoPlayerActivity���Activity�����ˣ��������Ź��ܣ������ĳ����������ǿ�����Ҫ�Լ�����������
+项目中集成了github上的gsy视频播放库，目前是我觉得开源库中兼容性最好的了吧直接调用VideoPlayerActivity这个Activity就行了，基础播放功能，如果你的场景更负责那可能需要自己单独集成了
 
-#### ��ͼԤ�����
+#### 大图预览框架
 
 ```
     new PreviewPhotoDialog(this)
@@ -1068,7 +1066,6 @@ public class Person extends BaseDaoBean {
         .show()
 ```
 
-#### ����һЩ�����Ĺ�����
+#### 关于一些其他的公共库
 
-base��װ��һЩdialog���Զ���view��װ�ȵȿ���������Դ���в鿴�˽⣬��һһ������
-
+base封装、一些dialog框、自定义view封装等等可以自行在源码中查看了解，不一一介绍了

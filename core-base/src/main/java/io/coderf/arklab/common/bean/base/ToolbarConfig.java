@@ -27,8 +27,9 @@ import java.util.Objects;
 
 import io.coderf.arklab.common.BR;
 import io.coderf.arklab.common.R;
-import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.common.utils.theme.ThemeUtils;
+import io.coderf.arklab.common.widget.customview.ActionToolbar;
+import io.coderf.arklab.core.utils.DensityUtil;
 
 /**
  * MaterialToolbar 配置（DataBinding 可观察）。
@@ -106,6 +107,13 @@ public class ToolbarConfig extends BaseObservable {
      * 为 true 时去掉 {@code appbar_scrolling_view_behavior}，AppBar 浮在内容之上。
      */
     private boolean contentUnderToolbar = false;
+
+    /**
+     * 状态栏内容被隐藏后，是否仍按状态栏高度给 Toolbar 留白。
+     * 默认 false：隐藏后高度收掉，标题栏贴到屏幕顶。
+     * true：高度保留。普通模式这块区域是标题栏背景；正文已铺到状态下则透出正文。
+     */
+    private boolean keepStatusBarHeight = false;
 
     /**
      * 是否显示返回按钮
@@ -285,6 +293,19 @@ public class ToolbarConfig extends BaseObservable {
      */
     public ToolbarConfig setContentUnderToolbar(boolean contentUnderToolbar) {
         this.contentUnderToolbar = contentUnderToolbar;
+        return this;
+    }
+
+    public boolean isKeepStatusBarHeight() {
+        return keepStatusBarHeight;
+    }
+
+    /**
+     * 隐藏状态栏内容后是否仍保留状态栏高度。
+     * 默认 false。为 true 时 Toolbar 继续按状态栏高度垫高，标题和返回键不会顶上去。
+     */
+    public ToolbarConfig setKeepStatusBarHeight(boolean keepStatusBarHeight) {
+        this.keepStatusBarHeight = keepStatusBarHeight;
         return this;
     }
 
@@ -706,16 +727,22 @@ public class ToolbarConfig extends BaseObservable {
     /**
      * 绑定标题水平对齐。
      * <p>
-     * 水平居中时走 {@link MaterialToolbar#setTitleCentered(boolean)}；
-     * 其余方向改写标题 TextView 的 {@link Toolbar.LayoutParams#gravity}。
+     * 居中走 {@link MaterialToolbar#setTitleCentered(boolean)}。
+     * 靠起始边时改标题 TextView 的 gravity（官方非居中布局本来就贴起始边）。
+     * 靠结束边时官方 {@code onLayout} 会忽略水平 gravity，改由
+     * {@link ActionToolbar#setTitleAbsoluteHorizontalGravity(int)} 在布局后平移。
      * </p>
      */
     @BindingAdapter("bindTitleGravity")
     public static void bindTitleGravity(MaterialToolbar toolbar, int gravity) {
         int grave = Gravity.getAbsoluteGravity(gravity, toolbar.getLayoutDirection())
                 & Gravity.HORIZONTAL_GRAVITY_MASK;
-        toolbar.setTitleCentered(grave == Gravity.CENTER_HORIZONTAL);
-        if (grave == Gravity.CENTER_HORIZONTAL) {
+        boolean center = grave == Gravity.CENTER_HORIZONTAL;
+        toolbar.setTitleCentered(center);
+        if (toolbar instanceof ActionToolbar actionToolbar) {
+            actionToolbar.setTitleAbsoluteHorizontalGravity(center ? Gravity.NO_GRAVITY : grave);
+        }
+        if (center) {
             return;
         }
         withTitleView(toolbar, textView -> {

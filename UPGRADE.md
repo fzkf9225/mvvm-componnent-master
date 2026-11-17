@@ -30,7 +30,6 @@ implementation 'io.coderf.arklab.core:db:2.0.0'
 **推荐：** `launchRequest(flow = { repo.xxx() }) { data -> … }`；多步用 Session + `collectSuccess`。  
 **禁止：** Session 内对 `RequestResult` 裸 collect；分页每页 `launchRequest`。
 
-
 ## 当前推荐 Maven 钉版本
 
 业务工程建议**显式**声明下表（勿只升 `common` 指望传递依赖一定最新）：
@@ -540,7 +539,6 @@ Repository ──写──? NetworkRequestUiHost（RequestUi）──Binder─�
 # rg "BaseView|setBaseView|getBaseView|unbindView|RequestUiCallback|onErrorCode|createRepository\\(this" --glob "*.{java,kt}"
 ```
 
-
 ### 2.6 请求 UI 统一为 RequestUi（删除 RequestUiCallback）
 
 在 1.2.0「去掉 BaseView」之后，请求 UI 曾短暂并存 **`RequestUiCallback`（旧）** 与 **`RequestUi`（新）**。现已**只保留 `RequestUi`**，避免双契约。
@@ -561,7 +559,6 @@ Repository ──RequestUi──? NetworkRequestUiHost ──LiveData──? Net
 ```
 
 页面仍实现 `RequestUi`：`BaseActivity` / `BaseFragment` 已实现 `showError`，业务码走登录过期 / 无权限；非业务错误走 Toast。分页基类等若曾 `override onErrorCode`，请改为 `override fun showError(error: AppError)`。
-
 
 ### 2.7 与 §1 / 网络迁移的关系
 

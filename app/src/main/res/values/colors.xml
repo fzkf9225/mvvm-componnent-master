@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- App module specific colors -->
+    <!-- 品牌色在 :base 的 base_host_colors.xml（含 values-night）。这里只放 app 自己的演示色。 -->
 
     <!-- 演示页：表单控件绿色主题配置 -->
     <color name="demo_green_track">#6608A04B</color>

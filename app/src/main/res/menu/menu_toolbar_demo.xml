@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_toolbar_done"
+        android:title="完成"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_toolbar_search"
+        android:icon="@drawable/ic_m3_search"
+        android:title="搜索"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_toolbar_share"
+        android:title="分享"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_toolbar_settings"
+        android:title="设置"
+        app:showAsAction="never" />
+</menu>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!--
+        宿主品牌色。:base 是示例里的业务基建，不是 core-base。
+        真正项目用 Maven 依赖框架时，把本文件和 values-night/base_host_colors.xml 放到自己的 base 或 app 模块。
+
+        这些名字故意不加 base_ 前缀：必须和框架颜色同名，合并后才会盖掉 core-base 的默认蓝 #1C50B5。
+        每个名字在 values-night 里都要再写一份。只写亮色时，夜间仍会命中框架的 values-night。
+        Manifest 继续用 @style/AppBaseTheme，不要再复制一份主题。
+
+        本示例主色是青，用来和框架默认蓝区分。
+        表面、描边、错误色这里没写，继续用框架色板。产品要改时按同名覆盖：
+        cardSurface、cardOnSurface、cardSurfaceVariant、cardOnSurfaceVariant、
+        surfaceContainer、surfaceContainerHigh、surfaceContainerHighest、
+        outline、outlineVariant、theme_red、onError。
+        secondary、tertiary 整组可以不写。
+    -->
+    <color name="themeColor" tools:ignore="ResourceName">#FF0F766E</color>
+    <color name="onPrimary" tools:ignore="ResourceName">#FFFFFFFF</color>
+    <color name="primaryContainer" tools:ignore="ResourceName">#FFCCFBF1</color>
+    <color name="onPrimaryContainer" tools:ignore="ResourceName">#FF042F2E</color>
+    <color name="primaryInverse" tools:ignore="ResourceName">#FF5EEAD4</color>
+    <!-- 页面底。亮色用宿主灰，和框架的 #EEF3F2 区分。 -->
+    <color name="default_background" tools:ignore="ResourceName">#FFF5F5F5</color>
+</resources>

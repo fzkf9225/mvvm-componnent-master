@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import io.coderf.arklab.common.base.BaseActivity;
 import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 import io.coderf.arklab.common.viewmodel.EmptyViewModel;
@@ -44,8 +45,14 @@ import io.coderf.arklab.demo.databinding.ActivityMaterial3KitBinding;
 
 /**
  * Material3 产品能力演示。Carousel 只做封面/货架浏览，不替代 {@code BannerView}，也不做微信相册。
+ *
+ * @author fz
+ * @version 1.0
+ * @since 1.0
+ * @created 2026/11/17 9:02
  */
 @ExperimentalBadgeUtils
+@AndroidEntryPoint
 public class Material3KitActivity extends BaseActivity<EmptyViewModel, ActivityMaterial3KitBinding> {
 
     private static final List<String> SEARCH_SUGGESTIONS = Arrays.asList(

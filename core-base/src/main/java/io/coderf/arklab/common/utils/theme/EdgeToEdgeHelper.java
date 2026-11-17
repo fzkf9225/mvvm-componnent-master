@@ -35,20 +35,46 @@ public final class EdgeToEdgeHelper {
      * <p>会覆盖 MaterialToolbar 的 height 与 top padding。</p>
      */
     public static void applyToolbarInsets(@NonNull MaterialToolbar toolbar, int actionBarHeightPx, boolean customHeight) {
+        applyToolbarInsets(toolbar, actionBarHeightPx, customHeight, false);
+    }
+
+    /**
+     * @param keepStatusBarHeight 状态栏隐藏后仍按状态栏高度垫高。为 false 时隐藏后顶部高度变为 0。
+     */
+    public static void applyToolbarInsets(@NonNull MaterialToolbar toolbar, int actionBarHeightPx,
+                                          boolean customHeight, boolean keepStatusBarHeight) {
         int contentHeightPx = customHeight ? actionBarHeightPx : 0;
         applyContentHeight(toolbar, contentHeightPx);
         ViewCompat.setOnApplyWindowInsetsListener(toolbar, (v, windowInsets) -> {
-            Insets statusBars = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars());
-            v.setPadding(v.getPaddingLeft(), statusBars.top, v.getPaddingRight(), v.getPaddingBottom());
+            int top = statusBarTop(windowInsets, keepStatusBarHeight);
+            if (keepStatusBarHeight && top <= 0) {
+                top = fallbackStatusBarHeight(v);
+            }
+            v.setPadding(v.getPaddingLeft(), top, v.getPaddingRight(), v.getPaddingBottom());
             ViewGroup.LayoutParams lp = v.getLayoutParams();
             if (lp != null) {
-                lp.height = actionBarHeightPx + statusBars.top;
+                lp.height = actionBarHeightPx + top;
                 v.setLayoutParams(lp);
             }
             applyContentHeight(toolbar, contentHeightPx);
             return windowInsets;
         });
         ViewCompat.requestApplyInsets(toolbar);
+    }
+
+    private static int statusBarTop(@NonNull WindowInsetsCompat windowInsets, boolean ignoreVisibility) {
+        Insets statusBars = ignoreVisibility
+                ? windowInsets.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.statusBars())
+                : windowInsets.getInsets(WindowInsetsCompat.Type.statusBars());
+        return statusBars.top;
+    }
+
+    private static int fallbackStatusBarHeight(@NonNull View view) {
+        int resId = view.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resId > 0) {
+            return view.getResources().getDimensionPixelSize(resId);
+        }
+        return 0;
     }
 
     /**

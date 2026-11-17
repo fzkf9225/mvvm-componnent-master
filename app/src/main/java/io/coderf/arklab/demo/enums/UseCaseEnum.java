@@ -2,6 +2,8 @@ package io.coderf.arklab.demo.enums;
 
 import android.os.Bundle;
 
+import com.google.android.material.badge.ExperimentalBadgeUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,7 @@ import io.coderf.arklab.demo.activity.PreviewInfoPhotoActivity;
 import io.coderf.arklab.demo.activity.RoomPagingActivity;
 import io.coderf.arklab.demo.activity.ScanQrCodeActivity;
 import io.coderf.arklab.demo.activity.TargetActivity;
+import io.coderf.arklab.demo.activity.ToolbarDemoActivity;
 import io.coderf.arklab.demo.activity.VerifyActivity;
 import io.coderf.arklab.demo.activity.VideoPlayerEmbedDemoActivity;
 import io.coderf.arklab.demo.activity.ViewPagerSampleActivity;
@@ -48,11 +51,13 @@ import io.coderf.arklab.demo.bean.UseCase;
  * @since 1.0
  * @created 2023/8/14 10:19
  */
+@ExperimentalBadgeUtils
 public enum UseCaseEnum {
     /**
      * 自定义组件
      */
     WIGHT(WightActivity.class, "自定义组件", "自定义实现的一些View、ViewGroup", null),
+    TOOLBAR(ToolbarDemoActivity.class, "Toolbar 配置", "ToolbarConfig 颜色/对齐/字重/菜单/沉浸，以及 TitleBar、搜索标题栏", null),
     EMPTY_LAYOUT(EmptyLayoutDemoActivity.class, "EmptyLayout 骨架屏", "EmptyLayout 加载样式、骨架屏与空态/错误态用法演示", null),
     UI_STATE(UiStateDemoActivity.class, "UiState 页面状态", "UiState + StateFlow 驱动内容区；与 RequestUi 遮罩正交演示", null),
     MATERIAL3_KIT(Material3KitActivity.class, "Material3 能力", "SearchBar / Chip / ToggleGroup / BottomAppBar", null),

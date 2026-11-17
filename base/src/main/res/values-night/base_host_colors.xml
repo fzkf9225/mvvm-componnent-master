@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!--
+        暗色品牌色。亮色里覆盖过的每个名字都要在这里再写，否则夜间回到框架色。
+        暗色主色用浅青，上面的字用深色，保证对比度。
+    -->
+    <color name="themeColor" tools:ignore="ResourceName">#FF5EEAD4</color>
+    <color name="onPrimary" tools:ignore="ResourceName">#FF042F2E</color>
+    <color name="primaryContainer" tools:ignore="ResourceName">#FF134E48</color>
+    <color name="onPrimaryContainer" tools:ignore="ResourceName">#FFCCFBF1</color>
+    <color name="primaryInverse" tools:ignore="ResourceName">#FF0F766E</color>
+    <color name="default_background" tools:ignore="ResourceName">#FF121212</color>
+</resources>

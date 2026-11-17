@@ -366,7 +366,8 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
         int height = toolbarConfig.getHeight();
         boolean customHeight = toolbarConfig.hasCustomHeight();
         if (shouldApplyEdgeToEdge()) {
-            EdgeToEdgeHelper.applyToolbarInsets(toolbarBind.mainBar, height, customHeight);
+            EdgeToEdgeHelper.applyToolbarInsets(toolbarBind.mainBar, height, customHeight,
+                    toolbarConfig.isKeepStatusBarHeight());
         } else {
             EdgeToEdgeHelper.applyToolbarHeight(toolbarBind.mainBar, height, customHeight);
         }

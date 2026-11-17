@@ -71,7 +71,8 @@ public abstract class BaseSearchTitleActivity<VM extends BaseViewModel, VDB exte
         int height = config.getHeight();
         boolean customHeight = config.hasCustomHeight();
         if (shouldApplyEdgeToEdge()) {
-            EdgeToEdgeHelper.applyToolbarInsets(searchBinding.searchToolBar, height, customHeight);
+            EdgeToEdgeHelper.applyToolbarInsets(searchBinding.searchToolBar, height, customHeight,
+                    config.isKeepStatusBarHeight());
         } else {
             EdgeToEdgeHelper.applyToolbarHeight(searchBinding.searchToolBar, height, customHeight);
         }

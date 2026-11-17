@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="base_default_background">#F5F5F5</color>
+    <!-- 带模块前缀的别名，值来自 base_host_colors.xml 的 default_background。 -->
+    <color name="base_default_background">@color/default_background</color>
 </resources>
