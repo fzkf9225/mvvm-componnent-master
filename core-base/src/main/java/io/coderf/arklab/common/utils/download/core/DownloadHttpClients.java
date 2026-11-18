@@ -5,8 +5,7 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-import io.coderf.arklab.common.api.Config;
-import io.coderf.arklab.common.utils.common.PropertiesUtil;
+import io.coderf.arklab.common.api.ApiBaseUrl;
 import io.coderf.arklab.core.utils.MapUtil;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -66,8 +65,7 @@ public final class DownloadHttpClients {
             synchronized (DownloadHttpClients.class) {
                 if (sBaseRetrofit == null) {
                     sBaseRetrofit = new Retrofit.Builder()
-                            .baseUrl(PropertiesUtil.getInstance()
-                                    .loadConfig(Config.getInstance().getApplication()).getBaseUrl())
+                            .baseUrl(ApiBaseUrl.require())
                             .addConverterFactory(GsonConverterFactory.create())
                             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                             .client(buildBaseClient(null))

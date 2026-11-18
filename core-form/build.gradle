@@ -22,13 +22,11 @@ android {
 
     buildTypes {
         release {
-            resValue("string", "app_config_file", "prod.properties")
             buildConfigField("boolean", "LOG_DEBUG", "false")
             minifyEnabled = false
             proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
         }
         debug {
-            resValue("string", "app_config_file", "dev.properties")
             buildConfigField("boolean", "LOG_DEBUG", "true")
             minifyEnabled = false
             proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')

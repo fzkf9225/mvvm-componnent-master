@@ -17,7 +17,6 @@ android {
 
     buildTypes {
         release {
-            resValue("string", "gps_config_file", "prod.properties" )
             buildConfigField("boolean", "LOG_DEBUG", "false")// 不显示log
             minifyEnabled = false// 混淆
             proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
@@ -25,7 +24,6 @@ android {
             consumerProguardFiles('consumer-rules.pro')
         }
         debug {
-            resValue("string", "gps_config_file", "dev.properties")
             buildConfigField("boolean", "LOG_DEBUG", "true")// 显示log
             minifyEnabled = false// 混淆
             proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')

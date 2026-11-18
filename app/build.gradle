@@ -26,20 +26,31 @@ android {
 
     buildTypes {
         release {
-            resValue("string", "app_config_file", "prod.properties")  // 加上括号
-            buildConfigField("boolean", "LOG_DEBUG", "false")  // 加上括号
+            buildConfigField("boolean", "LOG_DEBUG", "false")
             minifyEnabled = true
             zipAlignEnabled = true
             shrinkResources = true
-            proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')  // 加上括号
+            proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
         }
         debug {
-            resValue("string", "app_config_file", "dev.properties")  // 加上括号
-            buildConfigField("boolean", "LOG_DEBUG", "true")  // 加上括号
+            buildConfigField("boolean", "LOG_DEBUG", "true")
             minifyEnabled = false
             zipAlignEnabled = false
             shrinkResources = false
-            proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')  // 加上括号
+            proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
+        }
+    }
+    flavorDimensions += "channel"
+    productFlavors {
+        demo {
+            dimension "channel"
+            isDefault = true
+        }
+        // 生产环境的测试包。名字不能用 test，该前缀被单元测试占用。
+        prodTest {
+            dimension "channel"
+            applicationIdSuffix ".test"
+            versionNameSuffix "-test"
         }
     }
     compileOptions {

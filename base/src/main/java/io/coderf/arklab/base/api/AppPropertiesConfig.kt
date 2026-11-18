@@ -1,21 +1,25 @@
 package io.coderf.arklab.base.api
 
 /**
- * assets 配置文件映射（通用字段；宿主可按项目扩展 data class 或另建 Config）。
- *
- * @author fz
- * @version 1.0
- * @since 1.0
- * @updated 2026/9/1 22:51
+ * 当前变体的应用配置。字段与 assets/config.properties 一一对应。
+ * appSecret 是请求 MD5 签名因子，不是私钥。
  */
 data class AppPropertiesConfig(
     val baseUrl: String,
     val fileBaseUrl: String,
-    val sm2PublicKey: String,
-    val dataBase: String,
+    val appId: String,
+    val appSecret: String,
     val protocolVersion: String,
-    val tokenType: String,
-    val tenantId: String,
-    val businessDataBase: String,
-    val attachmentDataBase: String
+    val dataBase: String,
+    val attachmentDataBase: String,
+    val webSocketUrl: String,
+    val webSocketChannelId: Int,
+    val webSocketChannelName: String,
+    val webSocketNotifyId: Int,
+    val mqttChannelId: Int,
+    val mqttChannelName: String,
+    val mqttNotifyId: Int,
+    val mediaTransmissionChannelId: Int,
+    val mediaTransmissionChannelName: String,
+    val mediaTransmissionNotifyId: Int,
 )

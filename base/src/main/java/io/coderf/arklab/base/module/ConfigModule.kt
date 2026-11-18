@@ -1,23 +1,17 @@
 package io.coderf.arklab.base.module
 
 import android.content.Context
-import androidx.core.content.ContextCompat
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import io.coderf.arklab.base.R
 import io.coderf.arklab.base.api.AppPropertiesConfig
+import io.coderf.arklab.common.api.ApiBaseUrl
 import javax.inject.Singleton
 
 /**
- * ConfigModule 对象。
- *
- * @author fz
- * @version 1.0
- * @since 1.0
- * @updated 2026/9/1 22:51
+ * 全工程唯一的应用配置绑定。
  */
 @Module
 @InstallIn(SingletonComponent::class)
@@ -27,9 +21,10 @@ object ConfigModule {
     @Singleton
     fun provideAppConfig(
         @ApplicationContext context: Context,
-        configLoader: ConfigLoader
+        configLoader: ConfigLoader,
     ): AppPropertiesConfig {
-        val configFile = ContextCompat.getString(context, R.string.base_config_file)
-        return configLoader.loadConfig(configFile)
+        val config = configLoader.load(context)
+        ApiBaseUrl.set(config.baseUrl)
+        return config
     }
 }

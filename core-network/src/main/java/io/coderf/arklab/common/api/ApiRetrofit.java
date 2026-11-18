@@ -22,7 +22,6 @@ import io.coderf.arklab.common.inter.FlowRetryService;
 import io.coderf.arklab.common.inter.RetryService;
 import io.coderf.arklab.core.network.TokenRefresher;
 import io.coderf.arklab.core.utils.DateUtil;
-import io.coderf.arklab.common.utils.common.PropertiesUtil;
 import io.coderf.arklab.core.utils.encode.MD5Util;
 import io.coderf.arklab.common.utils.log.LogUtil;
 import okhttp3.Headers;
@@ -482,26 +481,13 @@ public class ApiRetrofit {
 
         public ApiRetrofit builder() {
             if (TextUtils.isEmpty(baseUrl)) {
-                this.baseUrl = PropertiesUtil.getInstance().loadConfig(mContext).getBaseUrl();
+                throw new IllegalStateException("ApiRetrofit 需要 setBaseUrl");
             }
-
-            if (TextUtils.isEmpty(appId)) {
-                this.appId = PropertiesUtil.getInstance().loadConfig(mContext).getAppId();
-                if (!TextUtils.isEmpty(appId)) {
-                    headerMap.put("o-appId", appId);
-                }
+            if (!TextUtils.isEmpty(appId)) {
+                headerMap.put("o-appId", appId);
             }
-
-            if (TextUtils.isEmpty(appSecret)) {
-                // 仅用于本地签名计算，禁止把原始 secret 写入请求头
-                this.appSecret = PropertiesUtil.getInstance().loadConfig(mContext).getAppSecret();
-            }
-
-            if (TextUtils.isEmpty(protocolVersion)) {
-                this.protocolVersion = PropertiesUtil.getInstance().loadConfig(mContext).getProtocolVersion();
-                if (!TextUtils.isEmpty(protocolVersion)) {
-                    headerMap.put("o-protocolVersion", protocolVersion);
-                }
+            if (!TextUtils.isEmpty(protocolVersion)) {
+                headerMap.put("o-protocolVersion", protocolVersion);
             }
 
             if (appInfo) {
