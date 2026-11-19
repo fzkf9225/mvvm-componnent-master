@@ -1,8 +1,6 @@
 apply plugin: 'java-library'
 
 dependencies {
-    annotationProcessor libs.auto.service
-    compileOnly libs.auto.service.annotation
     testImplementation libs.junit
 }
 sourceCompatibility = "17"
@@ -31,7 +29,7 @@ afterEvaluate {
                 artifact("$buildDir/libs/${artifactId}.jar")
                 groupId = 'io.coderf.arklab.annotation'
                 artifactId = 'annotation'
-                version = '3.3.1'
+                version = '3.3.2'
             }
         }
         repositories {

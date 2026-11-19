@@ -14,7 +14,6 @@
 -keep @interface io.coderf.arklab.annotation.annotation.VerifyWhenAll
 -keep @interface io.coderf.arklab.annotation.annotation.VerifyCrossField
 -keep @interface io.coderf.arklab.annotation.annotation.VerifyCrossFields
--keep @interface io.coderf.arklab.annotation.format.FormatDecimal
 
 -keep class io.coderf.arklab.annotation.bean.VerifyResult { *; }
 -keep class io.coderf.arklab.annotation.bean.FieldVerifyError { *; }

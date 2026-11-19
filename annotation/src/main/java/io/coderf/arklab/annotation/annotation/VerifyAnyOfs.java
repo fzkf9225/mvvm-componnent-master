@@ -1,4 +1,4 @@
-package io.coderf.arklab.annotation.format;
+package io.coderf.arklab.annotation.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -6,16 +6,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * FormatDecimal 接口。
+ * 支持在同一类上声明多个 {@link VerifyAnyOf}。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/11/19 13:46
  */
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
-@Deprecated
-public @interface FormatDecimal {
-    int value() default 2;
+public @interface VerifyAnyOfs {
+    VerifyAnyOf[] value();
 }

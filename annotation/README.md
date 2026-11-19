@@ -10,7 +10,7 @@ Maven：`io.coderf.arklab.annotation:annotation:3.3.1`
 ## 职责
 
 - `@Verify*` / `@Valid` 等校验注解
-- `EntityValidator` 及格式处理器，用于表单 / 入参校验
+- `EntityValidator`，用于表单 / 入参校验
 
 ---
 
@@ -26,8 +26,6 @@ Maven：`io.coderf.arklab.annotation:annotation:3.3.1`
 
 ```gradle
 implementation 'io.coderf.arklab.annotation:annotation:3.3.1'
-// 若使用注解处理器：
-annotationProcessor project(':annotation')   // 或对应 Maven classifier / 处理器配置
 ```
 
 工程内 Demo 见 `app` / 表单相关用法；总览见 [MODULES.md](../MODULES.md)。

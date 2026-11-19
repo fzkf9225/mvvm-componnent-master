@@ -24,8 +24,20 @@ public @interface Valid {
     boolean notNull() default false;
 
     boolean notEmpty() default false;
+
     /**
-     * 错误提示信息
+     * 集合、Map、数组的最少元素个数。小于 0 表示不限制。
+     * 大于 0 时，字段为 null 也视为不满足。
+     */
+    int minSize() default -1;
+
+    /**
+     * 集合、Map、数组的最多元素个数。小于 0 表示不限制。
+     */
+    int maxSize() default -1;
+
+    /**
+     * 错误提示信息。为空、null 与条数不满足时共用。
      * @return String
      */
     String errorMsg() default "不可为空，请验证后重新输入！";

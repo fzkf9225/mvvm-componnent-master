@@ -1,6 +1,7 @@
 package io.coderf.arklab.annotation.verify;
 
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import io.coderf.arklab.annotation.annotation.Valid;
+import io.coderf.arklab.annotation.annotation.VerifyAnyOf;
 import io.coderf.arklab.annotation.annotation.VerifyArray;
 import io.coderf.arklab.annotation.annotation.VerifyCrossField;
 import io.coderf.arklab.annotation.annotation.VerifyCrossFields;
@@ -36,7 +38,7 @@ import io.coderf.arklab.annotation.utils.ValidatorUtil;
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/11/19 13:46
  */
 public final class EntityValidator {
 
@@ -112,9 +114,6 @@ public final class EntityValidator {
             }
 
             List<Field> fields = new ArrayList<>(meta.fields);
-            if (fields.isEmpty()) {
-                return VerifyResult.ok();
-            }
             if (validation.sort()) {
                 sortFields(fields);
             }
@@ -133,6 +132,13 @@ public final class EntityValidator {
                     }
                     errors.addAll(fieldResult.getErrors());
                 }
+            }
+            VerifyResult anyOfResult = validateAnyOf(entity, meta.anyOfRules, fieldMap, stopOnFirstError, currentGroups);
+            if (!anyOfResult.isOk()) {
+                if (stopOnFirstError) {
+                    return anyOfResult;
+                }
+                errors.addAll(anyOfResult.getErrors());
             }
             if (errors.isEmpty()) {
                 return VerifyResult.ok();
@@ -224,13 +230,26 @@ public final class EntityValidator {
             }
             if (validObj.notNull() && value == null) {
                 return failField(fieldName, validObj.errorMsg(), stopOnFirstError);
-            } else if (!validObj.notNull() && value == null) {
+            }
+            if (value == null) {
+                if (validObj.minSize() > 0) {
+                    return failField(fieldName, validObj.errorMsg(), stopOnFirstError);
+                }
                 continue;
             }
             if (validObj.notEmpty() && value instanceof Collection<?> collection && collection.isEmpty()) {
                 return failField(fieldName, validObj.errorMsg(), stopOnFirstError);
             } else if (validObj.notEmpty() && value instanceof Map<?, ?> map && map.isEmpty()) {
                 return failField(fieldName, validObj.errorMsg(), stopOnFirstError);
+            }
+            Integer countableSize = countableSize(value);
+            if (countableSize != null) {
+                if (validObj.minSize() >= 0 && countableSize < validObj.minSize()) {
+                    return failField(fieldName, validObj.errorMsg(), stopOnFirstError);
+                }
+                if (validObj.maxSize() >= 0 && countableSize > validObj.maxSize()) {
+                    return failField(fieldName, validObj.errorMsg(), stopOnFirstError);
+                }
             }
             if (value instanceof Collection<?> collection) {
                 for (Object obj : collection) {
@@ -319,6 +338,7 @@ public final class EntityValidator {
     }
 
     private static VerifyResult validateParamRule(String fieldName, VerifyParams params, Object value) {
+        value = applyTrim(params, value);
         VerifyType verifyType = params.type();
         if (VerifyType.NOTNULL == verifyType && value == null) {
             return VerifyResult.fail(params.errorMsg());
@@ -356,6 +376,106 @@ public final class EntityValidator {
         }
         VerifyResult result = VerifyResult.aggregate(List.of(new FieldVerifyError(fieldName, errorMsg)));
         return result;
+    }
+
+    /**
+     * 集合、Map、数组返回元素个数；其它类型返回 null，不参与条数校验。
+     */
+    private static Integer countableSize(Object value) {
+        if (value instanceof Collection<?> collection) {
+            return collection.size();
+        }
+        if (value instanceof Map<?, ?> map) {
+            return map.size();
+        }
+        if (value.getClass().isArray()) {
+            return Array.getLength(value);
+        }
+        return null;
+    }
+
+    private static Object applyTrim(VerifyParams params, Object value) {
+        if (!params.trim() || !(value instanceof CharSequence)) {
+            return value;
+        }
+        return value.toString().trim();
+    }
+
+    private static VerifyResult validateAnyOf(Object entity, VerifyAnyOf[] rules, Map<String, Field> fieldMap,
+                                              boolean stopOnFirstError, Class<?>... currentGroups) {
+        if (rules == null || rules.length == 0) {
+            return VerifyResult.ok();
+        }
+        List<FieldVerifyError> errors = new ArrayList<>();
+        for (VerifyAnyOf rule : rules) {
+            if (!matchesGroup(rule.group(), currentGroups)) {
+                continue;
+            }
+            String[] names = rule.fields();
+            if (names == null || names.length == 0) {
+                continue;
+            }
+            boolean filled = false;
+            String missing = null;
+            String anchor = null;
+            for (String name : names) {
+                if (name == null || name.isEmpty()) {
+                    continue;
+                }
+                if (anchor == null) {
+                    anchor = name;
+                }
+                if (!fieldMap.containsKey(name)) {
+                    missing = name;
+                    break;
+                }
+                if (isValuePresent(CompareUtil.readFieldValue(entity, name, fieldMap))) {
+                    filled = true;
+                    break;
+                }
+            }
+            if (anchor == null) {
+                continue;
+            }
+            if (missing != null) {
+                VerifyResult missingResult = failField(missing, "未找到字段：" + missing, stopOnFirstError);
+                if (stopOnFirstError) {
+                    return missingResult;
+                }
+                errors.addAll(missingResult.getErrors());
+                continue;
+            }
+            if (!filled) {
+                VerifyResult fail = failField(anchor, rule.errorMsg(), stopOnFirstError);
+                if (stopOnFirstError) {
+                    return fail;
+                }
+                errors.addAll(fail.getErrors());
+            }
+        }
+        if (errors.isEmpty()) {
+            return VerifyResult.ok();
+        }
+        return VerifyResult.aggregate(errors);
+    }
+
+    /**
+     * 空白字符串、空集合、空 Map、空数组视为未填写。
+     */
+    private static boolean isValuePresent(Object value) {
+        if (value == null) {
+            return false;
+        }
+        if (value instanceof Collection<?> collection) {
+            return !collection.isEmpty();
+        }
+        if (value instanceof Map<?, ?> map) {
+            return !map.isEmpty();
+        }
+        if (value.getClass().isArray()) {
+            return Array.getLength(value) > 0;
+        }
+        return !ValidatorUtil.isEmpty(value);
     }
 
     private static boolean matchesGroup(Class<?>[] fieldGroups, Class<?>... currentGroups) {

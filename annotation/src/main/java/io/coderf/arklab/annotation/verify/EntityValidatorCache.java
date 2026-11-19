@@ -1,11 +1,13 @@
 package io.coderf.arklab.annotation.verify;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import io.coderf.arklab.annotation.annotation.VerifyAnyOf;
 import io.coderf.arklab.annotation.annotation.VerifyEntity;
 import io.coderf.arklab.annotation.utils.CompareUtil;
 import io.coderf.arklab.annotation.utils.ValidatorUtil;
@@ -16,7 +18,7 @@ import io.coderf.arklab.annotation.utils.ValidatorUtil;
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/11/19 13:46
  */
 public final class EntityValidatorCache {
 
@@ -64,7 +66,23 @@ public final class EntityValidatorCache {
             validationFlags.put(field, EntityValidator.hasValidationAnnotations(field));
         }
         Map<String, Field> fieldMap = CompareUtil.buildFieldMap(fields);
-        return new EntityMeta(verifyEntity, fields, validationFlags, fieldMap);
+        return new EntityMeta(verifyEntity, fields, validationFlags, fieldMap, collectAnyOf(clazz));
+    }
+
+    /**
+     * 收集当前类及父类上的 {@link VerifyAnyOf}。子类规则在前。
+     */
+    private static VerifyAnyOf[] collectAnyOf(Class<?> clazz) {
+        List<VerifyAnyOf> rules = new ArrayList<>();
+        Class<?> current = clazz;
+        while (current != null && current != Object.class) {
+            VerifyAnyOf[] declared = current.getAnnotationsByType(VerifyAnyOf.class);
+            if (declared.length > 0) {
+                rules.addAll(List.of(declared));
+            }
+            current = current.getSuperclass();
+        }
+        return rules.toArray(new VerifyAnyOf[0]);
     }
 
     static final class EntityMeta {
@@ -72,13 +90,15 @@ public final class EntityValidatorCache {
         final List<Field> fields;
         final Map<Field, Boolean> validationFlags;
         final Map<String, Field> fieldMap;
+        final VerifyAnyOf[] anyOfRules;
 
         EntityMeta(VerifyEntity verifyEntity, List<Field> fields, Map<Field, Boolean> validationFlags,
-                   Map<String, Field> fieldMap) {
+                   Map<String, Field> fieldMap, VerifyAnyOf[] anyOfRules) {
             this.verifyEntity = verifyEntity;
             this.fields = fields;
             this.validationFlags = validationFlags;
             this.fieldMap = fieldMap;
+            this.anyOfRules = anyOfRules;
         }
     }
 }

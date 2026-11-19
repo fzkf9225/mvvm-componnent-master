@@ -71,6 +71,12 @@ public @interface VerifyParams {
     int scale() default -1;
 
     /**
+     * 为 true 时，本条规则按去掉首尾空白后的字符串校验，不回写字段原值。
+     * 仅对字符串生效。
+     */
+    boolean trim() default false;
+
+    /**
      * 单条规则生效条件；refField 为空（默认）时始终生效。
      */
     VerifyWhen when() default @VerifyWhen(refField = VerifyWhen.SKIP);
