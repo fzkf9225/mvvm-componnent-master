@@ -3,11 +3,6 @@ package io.coderf.arklab.core.request
 import io.coderf.arklab.common.base.BaseException
 import io.coderf.arklab.common.base.BaseException.ErrorType
 
-private const val DEFAULT_NETWORK_MESSAGE = "网络不太稳定，请检查后再试"
-private const val DEFAULT_TIMEOUT_MESSAGE = "连接超时了，请稍后再试"
-private const val DEFAULT_UNKNOWN_MESSAGE = "出了点问题，请稍后再试"
-private const val DEFAULT_CANCELLED_MESSAGE = "操作已取消"
-
 /**
  * 统一错误模型。网络 / 业务 / 超时 / 取消等均映射到此类型，
  * UI 层与 Repository 层只处理 [AppError]，不再散落多种 Throwable 分支。
@@ -22,7 +17,7 @@ sealed class AppError(
     open val cause: Throwable? = null
 ) {
     data class Network(
-        override val message: String = DEFAULT_NETWORK_MESSAGE,
+        override val message: String = ErrorType.BAD_NETWORK.msg,
         override val cause: Throwable? = null
     ) : AppError(message, cause)
 
@@ -33,14 +28,14 @@ sealed class AppError(
     ) : AppError(message, cause)
 
     data class Timeout(
-        override val message: String = DEFAULT_TIMEOUT_MESSAGE,
+        override val message: String = ErrorType.CONNECT_TIMEOUT.msg,
         override val cause: Throwable? = null
     ) : AppError(message, cause)
 
-    data object Cancelled : AppError(DEFAULT_CANCELLED_MESSAGE, null)
+    data object Cancelled : AppError(ErrorType.USER_CANCELED.msg, null)
 
     data class Unknown(
-        override val message: String = DEFAULT_UNKNOWN_MESSAGE,
+        override val message: String = ErrorType.OTHER.msg,
         override val cause: Throwable? = null
     ) : AppError(message, cause)
 
@@ -63,7 +58,7 @@ sealed class AppError(
                 is BaseException -> fromBaseException(throwable)
                 is retrofit2.HttpException -> Business(
                     code = throwable.code().toString(),
-                    message = throwable.message()?.takeIf { it.isNotBlank() } ?: DEFAULT_UNKNOWN_MESSAGE,
+                    message = throwable.message()?.takeIf { it.isNotBlank() } ?: ErrorType.OTHER.msg,
                     cause = throwable
                 )
                 is kotlinx.coroutines.TimeoutCancellationException -> Timeout(cause = throwable)
@@ -72,7 +67,7 @@ sealed class AppError(
                 is java.net.SocketException -> Timeout(cause = throwable)
                 is java.io.IOException -> Network(cause = throwable)
                 else -> Unknown(
-                    message = throwable.message?.takeIf { it.isNotBlank() } ?: DEFAULT_UNKNOWN_MESSAGE,
+                    message = throwable.message?.takeIf { it.isNotBlank() } ?: ErrorType.OTHER.msg,
                     cause = throwable
                 )
             }
@@ -82,7 +77,7 @@ sealed class AppError(
             val code = e.errorCode.orEmpty()
             val msg = e.errorMsg?.takeIf { it.isNotBlank() }
                 ?: e.message?.takeIf { it.isNotBlank() }
-                ?: DEFAULT_UNKNOWN_MESSAGE
+                ?: ErrorType.OTHER.msg
             return when (code) {
                 ErrorType.CONNECT_TIMEOUT.code,
                 ErrorType.OPERATION_TIMEOUT.code -> Timeout(message = msg, cause = e)

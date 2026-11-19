@@ -31,7 +31,6 @@ import io.coderf.arklab.core.request.LoadingCancelPolicy;
 import io.coderf.arklab.core.request.RequestUi;
 import io.coderf.arklab.common.helper.AuthManager;
 import io.coderf.arklab.common.helper.LoadingDelegate;
-import io.coderf.arklab.common.helper.UIController;
 import io.coderf.arklab.common.helper.ViewModelHelper;
 import io.coderf.arklab.common.inter.ErrorService;
 import io.coderf.arklab.common.utils.download.DownloadPermissionHelper;
@@ -102,12 +101,7 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
      */
     protected AuthManager authManager;
 
-    /**
-     * Loading / Toast 控制器，与 {@link #loadingDelegate} 持有同一实例。
-     */
-    protected UIController uiController;
-
-    /** Loading / Toast 委托。子类可在 {@code super.onCreate} 之前赋值以替换实例。 */
+    /** Loading / Toast。子类可在 {@code super.onCreate} 之前赋值以替换实例。 */
     @Nullable
     protected LoadingDelegate loadingDelegate;
 
@@ -240,15 +234,13 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     /**
-     * 创建 Loading 委托；同步填充 {@link #uiController}。
-     * 并挂接 Loading 用户取消 → {@link #onLoadingCancelled(LoadingCancelPolicy)}。
+     * 创建 Loading 委托，并挂接用户取消 → {@link #onLoadingCancelled(LoadingCancelPolicy)}。
      */
     protected void createUIController() {
         if (loadingDelegate == null) {
             ensureDelegates();
             loadingDelegate = new LoadingDelegate(this, getLifecycle(), uiSafetyChecker);
         }
-        uiController = loadingDelegate.getUiController();
         loadingDelegate.setOnLoadingCancelListener(this::onLoadingCancelled);
     }
 

@@ -1,43 +1,84 @@
 package io.coderf.arklab.common.helper;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.DialogInterface;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 
+import io.coderf.arklab.common.widget.dialog.LoadingProgressDialog;
+import io.coderf.arklab.common.widget.feedback.ToastHelper;
 import io.coderf.arklab.core.request.LoadingCancelPolicy;
-import io.coderf.arklab.core.ui.delegate.LoadingHost;
-import io.coderf.arklab.core.ui.delegate.UiMessageHost;
 import io.coderf.arklab.core.ui.delegate.UiSafety;
 import io.coderf.arklab.core.ui.delegate.UiSafetyChecker;
 
 /**
- * Loading / Toast 委托：包装 {@link UIController}，实现 {@link UiMessageHost}。
+ * 页面级 Loading / Toast：持有 Dialog，绑定 Lifecycle。
  * <p>
- * 供 {@link io.coderf.arklab.common.base.BaseActivity} / {@link io.coderf.arklab.common.base.BaseFragment}
- * 内部使用；对外仍可通过 {@link #getUiController()} 访问原 {@link UIController}，行为与改造前一致。
+ * 同一时刻只保留一个 Dialog：已在展示时原地刷新，避免 dismiss + show 闪烁，也避免多层叠加。
+ * 主线程策略：已在主线程则直接执行，否则 {@link Handler#post}。
+ * {@code ON_DESTROY} 时关闭 Loading 并清空主线程排队任务，避免 Window 泄漏与销毁后误弹。
+ * <p>
+ * 供 {@link io.coderf.arklab.common.base.BaseActivity} / {@link io.coderf.arklab.common.base.BaseFragment} 使用。
  *
  * @author fz
- * @version 1.1
+ * @version 2.0
  * @since 1.2.0
- * @updated 2026/11/12
+ * @updated 2026/11/19
  */
-public class LoadingDelegate implements UiMessageHost {
+public class LoadingDelegate implements DefaultLifecycleObserver {
 
+    /** 未传文案时的 Loading 默认提示。 */
+    private static final String DEFAULT_LOADING_MESSAGE = "加载中…";
+
+    /** 构造时传入的 Context（Activity 或 Application）。 */
     @NonNull
-    private final UIController uiController;
+    private final Context context;
 
-    @NonNull
-    private final UiSafetyChecker safety;
-
+    /** 弹 Loading 时优先使用的 Context；Fragment 场景为宿主 Activity。 */
     @Nullable
     private final Context dialogContext;
 
+    /** 当前 Loading Dialog 实例；非展示时置 null。 */
+    @Nullable
+    private LoadingProgressDialog loadingDialog;
+
+    /** 主线程 Handler。 */
+    @NonNull
+    private final Handler mainHandler;
+
+    /** UI 安全检查（未 finish / destroy，Fragment 还需已 attach）。 */
+    @NonNull
+    private final UiSafetyChecker safety;
+
+    /** 当前 Dialog 对应的取消策略。 */
+    @NonNull
+    private LoadingCancelPolicy currentCancelPolicy = LoadingCancelPolicy.None;
+
+    /** 用户取消 Loading 时的回调（由 Base 页面设置）。 */
+    @Nullable
+    private OnLoadingCancelListener onLoadingCancelListener;
+
     /**
-     * @param context   用于构造 UIController（Activity 或 Application 均可；Loading 会校验 Activity 有效性）
+     * Loading 被用户取消（系统返回 / 手势返回）时的回调；点外侧不会触发。
+     */
+    public interface OnLoadingCancelListener {
+        /**
+         * @param policy 取消时 Dialog 上的策略（决定是否离页）
+         */
+        void onLoadingCancelled(@NonNull LoadingCancelPolicy policy);
+    }
+
+    /**
+     * @param context   Activity 或 Application；Loading 会校验 Activity 有效性
      * @param lifecycle 绑定 Lifecycle，ON_DESTROY 时自动 hideLoading
      * @param safety    UI 安全检查（未 finish / destroy）
      */
@@ -54,16 +95,18 @@ public class LoadingDelegate implements UiMessageHost {
                            @NonNull Lifecycle lifecycle,
                            @NonNull UiSafetyChecker safety,
                            @Nullable Context dialogContext) {
-        this.uiController = new UIController(context, lifecycle);
+        this.context = context;
         this.safety = safety;
         this.dialogContext = dialogContext;
+        this.mainHandler = new Handler(Looper.getMainLooper());
+        lifecycle.addObserver(this);
     }
 
     /**
      * Activity 场景便捷工厂。
      */
     @NonNull
-    public static LoadingDelegate forActivity(@NonNull android.app.Activity activity,
+    public static LoadingDelegate forActivity(@NonNull Activity activity,
                                               @NonNull Lifecycle lifecycle) {
         return new LoadingDelegate(activity, lifecycle, UiSafety.forActivity(activity));
     }
@@ -74,7 +117,7 @@ public class LoadingDelegate implements UiMessageHost {
     @NonNull
     public static LoadingDelegate forFragment(@NonNull androidx.fragment.app.Fragment fragment,
                                               @NonNull LifecycleOwner viewLifecycleOwner) {
-        android.app.Activity activity = fragment.requireActivity();
+        Activity activity = fragment.requireActivity();
         return new LoadingDelegate(
                 activity,
                 viewLifecycleOwner.getLifecycle(),
@@ -83,21 +126,24 @@ public class LoadingDelegate implements UiMessageHost {
         );
     }
 
-    @NonNull
-    public UIController getUiController() {
-        return uiController;
-    }
-
     /**
-     * 设置用户取消 Loading 的监听（系统返回 / 手势返回；点外侧不取消）。
-     *
-     * @param listener 回调；传 null 清除
+     * 设置用户取消 Loading 的监听；传 null 清除。
      */
-    public void setOnLoadingCancelListener(@Nullable UIController.OnLoadingCancelListener listener) {
-        uiController.setOnLoadingCancelListener(listener);
+    public void setOnLoadingCancelListener(@Nullable OnLoadingCancelListener listener) {
+        this.onLoadingCancelListener = listener;
     }
 
     @Override
+    public void onDestroy(@NonNull LifecycleOwner owner) {
+        cancelPendingUi();
+    }
+
+    /** 取消尚未执行的主线程 UI 任务，并立即关闭 Loading。 */
+    public void cancelPendingUi() {
+        mainHandler.removeCallbacksAndMessages(null);
+        hideLoadingImmediate();
+    }
+
     public void showLoading(String message, boolean enableDynamicEllipsis) {
         showLoading(message, enableDynamicEllipsis, LoadingCancelPolicy.None);
     }
@@ -117,51 +163,160 @@ public class LoadingDelegate implements UiMessageHost {
         if (!safety.isUiSafe()) {
             return;
         }
-        String msg = message != null ? message : LoadingHost.DEFAULT_LOADING_MESSAGE;
+        Context target = dialogContext != null ? dialogContext : context;
+        String msg = message != null ? message : DEFAULT_LOADING_MESSAGE;
         LoadingCancelPolicy policy = cancelPolicy != null ? cancelPolicy : LoadingCancelPolicy.None;
-        if (dialogContext != null) {
-            uiController.showLoading(dialogContext, msg, enableDynamicEllipsis, policy);
-        } else {
-            uiController.showLoading(msg, enableDynamicEllipsis, policy);
+        if (!canShowUi(target)) {
+            return;
         }
+        runOnMain(() -> {
+            if (!canShowUi(target)) {
+                return;
+            }
+            showLoadingImmediate(target, msg, enableDynamicEllipsis, policy);
+        });
     }
 
-    @Override
     public void refreshLoading(String message) {
-        if (!safety.isUiSafe()) {
+        if (!safety.isUiSafe() || !canShowUi(dialogContext != null ? dialogContext : context)) {
             return;
         }
-        uiController.refreshLoading(message != null ? message : "");
+        String msg = message != null ? message : "";
+        runOnMain(() -> {
+            if (isLoadingShowing()) {
+                loadingDialog.refreshMessage(msg);
+            }
+        });
     }
 
-    @Override
     public void hideLoading() {
-        uiController.hideLoading();
+        runOnMain(this::hideLoadingImmediate);
     }
 
-    @Override
     public boolean isLoading() {
-        return uiController.isLoadingShowing();
+        return isLoadingShowing();
     }
 
-    @Override
+    /**
+     * 当前 Dialog 上的取消策略（未展示时为 {@link LoadingCancelPolicy#None}）。
+     */
+    @NonNull
+    public LoadingCancelPolicy getCurrentCancelPolicy() {
+        return currentCancelPolicy;
+    }
+
     public void showToast(String message) {
-        if (!safety.isUiSafe() || message == null || message.isEmpty()) {
+        if (!safety.isUiSafe() || !canShowToast() || message == null || message.isEmpty()) {
             return;
         }
-        uiController.showToast(message);
+        runOnMain(() -> ToastHelper.showShort(context, message));
     }
 
-    @Override
     public void showToast(@StringRes int resId) {
-        if (!safety.isUiSafe()) {
+        if (!safety.isUiSafe() || !canShowToast()) {
             return;
         }
-        uiController.showToast(resId);
+        runOnMain(() -> ToastHelper.showShort(resId));
     }
 
-    /** 取消尚未执行的主线程 UI 任务并立即关闭 Loading。 */
-    public void cancelPendingUi() {
-        uiController.cancelPendingUi();
+    private void runOnMain(@NonNull Runnable action) {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            action.run();
+        } else {
+            mainHandler.post(action);
+        }
+    }
+
+    /**
+     * 已在展示则复用同一实例并刷新内容；否则先清掉残留引用再创建，保证不会叠多层。
+     */
+    private void showLoadingImmediate(
+            Context dialogTarget,
+            String message,
+            boolean enableDynamicEllipsis,
+            @NonNull LoadingCancelPolicy cancelPolicy
+    ) {
+        currentCancelPolicy = cancelPolicy;
+        boolean cancelable = cancelPolicy.isCancelable();
+        if (isLoadingShowing()) {
+            loadingDialog.refreshShowing(message, enableDynamicEllipsis, cancelable);
+            loadingDialog.setCanCelListener(cancelable ? this::dispatchLoadingCancelled : null);
+            return;
+        }
+        hideLoadingImmediate();
+        currentCancelPolicy = cancelPolicy;
+        loadingDialog = LoadingProgressDialog.getInstance(dialogTarget)
+                .setCanCancel(cancelable)
+                .setEnableDynamicEllipsis(enableDynamicEllipsis)
+                .setMessage(message)
+                .setCanCelListener(cancelable ? this::dispatchLoadingCancelled : null)
+                .builder();
+        loadingDialog.show();
+    }
+
+    /**
+     * Dialog OnCancel → 页面取消请求。
+     */
+    private void dispatchLoadingCancelled(DialogInterface dialog) {
+        LoadingCancelPolicy policy = currentCancelPolicy;
+        hideLoadingImmediate();
+        OnLoadingCancelListener listener = onLoadingCancelListener;
+        if (listener != null) {
+            listener.onLoadingCancelled(policy);
+        }
+    }
+
+    private void hideLoadingImmediate() {
+        if (isLoadingShowing()) {
+            loadingDialog.setCanCelListener(null);
+            loadingDialog.dismiss();
+        }
+        loadingDialog = null;
+        currentCancelPolicy = LoadingCancelPolicy.None;
+    }
+
+    private boolean isLoadingShowing() {
+        return loadingDialog != null && loadingDialog.isShowing();
+    }
+
+    /**
+     * Loading 必须绑定有效 Activity（含 ContextWrapper 解包）；非 Activity 不允许弹窗。
+     */
+    private boolean canShowUi(Context target) {
+        Activity activity = findActivity(target);
+        if (activity == null) {
+            return false;
+        }
+        return !activity.isFinishing() && !activity.isDestroyed();
+    }
+
+    /**
+     * Toast 允许非 Activity Context（由 {@link ToastHelper} 走 ApplicationContext）；
+     * 若构造时是 Activity，则仍校验未 finish / destroy。
+     */
+    private boolean canShowToast() {
+        Activity activity = findActivity(context);
+        if (activity != null) {
+            return !activity.isFinishing() && !activity.isDestroyed();
+        }
+        return true;
+    }
+
+    @Nullable
+    private static Activity findActivity(Context target) {
+        if (target == null) {
+            return null;
+        }
+        if (target instanceof Activity) {
+            return (Activity) target;
+        }
+        Context base = target;
+        while (base instanceof ContextWrapper) {
+            if (base instanceof Activity) {
+                return (Activity) base;
+            }
+            base = ((ContextWrapper) base).getBaseContext();
+        }
+        return null;
     }
 }

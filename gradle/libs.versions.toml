@@ -59,7 +59,6 @@ zxingCoreVersion = "3.5.4"
 gsyVersion = "13.2.1"
 bcprov = "1.84"
 webkitVersion = "1.16.0"
-autoServiceVersion="1.1.1"
 javapoetVersion="1.13.0"
 javawriterVersion="2.5.1"
 camerax = "1.6.1"
@@ -184,8 +183,6 @@ bouncycastle-bcprov = { module = "org.bouncycastle:bcprov-jdk18on", version.ref 
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 
 #Annotations
-auto-service ={ module = "com.google.auto.service:auto-service", version.ref = "autoServiceVersion"}
-auto-service-annotation ={ module = "com.google.auto.service:auto-service-annotations", version.ref = "autoServiceVersion"}
 squareup-javapoet ={ module = "com.squareup:javapoet", version.ref = "javapoetVersion"}
 squareup-javawriter ={ module = "com.squareup:javawriter", version.ref = "javawriterVersion"}
 

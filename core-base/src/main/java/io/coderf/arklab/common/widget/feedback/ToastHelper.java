@@ -13,7 +13,7 @@ import androidx.annotation.StringRes;
 import io.coderf.arklab.common.api.BaseApplication;
 
 /**
- * 全局 Toast 封装：统一主线程调用与空文案过滤，可在无 {@link io.coderf.arklab.common.helper.UIController} 的场景直接使用。
+ * 全局 Toast 封装：统一主线程调用与空文案过滤，不依赖页面 Loading。
  *
  * @author fz
  * @version 1.0

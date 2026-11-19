@@ -23,7 +23,7 @@ import io.coderf.arklab.core.request.RequestUi;
  * @author fz
  * @version 2.1
  * @since 1.0
- * @updated 2026/11/12
+ * @updated 2026/11/19
  */
 public class NetworkRequestUiHost implements RequestUi {
 
@@ -144,10 +144,8 @@ public class NetworkRequestUiHost implements RequestUi {
     @Override
     public void showError(@NonNull AppError error) {
         if (error instanceof AppError.Business business) {
+            // 业务码只走 errorCode（登录 / 无权限）。文案不进 toast，避免页面再按未知错误弹一次。
             errorCode.postValue(new BaseResponse<>(business.getCode(), business.getMessage()));
-            if (business.getMessage() != null && !business.getMessage().isEmpty()) {
-                toast.postValue(business.getMessage());
-            }
             return;
         }
         if (error == AppError.Cancelled.INSTANCE) {
@@ -197,26 +195,12 @@ public class NetworkRequestUiHost implements RequestUi {
 
     /**
      * 单次 Loading 占用会话（一次 show 对应一次 hide）。
+     * @param message  加载文案。
+     * @param enableDynamicEllipsis  是否动态省略号。
+     * @param cancelPolicy  本会话声明的取消策略。
      */
-    private static final class LoadingSession {
-        /** 加载文案。 */
-        @NonNull
-        final String message;
-        /** 是否动态省略号。 */
-        final boolean enableDynamicEllipsis;
-        /** 本会话声明的取消策略。 */
-        @NonNull
-        final LoadingCancelPolicy cancelPolicy;
-
-        LoadingSession(
-                @NonNull String message,
-                boolean enableDynamicEllipsis,
-                @NonNull LoadingCancelPolicy cancelPolicy
-        ) {
-            this.message = message;
-            this.enableDynamicEllipsis = enableDynamicEllipsis;
-            this.cancelPolicy = cancelPolicy;
-        }
+    private record LoadingSession(@NonNull String message, boolean enableDynamicEllipsis,
+                                  @NonNull LoadingCancelPolicy cancelPolicy) {
     }
 
     /**

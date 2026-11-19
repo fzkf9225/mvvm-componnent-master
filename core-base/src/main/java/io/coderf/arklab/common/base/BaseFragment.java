@@ -24,7 +24,6 @@ import javax.inject.Inject;
 
 import io.coderf.arklab.common.helper.AuthManager;
 import io.coderf.arklab.common.helper.LoadingDelegate;
-import io.coderf.arklab.common.helper.UIController;
 import io.coderf.arklab.common.helper.ViewModelHelper;
 import io.coderf.arklab.common.inter.ErrorService;
 import io.coderf.arklab.core.ui.delegate.AlwaysInitData;
@@ -40,7 +39,7 @@ import io.coderf.arklab.core.ui.delegate.UiSafetyChecker;
  * UI 策略与 Activity 对称：{@link InitDataPolicy}、{@link PageArgumentsResolver}、{@link UiSafetyChecker}。
  * 换预设给 policy 字段赋值；要写分支则重写 {@code shouldXxx()}，重写覆盖字段。
  * Loading 由 {@link LoadingDelegate} 承担，登录 / 权限由 {@link AuthManager} 承担。
- * {@link #authManager} / {@link #uiController} 仍可直接使用。
+ * {@link #authManager} / {@link #loadingDelegate} 仍可直接使用。
  * 需要「仅首次创建时 initData」可继承 {@link BaseStatefulFragment}，或设置
  * {@link io.coderf.arklab.core.ui.delegate.FirstCreateOnlyInitData}。
  *
@@ -68,12 +67,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
      * 登录 / 权限管理。子类可在 {@code super.onCreateView} 之前赋值以替换实例。
      */
     protected AuthManager authManager;
-    /**
-     * Loading / Toast 控制器，与 {@link #loadingDelegate} 持有同一实例。
-     */
-    protected UIController uiController;
-
-    /** Loading / Toast 委托。子类可在 {@code super.onCreateView} 之前赋值以替换实例。 */
+    /** Loading / Toast。子类可在 {@code super.onCreateView} 之前赋值以替换实例。 */
     @Nullable
     protected LoadingDelegate loadingDelegate;
 
@@ -149,7 +143,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     /**
-     * 创建 Loading 委托；Dialog 挂 Activity，Lifecycle 跟 View；同步填充 {@link #uiController}。
+     * 创建 Loading 委托；Dialog 挂 Activity，Lifecycle 跟 View。
      * 并挂接 Loading 用户取消 → {@link #onLoadingCancelled(LoadingCancelPolicy)}。
      */
     protected void createUIController() {
@@ -157,7 +151,6 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
             // Dialog 挂 Activity Window；Lifecycle 跟 View，与 onDestroyView 对齐
             loadingDelegate = LoadingDelegate.forFragment(this, getViewLifecycleOwner());
         }
-        uiController = loadingDelegate.getUiController();
         loadingDelegate.setOnLoadingCancelListener(this::onLoadingCancelled);
     }
 

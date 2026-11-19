@@ -4,14 +4,13 @@ import io.coderf.arklab.core.bean.RequestOptions
 import io.coderf.arklab.core.bean.RequestResult
 import io.coderf.arklab.core.network.BaseNetworkRepository
 import io.coderf.arklab.user.api.UserApiService
-import io.coderf.arklab.user.domain.repository.UserProfileRepository
 import io.coderf.arklab.userapi.bean.UserInfo
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 /**
- * ÓÃ»§×ÊÁÏ²Ö¿â£¨[BaseNetworkRepository]£©¡£
- * ¼øÈ¨£ºÓÅÏÈ¹¹Ôì [tokenRefresher]£¬·ñÔòÓÃ [api] ËùÊô ApiRetrofit.Builder ÉÏµÄÅäÖÃ¡£
+ * ç”¨æˆ·èµ„æ–™ä»“åº“ï¼ˆ[BaseNetworkRepository]ï¼‰ã€‚
+ * é‰´æƒï¼šä¼˜å…ˆæ„é€  [tokenRefresher]ï¼Œå¦åˆ™ç”¨ [api] æ‰€å± ApiRetrofit.Builder ä¸Šçš„é…ç½®ã€‚
  *
  * @author fz
  * @version 1.1
@@ -22,10 +21,9 @@ class UserRepositoryImpl @Inject constructor(
     private val apiService: UserApiService,
 ) : BaseNetworkRepository(
     boundApiService = apiService
-),
-    UserProfileRepository {
+) {
 
-    override fun refreshUserInfo(): Flow<RequestResult<UserInfo>> {
+    fun refreshUserInfo(): Flow<RequestResult<UserInfo>> {
         return request(
             RequestOptions.builder()
                 .showLoading(false)

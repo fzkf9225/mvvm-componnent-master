@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
  * - [InitDataPolicy]
  * - [PageArgumentsResolver]（默认 [PageArguments.fromFragment]）
  * - [UiSafetyChecker]（默认 [UiSafety.forFragment]）
- * - [UiMessageHost] / [LifecycleUiMessageHost]
  *
  * 本文件提供便捷装配，避免业务手写样板。
  *

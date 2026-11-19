@@ -1,2 +1,5 @@
 /build
 *.hprof
+mapping.txt
+seeds.txt
+unused.txt
