@@ -1,6 +1,7 @@
 package io.coderf.arklab.common.repository;
 
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
@@ -14,6 +15,7 @@ import io.coderf.arklab.common.base.BaseRepository;
 import io.coderf.arklab.common.bean.ApiRequestOptions;
 import io.coderf.arklab.common.inter.RetryService;
 import io.coderf.arklab.core.request.LoadingCancelPolicy;
+import io.coderf.arklab.core.request.LoadingTicket;
 import io.coderf.arklab.core.request.RequestUi;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Flowable;
@@ -115,17 +117,18 @@ public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRep
 
     public <T> Observable<T> sendRequest(Observable<T> observable, ApiRequestOptions apiRequestOptions) {
         RetryService retryService = resolveRetryService();
+        LoadingLease lease = new LoadingLease();
         if (retryService != null) {
             return observable.subscribeOn(Schedulers.io())
                     .retryWhen(retryService::handleObservableError)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe(disposable -> onRxSubscribe(disposable, apiRequestOptions))
-                    .doFinally(() -> onRxFinally(apiRequestOptions));
+                    .doOnSubscribe(disposable -> onRxSubscribe(disposable, apiRequestOptions, lease))
+                    .doFinally(() -> onRxFinally(apiRequestOptions, lease));
         } else {
             return observable.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe(disposable -> onRxSubscribe(disposable, apiRequestOptions))
-                    .doFinally(() -> onRxFinally(apiRequestOptions));
+                    .doOnSubscribe(disposable -> onRxSubscribe(disposable, apiRequestOptions, lease))
+                    .doFinally(() -> onRxFinally(apiRequestOptions, lease));
         }
     }
 
@@ -192,18 +195,19 @@ public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRep
 
     public <T> Flowable<T> sendRequest(Flowable<T> flowable, ApiRequestOptions apiRequestOptions) {
         RetryService retryService = resolveRetryService();
+        LoadingLease lease = new LoadingLease();
         if (retryService != null) {
             return flowable.subscribeOn(Schedulers.io())
                     .retryWhen(throwableObservable ->
                             retryService.handleFlowableError(throwableObservable.cast(Throwable.class)))
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe(subscription -> onFlowableSubscribe(subscription, apiRequestOptions))
-                    .doFinally(() -> onRxFinally(apiRequestOptions));
+                    .doOnSubscribe(subscription -> onFlowableSubscribe(subscription, apiRequestOptions, lease))
+                    .doFinally(() -> onRxFinally(apiRequestOptions, lease));
         } else {
             return flowable.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe(subscription -> onFlowableSubscribe(subscription, apiRequestOptions))
-                    .doFinally(() -> onRxFinally(apiRequestOptions));
+                    .doOnSubscribe(subscription -> onFlowableSubscribe(subscription, apiRequestOptions, lease))
+                    .doFinally(() -> onRxFinally(apiRequestOptions, lease));
         }
     }
 
@@ -267,76 +271,80 @@ public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRep
 
     public <T> Single<T> sendRequest(Single<T> single, ApiRequestOptions apiRequestOptions) {
         RetryService retryService = resolveRetryService();
+        LoadingLease lease = new LoadingLease();
         if (retryService != null) {
             return single.subscribeOn(Schedulers.io())
                     .retryWhen(throwableObservable ->
                             retryService.handleFlowableError(throwableObservable.cast(Throwable.class)))
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe(disposable -> onRxSubscribe(disposable, apiRequestOptions))
-                    .doFinally(() -> onRxFinally(apiRequestOptions));
+                    .doOnSubscribe(disposable -> onRxSubscribe(disposable, apiRequestOptions, lease))
+                    .doFinally(() -> onRxFinally(apiRequestOptions, lease));
         } else {
             return single.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe(disposable -> onRxSubscribe(disposable, apiRequestOptions))
-                    .doFinally(() -> onRxFinally(apiRequestOptions));
+                    .doOnSubscribe(disposable -> onRxSubscribe(disposable, apiRequestOptions, lease))
+                    .doFinally(() -> onRxFinally(apiRequestOptions, lease));
         }
     }
 
     /**
      * Observable / Single 订阅时：登记 Disposable、按策略登记可取消组、展示 Loading。
      */
-    private void onRxSubscribe(@Nullable Disposable disposable, @Nullable ApiRequestOptions options) {
+    private void onRxSubscribe(@Nullable Disposable disposable, @Nullable ApiRequestOptions options, @NonNull LoadingLease lease) {
         if (disposable != null) {
             addDisposable(disposable);
         }
         ApiRequestOptions opts = options != null ? options : ApiRequestOptions.getDefault();
-        LoadingCancelPolicy policy = opts.getLoadingCancelPolicy();
         if (opts.isShowDialog()) {
-            trackCancellableIfNeeded(disposable, policy);
-            RequestUi ui = getRequestUi();
-            if (ui != null) {
-                ui.showLoading(
-                        opts.getDialogMessage(),
-                        opts.isEnableDynamicEllipsis(),
-                        policy
-                );
-            }
+            trackCancellableIfNeeded(disposable, opts.getLoadingCancelPolicy());
         }
+        openLoading(options, lease);
     }
 
     /**
      * Flowable 订阅时：登记 Subscription、按策略登记可取消组、展示 Loading。
      */
-    private void onFlowableSubscribe(@Nullable Subscription subscription, @Nullable ApiRequestOptions options) {
+    private void onFlowableSubscribe(@Nullable Subscription subscription, @Nullable ApiRequestOptions options, @NonNull LoadingLease lease) {
         if (subscription != null) {
             addSubscription(subscription);
         }
         ApiRequestOptions opts = options != null ? options : ApiRequestOptions.getDefault();
-        LoadingCancelPolicy policy = opts.getLoadingCancelPolicy();
         if (opts.isShowDialog()) {
-            trackCancellableIfNeeded(subscription, policy);
-            RequestUi ui = getRequestUi();
-            if (ui != null) {
-                ui.showLoading(
-                        opts.getDialogMessage(),
-                        opts.isEnableDynamicEllipsis(),
-                        policy
-                );
-            }
+            trackCancellableIfNeeded(subscription, opts.getLoadingCancelPolicy());
         }
+        openLoading(options, lease);
     }
 
-    /**
-     * 请求结束（成功 / 失败 / dispose）时按引用计数隐藏 Loading。
-     */
-    private void onRxFinally(@Nullable ApiRequestOptions options) {
+    private void openLoading(@Nullable ApiRequestOptions options, @NonNull LoadingLease lease) {
         ApiRequestOptions opts = options != null ? options : ApiRequestOptions.getDefault();
         if (!opts.isShowDialog()) {
             return;
         }
         RequestUi ui = getRequestUi();
+        if (ui == null) {
+            return;
+        }
+        LoadingCancelPolicy policy = opts.getLoadingCancelPolicy();
+        lease.ticket = ui.openLoading(
+                opts.getDialogMessage() != null ? opts.getDialogMessage() : "",
+                opts.isEnableDynamicEllipsis(),
+                policy
+        );
+        lease.opened = true;
+    }
+
+    /**
+     * 请求结束（成功 / 失败 / dispose）时按票据关闭这一次 Loading。
+     */
+    private void onRxFinally(@Nullable ApiRequestOptions options, @NonNull LoadingLease lease) {
+        ApiRequestOptions opts = options != null ? options : ApiRequestOptions.getDefault();
+        if (!opts.isShowDialog() || !lease.opened) {
+            return;
+        }
+        lease.opened = false;
+        RequestUi ui = getRequestUi();
         if (ui != null) {
-            ui.hideLoading();
+            ui.closeLoading(lease.ticket != null ? lease.ticket : LoadingTicket.NONE);
         }
     }
 
@@ -349,6 +357,12 @@ public abstract class RepositoryImpl<API extends BaseApiService> extends BaseRep
             return null;
         }
         return apiService.getRetrofit().getBuilder().getRetryService();
+    }
+
+    /** 同一次 Rx 订阅的 Loading 票据，避免并发请求互相关掉。 */
+    private static final class LoadingLease {
+        private LoadingTicket ticket = LoadingTicket.NONE;
+        private boolean opened;
     }
 
 }

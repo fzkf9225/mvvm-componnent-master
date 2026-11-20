@@ -35,7 +35,7 @@ import io.coderf.arklab.common.widget.empty.EmptyLayoutConfig;
  * @author fz
  * @version 1.2
  * @since 1.0
- * @updated 2026/11/16 关闭加载更多时不展示底部状态行
+ * @updated 2026/11/20 不满一屏时可隐藏「暂无更多数据」
  */
 public class PagingFooterAdapter extends LoadStateAdapter<BaseViewHolder<PagingFooterBinding>> {
 
@@ -47,6 +47,24 @@ public class PagingFooterAdapter extends LoadStateAdapter<BaseViewHolder<PagingF
     private EmptyLayoutConfig config;
     /** 为 false 时不占行。单页失败由页面 EmptyLayout 承接。 */
     private boolean loadMoreEnabled = true;
+    /**
+     * 为 true 时，「暂无更多」只在内容超过一屏后展示。
+     * 加载中、加载失败不受这个开关影响。
+     */
+    private boolean hideEndHintUntilOverflow;
+    /** 由列表在布局后回写：去掉本 Footer 后，内容是否仍能滚动。 */
+    private boolean contentOverflows;
+
+    /**
+     * 底部暂无更多文本默认提示
+     */
+    private final static String NO_MORE_DATA_TEXT = "暂无更多数据";
+
+    /**
+     * 底部暂无更多文本提示
+     */
+    private String noMoreDataText = NO_MORE_DATA_TEXT;
+
 
     /**
      * @param retry 加载失败时的重试回调，一般为 {@code adapter::retry}
@@ -78,6 +96,22 @@ public class PagingFooterAdapter extends LoadStateAdapter<BaseViewHolder<PagingF
     }
 
     /**
+     * 获取底部暂无更多文本提示
+     * @return 底部暂无更多提示文本
+     */
+    public String getNoMoreDataText() {
+        return noMoreDataText;
+    }
+
+    /**
+     * 设置底部暂无更多数据时的提示内容，特殊场景下可以制定文本
+     * @param noMoreDataText 暂无更多提示文本
+     */
+    public void setNoMoreDataText(String noMoreDataText) {
+        this.noMoreDataText = noMoreDataText;
+    }
+
+    /**
      * 运行时更新配置（例如宿主在 Config.init 之后才拿到全局配置）。
      * 已创建的 ViewHolder 会在下次 bind 时生效。
      */
@@ -95,6 +129,42 @@ public class PagingFooterAdapter extends LoadStateAdapter<BaseViewHolder<PagingF
 
     public boolean isLoadMoreEnabled() {
         return loadMoreEnabled;
+    }
+
+    /**
+     * 不满一屏时不展示「暂无更多数据」。须在装上 RecyclerView 之前设置。
+     */
+    public void setHideEndHintUntilOverflow(boolean hideEndHintUntilOverflow) {
+        this.hideEndHintUntilOverflow = hideEndHintUntilOverflow;
+    }
+
+    public boolean isHideEndHintUntilOverflow() {
+        return hideEndHintUntilOverflow;
+    }
+
+    /**
+     * 内容是否已经超过一屏。只影响「暂无更多」这一行。
+     */
+    public void setContentOverflows(boolean overflows) {
+        if (this.contentOverflows == overflows) {
+            return;
+        }
+        LoadState state = getLoadState();
+        boolean before = displayLoadStateAsItem(state);
+        this.contentOverflows = overflows;
+        dispatchDisplayChange(state, before);
+    }
+
+    private void dispatchDisplayChange(@NonNull LoadState state, boolean before) {
+        boolean after = displayLoadStateAsItem(state);
+        if (before == after) {
+            return;
+        }
+        if (after) {
+            notifyItemInserted(0);
+        } else {
+            notifyItemRemoved(0);
+        }
     }
 
     @Nullable
@@ -126,13 +196,13 @@ public class PagingFooterAdapter extends LoadStateAdapter<BaseViewHolder<PagingF
             binding.retryButton.setVisibility(View.VISIBLE);
             binding.retryButton.setClickable(true);
             binding.retryButton.setFocusable(true);
-            binding.setMessage("加载失败，点击重试");
+            binding.retryButton.setText("加载失败，点击重试");
             binding.retryButton.setOnClickListener(v -> {
                 binding.retryButton.setClickable(false);
                 binding.retryButton.setFocusable(false);
                 binding.progressBar.setVisibility(View.VISIBLE);
                 binding.progressBar.show();
-                binding.setMessage("正在加载...");
+                binding.retryButton.setText("正在加载");
                 retry.run();
             });
         } else if (loadState instanceof LoadState.Loading) {
@@ -142,7 +212,7 @@ public class PagingFooterAdapter extends LoadStateAdapter<BaseViewHolder<PagingF
             binding.retryButton.setOnClickListener(null);
             binding.progressBar.setVisibility(View.VISIBLE);
             binding.progressBar.show();
-            binding.setMessage("正在加载...");
+            binding.retryButton.setText("正在加载");
         } else if (loadState instanceof LoadState.NotLoading) {
             if (loadState.getEndOfPaginationReached()) {
                 binding.progressBar.setVisibility(View.GONE);
@@ -150,7 +220,7 @@ public class PagingFooterAdapter extends LoadStateAdapter<BaseViewHolder<PagingF
                 binding.retryButton.setClickable(false);
                 binding.retryButton.setFocusable(false);
                 binding.retryButton.setOnClickListener(null);
-                binding.setMessage("暂无更多数据");
+                binding.retryButton.setText(getNoMoreDataText());
                 binding.progressBar.hide();
             } else {
                 binding.progressBar.setVisibility(View.GONE);
@@ -158,7 +228,7 @@ public class PagingFooterAdapter extends LoadStateAdapter<BaseViewHolder<PagingF
                 binding.progressBar.hide();
             }
         } else {
-            binding.setMessage("暂无更多数据");
+            binding.retryButton.setText(getNoMoreDataText());
             binding.progressBar.setVisibility(View.GONE);
             binding.retryButton.setVisibility(View.GONE);
             binding.progressBar.hide();
@@ -178,16 +248,21 @@ public class PagingFooterAdapter extends LoadStateAdapter<BaseViewHolder<PagingF
     }
 
     /**
-     * 仅在有列表数据时展示 Footer，保证「暂无更多」出现在列表末尾（需上拉才可见）。
+     * 有列表数据时才展示 Footer。
+     * 「暂无更多」在 {@link #hideEndHintUntilOverflow} 打开时，还要等内容超过一屏。
      */
     @Override
     public boolean displayLoadStateAsItem(@NonNull LoadState loadState) {
         if (!loadMoreEnabled || !hasContentItems()) {
             return false;
         }
-        return loadState instanceof LoadState.Loading
-                || loadState instanceof LoadState.Error
-                || (loadState instanceof LoadState.NotLoading && loadState.getEndOfPaginationReached());
+        if (loadState instanceof LoadState.Loading || loadState instanceof LoadState.Error) {
+            return true;
+        }
+        if (loadState instanceof LoadState.NotLoading && loadState.getEndOfPaginationReached()) {
+            return !hideEndHintUntilOverflow || contentOverflows;
+        }
+        return false;
     }
 
     /** 主列表是否至少有一条数据（不含 Header / Footer） */

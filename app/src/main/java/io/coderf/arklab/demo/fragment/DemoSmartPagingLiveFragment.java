@@ -84,7 +84,7 @@ public class DemoSmartPagingLiveFragment
     @Override
     protected void initData(Bundle bundle) {
         super.initData(bundle);
-        mViewModel.getItems().observe(this, observer);
+        mViewModel.getItems().observe(getViewLifecycleOwner(), observer);
         mViewModel.ensureSeedHistory(
                 () -> {
                     mViewModel.refreshData();

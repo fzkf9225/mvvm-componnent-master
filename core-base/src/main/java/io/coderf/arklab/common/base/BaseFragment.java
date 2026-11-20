@@ -10,6 +10,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import io.coderf.arklab.core.request.AppError;
 import io.coderf.arklab.core.request.LoadingCancelPolicy;
+import io.coderf.arklab.core.request.LoadingTicket;
 import io.coderf.arklab.core.request.RequestUi;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -91,7 +92,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
         createAuthManager();
         createUIController();
         binding = DataBindingUtil.inflate(inflater, getLayoutId(), container, false);
-        binding.setLifecycleOwner(this);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
         createViewModel();
         initView(savedInstanceState);
         if (shouldRunInitData(savedInstanceState)) {
@@ -197,11 +198,11 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
 
     /**
      * 将 ViewModel 内 {@link NetworkRequestUiHost} 派发到本页。
-     * 与 Activity 共用 VM 时默认仍 bind 到本 Fragment（loading 跟当前可见页）；
-     * 若希望只由 Activity 展示，可重写为空并依赖 Activity 的 bind。
+     * 与 Activity 共用 ViewModel 时，Activity 已经订阅同一个 Host；这里再订阅会把
+     * Toast 和登录跳转各派发一次。Loading 仍由 Activity 上的那一次订阅负责。
      */
     protected void bindNetworkRequestUi() {
-        if (mViewModel == null) {
+        if (mViewModel == null || useActivityViewModel()) {
             return;
         }
         NetworkRequestUiBinder.bind(getViewLifecycleOwner(), mViewModel.getNetworkRequestUiHost(), resolveRequestUi());
@@ -264,6 +265,10 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
             loadingDelegate.hideLoading();
         }
         super.onDestroyView();
+        if (binding != null) {
+            binding.unbind();
+            binding = null;
+        }
     }
 
     @Override
@@ -295,6 +300,27 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
             return;
         }
         loadingDelegate.hideLoading();
+    }
+
+    /**
+     * 页面只渲染一个对话框，不按票据计数。计数在 {@link NetworkRequestUiHost}。
+     */
+    @NonNull
+    @Override
+    public LoadingTicket openLoading(@Nullable String message, boolean enableDynamicEllipsis,
+                                     @NonNull LoadingCancelPolicy cancelPolicy) {
+        showLoading(message, enableDynamicEllipsis, cancelPolicy);
+        return LoadingTicket.NONE;
+    }
+
+    @Override
+    public void closeLoading(@NonNull LoadingTicket ticket) {
+        hideLoading();
+    }
+
+    @Override
+    public void refreshLoading(@NonNull LoadingTicket ticket, @NonNull String message) {
+        refreshLoading(message);
     }
 
     @Override

@@ -14,6 +14,8 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import io.coderf.arklab.core.request.LoadingCancelPolicy;
+import io.coderf.arklab.core.request.LoadingTicket;
 import io.coderf.arklab.core.request.RequestUi;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
@@ -129,6 +131,8 @@ public class CacheUtil {
      */
     public Single<String> calculateCacheSize(Context context, @Nullable RequestUi requestUi,
                                              String message, boolean enableDynamicEllipsis) {
+        LoadingLease lease = new LoadingLease();
+        String loadingMessage = TextUtils.isEmpty(message) ? "正在计算缓存，请稍后..." : message;
         return Single.create((SingleOnSubscribe<String>) emitter -> {
                     long cacheSize = 0;
                     // 内部缓存
@@ -150,16 +154,8 @@ public class CacheUtil {
                     emitter.onSuccess(getFormatSize(cacheSize));
                 })
                 .subscribeOn(Schedulers.io())
-                .doOnSubscribe(disposable -> {
-                    if (requestUi != null) {
-                        requestUi.showLoading(TextUtils.isEmpty(message) ? "正在计算缓存，请稍后..." : message, enableDynamicEllipsis);
-                    }
-                })
-                .doFinally(() -> {
-                    if (requestUi != null) {
-                        requestUi.hideLoading();
-                    }
-                })
+                .doOnSubscribe(disposable -> lease.open(requestUi, loadingMessage, enableDynamicEllipsis))
+                .doFinally(() -> lease.close(requestUi))
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
@@ -232,6 +228,8 @@ public class CacheUtil {
      */
     public Completable clearCache(Context context, @Nullable RequestUi requestUi,
                                   String message, boolean enableDynamicEllipsis) {
+        LoadingLease lease = new LoadingLease();
+        String loadingMessage = TextUtils.isEmpty(message) ? "缓存清理中，请稍后..." : message;
         return Completable.create(emitter -> {
                     // 清理内部缓存
                     deleteFolderFile(context.getCacheDir().getAbsolutePath(), false);
@@ -248,16 +246,8 @@ public class CacheUtil {
                     clearImageAllCache(context);
                     emitter.onComplete();
                 }).subscribeOn(Schedulers.io())
-                .doOnSubscribe(disposable -> {
-                    if (requestUi != null) {
-                        requestUi.showLoading(TextUtils.isEmpty(message) ? "缓存清理中，请稍后..." : message, enableDynamicEllipsis);
-                    }
-                })
-                .doFinally(() -> {
-                    if (requestUi != null) {
-                        requestUi.hideLoading();
-                    }
-                })
+                .doOnSubscribe(disposable -> lease.open(requestUi, loadingMessage, enableDynamicEllipsis))
+                .doFinally(() -> lease.close(requestUi))
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
@@ -364,5 +354,31 @@ public class CacheUtil {
         BigDecimal result4 = new BigDecimal(teraBytes);
 
         return result4.setScale(2, RoundingMode.HALF_UP).toPlainString() + "TB";
+    }
+
+    /** 同一次缓存任务的 Loading 票据。 */
+    private static final class LoadingLease {
+        private volatile LoadingTicket ticket = LoadingTicket.NONE;
+        private volatile boolean opened;
+
+        void open(@Nullable RequestUi requestUi, String message, boolean enableDynamicEllipsis) {
+            if (requestUi == null || opened) {
+                return;
+            }
+            ticket = requestUi.openLoading(
+                    message != null ? message : "",
+                    enableDynamicEllipsis,
+                    LoadingCancelPolicy.None
+            );
+            opened = true;
+        }
+
+        void close(@Nullable RequestUi requestUi) {
+            if (requestUi == null || !opened) {
+                return;
+            }
+            opened = false;
+            requestUi.closeLoading(ticket != null ? ticket : LoadingTicket.NONE);
+        }
     }
 }

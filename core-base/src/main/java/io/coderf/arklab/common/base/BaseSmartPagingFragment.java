@@ -38,7 +38,7 @@ import io.coderf.arklab.common.utils.theme.ThemeAttrs;
  * @version 1.2
  * @since 1.0
  * @created 2017/11/17
- * @updated 2026/11/16 列表壳控件改为引用 ids.xml 中的稳定 id
+ * @updated 2026/11/20 不满一屏时不展示「暂无更多数据」
  */
 public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VDB extends ViewDataBinding, T> extends BaseFragment<VM, VDB>
         implements PagingAdapterListener<T>, EmptyLayout.OnEmptyLayoutClickListener, OnRefreshListener {
@@ -46,6 +46,10 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
     protected EmptyLayout emptyLayout;
     protected SmartRefreshLayout refreshLayout;
     public BasePagingAdapter<T, ?> adapter;
+    private PagingFooterAdapter pagingFooter;
+    private boolean noMoreHintWatchInstalled;
+    private boolean noMoreHintSyncPosted;
+    private int noMoreHintMeasureRetries;
 
     @Override
     protected int getLayoutId() {
@@ -70,6 +74,7 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
         }
         adapter.setOnAdapterListener(this);
         mRecyclerView.setAdapter(createdHeaderFootAdapter());
+        installNoMoreHintWatch();
 
         emptyLayout.setOnEmptyLayoutClickListener(this);
         refreshLayout.setOnRefreshListener(this);
@@ -85,6 +90,8 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
         PagingFooterAdapter footer = new PagingFooterAdapter(
                 () -> adapter.retry(), adapter, emptyLayout.getConfig());
         footer.setLoadMoreEnabled(mViewModel.isLoadMoreEnabled());
+        footer.setHideEndHintUntilOverflow(hideNoMoreHintWhenNotFullScreen());
+        pagingFooter = footer;
         RecyclerView.Adapter<? extends RecyclerView.ViewHolder> header = adapter.getPagingHeaderAdapter();
         ConcatAdapter mainWithFooter = adapter.withLoadStateFooter(footer);
         if (header != null) {
@@ -100,7 +107,9 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
         LoadState refresh = loadStates.getRefresh();
         LoadState append = loadStates.getAppend();
         if (refresh instanceof LoadState.Loading) {
-
+            if (pagingFooter != null) {
+                pagingFooter.setContentOverflows(false);
+            }
         } else if (refresh instanceof LoadState.NotLoading) {
             refreshLayout.finishRefresh();
             if (adapter.getContentItemCount() == 0) {
@@ -126,6 +135,7 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
 //        } else if (append instanceof LoadState.Error) {
 //            refreshLayout.finishLoadMore(false);
 //        }
+        scheduleNoMoreHintSync();
         return null;
     };
 
@@ -160,7 +170,16 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
         layout.setSkeletonRowCount(6);
     }
 
-    protected final Observer<? super PagingData<T>> observer = responseBean -> adapter.submitData(getLifecycle(), responseBean);
+    /**
+     * 收集必须绑视图生命周期。Fragment 生命周期在 onDestroyView 后仍然活着，
+     * 用 {@code getLifecycle()} 会让旧 Adapter 在旋转或返回后继续收分页。
+     */
+    protected final Observer<? super PagingData<T>> observer = pagingData -> {
+        if (pagingData == null || adapter == null || getView() == null) {
+            return;
+        }
+        adapter.submitData(getViewLifecycleOwner().getLifecycle(), pagingData);
+    };
 
     protected RecyclerView getRecyclerView() {
         return mRecyclerView;
@@ -179,6 +198,166 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
 
     protected boolean hideRecycleViewDivider() {
         return false;
+    }
+
+    /**
+     * 内容不满一屏时，不展示底部「暂无更多数据」。
+     *
+     * <p>默认 true：条目加起来不到一屏时不占这一行；超过一屏后，这一行在列表末尾，
+     * 往上滑到末尾就能看到。加载中、加载失败仍照常显示。
+     * 某一页如果到了最后一页就要始终显示这行字，重写并返回 false。</p>
+     */
+    protected boolean hideNoMoreHintWhenNotFullScreen() {
+        return true;
+    }
+
+    private final View.OnLayoutChangeListener noMoreHintLayoutListener =
+            (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> scheduleNoMoreHintSync();
+
+    private final RecyclerView.AdapterDataObserver noMoreHintDataObserver = new RecyclerView.AdapterDataObserver() {
+        @Override
+        public void onChanged() {
+            scheduleNoMoreHintSync();
+        }
+
+        @Override
+        public void onItemRangeInserted(int positionStart, int itemCount) {
+            scheduleNoMoreHintSync();
+        }
+
+        @Override
+        public void onItemRangeRemoved(int positionStart, int itemCount) {
+            scheduleNoMoreHintSync();
+        }
+    };
+
+    private final Runnable noMoreHintSync = () -> {
+        noMoreHintSyncPosted = false;
+        syncNoMoreHintWithViewport();
+    };
+
+    private void installNoMoreHintWatch() {
+        if (noMoreHintWatchInstalled || pagingFooter == null || mRecyclerView == null || adapter == null) {
+            return;
+        }
+        if (!pagingFooter.isHideEndHintUntilOverflow()) {
+            return;
+        }
+        mRecyclerView.addOnLayoutChangeListener(noMoreHintLayoutListener);
+        adapter.registerAdapterDataObserver(noMoreHintDataObserver);
+        noMoreHintWatchInstalled = true;
+    }
+
+    private void removeNoMoreHintWatch() {
+        if (mRecyclerView != null) {
+            mRecyclerView.removeOnLayoutChangeListener(noMoreHintLayoutListener);
+            mRecyclerView.removeCallbacks(noMoreHintSync);
+        }
+        if (noMoreHintWatchInstalled && adapter != null) {
+            adapter.unregisterAdapterDataObserver(noMoreHintDataObserver);
+        }
+        noMoreHintWatchInstalled = false;
+        noMoreHintSyncPosted = false;
+        noMoreHintMeasureRetries = 0;
+    }
+
+    private void scheduleNoMoreHintSync() {
+        if (pagingFooter == null || !pagingFooter.isHideEndHintUntilOverflow() || mRecyclerView == null) {
+            return;
+        }
+        if (noMoreHintSyncPosted) {
+            return;
+        }
+        noMoreHintSyncPosted = true;
+        mRecyclerView.post(noMoreHintSync);
+    }
+
+    /**
+     * 用「去掉底部状态行之后还能不能滚」判断有没有超过一屏。
+     * 只在已经到最后一页时判断，避免「正在加载」那一行把自己算进高度。
+     */
+    private void syncNoMoreHintWithViewport() {
+        RecyclerView rv = mRecyclerView;
+        PagingFooterAdapter footer = pagingFooter;
+        if (rv == null || footer == null || !footer.isHideEndHintUntilOverflow()) {
+            return;
+        }
+        if (rv.getVisibility() != View.VISIBLE || !rv.isLaidOut() || rv.getHeight() == 0) {
+            return;
+        }
+        LoadState state = footer.getLoadState();
+        if (!(state instanceof LoadState.NotLoading) || !state.getEndOfPaginationReached()) {
+            return;
+        }
+        if (footer.getItemCount() > 0 && visibleEndHintSize(rv, scrollsVertically(rv)) < 0
+                && noMoreHintMeasureRetries < 2) {
+            noMoreHintMeasureRetries++;
+            scheduleNoMoreHintSync();
+            return;
+        }
+        noMoreHintMeasureRetries = 0;
+        footer.setContentOverflows(contentOverflowsWithoutEndHint(rv));
+    }
+
+    private boolean scrollsVertically(@NonNull RecyclerView rv) {
+        RecyclerView.LayoutManager layoutManager = rv.getLayoutManager();
+        return layoutManager == null || layoutManager.canScrollVertically();
+    }
+
+    private boolean canScrollContent(@NonNull RecyclerView rv, boolean vertical) {
+        return vertical
+                ? rv.canScrollVertically(1) || rv.canScrollVertically(-1)
+                : rv.canScrollHorizontally(1) || rv.canScrollHorizontally(-1);
+    }
+
+    private boolean contentOverflowsWithoutEndHint(@NonNull RecyclerView rv) {
+        boolean vertical = scrollsVertically(rv);
+        if (pagingFooter == null || pagingFooter.getItemCount() == 0) {
+            return canScrollContent(rv, vertical);
+        }
+        int hintSize = visibleEndHintSize(rv, vertical);
+        if (hintSize < 0) {
+            return canScrollContent(rv, vertical);
+        }
+        if (vertical) {
+            return rv.computeVerticalScrollRange() - hintSize > rv.computeVerticalScrollExtent();
+        }
+        return rv.computeHorizontalScrollRange() - hintSize > rv.computeHorizontalScrollExtent();
+    }
+
+    /**
+     * @return 底部状态行的高（或宽）；行已经插入但还没出现在屏幕上时返回 -1，说明内容已经超过一屏
+     */
+    private int visibleEndHintSize(@NonNull RecyclerView rv, boolean vertical) {
+        RecyclerView.Adapter<?> root = rv.getAdapter();
+        if (!(root instanceof ConcatAdapter) || pagingFooter == null) {
+            return 0;
+        }
+        int position = adapterPositionOf(pagingFooter, (ConcatAdapter) root, 0);
+        if (position == RecyclerView.NO_POSITION) {
+            return 0;
+        }
+        RecyclerView.ViewHolder holder = rv.findViewHolderForAdapterPosition(position);
+        if (holder == null) {
+            return -1;
+        }
+        return vertical ? holder.itemView.getHeight() : holder.itemView.getWidth();
+    }
+
+    private int adapterPositionOf(RecyclerView.Adapter<?> target, ConcatAdapter concat, int offset) {
+        for (RecyclerView.Adapter<? extends RecyclerView.ViewHolder> child : concat.getAdapters()) {
+            if (child == target) {
+                return offset;
+            }
+            if (child instanceof ConcatAdapter) {
+                int nested = adapterPositionOf(target, (ConcatAdapter) child, offset);
+                if (nested != RecyclerView.NO_POSITION) {
+                    return nested;
+                }
+            }
+            offset += child.getItemCount();
+        }
+        return RecyclerView.NO_POSITION;
     }
 
     protected abstract BasePagingAdapter<T, ?> getRecyclerAdapter();
@@ -259,6 +438,16 @@ public abstract class BaseSmartPagingFragment<VM extends BasePagingViewModel, VD
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         mViewModel.refreshData();
         adapter.refresh();
+    }
+
+    @Override
+    public void onDestroyView() {
+        removeNoMoreHintWatch();
+        if (adapter != null) {
+            adapter.removeLoadStateListener(loadStateListener);
+        }
+        pagingFooter = null;
+        super.onDestroyView();
     }
 
     @Override

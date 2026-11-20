@@ -1,75 +1,68 @@
-package io.coderf.arklab.common.base;
+package io.coderf.arklab.common.base
 
-import android.text.TextUtils;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.LifecycleOwner;
-
-import io.coderf.arklab.core.request.AppError;
-import io.coderf.arklab.core.request.LoadingCancelPolicy;
-import io.coderf.arklab.core.request.RequestUi;
+import android.text.TextUtils
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import io.coderf.arklab.core.request.AppError
+import io.coderf.arklab.core.request.RequestUi
+import kotlinx.coroutines.launch
 
 /**
- * 将 {@link NetworkRequestUiHost} 的 LiveData 派发到页面实现的 {@link RequestUi}。
- * <p>
- * 由 {@link BaseActivity} / {@link BaseFragment} 在创建 ViewModel 后自动调用；
- * 业务页一般无需再手写 observe。自定义 UI 可自行观察 Host 的三个 LiveData。
- * <p>
- * 约定：
- * <ul>
- *   <li>UI 副作用只在 ViewModel（{@code launchRequest} / Host），Repository 不持有页面。</li>
- *   <li>页面实现 {@link RequestUi} 仅作为 Binder 的渲染落点。</li>
- * </ul>
+ * 将 [NetworkRequestUiHost] 派发到页面实现的 [RequestUi]。
+ *
+ * 由 [BaseActivity] / [BaseFragment] 在创建 ViewModel 后自动调用。
+ * Loading 收集 [NetworkRequestUiHost.loadingState]，页面回到前台时拿到当前遮罩。
+ * Toast / 业务码仍观察 LiveData，并先经 [UiEvent.getContentIfNotHandled] 取走。
  *
  * @author fz
- * @version 2.1
+ * @version 2.2
  * @since 1.0
- * @updated 2026/11/12
+ * @updated 2026/11/20
  */
-public final class NetworkRequestUiBinder {
-
-    private NetworkRequestUiBinder() {
-    }
+object NetworkRequestUiBinder {
 
     /**
-     * 订阅 Host 状态并转发到页面侧 {@link RequestUi}。
-     * 使用 {@link LifecycleOwner} 自动随页面销毁解除观察，避免泄漏。
+     * 订阅 Host 并转发到页面侧 [RequestUi]。
+     * 随 [owner] 销毁解除订阅。
      */
-    public static void bind(
-            @NonNull LifecycleOwner owner,
-            @NonNull NetworkRequestUiHost host,
-            @NonNull RequestUi ui
+    @JvmStatic
+    fun bind(
+        owner: LifecycleOwner,
+        host: NetworkRequestUiHost,
+        ui: RequestUi,
     ) {
-        host.getLoadingState().observe(owner, state -> {
-            if (state == null) {
-                return;
+        owner.lifecycleScope.launch {
+            owner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                host.loadingState.collect { state ->
+                    if (state.visible) {
+                        ui.showLoading(
+                            state.message.orEmpty(),
+                            state.enableDynamicEllipsis,
+                            state.cancelPolicy,
+                        )
+                    } else {
+                        ui.hideLoading()
+                    }
+                }
             }
-            if (state.visible) {
-                LoadingCancelPolicy policy = state.cancelPolicy != null
-                        ? state.cancelPolicy
-                        : LoadingCancelPolicy.None;
-                ui.showLoading(
-                        state.message != null ? state.message : "",
-                        state.enableDynamicEllipsis,
-                        policy
-                );
-            } else {
-                ui.hideLoading();
+        }
+        host.toast.observe(owner) { event ->
+            if (event == null) {
+                return@observe
             }
-        });
-        // Toast 通道 → 非业务错误展示
-        host.getToast().observe(owner, msg -> {
+            val msg = event.getContentIfNotHandled()
             if (!TextUtils.isEmpty(msg)) {
-                ui.showError(new AppError.Unknown(msg, null));
+                ui.showError(AppError.Unknown(msg!!, null))
             }
-        });
-        // 业务码通道 → onBusinessCode（页面处理登录过期 / 无权限等）
-        host.getErrorCode().observe(owner, model -> {
-            if (model != null) {
-                String code = model.getCode() != null ? model.getCode() : "";
-                String message = model.getMessage() != null ? model.getMessage() : "";
-                ui.onBusinessCode(code, message);
+        }
+        host.errorCode.observe(owner) { event ->
+            if (event == null) {
+                return@observe
             }
-        });
+            val model = event.getContentIfNotHandled() ?: return@observe
+            ui.onBusinessCode(model.code.orEmpty(), model.message.orEmpty())
+        }
     }
 }

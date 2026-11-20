@@ -8,6 +8,7 @@ import io.coderf.arklab.common.utils.download.core.DownloadState
 import io.coderf.arklab.common.utils.download.core.DownloadTask
 import io.coderf.arklab.common.utils.download.listener.DownloadListener
 import io.coderf.arklab.core.request.AppError
+import io.coderf.arklab.core.request.LoadingTicket
 import io.coderf.arklab.core.request.NoOpRequestUi
 import io.coderf.arklab.core.request.RequestUi
 import kotlinx.coroutines.CancellationException
@@ -23,9 +24,8 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
@@ -152,34 +152,38 @@ class DownloadClient private constructor() {
         requestUi: RequestUi? = null
     ): Flow<DownloadEvent> {
         val ui = requestUi ?: NoOpRequestUi
-        return downloadInternal(config)
-            .onStart {
+        return flow {
+            var ticket = LoadingTicket.NONE
+            var opened = false
+            try {
                 if (options.showLoading) {
-                    ui.showLoading(
+                    ticket = ui.openLoading(
                         options.loadingMessage,
                         options.enableDynamicEllipsis,
                         options.loadingCancelPolicy
                     )
+                    opened = true
                 }
-            }
-            .onEach { event ->
-                when (event) {
-                    is DownloadEvent.Progress -> {
-                        if (options.showLoading && options.refreshLoadingOnProgress) {
-                            ui.refreshLoading("${options.loadingMessage} ${event.percent}%")
+                downloadInternal(config).collect { event ->
+                    when (event) {
+                        is DownloadEvent.Progress -> {
+                            if (opened && options.refreshLoadingOnProgress) {
+                                ui.refreshLoading(ticket, "${options.loadingMessage} ${event.percent}%")
+                            }
                         }
+                        is DownloadEvent.Failed -> deliverErrorToUi(ui, options, event.error)
+                        else -> Unit
                     }
-                    is DownloadEvent.Failed -> deliverErrorToUi(ui, options, event.error)
-                    else -> Unit
+                    emit(event)
                 }
-            }
-            .onCompletion {
-                if (options.showLoading) {
+            } finally {
+                if (opened) {
                     withContext(NonCancellable) {
-                        ui.hideLoading()
+                        ui.closeLoading(ticket)
                     }
                 }
             }
+        }
     }
 
     /**
@@ -214,12 +218,15 @@ class DownloadClient private constructor() {
         requestUi: RequestUi? = null
     ): List<File> {
         val ui = requestUi ?: NoOpRequestUi
+        var ticket = LoadingTicket.NONE
+        var opened = false
         if (options.showLoading) {
-            ui.showLoading(
+            ticket = ui.openLoading(
                 options.loadingMessage,
                 options.enableDynamicEllipsis,
                 options.loadingCancelPolicy
             )
+            opened = true
         }
         try {
             return coroutineScope {
@@ -254,9 +261,9 @@ class DownloadClient private constructor() {
             deliverErrorToUi(ui, options, e)
             throw e
         } finally {
-            if (options.showLoading) {
+            if (opened) {
                 withContext(NonCancellable) {
-                    ui.hideLoading()
+                    ui.closeLoading(ticket)
                 }
             }
         }

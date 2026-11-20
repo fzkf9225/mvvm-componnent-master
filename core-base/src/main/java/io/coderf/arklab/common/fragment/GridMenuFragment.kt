@@ -68,7 +68,7 @@ class GridMenuFragment<T : GridMenuBean> : BaseFragment<EmptyViewModel, Fragment
         } else {
             bundle?.getParcelableArrayList(DATA)
         }
-        adapter?.submitData(lifecycle, PagingData.from(menuList ?: emptyList()))
+        adapter?.submitData(viewLifecycleOwner.lifecycle, PagingData.from(menuList ?: emptyList()))
     }
 
     companion object {

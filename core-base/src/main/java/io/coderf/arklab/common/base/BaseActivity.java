@@ -28,6 +28,7 @@ import io.coderf.arklab.common.bean.base.ToolbarConfig;
 import io.coderf.arklab.common.databinding.BaseActivityConstraintBinding;
 import io.coderf.arklab.core.request.AppError;
 import io.coderf.arklab.core.request.LoadingCancelPolicy;
+import io.coderf.arklab.core.request.LoadingTicket;
 import io.coderf.arklab.core.request.RequestUi;
 import io.coderf.arklab.common.helper.AuthManager;
 import io.coderf.arklab.common.helper.LoadingDelegate;
@@ -427,7 +428,8 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
 
     /**
      * 将 ViewModel 内 {@link NetworkRequestUiHost} 的 loading/toast/error 派发到本页（本类实现 {@link RequestUi}）。
-     * 子类若完全自定义请求 UI，可重写为空实现并自行 observe {@link BaseViewModel#getNetworkRequestUiHost()}。
+     * 子类若完全自定义请求 UI，可重写为空实现，再自行收集 Host 的 {@code loadingState}。
+     * Toast 与业务码仍是 LiveData。
      */
     protected void bindNetworkRequestUi() {
         if (mViewModel == null) {
@@ -542,6 +544,27 @@ public abstract class BaseActivity<VM extends BaseViewModel, VDB extends ViewDat
             return;
         }
         loadingDelegate.hideLoading();
+    }
+
+    /**
+     * 页面只渲染一个对话框，不按票据计数。计数在 {@link NetworkRequestUiHost}。
+     */
+    @NonNull
+    @Override
+    public LoadingTicket openLoading(@Nullable String message, boolean enableDynamicEllipsis,
+                                     @NonNull LoadingCancelPolicy cancelPolicy) {
+        showLoading(message, enableDynamicEllipsis, cancelPolicy);
+        return LoadingTicket.NONE;
+    }
+
+    @Override
+    public void closeLoading(@NonNull LoadingTicket ticket) {
+        hideLoading();
+    }
+
+    @Override
+    public void refreshLoading(@NonNull LoadingTicket ticket, @NonNull String message) {
+        refreshLoading(message);
     }
 
     public void showToast(String msg) {

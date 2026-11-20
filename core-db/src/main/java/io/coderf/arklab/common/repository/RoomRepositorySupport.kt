@@ -5,6 +5,7 @@ import io.coderf.arklab.common.base.BaseRepository
 import io.coderf.arklab.common.bean.RoomRequestOptions
 import io.coderf.arklab.core.db.RoomLog
 import io.coderf.arklab.core.request.LoadingCancelPolicy
+import io.coderf.arklab.core.request.LoadingTicket
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
@@ -14,6 +15,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import org.reactivestreams.Subscription
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 
 /**
  * Room 仓库 RxJava 链路的统一封装（内部类，不对外直接使用）。
@@ -61,8 +63,7 @@ internal object RoomRepositorySupport {
             chain = chain.timeout(options.timeoutSeconds, TimeUnit.SECONDS)
         }
         val session = arrayOfNulls<RoomLog.Session>(1)
-        /** 保证一次 show 只对应一次 hide（引用计数安全）。 */
-        val loadingReleased = AtomicBoolean(false)
+        val loading = LoadingLease()
         return chain
             .doOnSubscribe { disposable ->
                 repository.addDisposable(disposable)
@@ -76,8 +77,8 @@ internal object RoomRepositorySupport {
             .doOnComplete { session[0]?.success("complete") }
             .doOnError { session[0]?.error(it) }
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { showLoading(repository, options) }
-            .doFinally { releaseLoading(repository, options, loadingReleased) }
+            .doOnSubscribe { loading.show(repository, options) }
+            .doFinally { loading.release(repository, options) }
     }
 
     /**
@@ -96,7 +97,7 @@ internal object RoomRepositorySupport {
             chain = chain.timeout(options.timeoutSeconds, TimeUnit.SECONDS)
         }
         val session = arrayOfNulls<RoomLog.Session>(1)
-        val loadingReleased = AtomicBoolean(false)
+        val loading = LoadingLease()
         return chain
             .doOnSubscribe { disposable ->
                 repository.addDisposable(disposable)
@@ -110,8 +111,8 @@ internal object RoomRepositorySupport {
             .doOnSuccess { session[0]?.success(it) }
             .doOnError { session[0]?.error(it) }
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { showLoading(repository, options) }
-            .doFinally { releaseLoading(repository, options, loadingReleased) }
+            .doOnSubscribe { loading.show(repository, options) }
+            .doFinally { loading.release(repository, options) }
     }
 
     /**
@@ -133,14 +134,14 @@ internal object RoomRepositorySupport {
         if (options.timeoutSeconds > 0) {
             chain = chain.timeout(options.timeoutSeconds, TimeUnit.SECONDS)
         }
-        val loadingReleased = AtomicBoolean(false)
+        val loading = LoadingLease()
         if (options.isThrowOnEmptyList) {
             chain = chain.doOnNext { list ->
                 if (list.isEmpty()) {
                     throw BaseException(BaseException.ErrorType.NOT_FOUND)
                 }
                 if (options.isShowDialog) {
-                    releaseLoading(repository, options, loadingReleased)
+                    loading.release(repository, options)
                 }
             }
         }
@@ -158,35 +159,42 @@ internal object RoomRepositorySupport {
             .doOnNext { session[0]?.success(it) }
             .doOnError { session[0]?.error(it) }
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { showLoading(repository, options) }
-            .doFinally { releaseLoading(repository, options, loadingReleased) }
-    }
-
-    /** 根据 options 显示 Loading（仅当 RequestUi 非空且 showDialog 为 true） */
-    private fun showLoading(
-        repository: BaseRepository,
-        options: RoomRequestOptions
-    ) {
-        if (!options.isShowDialog) return
-        val policy = options.loadingCancelPolicy ?: LoadingCancelPolicy.None
-        repository.requestUi?.showLoading(
-            options.dialogMessage,
-            options.isEnableDynamicEllipsis,
-            policy
-        )
+            .doOnSubscribe { loading.show(repository, options) }
+            .doFinally { loading.release(repository, options) }
     }
 
     /**
-     * 隐藏 Loading；[released] 保证同一次请求只减一次引用计数。
+     * 同一次 Room 请求的 Loading 票据。onNext 与 doFinally 都可能关闭，只关一次。
      */
-    private fun releaseLoading(
-        repository: BaseRepository,
-        options: RoomRequestOptions,
-        released: AtomicBoolean
-    ) {
-        if (!options.isShowDialog) return
-        if (!released.compareAndSet(false, true)) return
-        repository.requestUi?.hideLoading()
+    private class LoadingLease {
+        private val ticket = AtomicReference(LoadingTicket.NONE)
+        private val opened = AtomicBoolean(false)
+
+        fun show(repository: BaseRepository, options: RoomRequestOptions) {
+            if (!options.isShowDialog || !opened.compareAndSet(false, true)) {
+                return
+            }
+            val ui = repository.requestUi
+            if (ui == null) {
+                opened.set(false)
+                return
+            }
+            val policy = options.loadingCancelPolicy ?: LoadingCancelPolicy.None
+            ticket.set(
+                ui.openLoading(
+                    options.dialogMessage ?: "",
+                    options.isEnableDynamicEllipsis,
+                    policy
+                )
+            )
+        }
+
+        fun release(repository: BaseRepository, options: RoomRequestOptions) {
+            if (!options.isShowDialog || !opened.compareAndSet(true, false)) {
+                return
+            }
+            repository.requestUi?.closeLoading(ticket.get())
+        }
     }
 
     private fun trackCancellableDisposable(

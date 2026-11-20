@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import io.coderf.arklab.core.bean.RequestOptions
 import io.coderf.arklab.core.bean.RequestResult
 import io.coderf.arklab.core.request.AppError
+import io.coderf.arklab.core.request.LoadingTicket
 import io.coderf.arklab.core.request.RequestSession
 import io.coderf.arklab.core.request.UiRequestTracker
 import io.coderf.arklab.core.ui.state.UiState
@@ -105,19 +106,21 @@ open class BaseViewModel(
     ): Job {
         val job = viewModelScope.launch {
             val session = RequestSession(this, options, networkRequestUiHost)
+            val loadingTicket = if (options.showLoading) {
+                networkRequestUiHost.openLoading(
+                    options.loadingMessage,
+                    options.enableDynamicEllipsis,
+                    options.loadingCancelPolicy
+                )
+            } else {
+                LoadingTicket.NONE
+            }
             try {
-                if (options.showLoading) {
-                    networkRequestUiHost.showLoading(
-                        options.loadingMessage,
-                        options.enableDynamicEllipsis,
-                        options.loadingCancelPolicy
-                    )
-                }
                 session.block()
             } finally {
-                if (options.showLoading) {
+                if (loadingTicket.isActive) {
                     withContext(NonCancellable) {
-                        networkRequestUiHost.hideLoading()
+                        networkRequestUiHost.closeLoading(loadingTicket)
                     }
                 }
             }

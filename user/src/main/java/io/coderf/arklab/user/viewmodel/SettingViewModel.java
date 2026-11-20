@@ -23,6 +23,8 @@ import io.coderf.arklab.common.utils.common.CacheUtil;
 import io.coderf.arklab.common.utils.download.UpdateManager;
 import io.coderf.arklab.common.widget.customview.IconLabelValueView;
 import io.coderf.arklab.common.widget.dialog.ConfirmDialog;
+import io.coderf.arklab.core.request.LoadingCancelPolicy;
+import io.coderf.arklab.core.request.LoadingTicket;
 import io.coderf.arklab.user.R;
 import io.coderf.arklab.user.activity.FeedBackActivity;
 import io.coderf.arklab.user.activity.LoginActivity;
@@ -55,7 +57,8 @@ public class SettingViewModel extends BaseViewModel {
         } else if (id == R.id.tv_feedback) {
             startActivity(context, FeedBackActivity.class);
         } else if (id == R.id.versionName) {
-            getNetworkRequestUiHost().showLoading("正在检测新版本...", true);
+            LoadingTicket ticket = getNetworkRequestUiHost().openLoading(
+                    "正在检测新版本...", true, LoadingCancelPolicy.None);
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 ConstantsHelper.isSuccessRequestUpdate = true;
                 UpdateManager.getInstance().checkUpdateInfo((Activity) context,
@@ -63,7 +66,7 @@ public class SettingViewModel extends BaseViewModel {
                         "leakcanary-android-release.apk",
                         "1、修复已知bug",
                         "1.0.1");
-                getNetworkRequestUiHost().hideLoading();
+                getNetworkRequestUiHost().closeLoading(ticket);
             }, 2000);
         } else if (id == R.id.cleanUp) {
             IconLabelValueView tvCleanUp = (IconLabelValueView) view;

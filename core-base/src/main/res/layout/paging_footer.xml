@@ -4,9 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable
-            name="message"
-            type="java.lang.String" />
     </data>
 
     <LinearLayout
@@ -34,7 +31,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="@={message}"
             tools:text="正在加载..."
             android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="13sp" />

@@ -46,7 +46,7 @@ public class RoomSmartPagingFragment extends BaseSmartPagingFragment<DemoRoomPag
     @Override
     protected void initData(Bundle bundle) {
         super.initData(bundle);
-        mViewModel.getItems().observe(this, responseBean -> adapter.submitData(getLifecycle(), responseBean));
+        mViewModel.getItems().observe(getViewLifecycleOwner(), observer);
         onRefresh(binding.smartFreshLayout);
     }
 

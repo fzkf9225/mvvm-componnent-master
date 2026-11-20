@@ -106,9 +106,9 @@ dependencies {
     implementation project(':user')
     implementation project(':core-mqtt')
     implementation project(':core-ws')
+    implementation project(':core-annotation')
+    annotationProcessor project(':core-annotation')
 
-    implementation project(':annotation')
-    annotationProcessor project(':annotation')
 
     implementation libs.github.glide
 

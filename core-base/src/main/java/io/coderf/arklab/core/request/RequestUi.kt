@@ -40,11 +40,41 @@ interface RequestUi {
     fun hideLoading()
 
     /**
+     * 占用一次 Loading，并返回只属于这次请求的票据。
+     * 并发请求必须用返回值调用 [closeLoading]，不能靠 [hideLoading] 猜测该关哪一次。
+     * 默认实现只转调 [showLoading]，票据为 [LoadingTicket.NONE]（页面渲染层不计数）。
+     */
+    fun openLoading(
+        message: String,
+        enableDynamicEllipsis: Boolean,
+        cancelPolicy: LoadingCancelPolicy
+    ): LoadingTicket {
+        showLoading(message, enableDynamicEllipsis, cancelPolicy)
+        return LoadingTicket.NONE
+    }
+
+    /**
+     * 关闭 [openLoading] 返回的那一次 Loading。
+     * Host 按票据移除；页面渲染层没有票据，默认直接 [hideLoading]。
+     */
+    fun closeLoading(ticket: LoadingTicket) {
+        hideLoading()
+    }
+
+    /**
      * 刷新已展示 Loading 的文案（不改变引用计数与取消策略）。
      *
      * @param message 新文案
      */
     fun refreshLoading(message: String)
+
+    /**
+     * 刷新 [ticket] 对应那一次 Loading 的文案。
+     * 默认转调 [refreshLoading]；Host 会写回该会话，避免下次发布状态时把进度打回旧文案。
+     */
+    fun refreshLoading(ticket: LoadingTicket, message: String) {
+        refreshLoading(message)
+    }
 
     /**
      * 展示错误；[AppError.Cancelled] 应由实现方静默忽略。

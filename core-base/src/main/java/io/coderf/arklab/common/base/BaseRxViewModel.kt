@@ -3,6 +3,7 @@ package io.coderf.arklab.common.base
 import android.app.Application
 import io.coderf.arklab.core.bean.RequestOptions
 import io.coderf.arklab.core.request.AppError
+import io.coderf.arklab.core.request.LoadingTicket
 import io.coderf.arklab.core.request.RequestErrorMapper
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Flowable
@@ -55,11 +56,11 @@ open class BaseRxViewModel(
         options: RequestOptions = RequestOptions.defaults(),
         onNext: (T) -> Unit
     ): Disposable {
-        showLoadingIfNeeded(options)
+        val loadingTicket = openLoadingIfNeeded(options)
         val disposable = source
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doFinally { hideLoadingIfNeeded(options) }
+            .doFinally { closeLoadingIfNeeded(loadingTicket) }
             .subscribe(
                 { value -> onNext(value) },
                 { throwable -> deliverRxError(throwable, options) }
@@ -77,11 +78,11 @@ open class BaseRxViewModel(
         options: RequestOptions = RequestOptions.defaults(),
         onSuccess: (T) -> Unit
     ): Disposable {
-        showLoadingIfNeeded(options)
+        val loadingTicket = openLoadingIfNeeded(options)
         val disposable = source
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doFinally { hideLoadingIfNeeded(options) }
+            .doFinally { closeLoadingIfNeeded(loadingTicket) }
             .subscribe(
                 { value -> onSuccess(value) },
                 { throwable -> deliverRxError(throwable, options) }
@@ -99,11 +100,11 @@ open class BaseRxViewModel(
         options: RequestOptions = RequestOptions.defaults(),
         onNext: (T) -> Unit
     ): Disposable {
-        showLoadingIfNeeded(options)
+        val loadingTicket = openLoadingIfNeeded(options)
         val disposable = source
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doFinally { hideLoadingIfNeeded(options) }
+            .doFinally { closeLoadingIfNeeded(loadingTicket) }
             .subscribe(
                 { value -> onNext(value) },
                 { throwable -> deliverRxError(throwable, options) }
@@ -112,19 +113,20 @@ open class BaseRxViewModel(
         return disposable
     }
 
-    private fun showLoadingIfNeeded(options: RequestOptions) {
-        if (options.showLoading) {
-            networkRequestUiHost.showLoading(
-                options.loadingMessage,
-                options.enableDynamicEllipsis,
-                options.loadingCancelPolicy
-            )
+    private fun openLoadingIfNeeded(options: RequestOptions): LoadingTicket {
+        if (!options.showLoading) {
+            return LoadingTicket.NONE
         }
+        return networkRequestUiHost.openLoading(
+            options.loadingMessage,
+            options.enableDynamicEllipsis,
+            options.loadingCancelPolicy
+        )
     }
 
-    private fun hideLoadingIfNeeded(options: RequestOptions) {
-        if (options.showLoading) {
-            networkRequestUiHost.hideLoading()
+    private fun closeLoadingIfNeeded(ticket: LoadingTicket) {
+        if (ticket.isActive()) {
+            networkRequestUiHost.closeLoading(ticket)
         }
     }
 

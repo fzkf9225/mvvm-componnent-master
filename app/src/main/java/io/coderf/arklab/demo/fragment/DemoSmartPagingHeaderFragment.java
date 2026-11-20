@@ -34,7 +34,7 @@ public class DemoSmartPagingHeaderFragment extends BaseSmartPagingFragment<DemoP
     @Override
     protected void initData(Bundle bundle) {
         super.initData(bundle);
-        mViewModel.getItems().observe(this, observer);
+        mViewModel.getItems().observe(getViewLifecycleOwner(), observer);
         onRefresh(binding.smartFreshLayout);
     }
 
