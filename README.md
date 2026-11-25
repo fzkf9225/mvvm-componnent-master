@@ -12,6 +12,7 @@
 | [room-processor/README.md](room-processor/README.md) | KSP Bridge：**1.2.0**（含 suspend RawQuery） |
 | [core-form/README.md](core-form/README.md) | 表单 / 日历等（原 commonui） |
 | [core-media/README.md](core-media/README.md) | 媒体选图 / 压缩等（原 commonmedia） |
+| [core-speak/README.md](core-speak/README.md) | 仿微信按住说话 / 本地录音（可选） |
 | [core-gnss/README.md](core-gnss/README.md) | GNSS / 轨迹（原 googlegps） |
 
 当前主干版本：**common `4.7.0`** · **core-base `1.7.2`** · **core-network `1.7.1`** · **core-db `1.6.2`** · **core-ui `1.3.1`** · **core-utils `1.2.0`** · **core-form `3.7.7`** · **core-media `3.7.0`** · **core-ws `1.0.1`** · **core-gnss `4.0.0`**，主题为 **Material3 DayNight**（Views + MDC 1.14）。业务侧仍可依赖 `common`，但 Maven 请按 [UPGRADE.md 文首](UPGRADE.md) **显式钉住** core / ui / media / gps。包名多为 `io.coderf.arklab.common.*`。升级说明见 [UPGRADE.md](UPGRADE.md)（附件缩略图见 §0.4.3，附件模型见 §0.4.2）。
@@ -55,6 +56,7 @@
     - annotation：注解框架，主要用于数据校验的注解
     - app：框架 case 示例（含 Gateway Hilt 绑定）
     - core-media：摄像头、相册、媒体相关封装（原 commonmedia；不含 Gateway）
+    - core-speak：仿微信输入法语音面板 / 本地录音与 Room 元数据（可选；本期无 ASR/Gateway）
     - core-form：UI 组件封装，主要为表单组件（原 commonui）
     - core-gnss：GPS工具类
     - mqttcomponent：MQTT 封装（不含 Gateway）
@@ -203,8 +205,7 @@ implementation project(':userapi')   // 需要用户契约时
 20. `KeyBoardUtil`：软键盘控制、唤醒、关闭和监听等
 21. `GeoMapUtil`：坐标转化工具
 22. `FastBlur`：高斯模糊工具类
-23. `ThreadExecutor`：线程池工具类
-24. `ThreadExecutorBounded`：线程池工具类，边界更大默认为128
+23. `CoreExecutors`：框架级 Runnable 执行器（`io` / `bounded` / `serial` / `cpu` / `main`）
 
 #### 自定义View相关
 
@@ -263,8 +264,7 @@ implementation project(':userapi')   // 需要用户契约时
 42. `TreePopupView`：二级树形选择弹窗
 43. `CascadeMultiPopupWindow`：多选项级联弹窗
 44. `TxSlideRecyclerView`：支持侧滑的`RecyclerView`
-45. `SpeakButton`：仿微信的长按说话View
-46. `VoiceView`：语音播放条控件
+45. `core-speak`：`SpeakButton` / `SpeakerView`（仿微信输入法语音面板，可选模块）
 
 #### Form表单相关控件
 主要用于常见的一些表单输入和回显情况

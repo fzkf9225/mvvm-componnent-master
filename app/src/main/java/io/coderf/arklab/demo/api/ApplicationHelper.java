@@ -75,6 +75,7 @@ public class ApplicationHelper extends BaseApplication {
             io.coderf.arklab.media.utils.DebugUtil.enableDebug(this, true);
             Mqtt.enableDebug(this, true);
             Ws.enableDebug(this, true);
+            ArkLog.channel("speak").setEnableDebug(true);
         }
         Disposable disposable = CalendarDataSource.observableCalendarData()
                 .toList()

@@ -169,7 +169,6 @@
     <public name="act_dialog_preview_album" type="layout"/>
     <public name="item_preview_album" type="layout"/>
     <public name="camera_view" type="layout"/>
-    <public name="dialog_record" type="layout"/>
     <public name="activity_shoot" type="layout"/>
 
     <!--navigation资源-->
@@ -199,10 +198,6 @@
     <public name="ic_arrow_bottom" type="mipmap"/>
     <public name="ic_tweet_add" type="mipmap"/>
     <public name="ic_tweet_add_video" type="mipmap"/>
-    <public name="ic_voice_mic" type="mipmap"/>
-    <public name="ic_voice_record_bg" type="mipmap"/>
-    <public name="ic_voice_tip" type="mipmap"/>
-
     <!--样式资源-->
     <public name="h_line" type="style"/>
     <public name="s_line" type="style"/>

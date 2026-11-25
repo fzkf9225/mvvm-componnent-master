@@ -30,7 +30,7 @@ namespace：`io.coderf.arklab.gnss`
 | `service` | `GpsService` / `Session` | 前台定位服务（Manifest 注册）与会话运行态 |
 | `permission` | `GpsLifecycleObserver` / `PermissionsChecker` | GPS 开关、前/后台定位权限引导流程 |
 | `location` | `GnssLocationListener` / `NmeaLocationListener` / `NmeaSentence` | 系统定位监听与 NMEA 解析（内部） |
-| `track` | `IFileLogger` / `CsvFileLogger` / `GpxFileLogger` / `FileLoggerFactory` / `Files` / `GpsFileParser` / `GpsLoggerThreadExecutor` | 轨迹文件记录与解析 |
+| `track` | `IFileLogger` / `CsvFileLogger` / `GpxFileLogger` / `FileLoggerFactory` / `Files` / `GpsFileParser`（写盘走 `CoreExecutors.serial()`） | 轨迹文件记录与解析 |
 | `ui` | `GPSConfirmDialog` / `UiUtil` | 权限引导确认弹窗（内部） |
 | `utils` | `AppUtil` / `DebugUtil` / `EsriUtil` / `LogUtil` | 通用工具 |
 

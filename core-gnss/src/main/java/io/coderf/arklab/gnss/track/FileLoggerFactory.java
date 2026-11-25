@@ -1,9 +1,9 @@
 package io.coderf.arklab.gnss.track;
 import android.location.Location;
 
+import io.coderf.arklab.core.utils.CoreExecutors;
 import io.coderf.arklab.gnss.api.GpsSettingConfig;
 import io.coderf.arklab.gnss.service.GpsService;
-import io.coderf.arklab.gnss.track.GpsLoggerThreadExecutor;
 import io.coderf.arklab.gnss.utils.LogUtil;
 
 /**
@@ -70,7 +70,7 @@ public class FileLoggerFactory {
             LogUtil.logger(GpsService.TAG, "Logger not initialized, call init() first");
             return;
         }
-        GpsLoggerThreadExecutor.getInstance().execute(() -> currentLogger.write(loc));
+        CoreExecutors.serial().execute(() -> currentLogger.write(loc));
     }
 
     /**

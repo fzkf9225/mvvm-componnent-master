@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:attr/colorBackground"
+        tools:context=".activity.SpeakDemoActivity">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvIntro"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_m"
+            android:lineSpacingExtra="4dp"
+            android:text="core-speak：按住说话（首次会先弹权限说明再申请麦克风）。松手编辑区=回调；左上滑撤回、右上滑发送入库。列表点击播放，长按删除。"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="@dimen/font_size_m"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/speak_smart_paging_fragment_view"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:defaultNavHost="true"
+            app:layout_constraintBottom_toTopOf="@id/bottomBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvIntro"
+            app:navGraph="@navigation/speak_smart_paging_navigation" />
+
+        <LinearLayout
+            android:id="@+id/bottomBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorSurface"
+            android:elevation="4dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_m"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <io.coderf.arklab.speak.widget.SpeakButton
+                android:id="@+id/btnSpeak"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:text="按住说话"
+                app:speakAccentColor="#2ECF9B"
+                app:speakWaveformColor="#2ECF9B" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

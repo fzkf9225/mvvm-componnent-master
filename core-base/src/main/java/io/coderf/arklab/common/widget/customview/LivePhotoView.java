@@ -42,7 +42,7 @@ import io.coderf.arklab.common.widget.gallery.config.PreviewGalleryZoomConfig;
 import io.coderf.arklab.common.widget.gallery.impl.PhotoView;
 import io.coderf.arklab.common.widget.gallery.inter.IPhotoView;
 import io.coderf.arklab.core.utils.DensityUtil;
-import io.coderf.arklab.core.utils.ThreadExecutorBounded;
+import io.coderf.arklab.core.utils.CoreExecutors;
 
 /**
  * 实况图预览控件：静图（{@link PhotoView}）+ 短视频（{@link TextureView}）。
@@ -850,7 +850,7 @@ public class LivePhotoView extends FrameLayout {
         if (!motionEnabled && resolveIfMissing && !TextUtils.isEmpty(stillPath)) {
             final Context appContext = getContext().getApplicationContext();
             final String pathToResolve = stillPath;
-            ThreadExecutorBounded.getInstance().execute(() -> {
+            CoreExecutors.bounded().execute(() -> {
                 MotionPhotoResolver.ResolveResult result =
                         MotionPhotoResolver.resolve(appContext, pathToResolve);
                 post(() -> {

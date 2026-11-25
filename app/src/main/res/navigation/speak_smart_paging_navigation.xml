@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/speak_smart_paging_navigation"
+    app:startDestination="@+id/speak_smart_paging_layout_page">
+
+    <fragment
+        android:id="@+id/speak_smart_paging_layout_page"
+        android:name="io.coderf.arklab.demo.fragment.SpeakSmartPagingFragment"
+        android:label="SpeakSmartPaging列表实例"
+        tools:layout="@layout/base_smart_paging" />
+</navigation>

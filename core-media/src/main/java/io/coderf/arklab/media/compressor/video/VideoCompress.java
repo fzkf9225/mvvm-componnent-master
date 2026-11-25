@@ -11,6 +11,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import io.coderf.arklab.core.utils.CoreExecutors;
+
 /**
  * Created by fz
  * Date: 2017/8/16
@@ -38,17 +40,17 @@ public class VideoCompress {
     }
 
     public static void compressVideoHigh(Context context, Uri srcPath, String destPath, CompressListener listener, long timeoutMs) {
-        ThreadExecutorVideo.getInstance().execute(
+        CoreExecutors.cpu().execute(
                 new CompressRunnable(context, srcPath, destPath, listener, VideoController.COMPRESS_QUALITY_HIGH, timeoutMs));
     }
 
     public static void compressVideoMedium(Context context, Uri srcPath, String destPath, CompressListener listener, long timeoutMs) {
-        ThreadExecutorVideo.getInstance().execute(
+        CoreExecutors.cpu().execute(
                 new CompressRunnable(context, srcPath, destPath, listener, VideoController.COMPRESS_QUALITY_MEDIUM, timeoutMs));
     }
 
     public static void compressVideoLow(Context context, Uri srcPath, String destPath, CompressListener listener, long timeoutMs) {
-        ThreadExecutorVideo.getInstance().execute(
+        CoreExecutors.cpu().execute(
                 new CompressRunnable(context, srcPath, destPath, listener, VideoController.COMPRESS_QUALITY_LOW, timeoutMs));
     }
 
@@ -80,7 +82,7 @@ public class VideoCompress {
                 return;
             }
 
-            // 独立单线程执行实际压缩，避免与 ThreadExecutorVideo 池嵌套提交死锁；
+            // 独立单线程执行实际压缩，避免与 CoreExecutors.cpu() 池嵌套提交死锁；
             // 当前线程仅负责超时等待，超时后取消任务并回调失败。
             ExecutorService workExecutor = Executors.newSingleThreadExecutor(r -> {
                 Thread t = new Thread(r, "VideoCompress-Work");

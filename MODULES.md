@@ -1,6 +1,6 @@
 # 模块说明与使用指南
 
-> 对应版本（以各模块 `build.gradle` 为准）：**common `4.8.0`** · **core-base `1.10.0`** · **core-network `1.8.0`** · **core-db `1.7.0`** · **core-ui `1.3.1`** · **core-utils `1.2.0`** · **core-log `1.2.0`** · **room-processor `1.2.0`** · **core-ws `1.0.1`** · **core-form `3.7.7`** · **core-media `3.7.0`** · **core-gnss `4.0.0`**  
+> 对应版本（以各模块 `build.gradle` 为准）：**common `4.8.1`** · **core-base `2.0.7`** · **core-network `1.8.0`** · **core-db `1.7.0`** · **core-ui `1.3.1`** · **core-utils `1.2.3`** · **core-log `1.2.0`** · **room-processor `1.2.0`** · **core-ws `1.0.1`** · **core-form `3.8.2`** · **core-media `3.7.1`** · **core-speak `1.0.0`** · **core-gnss `4.0.1`**  
 > Options 完善见 [UPGRADE.md §0](./UPGRADE.md#0-160network--db请求-options-完善)；剔除 `BaseView` 见 [UPGRADE.md §2](./UPGRADE.md#2-120彻底剔除-baseview--mvp-页面绑定)。  
 > 本文说明各模块职责、依赖关系与日常用法。升级请看 [UPGRADE.md](./UPGRADE.md)。
 
@@ -18,6 +18,7 @@ app（组装：Hilt / Demo）
   │                      │ 实现绑定在 app（适配 media / mqtt）
   ├─ mqttcomponent ──────┘ MessageGateway
   ├─ core-media ──────────┘ MediaGateway
+  ├─ core-speak（语音，可选；本期无 Gateway）
   ├─ core-form / core-gnss / core-ws / …
   └─ common（facade）── api ──? core-network / core-db / core-ui
                                       │
@@ -112,11 +113,12 @@ Demo 参考：`SampleCoreNetworkRepository`、`LoginViewModel`、`DemoFlowPaging
 
 | 项 | 说明 |
 |----|------|
-| 职责 | 无 Android R 依赖的轻量工具与通用扩展（`CoreLogger`、日期/数值/密度/View 等） |
+| 职责 | 无 Android R 依赖的轻量工具与通用扩展（`CoreLogger`、日期/数值/密度/View 等）；Runnable 门面 **`CoreExecutors`** |
 | 包名 | `io.coderf.arklab.core.utils`；扩展统一在 `io.coderf.arklab.core.utils.ext` |
 | 现状 | 已从 `core-base` 下沉原 `Extensions.kt`；`DrawableUtil` 等带 R / 重 UI 的仍留在 `core-base` |
-| 新代码 | `import io.coderf.arklab.core.utils.ext.*`（勿再依赖 `common.utils.common` 下的旧扩展） |
-| 兼容 | `core-base` 的 `Extensions.kt` 仍保留同签名 `@Deprecated` 转发，旧 import 可编译 |
+| 新代码 | `import io.coderf.arklab.core.utils.ext.*`（勿再依赖 `common.utils.common` 下的旧扩展）；后台 Runnable 用 `CoreExecutors.io()` / `bounded()` / `serial()` / `cpu()` / `main()` |
+| 兼容 | `core-base` 的 `Extensions.kt` 仍保留同签名 `@Deprecated` 转发；旧 `ThreadExecutor*` 已移除，请用 `CoreExecutors` |
+| Maven | `io.coderf.arklab.core:utils:1.2.3` |
 
 #### util 说明（暂缓整批迁入 core-utils）
 
@@ -149,8 +151,18 @@ Demo 参考：`SampleCoreNetworkRepository`、`LoginViewModel`、`DemoFlowPaging
 | `user` | 用户业务 UI / 逻辑 | 依赖 `common` + `base` + `userapi`，**禁止**直接依赖 mqtt / media |
 | `mqttcomponent` | MQTT 实现（`MqttClient` 等） | 仅 app 依赖；Gateway 适配写在 app |
 | `core-media` | 拍照/选图/压缩（`MediaHelper` 等） | 仅 app 依赖；Gateway 适配写在 app |
+| `core-speak` | 仿微信输入法语音：`SpeakButton` / 文件契约 `VoiceFileStore` / Room 元数据 | 按需；本期无 Gateway/ASR，业务直连模块；编辑仅回调；详见 [core-speak/README.md](./core-speak/README.md) |
 | `core-form` | 表单等通用 UI 组件 | 按需；`FormHost.validateAll` / `formStyle` 见 core-form README |
 | `core-gnss` | 定位能力 | 按需；见下方边界 |
+
+#### core-speak 能力边界
+
+| 能力 | 建议 |
+|------|------|
+| `SpeakButton` 按住说话 + 权限说明 + 本地 AMR | **默认核心**；样式用 `SpeakUiStyle` / XML attrs |
+| `VoiceFileStore` / Room `VoiceMessageRepository` | 按需；可换自定义落盘或只用不入库 |
+| `SpeakerView` 列表播放 | 按需 |
+| ASR / 消息上行 / Gateway | **不在本库**；`Edit` 回调由宿主接转写或编辑页 |
 
 #### core-gnss 能力边界
 
@@ -220,20 +232,21 @@ mediaGateway.pickImages(1, uris -> { /* 上传头像等 */ });
 
 | 模块 | 坐标 |
 |------|------|
-| common | `io.coderf.arklab.common:common:4.8.0` |
-| core-base | `io.coderf.arklab.core:base:1.10.0` |
+| common | `io.coderf.arklab.common:common:4.8.1` |
+| core-base | `io.coderf.arklab.core:base:2.0.7` |
 | core-network | `io.coderf.arklab.core:network:1.8.0`（见 [core-network/README.md](./core-network/README.md)） |
 | core-db | `io.coderf.arklab.core:db:1.7.0`（见 [core-db/README.md](./core-db/README.md)） |
 | core-ui | `io.coderf.arklab.core:ui:1.3.1` |
-| core-utils | `io.coderf.arklab.core:utils:1.2.0` |
+| core-utils | `io.coderf.arklab.core:utils:1.2.3` |
 | core-log | `io.coderf.arklab.core:log:1.2.0` |
 | core-autosize | `io.coderf.arklab.core:autosize:1.0.0` |
 | room-processor | `io.coderf.arklab.room:room-processor:1.2.0`（见 [room-processor/README.md](./room-processor/README.md)） |
 | core-mqtt | `io.coderf.arklab.mqtt:mqtt:1.6.2` |
 | core-ws | `io.coderf.arklab.ws:ws:1.0.1` |
-| core-media | `io.coderf.arklab.media:media:3.7.0`（原模块名 `commonmedia`；包名 / Maven 坐标不变） |
-| core-form | `io.coderf.arklab.ui:ui:3.7.7`（原模块名 `commonui`；包名 / Maven 坐标不变；`api` → core-base / core-network，另依赖 media） |
-| core-gnss | `io.coderf.arklab.gnss:core-gnss:4.0.0`（原 `googlegps`，包名 `io.coderf.arklab.gnss`，无旧坐标兼容） |
+| core-media | `io.coderf.arklab.media:media:3.7.1`（原模块名 `commonmedia`；包名 / Maven 坐标不变） |
+| core-speak | `io.coderf.arklab.speak:speak:1.0.0`（可选；见 [core-speak/README.md](./core-speak/README.md)） |
+| core-form | `io.coderf.arklab.ui:ui:3.8.2`（原模块名 `commonui`；包名 / Maven 坐标不变；`api` → core-base / core-network，另依赖 media） |
+| core-gnss | `io.coderf.arklab.gnss:core-gnss:4.0.1`（原 `googlegps`，包名 `io.coderf.arklab.gnss`，无旧坐标兼容） |
 | annotation | `io.coderf.arklab.annotation:annotation:3.3.1` |
 
 宿主若只引 `common`，会通过 POM / `api` 依赖带上对应 `core-*`（以实际发布 POM 为准）。Maven 工程请按 [UPGRADE.md 文首](./UPGRADE.md) **显式钉版本**，避免传递依赖解析到旧 POM。

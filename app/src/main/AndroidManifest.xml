@@ -246,6 +246,9 @@
             android:name=".activity.WsDemoActivity"
             android:exported="false" />
         <activity
+            android:name=".activity.SpeakDemoActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"

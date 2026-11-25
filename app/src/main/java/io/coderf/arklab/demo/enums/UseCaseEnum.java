@@ -32,6 +32,7 @@ import io.coderf.arklab.demo.activity.WsDemoActivity;
 import io.coderf.arklab.demo.activity.PreviewInfoPhotoActivity;
 import io.coderf.arklab.demo.activity.RoomPagingActivity;
 import io.coderf.arklab.demo.activity.ScanQrCodeActivity;
+import io.coderf.arklab.demo.activity.SpeakDemoActivity;
 import io.coderf.arklab.demo.activity.TargetActivity;
 import io.coderf.arklab.demo.activity.ToolbarDemoActivity;
 import io.coderf.arklab.demo.activity.VerifyActivity;
@@ -89,6 +90,7 @@ public enum UseCaseEnum {
     WEB_VIEW_BASIC(WebViewBasicDemoActivity.class, "WebView 基础能力", "仅 common：原生选文件/定位/扫码 JSBridge，assets+沙盒演示页", null),
     WEB_VIEW_HYBRID(WebViewHybridDemoActivity.class, "WebView 增强能力", "core-form：MediaHelper 相册选图 + 原生定位 + JSBridge，对比基础版", null),
     CUSTOM_CAMERA(CustomCameraActivity.class, "自定义相机", "通过自定义相机实现拍照录像功能", null),
+    SPEAK(SpeakDemoActivity.class, "语音 Speak", "core-speak：仿微信输入法按住说话、文件契约、Room 持久化与回放", null),
     MQTT(MqttDemoActivity.class, "MQTT 组件", "mqttcomponent：Java 接入 MqttConnection / Presence 心跳示例", null),
     WEB_SOCKET(WsDemoActivity.class, "WebSocket 组件", "core-ws：鉴权/匿名直连、频道 Session、有限重连弹窗、Presence", null),
 

@@ -27,7 +27,7 @@ import io.coderf.arklab.common.enums.AttachmentTypeEnum;
 import io.coderf.arklab.common.utils.common.AttachmentUtil;
 import io.coderf.arklab.common.utils.common.LivePhotoInfo;
 import io.coderf.arklab.core.utils.FileUtil;
-import io.coderf.arklab.core.utils.ThreadExecutorBounded;
+import io.coderf.arklab.core.utils.CoreExecutors;
 import io.coderf.arklab.common.utils.download.DownLoadImageService;
 import io.coderf.arklab.common.utils.download.ImageDownLoadCallBack;
 import io.coderf.arklab.common.utils.log.LogUtil;
@@ -174,7 +174,7 @@ public class PreviewInfoViewPagerAdapter extends BaseRecyclerViewAdapter<Preview
      * @param fileType 文件类型，为空时按图片处理
      */
     private void downloadImage(Context context, String path, String fileType) {
-        ThreadExecutorBounded.getInstance().execute(new DownLoadImageService(context, path,
+        CoreExecutors.bounded().execute(new DownLoadImageService(context, path,
                 TextUtils.isEmpty(fileType) ? "image" : fileType, new ImageDownLoadCallBack() {
             @Override
             public void onDownLoadSuccess(File file) {

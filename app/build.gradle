@@ -103,6 +103,7 @@ dependencies {
     implementation project(':core-form')
     implementation project(':core-gnss')
     implementation project(':core-media')
+    implementation project(':core-speak')
     implementation project(':user')
     implementation project(':core-mqtt')
     implementation project(':core-ws')

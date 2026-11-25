@@ -80,6 +80,7 @@ dependencies {
 
     implementation libs.androidx.exifinterface
     api project(':core-log')
+    implementation project(':core-utils')
 }
 
 
@@ -93,7 +94,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'io.coderf.arklab.media'
                 artifactId = 'media'
-                version = '3.7.0'
+                version = '3.7.1'
             }
         }
         repositories {

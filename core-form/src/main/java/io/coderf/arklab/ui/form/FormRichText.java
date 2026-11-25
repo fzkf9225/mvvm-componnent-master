@@ -16,7 +16,7 @@ import androidx.core.text.HtmlCompat;
 import com.bumptech.glide.Glide;
 
 import io.coderf.arklab.common.api.Config;
-import io.coderf.arklab.core.utils.ThreadExecutor;
+import io.coderf.arklab.core.utils.CoreExecutors;
 
 /**
  * 富文本
@@ -93,7 +93,7 @@ public class FormRichText extends FormTextView {
             return;
         }
         // 将 HTML 转换为 Spanned 对象并显示在 MaterialTextView 中
-        ThreadExecutor.getInstance().execute(() -> {
+        CoreExecutors.io().execute(() -> {
             Spanned spanned = HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_COMPACT, source -> {
                 // 使用Glide加载图片
                 Drawable drawable;

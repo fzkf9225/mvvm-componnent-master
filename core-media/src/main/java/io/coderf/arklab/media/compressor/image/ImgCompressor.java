@@ -23,13 +23,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
+import io.coderf.arklab.core.utils.CoreExecutors;
 import io.coderf.arklab.media.utils.MediaUtil;
 
 
@@ -373,7 +368,7 @@ public class ImgCompressor {
     public void starCompress(Uri srcImageUri, String outPath, int outWidth, int outHeight, int maxFileSize,
                              String fileExtension, String fileProviderAuthority) {
         CompressListener listener = this.compressListener;
-        ThreadExecutor.getInstance().execute(
+        CoreExecutors.cpu().execute(
                 new CompressRunnable(srcImageUri, outPath, outWidth, outHeight, maxFileSize, fileExtension,
                         fileProviderAuthority, listener));
     }
@@ -511,45 +506,6 @@ public class ImgCompressor {
             if (listener != null) {
                 listener.onCompressEnd(compressResult);
             }
-        }
-    }
-
-    /**
-     * @author fz
-     * @dec 开启线程, 进行压缩
-     * @date 2023/4/26 16:23
-     */
-    public static class ThreadExecutor extends ThreadPoolExecutor {
-        private static final int CORE_POOL_SIZE = 3;
-        //以CPU总数*2作为线程池上限
-        private static final int MAXI_MUM_POOL_SIZE = Runtime.getRuntime().availableProcessors() * 2;
-        private static final int KEEP_ALIVE_TIME = 10;
-        private static volatile ThreadExecutor executor;
-
-        private static final ThreadFactory sThreadFactory = new ThreadFactory() {
-            private final AtomicInteger mCount = new AtomicInteger(1);
-
-            public Thread newThread(Runnable r) {
-                return new Thread(r, "ThreadExecutor #" + mCount.getAndIncrement());
-            }
-        };
-
-        public ThreadExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue,
-                              ThreadFactory threadFactory) {
-            super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory);
-        }
-
-        //单例模式
-        public static ThreadExecutor getInstance() {
-            if (null == executor) {
-                synchronized (ThreadExecutor.class) {
-                    if (null == executor) {
-                        executor = new ThreadExecutor(CORE_POOL_SIZE, MAXI_MUM_POOL_SIZE, KEEP_ALIVE_TIME, TimeUnit.SECONDS, new SynchronousQueue<Runnable>(),
-                                sThreadFactory);
-                    }
-                }
-            }
-            return executor;
         }
     }
 

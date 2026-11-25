@@ -48,6 +48,8 @@ public final class ArkLog {
     public static final String MODULE_GPS = "gps";
     /** core-media 通道 id */
     public static final String MODULE_MEDIA = "media";
+    /** core-speak 通道 id */
+    public static final String MODULE_SPEAK = "speak";
 
     /** 模块日志通道缓存（key 为 moduleId），同一模块全局单例 */
     private static final ConcurrentHashMap<String, LogChannel> CHANNELS = new ConcurrentHashMap<>();

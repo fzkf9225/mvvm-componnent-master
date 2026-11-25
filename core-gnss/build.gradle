@@ -71,6 +71,7 @@ dependencies {
     implementation libs.androidx.appcompat
     implementation libs.material
     api project(':core-log')
+    implementation project(':core-utils')
     testImplementation libs.junit
     implementation libs.gson
 }
@@ -91,7 +92,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'io.coderf.arklab.gnss'
                 artifactId = 'core-gnss'
-                version = '4.0.0'
+                version = '4.0.1'
             }
         }
         repositories {

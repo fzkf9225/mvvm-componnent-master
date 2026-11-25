@@ -20,15 +20,10 @@ import com.amazonaws.services.s3.model.S3Object;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import io.coderf.arklab.common.api.BaseApplication;
 import io.coderf.arklab.common.base.BaseException;
+import io.coderf.arklab.core.utils.CoreExecutors;
 import io.coderf.arklab.core.utils.FileUtil;
 import io.coderf.arklab.common.utils.log.LogUtil;
 
@@ -65,7 +60,7 @@ public class OSSHelper {
      * 文件下载
      */
     public void downloadOssObject(String accessKey, String secretKey, String secretToken, String bucketName, String objectName, String savePath, OSSCallback callback) throws Exception {
-        ThreadExecutor.getInstance().execute(new DownloadRunnable(objectName, accessKey, secretKey, secretToken, bucketName, savePath, callback));
+        CoreExecutors.io().execute(new DownloadRunnable(objectName, accessKey, secretKey, secretToken, bucketName, savePath, callback));
     }
 
     /**
@@ -150,7 +145,7 @@ public class OSSHelper {
      * 文件上传
      */
     public void uploadOssObject(String endPoint, String accessKey, String secretKey, String secretToken, String bucketName, Uri uri, OSSCallback callback) {
-        ThreadExecutor.getInstance().execute(new UploadRunnable(endPoint, accessKey, secretKey, secretToken, bucketName, uri, callback));
+        CoreExecutors.io().execute(new UploadRunnable(endPoint, accessKey, secretKey, secretToken, bucketName, uri, callback));
     }
 
     private static final class UploadRunnable implements Runnable {
@@ -247,7 +242,7 @@ public class OSSHelper {
      * 文件上传
      */
     public void uploadOssObjectFile(String endPoint, String accessKey, String secretKey, String secretToken, String bucketName, File file, OSSCallback callback) {
-        ThreadExecutor.getInstance().execute(new UploadFileRunnable(endPoint, accessKey, secretKey, secretToken, bucketName, file, callback));
+        CoreExecutors.io().execute(new UploadFileRunnable(endPoint, accessKey, secretKey, secretToken, bucketName, file, callback));
     }
 
     private static final class UploadFileRunnable implements Runnable {
@@ -320,42 +315,4 @@ public class OSSHelper {
         }
     }
 
-    /**
-     * @author fz
-     * @dec 上传文件
-     * @date 2023/5/28 15:42
-     */
-    public static class ThreadExecutor extends ThreadPoolExecutor {
-        private static final int CORE_POOL_SIZE = 1;
-        //以CPU总数*2作为线程池上限
-        private static final int MAXI_MUM_POOL_SIZE = Runtime.getRuntime().availableProcessors() * 2;
-        private static final int KEEP_ALIVE_TIME = 3;
-        private static volatile ThreadExecutor executor;
-
-        private static final ThreadFactory S_THREAD_FACTORY = new ThreadFactory() {
-            private final AtomicInteger mCount = new AtomicInteger(1);
-
-            public Thread newThread(Runnable r) {
-                return new Thread(r, "ThreadExecutor #" + mCount.getAndIncrement());
-            }
-        };
-
-        public ThreadExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue,
-                              ThreadFactory threadFactory) {
-            super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory);
-        }
-
-        //单例模式
-        public static ThreadExecutor getInstance() {
-            if (null == executor) {
-                synchronized (ThreadExecutor.class) {
-                    if (null == executor) {
-                        executor = new ThreadExecutor(CORE_POOL_SIZE, MAXI_MUM_POOL_SIZE, KEEP_ALIVE_TIME, TimeUnit.SECONDS, new SynchronousQueue<>(),
-                                S_THREAD_FACTORY);
-                    }
-                }
-            }
-            return executor;
-        }
-    }
 }

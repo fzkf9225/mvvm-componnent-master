@@ -1,12 +1,39 @@
 # 升级与迁移说明
 
 > **当前主干（以各模块 `build.gradle` 发布号为准）：**  
-> **core-base / core-network / core-db `2.0.0`（破坏性，须同升）** · **common `4.8.0`** · **core-ui `1.3.1`** · **core-utils `1.2.2`** · **core-log `1.2.0`** · **core-autosize `1.0.0`** · **room-processor `1.2.0`** · **core-mqtt `1.6.2`** · **core-ws `1.0.1`** · **core-form `3.8.1`** · **core-media `3.7.0`** · **core-gnss `4.0.0`** · **annotation `3.3.1`**
+> **core-base / core-network / core-db `2.0.0`（破坏性，须同升）** · **common `4.8.1`** · **core-base `2.0.7`** · **core-ui `1.3.1`** · **core-utils `1.2.3`** · **core-log `1.2.0`** · **core-autosize `1.0.0`** · **room-processor `1.2.0`** · **core-mqtt `1.6.2`** · **core-ws `1.0.1`** · **core-form `3.8.2`** · **core-media `3.7.1`** · **core-gnss `4.0.1`** · **annotation `3.3.1`**
 >
 > **本轮重点（2.0.0）：** MVVM 请求路径加固 —— 无泛型 `BaseViewModel`、`launchRequest`（Flow 重载 / Session）、仓库无 UI、分页 `onAppError` → Host、`trackUiRequest` protected。  
 > **业务工程请优先阅读：** [**MIGRATION-2.0.0.md**](./MIGRATION-2.0.0.md)（完整迁移步骤 / 对照 / 验收）。  
 > 用法速查：[QuickStart.md](./QuickStart.md)；模块职责：[MODULES.md](./MODULES.md)；网络细项：[core-network/MIGRATION.md](./core-network/MIGRATION.md)；Room：[core-db/README.md](./core-db/README.md)。  
 > 历史：协程下载 [§0.2](#02-协程下载真内核base-1100)；Loading 可取消 [§0.3](#03-loading-可取消base-190--network-180--db-170)；剔除 BaseView [§2](#2-120彻底剔除-baseview--mvp-页面绑定)；Material3 [§1](#1-460appcompat-主题--material3)；4.4.x 拆分 [附录 A](#附录-a4451从-444x-单体拆到-core)。
+
+---
+
+## 0.1 core-utils `1.2.3`：`CoreExecutors` 统一 Runnable 线程池
+
+**含破坏点（删除旧类）。** 新增 `io.coderf.arklab.core.utils.CoreExecutors`（静态门面，对齐 `CoreLogger`）：
+
+| API | 用途 |
+|-----|------|
+| `io()` | 短时可并发 IO |
+| `bounded()` | 可排队后台任务 |
+| `serial()` | 有序写日志 / 写文件 |
+| `cpu()` | 压缩等 CPU 投递 |
+| `main()` | 回主线程 |
+
+- **破坏点（utils）：** 删除 `ThreadExecutor` / `ThreadExecutorBounded`（含 `getInstance()`）。请改为 `CoreExecutors`。
+- 已收敛：OSS / 图片压缩 / 视频压缩外层投递 / GNSS 写盘 / Form 富文本 / 画廊下载 → `CoreExecutors`；删除模块内嵌套池与 `ThreadExecutorVideo` / `GpsLoggerThreadExecutor`。
+- `core-media` / `core-gnss` 现依赖 `core-utils`。
+- **不变：** 网络 / Room 继续协程 `Dispatchers.IO`；Camera / WS / MQTT / MediaHelper `HandlerThread` / 视频压缩超时隔离线程不并入。
+
+```java
+// 旧
+// ThreadExecutor.getInstance().execute(r);
+// 新
+CoreExecutors.io().execute(r);
+// ThreadExecutorBounded.getInstance() → CoreExecutors.bounded()
+```
 
 ---
 
@@ -35,27 +62,27 @@ implementation 'io.coderf.arklab.core:db:2.0.0'
 业务工程建议**显式**声明下表（勿只升 `common` 指望传递依赖一定最新）：
 
 ```gradle
-implementation 'io.coderf.arklab.common:common:4.8.0'
-implementation 'io.coderf.arklab.core:base:2.0.0'
+implementation 'io.coderf.arklab.common:common:4.8.1'
+implementation 'io.coderf.arklab.core:base:2.0.7'
 implementation 'io.coderf.arklab.core:network:2.0.0'
 implementation 'io.coderf.arklab.core:db:2.0.0'
 implementation 'io.coderf.arklab.core:ui:1.3.1'
-implementation 'io.coderf.arklab.core:utils:1.2.2'
+implementation 'io.coderf.arklab.core:utils:1.2.3'
 implementation 'io.coderf.arklab.core:log:1.2.0'
 ksp 'io.coderf.arklab.room:room-processor:1.2.0'   // 使用 @RoomObservedEntity 时
 // 按需：
-implementation 'io.coderf.arklab.ui:ui:3.8.1'
-implementation 'io.coderf.arklab.media:media:3.7.0'
+implementation 'io.coderf.arklab.ui:ui:3.8.2'
+implementation 'io.coderf.arklab.media:media:3.7.1'
 implementation 'io.coderf.arklab.mqtt:mqtt:1.6.2'
 implementation 'io.coderf.arklab.ws:ws:1.0.1'
-implementation 'io.coderf.arklab.gnss:core-gnss:4.0.0'
+implementation 'io.coderf.arklab.gnss:core-gnss:4.0.1'
 ```
 
 工程依赖 `implementation project(':common')` 时随源码即可。
 
 ### core-form（原 commonui）
 
-Gradle 模块由 `:commonui` 重命名为 `:core-form`；**包名与 Maven 坐标不变**（`io.coderf.arklab.ui:ui:3.7.7`）。勿与 `:core-ui`（`io.coderf.arklab.core:ui`）混淆。
+Gradle 模块由 `:commonui` 重命名为 `:core-form`；**包名与 Maven 坐标不变**（`io.coderf.arklab.ui:ui:3.8.2`）。勿与 `:core-ui`（`io.coderf.arklab.core:ui`）混淆。
 
 ```gradle
 // 旧
@@ -63,12 +90,12 @@ implementation project(':commonui')
 // 新
 implementation project(':core-form')
 // Maven 仍为：
-implementation 'io.coderf.arklab.ui:ui:3.8.1'
+implementation 'io.coderf.arklab.ui:ui:3.8.2'
 ```
 
 ### core-media（原 commonmedia）
 
-Gradle 模块由 `:commonmedia` 重命名为 `:core-media`；**包名与 Maven 坐标不变**（`io.coderf.arklab.media:media:3.7.0`）。
+Gradle 模块由 `:commonmedia` 重命名为 `:core-media`；**包名与 Maven 坐标不变**（`io.coderf.arklab.media:media:3.7.1`）。
 
 ```gradle
 // 旧
@@ -76,7 +103,7 @@ implementation project(':commonmedia')
 // 新
 implementation project(':core-media')
 // Maven 仍为：
-implementation 'io.coderf.arklab.media:media:3.7.0'
+implementation 'io.coderf.arklab.media:media:3.7.1'
 ```
 
 ### core-gnss `4.0.0` 包名与模块重命名（原 googlegps）
@@ -89,7 +116,7 @@ implementation project(':googlegps')
 implementation 'io.coderf.arklab.googlegps:googlegps:3.4.0'
 // 新
 implementation project(':core-gnss')
-implementation 'io.coderf.arklab.gnss:core-gnss:4.0.0'
+implementation 'io.coderf.arklab.gnss:core-gnss:4.0.1'
 ```
 
 ```text
@@ -100,20 +127,20 @@ import io.coderf.arklab.googlegps.*  →  import io.coderf.arklab.gnss.*
 
 | 模块 | 坐标 |
 |------|------|
-| common | `io.coderf.arklab.common:common:4.8.0` |
-| core-base | `io.coderf.arklab.core:base:2.0.0` |
+| common | `io.coderf.arklab.common:common:4.8.1` |
+| core-base | `io.coderf.arklab.core:base:2.0.7` |
 | core-network | `io.coderf.arklab.core:network:2.0.0` |
 | core-db | `io.coderf.arklab.core:db:2.0.0` |
 | core-ui | `io.coderf.arklab.core:ui:1.3.1` |
-| core-utils | `io.coderf.arklab.core:utils:1.2.2` |
+| core-utils | `io.coderf.arklab.core:utils:1.2.3` |
 | core-log | `io.coderf.arklab.core:log:1.2.0` |
 | core-autosize | `io.coderf.arklab.core:autosize:1.0.0` |
 | room-processor | `io.coderf.arklab.room:room-processor:1.2.0` |
 | core-mqtt | `io.coderf.arklab.mqtt:mqtt:1.6.2` |
 | core-ws | `io.coderf.arklab.ws:ws:1.0.1` |
-| core-form | `io.coderf.arklab.ui:ui:3.8.1`（原模块名 `commonui`；包名 / Maven 坐标不变） |
-| core-media | `io.coderf.arklab.media:media:3.7.0`（原模块名 `commonmedia`；包名 / Maven 坐标不变） |
-| core-gnss | `io.coderf.arklab.gnss:core-gnss:4.0.0`（原 `googlegps`，包名 `io.coderf.arklab.gnss`，无旧坐标兼容） |
+| core-form | `io.coderf.arklab.ui:ui:3.8.2`（原模块名 `commonui`；包名 / Maven 坐标不变） |
+| core-media | `io.coderf.arklab.media:media:3.7.1`（原模块名 `commonmedia`；包名 / Maven 坐标不变） |
+| core-gnss | `io.coderf.arklab.gnss:core-gnss:4.0.1`（原 `googlegps`，包名 `io.coderf.arklab.gnss`，无旧坐标兼容） |
 | annotation | `io.coderf.arklab.annotation:annotation:3.3.1` |
 
 ---
