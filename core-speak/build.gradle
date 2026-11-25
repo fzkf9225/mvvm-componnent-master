@@ -1,0 +1,111 @@
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
+}
+
+android {
+    namespace = 'io.coderf.arklab.speak'
+    compileSdk = libs.versions.compileSdkVersion.get().toInteger()
+    defaultConfig {
+        minSdk = libs.versions.minSdkVersion.get().toInteger()
+        targetSdk = libs.versions.targetSdkVersion.get().toInteger()
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles('consumer-rules.pro')
+    }
+
+    buildTypes {
+        release {
+            buildConfigField("boolean", "LOG_DEBUG", "false")
+            minifyEnabled = false
+            proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
+            consumerProguardFiles('consumer-rules.pro')
+        }
+        debug {
+            buildConfigField("boolean", "LOG_DEBUG", "true")
+            minifyEnabled = false
+            proguardFiles(getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro')
+        }
+    }
+    compileOptions {
+        encoding = "UTF-8"
+        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+    }
+    kotlin {
+        jvmToolchain(17)
+    }
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        }
+    }
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
+    buildFeatures {
+        buildConfig = true
+    }
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
+    }
+}
+
+dependencies {
+    implementation platform(libs.kotlin.bom)
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.appcompat
+    implementation libs.material
+    implementation libs.activity
+    implementation libs.lifecycle.runtime.ktx
+    implementation libs.kotlinx.coroutines.core
+
+    api project(':core-log')
+    implementation project(':core-utils')
+    // Room 协程栈 / BaseDaoBean / BaseRoomDao（core-db api → core-base）
+    api project(':core-db')
+
+    implementation libs.androidx.room.ktx
+    implementation libs.androidx.room.runtime
+    // BaseRoomDao 含 Rx 返回类型，Room 编译期需识别 Single/Flowable/Completable
+    implementation libs.room.rxjava3
+    implementation libs.rxjava3.rxjava
+    implementation libs.androidx.lifecycle.lifecycle.livedata.ktx
+    ksp libs.room.compiler
+    ksp project(':room-processor')
+
+    testImplementation libs.junit
+}
+
+apply plugin: 'maven-publish'
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'io.coderf.arklab.speak'
+                artifactId = 'speak'
+                version = '1.0.0'
+            }
+        }
+        repositories {
+            maven {
+                url = 'https://packages.aliyun.com/maven/repository/2405978-release-ObRSGq/'
+                credentials {
+                    username = System.getenv('ALIYUN_USER_NAME')
+                    password = System.getenv('ALIYUN_PASSWORD')
+                }
+            }
+            maven {
+                url = 'https://packages.aliyun.com/maven/repository/2405978-snapshot-rT6GM2/'
+                credentials {
+                    username = System.getenv('ALIYUN_USER_NAME')
+                    password = System.getenv('ALIYUN_PASSWORD')
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="speak_hold_to_talk">Hold to talk</string>
+    <string name="speak_release_to_send">Release to send</string>
+    <string name="speak_hint_recording">Release to edit · Slide up to send</string>
+    <string name="speak_hint_edit">Release to edit</string>
+    <string name="speak_hint_send">Release to send</string>
+    <string name="speak_hint_cancel">Release to cancel</string>
+    <string name="speak_action_edit">Edit</string>
+    <string name="speak_action_send">Send</string>
+    <string name="speak_action_cancel">Cancel</string>
+    <string name="speak_too_short">Message too short</string>
+    <string name="speak_save_failed">Failed to save voice message</string>
+    <string name="speak_start_failed">Failed to start recording</string>
+    <string name="speak_permission_title">Microphone access</string>
+    <string name="speak_permission_message">Voice messages need microphone access. After you allow it, hold to talk to send voice messages. Audio is captured only while you are actively recording.</string>
+    <string name="speak_permission_positive">Allow</string>
+    <string name="speak_permission_negative">Cancel</string>
+    <string name="speak_permission_denied">Microphone permission is required to record</string>
+    <string name="speak_permission_granted_retry">Permission granted. Hold to talk again.</string>
+</resources>

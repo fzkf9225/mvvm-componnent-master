@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SpeakButton">
+        <!-- 顶栏提示字号；不设则用 SpeakUiStyle 默认 -->
+        <attr name="speakHintTextSize" format="dimension" />
+        <!-- 统一覆盖编辑/撤回/发送字号（细分请用 SpeakUiStyle） -->
+        <attr name="speakActionTextSize" format="dimension" />
+        <attr name="speakWaveformColor" format="color" />
+        <attr name="speakAccentColor" format="color" />
+        <attr name="speakHintTextColor" format="color" />
+        <attr name="speakInactiveTextColor" format="color" />
+        <attr name="speakGlowColor" format="color" />
+        <attr name="speakCancelTextColor" format="color" />
+        <attr name="speakSendTextColor" format="color" />
+        <attr name="speakEditTextColor" format="color" />
+        <!-- 底部白弧露出高度 -->
+        <attr name="speakEditArcHeight" format="dimension" />
+        <!-- 是否启用编辑能力（文案 + Edit 回调） -->
+        <attr name="speakEditEnabled" format="boolean" />
+        <!-- 是否绘制底部白弧 -->
+        <attr name="speakShowEditArc" format="boolean" />
+    </declare-styleable>
+</resources>

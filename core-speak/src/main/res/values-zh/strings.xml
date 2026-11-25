@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="speak_hold_to_talk">按住说话</string>
+    <string name="speak_release_to_send">松开发送</string>
+    <string name="speak_hint_recording">松手编辑 · 上滑发送</string>
+    <string name="speak_hint_edit">松手编辑</string>
+    <string name="speak_hint_send">松手发送</string>
+    <string name="speak_hint_cancel">松手取消</string>
+    <string name="speak_action_edit">编辑</string>
+    <string name="speak_action_send">发送</string>
+    <string name="speak_action_cancel">撤回</string>
+    <string name="speak_too_short">说话时间太短</string>
+    <string name="speak_save_failed">语音保存失败</string>
+    <string name="speak_start_failed">录音启动失败</string>
+    <string name="speak_permission_title">麦克风权限说明</string>
+    <string name="speak_permission_message">录制语音需要使用麦克风。授权后可按住说话发送语音消息；我们仅在您主动录音时采集音频。</string>
+    <string name="speak_permission_positive">授权</string>
+    <string name="speak_permission_negative">取消</string>
+    <string name="speak_permission_denied">需要麦克风权限才能录音</string>
+    <string name="speak_permission_granted_retry">已授权，请再次按住说话</string>
+</resources>
