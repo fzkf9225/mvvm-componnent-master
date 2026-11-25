@@ -70,6 +70,10 @@ public class PreviewPhotoDialog extends Dialog {
      * 是否可以保存图片，默认为true
      */
     private boolean canSaveImage = true;
+    /** 右下角下载按钮是否显示，默认 true */
+    private boolean showDownloadButton = true;
+    /** 点击下载是否先弹出确认 Dialog，默认 false（直接下载） */
+    private boolean downloadConfirmEnabled = false;
     /**
      * 选中原点样式
      */
@@ -195,6 +199,31 @@ public class PreviewPhotoDialog extends Dialog {
      */
     public PreviewPhotoDialog setCanSaveImage(boolean canSaveImage) {
         this.canSaveImage = canSaveImage;
+        return this;
+    }
+
+    public boolean isShowDownloadButton() {
+        return showDownloadButton;
+    }
+
+    /**
+     * 是否显示右下角下载按钮（仿微信）。与 {@link #setCanSaveImage(boolean)} 独立。
+     */
+    public PreviewPhotoDialog setShowDownloadButton(boolean showDownloadButton) {
+        this.showDownloadButton = showDownloadButton;
+        return this;
+    }
+
+    public boolean isDownloadConfirmEnabled() {
+        return downloadConfirmEnabled;
+    }
+
+    /**
+     * 点击右下角下载时是否先弹出保存确认弹窗。
+     * 默认 {@code false}：直接下载；{@code true}：与长按保存一样先走 ImageSaveDialog。
+     */
+    public PreviewPhotoDialog setDownloadConfirmEnabled(boolean downloadConfirmEnabled) {
+        this.downloadConfirmEnabled = downloadConfirmEnabled;
         return this;
     }
 
@@ -374,20 +403,27 @@ public class PreviewPhotoDialog extends Dialog {
         }
         viewPager = findViewById(R.id.preview_viewPager);
         llPoint = findViewById(R.id.ll_point);
+        ShapeableImageView ivDownload = findViewById(R.id.iv_preview_download);
+        if (ivDownload != null) {
+            ivDownload.setVisibility(showDownloadButton ? View.VISIBLE : View.GONE);
+            ivDownload.setOnClickListener(v -> requestSaveCurrent());
+        }
         initPageAdapter();
         viewPager.setCurrentItem(position);
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int pos) {
-                super.onPageSelected(position);
-                if (llPoint.getChildCount() == 0) {
-                    return;
-                }
-                llPoint.getChildAt(pos).setBackground(drawableResCurrent);
-                if (position >= 0 && position < llPoint.getChildCount() && position != pos) {
-                    llPoint.getChildAt(position).setBackground(drawableResNormal);
+                super.onPageSelected(pos);
+                if (llPoint.getChildCount() > 0) {
+                    llPoint.getChildAt(pos).setBackground(drawableResCurrent);
+                    if (position >= 0 && position < llPoint.getChildCount() && position != pos) {
+                        llPoint.getChildAt(position).setBackground(drawableResNormal);
+                    }
                 }
                 position = pos;
+                if (pageAdapter != null) {
+                    pageAdapter.onPreviewPageSelected(pos);
+                }
             }
         });
         //用于拦截ViewPager2的触摸事件，但是无效
@@ -443,12 +479,15 @@ public class PreviewPhotoDialog extends Dialog {
         if (pageAdapter == null) {
             pageAdapter = new PreviewViewPagerAdapter(this);
             pageAdapter.setList(imageInfos);
+            pageAdapter.setCurrentPage(position);
             viewPager.setAdapter(pageAdapter);
         } else {
             pageAdapter.setList(imageInfos);
+            pageAdapter.setCurrentPage(position);
             pageAdapter.notifyDataSetChanged();
         }
-        viewPager.setOffscreenPageLimit(imageInfos.size());
+        // 限制离屏页，降低多视频同时占用
+        viewPager.setOffscreenPageLimit(1);
     }
 
     /**
@@ -472,6 +511,24 @@ public class PreviewPhotoDialog extends Dialog {
             params.leftMargin = DensityUtil.dp2px(getContext(), 8f);
             llPoint.addView(round, params);
         });
+    }
+
+    /**
+     * 右下角下载：对当前页弹出保存确认（与长按保存同一套逻辑）。
+     */
+    public void requestSaveCurrent() {
+        if (!canSaveImage || pageAdapter == null) {
+            return;
+        }
+        pageAdapter.saveCurrentItem(position, downloadConfirmEnabled);
+    }
+
+    @Override
+    public void dismiss() {
+        if (pageAdapter != null) {
+            pageAdapter.releaseAllPlayers();
+        }
+        super.dismiss();
     }
 }
 

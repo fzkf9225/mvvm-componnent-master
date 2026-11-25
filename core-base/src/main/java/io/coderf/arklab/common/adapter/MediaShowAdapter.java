@@ -85,17 +85,10 @@ public class MediaShowAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBea
             });
             binding.mediaPlay.setOnClickListener(v -> {
                 try {
-                    Bundle bundleVideo = new Bundle();
-                    bundleVideo.putString(VideoPlayerActivity.VIDEO_TITLE,
-                            TextUtils.isEmpty(adapter.getList().get(getAbsoluteAdapterPosition()).getFileName()) ?
-                                    FileUtil.getFileName(adapter.getList().get(getAbsoluteAdapterPosition()).getPath())
-                                    : adapter.getList().get(getAbsoluteAdapterPosition()).getFileName());
-                    bundleVideo.putString(VideoPlayerActivity.VIDEO_PATH, adapter.getList().get(getAbsoluteAdapterPosition()).getPath());
-                    VideoPlayerActivity.show(v.getContext(), bundleVideo);
+                    adapter.showPreviewPhoto(v.getContext(), adapter.getList(), getAbsoluteAdapterPosition());
                 } catch (Exception e) {
                     e.printStackTrace();
-                    LogUtil.e(MediaShowAdapter.class.getSimpleName(), "视频播放失败:" + e);
-                    Toast.makeText(v.getContext(), "视频播放失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(v.getContext(), "视频打开失败", Toast.LENGTH_SHORT).show();
                 }
             });
         }

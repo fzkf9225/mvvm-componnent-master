@@ -84,6 +84,7 @@ public class PreviewInfoPhotoDialog extends Dialog {
      * 右下角「查看全部」
      */
     private ShapeableImageView ivViewAll;
+    private ShapeableImageView ivDownload;
     /**
      * 底部名称、时间、定位信息区
      */
@@ -498,6 +499,7 @@ public class PreviewInfoPhotoDialog extends Dialog {
         ivPrev = findViewById(R.id.iv_preview_prev);
         ivNext = findViewById(R.id.iv_preview_next);
         ivViewAll = findViewById(R.id.iv_preview_view_all);
+        ivDownload = findViewById(R.id.iv_preview_download);
         llInfo = findViewById(R.id.ll_preview_info);
         tvTitle = findViewById(R.id.tv_preview_title);
         tvTime = findViewById(R.id.tv_preview_time);
@@ -520,6 +522,9 @@ public class PreviewInfoPhotoDialog extends Dialog {
                 position = pos;
                 bindCurrentInfo();
                 updateNavVisibility();
+                if (pageAdapter != null) {
+                    pageAdapter.onPreviewPageSelected(pos);
+                }
             }
         });
         applyWindowInsets(root);
@@ -539,6 +544,11 @@ public class PreviewInfoPhotoDialog extends Dialog {
         }
         ivLocation.setVisibility(config.isLocationEnabled() ? View.VISIBLE : View.GONE);
         ivViewAll.setVisibility(config.isViewAllEnabled() ? View.VISIBLE : View.GONE);
+        if (ivDownload != null) {
+            ivDownload.setVisibility(config.isDownloadEnabled() ? View.VISIBLE : View.GONE);
+            applyCircleIconBackground(ivDownload, config.isViewAllCircleBackgroundEnabled());
+            applyIconSize(ivDownload, config.getViewAllIconSizePx());
+        }
         ConstraintLayout.LayoutParams pagerLp = (ConstraintLayout.LayoutParams) viewPager.getLayoutParams();
         if (config.isLocationEnabled()) {
             pagerLp.topToBottom = R.id.iv_preview_location;
@@ -700,6 +710,9 @@ public class PreviewInfoPhotoDialog extends Dialog {
                 viewPager.setCurrentItem(position + 1, true);
             }
         });
+        if (ivDownload != null) {
+            ivDownload.setOnClickListener(v -> requestSaveCurrent());
+        }
         ivViewAll.setOnClickListener(v -> {
             if (imageInfos.isEmpty()) {
                 return;
@@ -739,14 +752,15 @@ public class PreviewInfoPhotoDialog extends Dialog {
         if (pageAdapter == null) {
             pageAdapter = new PreviewInfoViewPagerAdapter(this);
             pageAdapter.setList(imageInfos);
+            pageAdapter.setCurrentPage(position);
             viewPager.setAdapter(pageAdapter);
         } else {
             pageAdapter.setList(imageInfos);
+            pageAdapter.setCurrentPage(position);
             pageAdapter.notifyDataSetChanged();
         }
-        if (!imageInfos.isEmpty()) {
-            viewPager.setOffscreenPageLimit(Math.max(1, Math.min(imageInfos.size(), 4)));
-        }
+        // 限制离屏页，降低多视频同时占用
+        viewPager.setOffscreenPageLimit(1);
     }
 
     /**
@@ -856,6 +870,11 @@ public class PreviewInfoPhotoDialog extends Dialog {
             viewAllLp.setMarginEnd(viewAllEnd);
             viewAllLp.bottomMargin = viewAllBottom + bars.bottom;
             ivViewAll.setLayoutParams(viewAllLp);
+            if (ivDownload != null) {
+                ViewGroup.MarginLayoutParams downloadLp = (ViewGroup.MarginLayoutParams) ivDownload.getLayoutParams();
+                downloadLp.bottomMargin = viewAllBottom + bars.bottom;
+                ivDownload.setLayoutParams(downloadLp);
+            }
             llInfo.setPadding(infoPadStart, infoPadTop, infoPadEnd, infoPadBottom + bars.bottom);
             return insets;
         });
@@ -915,5 +934,24 @@ public class PreviewInfoPhotoDialog extends Dialog {
         void onViewAllClick(@NonNull PreviewInfoPhotoDialog dialog,
                             @NonNull List<PreviewInfoBean> items,
                             int position);
+    }
+
+    /**
+     * 右下角下载：当前页保存（与长按保存同一套）。
+     */
+    public void requestSaveCurrent() {
+        if (!canSaveImage || pageAdapter == null) {
+            return;
+        }
+        boolean confirm = config != null && config.isDownloadConfirmEnabled();
+        pageAdapter.saveCurrentItem(position, confirm);
+    }
+
+    @Override
+    public void dismiss() {
+        if (pageAdapter != null) {
+            pageAdapter.releaseAllPlayers();
+        }
+        super.dismiss();
     }
 }

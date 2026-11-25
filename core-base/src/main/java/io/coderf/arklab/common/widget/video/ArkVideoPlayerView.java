@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Outline;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 
 import androidx.annotation.NonNull;
@@ -471,6 +472,36 @@ public class ArkVideoPlayerView extends StandardGSYVideoPlayer {
     private void applyConfigInternal() {
         ensureConfig();
         refreshToolbarVisibility();
+        applyBottomControlsOffset();
+    }
+
+    /**
+     * 按 {@link VideoPlayerConfig#getBottomControlsOffsetDp()} 上移底部控制条与细进度条。
+     * 默认 0 不改布局，不影响 Activity/Dialog 等其它宿主。
+     */
+    private void applyBottomControlsOffset() {
+        int offsetPx = 0;
+        try {
+            offsetPx = io.coderf.arklab.core.utils.DensityUtil.dp2px(getContext(),
+                    config.getBottomControlsOffsetDp());
+        } catch (Exception ignore) {
+        }
+        View bottom = findViewById(R.id.layout_bottom);
+        if (bottom != null && bottom.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) bottom.getLayoutParams();
+            if (lp.bottomMargin != offsetPx) {
+                lp.bottomMargin = offsetPx;
+                bottom.setLayoutParams(lp);
+            }
+        }
+        View thinProgress = findViewById(R.id.bottom_progressbar);
+        if (thinProgress != null && thinProgress.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) thinProgress.getLayoutParams();
+            if (lp.bottomMargin != offsetPx) {
+                lp.bottomMargin = offsetPx;
+                thinProgress.setLayoutParams(lp);
+            }
+        }
     }
 
     private void ensureConfig() {

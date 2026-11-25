@@ -40,6 +40,14 @@ public class PreviewInfoConfig {
      */
     private boolean viewAllEnabled = true;
     /**
+     * 右下角下载按钮是否显示，默认 true
+     */
+    private boolean downloadEnabled = true;
+    /**
+     * 点击下载是否先弹出确认 Dialog，默认 false（直接下载）
+     */
+    private boolean downloadConfirmEnabled = false;
+    /**
      * 图片左右翻页按钮是否显示，默认 true；仅一张图时仍会隐藏
      */
     private boolean navEnabled = true;
@@ -206,6 +214,27 @@ public class PreviewInfoConfig {
 
     public boolean isViewAllEnabled() {
         return viewAllEnabled;
+    }
+
+    public boolean isDownloadEnabled() {
+        return downloadEnabled;
+    }
+
+    public PreviewInfoConfig setDownloadEnabled(boolean downloadEnabled) {
+        this.downloadEnabled = downloadEnabled;
+        return this;
+    }
+
+    public boolean isDownloadConfirmEnabled() {
+        return downloadConfirmEnabled;
+    }
+
+    /**
+     * 点击下载是否先弹出确认弹窗。默认 false 直接下载。
+     */
+    public PreviewInfoConfig setDownloadConfirmEnabled(boolean downloadConfirmEnabled) {
+        this.downloadConfirmEnabled = downloadConfirmEnabled;
+        return this;
     }
 
     public PreviewInfoConfig setViewAllEnabled(boolean viewAllEnabled) {

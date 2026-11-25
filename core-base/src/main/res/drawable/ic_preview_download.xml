@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="18dp"
+    android:height="18dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- 略缩小以与「查看全部」在 30dp 圆钮中视觉一致 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M6,19h12v-1.6H6V19zM17.2,9.2h-3.2V3.6H10v5.6H6.8L12,15.6l5.2,-6.4z" />
+</vector>

@@ -47,14 +47,18 @@ import io.coderf.arklab.core.utils.CoreExecutors;
 /**
  * 实况图预览控件：静图（{@link PhotoView}）+ 短视频（{@link TextureView}）。
  * <p>
- * L2 交互：按住播放动感片段，松手回到静图。非实况时退化为普通可缩放静图。
+ * 默认 L2 交互：按住播放动感片段，松手回到静图。非实况时退化为普通可缩放静图。
  * 微信款「实况」胶囊默认左下角；图标 / 文案 / 间距 / padding / 圆角背景均可配置。
+ * <p>
+ * <b>大图预览场景</b>请调用 {@link #setHoldToPlayEnabled(boolean)}{@code (false)}：
+ * 关闭整页按住播放，避免与长按保存冲突；改为仅点击左下角「实况」胶囊开关动感片段。
+ * 列表等非预览场景保持默认 {@code true} 即可，不必改调用方。
  *
  * @author fz
  * @version 1.0
  * @since 1.0
  * @created 2026/11/9
- * @updated 2026/11/9 播放状态回调 + 播放中图标
+ * @updated 2026/11/25 大图预览可关按住播，改为仅胶囊点击播放
  */
 public class LivePhotoView extends FrameLayout {
 
@@ -117,8 +121,22 @@ public class LivePhotoView extends FrameLayout {
     private boolean playerPrepared;
     /** 当前是否正在播放动感片段 */
     private boolean playing;
-    /** 手指是否仍按在实况区域（松手即停） */
+    /** 手指是否仍按在实况区域（松手即停）；仅 {@link #holdToPlayEnabled} 为 true 时生效 */
     private boolean holdPressed;
+    /**
+     * 是否允许整页按住播放动感片段，默认 true。
+     * 大图预览应设为 false，避免与长按保存抢手势，改由左下角胶囊点击播放。
+     */
+    private boolean holdToPlayEnabled = true;
+    /**
+     * 由胶囊点击/长按触发的播放请求（与 holdPressed 二选一即可起播）。
+     * 再次点击胶囊、长按松手或 {@link #stopMotion()} 时清掉。
+     */
+    private boolean badgePlayActive;
+    /** 胶囊长按是否已触发起播（用于区分短按 toggle 与长按按住播） */
+    private boolean badgeLongPressTriggered;
+    /** 胶囊长按延迟起播 */
+    private final Runnable badgeLongPressRunnable = this::onBadgeLongPressFire;
     /** prepare 尚未完成时，是否在就绪后立即起播 */
     private boolean wantPlayWhenPrepared;
     /** 动感视频宽，用于 TextureView 等比变换 */
@@ -652,6 +670,7 @@ public class LivePhotoView extends FrameLayout {
 
     /**
      * 把按住播放挂在 PhotoView 触摸链上，并继续把事件交给 {@link PhotoViewAttacher} 做缩放拖动。
+     * 仅当 {@link #holdToPlayEnabled} 且具备动感片段时处理按住逻辑。
      */
     @SuppressLint("ClickableViewAccessibility")
     private void installTouchHook() {
@@ -660,11 +679,122 @@ public class LivePhotoView extends FrameLayout {
             return;
         }
         stillView.setOnTouchListener((v, event) -> {
-            if (motionEnabled) {
+            if (motionEnabled && holdToPlayEnabled) {
                 handleHoldToPlay(event);
             }
             return attacher.onTouch(v, event);
         });
+    }
+
+    /**
+     * 按住播放开关。默认 true（列表等场景）。
+     * 大图预览传 false：整页按住不再起播，改为 {@link #setHoldToPlayEnabled} 关闭后由胶囊点击 toggle。
+     */
+    public void setHoldToPlayEnabled(boolean holdToPlayEnabled) {
+        this.holdToPlayEnabled = holdToPlayEnabled;
+        if (!holdToPlayEnabled) {
+            holdPressed = false;
+            removeCallbacks(startPlayRunnable);
+            getParentRequestDisallow(false);
+        }
+        applyBadgeClickListener();
+    }
+
+    /** @return 是否允许整页按住播放，默认 true */
+    public boolean isHoldToPlayEnabled() {
+        return holdToPlayEnabled;
+    }
+
+    /**
+     * 大图预览（关整页按住）时：胶囊支持短按 toggle + 长按按住播放、松手停止。
+     */
+    @SuppressLint("ClickableViewAccessibility")
+    private void applyBadgeClickListener() {
+        if (liveBadge == null) {
+            return;
+        }
+        if (!holdToPlayEnabled) {
+            liveBadge.setOnClickListener(null);
+            liveBadge.setOnTouchListener((v, event) -> {
+                if (!motionEnabled) {
+                    return false;
+                }
+                switch (event.getActionMasked()) {
+                    case MotionEvent.ACTION_DOWN:
+                        badgeLongPressTriggered = false;
+                        downX = event.getX();
+                        downY = event.getY();
+                        removeCallbacks(badgeLongPressRunnable);
+                        postDelayed(badgeLongPressRunnable, HOLD_TO_PLAY_MS);
+                        return true;
+                    case MotionEvent.ACTION_MOVE: {
+                        float dx = Math.abs(event.getX() - downX);
+                        float dy = Math.abs(event.getY() - downY);
+                        if (dx > touchSlop || dy > touchSlop) {
+                            removeCallbacks(badgeLongPressRunnable);
+                        }
+                        return true;
+                    }
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        removeCallbacks(badgeLongPressRunnable);
+                        if (badgeLongPressTriggered) {
+                            // 长按松手：停止动感
+                            badgePlayActive = false;
+                            badgeLongPressTriggered = false;
+                            stopMotion();
+                        } else if (event.getActionMasked() == MotionEvent.ACTION_UP) {
+                            // 短按：toggle
+                            if (playing || badgePlayActive) {
+                                badgePlayActive = false;
+                                stopMotion();
+                            } else {
+                                badgePlayActive = true;
+                                requestStartMotion();
+                            }
+                        }
+                        badgeLongPressTriggered = false;
+                        return true;
+                    default:
+                        return true;
+                }
+            });
+            liveBadge.setClickable(true);
+        } else {
+            removeCallbacks(badgeLongPressRunnable);
+            liveBadge.setOnTouchListener(null);
+            liveBadge.setOnClickListener(null);
+            liveBadge.setClickable(false);
+        }
+    }
+
+    private void onBadgeLongPressFire() {
+        if (holdToPlayEnabled || !motionEnabled) {
+            return;
+        }
+        badgeLongPressTriggered = true;
+        badgePlayActive = true;
+        requestStartMotion();
+    }
+
+    /**
+     * 请求起播动感片段（按住或胶囊点击共用）。
+     */
+    private void requestStartMotion() {
+        if (!motionEnabled || TextUtils.isEmpty(motionVideoPath)) {
+            return;
+        }
+        if (playerPrepared && mediaPlayer != null) {
+            beginPlayback();
+            return;
+        }
+        wantPlayWhenPrepared = true;
+        setPlaybackState(PlaybackState.PREPARING);
+        if (surfaceReady) {
+            preparePlayer();
+        } else {
+            textureView.setVisibility(VISIBLE);
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -874,6 +1004,7 @@ public class LivePhotoView extends FrameLayout {
         motionVideoPath = motionPath;
         motionEnabled = enabled && !TextUtils.isEmpty(motionPath);
         liveBadge.setVisibility(motionEnabled ? VISIBLE : GONE);
+        applyBadgeClickListener();
     }
 
     private void notifyMotionAvailability(boolean available) {
@@ -892,24 +1023,18 @@ public class LivePhotoView extends FrameLayout {
     }
 
     private void startMotionInternal() {
-        if (!motionEnabled || !holdPressed || TextUtils.isEmpty(motionVideoPath)) {
+        // 延迟任务来自按住：若已松手或已关按住播，则不起播
+        if (!holdToPlayEnabled || !holdPressed) {
             return;
         }
-        if (playerPrepared && mediaPlayer != null) {
-            beginPlayback();
-            return;
-        }
-        wantPlayWhenPrepared = true;
-        setPlaybackState(PlaybackState.PREPARING);
-        if (surfaceReady) {
-            preparePlayer();
-        } else {
-            textureView.setVisibility(VISIBLE);
-        }
+        requestStartMotion();
     }
 
     private void beginPlayback() {
-        if (mediaPlayer == null || !holdPressed) {
+        if (mediaPlayer == null) {
+            return;
+        }
+        if (!holdPressed && !badgePlayActive) {
             return;
         }
         try {
@@ -983,6 +1108,7 @@ public class LivePhotoView extends FrameLayout {
      */
     public void stopMotion() {
         wantPlayWhenPrepared = false;
+        badgePlayActive = false;
         removeCallbacks(startPlayRunnable);
         if (mediaPlayer != null && playing) {
             try {
@@ -1022,7 +1148,7 @@ public class LivePhotoView extends FrameLayout {
                 videoWidth = mp.getVideoWidth();
                 videoHeight = mp.getVideoHeight();
                 applyVideoTransform();
-                if (wantPlayWhenPrepared && holdPressed) {
+                if (wantPlayWhenPrepared && (holdPressed || badgePlayActive)) {
                     beginPlayback();
                 }
             });
@@ -1085,8 +1211,11 @@ public class LivePhotoView extends FrameLayout {
      */
     public void release() {
         holdPressed = false;
+        badgePlayActive = false;
+        badgeLongPressTriggered = false;
         wantPlayWhenPrepared = false;
         removeCallbacks(startPlayRunnable);
+        removeCallbacks(badgeLongPressRunnable);
         stopMotion();
         releasePlayerOnly();
     }

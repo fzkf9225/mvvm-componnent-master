@@ -30,6 +30,8 @@ public class VideoPlayerConfig implements Serializable {
     private VideoPlayerIconConfig iconConfig = VideoPlayerIconConfig.defaults();
     /** 嵌入模式非展开态的圆角半径（dp），0 表示直角；全屏/展开后不裁剪圆角 */
     private float cornerRadiusDp = 0f;
+    /** 底部控制条/进度条相对底部上移距离（dp），0 为贴底；大图预览可设以避开指示点 */
+    private int bottomControlsOffsetDp = 0;
     /** 是否启用边播边缓存；网络地址可开，本地 content/file 建议关闭 */
     private boolean cacheEnable = true;
     /** 是否显示顶部返回按钮 */
@@ -103,6 +105,31 @@ public class VideoPlayerConfig implements Serializable {
                 .setSpeedOptions(defaultSpeedOptions());
     }
 
+    /**
+     * 大图预览（ViewPager 内嵌）：仿微信，页内直接播。
+     * 无返回 / 标题 / 全屏 / 旋转 / 锁屏 / 倍速 / 清晰度；单击画面由 GSY 处理暂停/播放。
+     * 关闭预览请使用 item 左上角独立关闭按钮，不要依赖播放器返回键。
+     */
+    @NonNull
+    public static VideoPlayerConfig previewDefaults() {
+        return new VideoPlayerConfig()
+                .setHostMode(VideoPlayerHostMode.EMBED)
+                .setCornerRadiusDp(0f)
+                // 上移底部进度条，避免挡住大图预览底部指示点
+                .setBottomControlsOffsetDp(52)
+                .setShowBack(false)
+                .setShowTitle(false)
+                .setShowFullscreen(false)
+                .setShowRotate(false)
+                .setShowLock(false)
+                .setShowSpeed(false)
+                .setShowClarity(false)
+                .setGravityRotationEnabled(false)
+                .setShowCenterPlay(true)
+                .setShowBottomPlay(true)
+                .setSpeedOptions(defaultSpeedOptions());
+    }
+
     @NonNull
     public static List<Float> defaultSpeedOptions() {
         List<Float> speeds = new ArrayList<>();
@@ -163,6 +190,21 @@ public class VideoPlayerConfig implements Serializable {
     @NonNull
     public VideoPlayerConfig setCornerRadiusDp(float cornerRadiusDp) {
         this.cornerRadiusDp = cornerRadiusDp;
+        return this;
+    }
+
+    /** @return 底部控制条上移偏移（dp），0 表示贴底 */
+    public int getBottomControlsOffsetDp() {
+        return bottomControlsOffsetDp;
+    }
+
+    /**
+     * 底部控制条与底部细进度条上移距离（dp）。默认 0 不改变原有样式。
+     * 大图预览等场景可设为 48~56，避免挡住指示点。
+     */
+    @NonNull
+    public VideoPlayerConfig setBottomControlsOffsetDp(int bottomControlsOffsetDp) {
+        this.bottomControlsOffsetDp = Math.max(0, bottomControlsOffsetDp);
         return this;
     }
 

@@ -38,7 +38,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:background="@drawable/bg_preview_nav_circle"
-        android:clipToOutline="true"
         android:contentDescription="@string/preview_previous"
         android:scaleType="centerInside"
         android:src="@drawable/ic_preview_prev"
@@ -53,7 +52,6 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
         android:background="@drawable/bg_preview_nav_circle"
-        android:clipToOutline="true"
         android:contentDescription="@string/preview_next"
         android:scaleType="centerInside"
         android:src="@drawable/ic_preview_next"
@@ -109,15 +107,28 @@
     </LinearLayout>
 
     <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_preview_download"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/bg_preview_nav_circle"
+        android:contentDescription="@string/preview_download"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_preview_download"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/iv_preview_view_all"
+        app:shapeAppearanceOverlay="@style/CircleShapeAppearance" />
+
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_preview_view_all"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="24dp"
         android:background="@drawable/bg_preview_nav_circle"
-        android:clipToOutline="true"
         android:contentDescription="@string/view_all"
-        android:scaleType="center"
+        android:scaleType="centerInside"
         android:src="@drawable/ic_preview_view_all"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

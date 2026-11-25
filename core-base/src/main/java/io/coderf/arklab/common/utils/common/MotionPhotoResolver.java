@@ -28,8 +28,9 @@ import io.coderf.arklab.common.utils.log.LogUtil;
  * <p>
  * 支持：
  * <ul>
- *   <li>Apple Live Photo 同目录配对：{@code IMG_xxx.JPG} + {@code IMG_xxx.MOV}</li>
+ *   <li>Apple Live Photo 同目录配对：{@code IMG_xxx.JPG} + {@code IMG_xxx.MOV}（仅本地路径）</li>
  *   <li>Google Motion Photo / MicroVideo：JPEG/HEIC 内嵌尾部 MP4（XMP 偏移或 ftyp 扫描）</li>
+ *   <li>本地 file / content Uri，以及 {@code http(s)} 网络地址（按字节流解析内嵌视频）</li>
  * </ul>
  * 仅有静图关键帧、已剥离视频的导出 JPG <b>无法</b>还原实况。
  *
@@ -337,7 +338,7 @@ public final class MotionPhotoResolver {
             return path == null ? null : new FileInputStream(path);
         }
         if (stillPath.startsWith("http://") || stillPath.startsWith("https://")) {
-            return null;
+            return openHttpStream(stillPath);
         }
         File file = new File(stillPath);
         if (!file.isFile()) {
@@ -346,12 +347,41 @@ public final class MotionPhotoResolver {
         return new FileInputStream(file);
     }
 
+    /**
+     * 打开网络静图输入流。签名 URL 需在有效期内；每次解析可能发起多次请求（读头 / 扫尾 / 抽取）。
+     */
+    @Nullable
+    private static InputStream openHttpStream(@NonNull String url) throws Exception {
+        java.net.HttpURLConnection conn = (java.net.HttpURLConnection) new java.net.URL(url).openConnection();
+        conn.setConnectTimeout(15_000);
+        conn.setReadTimeout(60_000);
+        conn.setInstanceFollowRedirects(true);
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Accept", "*/*");
+        int code = conn.getResponseCode();
+        if (code >= 200 && code < 300) {
+            return conn.getInputStream();
+        }
+        LogUtil.e(TAG, "openHttpStream HTTP " + code + " for " + safeUrlForLog(url));
+        conn.disconnect();
+        return null;
+    }
+
+    @NonNull
+    private static String safeUrlForLog(@NonNull String url) {
+        int q = url.indexOf('?');
+        return q > 0 ? url.substring(0, q) + "?…" : url;
+    }
+
     private static long queryLength(@NonNull Context context, @NonNull String stillPath) throws Exception {
         if (stillPath.startsWith("content://")) {
             try (android.content.res.AssetFileDescriptor afd =
                          context.getContentResolver().openAssetFileDescriptor(Uri.parse(stillPath), "r")) {
                 return afd == null ? -1 : afd.getLength();
             }
+        }
+        if (stillPath.startsWith("http://") || stillPath.startsWith("https://")) {
+            return queryHttpLength(stillPath);
         }
         String local = stillPath;
         if (stillPath.startsWith("file://")) {
@@ -362,6 +392,62 @@ public final class MotionPhotoResolver {
         }
         File file = new File(local);
         return file.isFile() ? file.length() : -1;
+    }
+
+    /**
+     * 优先 HEAD 取 Content-Length；不支持 HEAD 或长度未知时再 GET（只读响应头）。
+     */
+    private static long queryHttpLength(@NonNull String url) throws Exception {
+        long len = requestHttpContentLength(url, "HEAD");
+        if (len > 0) {
+            return len;
+        }
+        return requestHttpContentLength(url, "GET");
+    }
+
+    private static long requestHttpContentLength(@NonNull String url, @NonNull String method) throws Exception {
+        java.net.HttpURLConnection conn = null;
+        try {
+            conn = (java.net.HttpURLConnection) new java.net.URL(url).openConnection();
+            conn.setConnectTimeout(15_000);
+            conn.setReadTimeout(30_000);
+            conn.setInstanceFollowRedirects(true);
+            conn.setRequestMethod(method);
+            conn.setRequestProperty("Accept", "*/*");
+            // GET 时也只为拿长度，避免无必要时读完 body
+            if ("GET".equals(method)) {
+                conn.setRequestProperty("Range", "bytes=0-0");
+            }
+            int code = conn.getResponseCode();
+            if (code >= 200 && code < 300 || code == 206) {
+                long contentLength = conn.getContentLengthLong();
+                if (contentLength > 0 && code != 206) {
+                    return contentLength;
+                }
+                // Range 206 时 Content-Length 可能是 1，改读 Content-Range: bytes 0-0/total
+                String contentRange = conn.getHeaderField("Content-Range");
+                if (!TextUtils.isEmpty(contentRange)) {
+                    int slash = contentRange.lastIndexOf('/');
+                    if (slash >= 0 && slash + 1 < contentRange.length()) {
+                        String total = contentRange.substring(slash + 1).trim();
+                        if (!"*".equals(total)) {
+                            long parsed = Long.parseLong(total);
+                            if (parsed > 0) {
+                                return parsed;
+                            }
+                        }
+                    }
+                }
+                if (contentLength > 0) {
+                    return contentLength;
+                }
+            }
+            return -1;
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
     }
 
     private static void skipFully(@NonNull InputStream in, long count) throws Exception {
@@ -382,7 +468,13 @@ public final class MotionPhotoResolver {
     @NonNull
     private static File buildCacheFile(@NonNull Context context, @NonNull String stillPath) throws Exception {
         File dir = new File(context.getCacheDir(), CACHE_DIR);
-        String key = sha1Hex(stillPath + "_" + queryLength(context, stillPath));
+        long length = -1;
+        try {
+            length = queryLength(context, stillPath);
+        } catch (Exception ignore) {
+        }
+        // 长度未知时仍按 URL/路径缓存，避免网络图永远无法落盘
+        String key = sha1Hex(stillPath + "_" + length);
         return new File(dir, key + ".mp4");
     }
 

@@ -278,14 +278,10 @@ public class MediaAddAdapter extends BaseMediaRecyclerViewAdapter<AttachmentBean
             });
             binding.ivPlayer.setOnClickListener(v -> {
                 try {
-                    Bundle bundleVideo = new Bundle();
-                    bundleVideo.putString(VideoPlayerActivity.VIDEO_TITLE, FileUtil.getFileName(adapter.getList().get(getAbsoluteAdapterPosition()).getPath()));
-                    bundleVideo.putString(VideoPlayerActivity.VIDEO_PATH, adapter.getList().get(getAbsoluteAdapterPosition()).getPath());
-                    VideoPlayerActivity.show(v.getContext(), bundleVideo);
+                    adapter.showPreviewPhoto(v.getContext(), adapter.getList(), getAbsoluteAdapterPosition());
                 } catch (Exception e) {
                     e.printStackTrace();
-                    LogUtil.e(MediaAddAdapter.class.getSimpleName(), "视频播放失败:" + e);
-                    Toast.makeText(v.getContext(), "视频播放失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(v.getContext(), "视频打开失败", Toast.LENGTH_SHORT).show();
                 }
             });
             binding.ivClearMedia.setOnClickListener(v -> {
