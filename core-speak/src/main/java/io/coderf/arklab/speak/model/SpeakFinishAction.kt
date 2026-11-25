@@ -1,7 +1,7 @@
 package io.coderf.arklab.speak.model
 
 /**
- * 录音结束时的手势结果（[io.coderf.arklab.speak.widget.SpeakButton] 回调）。
+ * 录音结束时的手势结果（[io.coderf.arklab.speak.SpeakHelper] / [io.coderf.arklab.speak.callback.OnSpeakListener]）。
  *
  * @author fz
  * @version 1.0

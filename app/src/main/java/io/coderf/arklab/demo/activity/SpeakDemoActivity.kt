@@ -8,56 +8,76 @@ import io.coderf.arklab.common.viewmodel.EmptyViewModel
 import io.coderf.arklab.demo.R
 import io.coderf.arklab.demo.databinding.ActivitySpeakDemoBinding
 import io.coderf.arklab.demo.fragment.SpeakSmartPagingFragment
+import io.coderf.arklab.speak.R as SpeakR
+import io.coderf.arklab.speak.SpeakHelper
 import io.coderf.arklab.speak.model.SpeakFinishAction
 import io.coderf.arklab.speak.permission.SpeakPermissionConfig
 import io.coderf.arklab.speak.style.SpeakUiStyle
 
 /**
- * core-speak Demo：NavHost 嵌入 [SpeakSmartPagingFragment] + 底部按住说话。
+ * core-speak Demo：NavHost 列表 + [SpeakHelper] 绑定到底栏普通按钮。
  *
  * @author fz
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  * @created 2026/11/25 14:05
- * @updated 2026/11/25 对齐 room / live Demo 的 navigation 写法
+ * @updated 2026/11/25 按住说话改为 SpeakHelper.attach
  */
 @AndroidEntryPoint
 class SpeakDemoActivity : BaseActivity<EmptyViewModel, ActivitySpeakDemoBinding>() {
+
+    private var speakHelper: SpeakHelper? = null
 
     override fun getLayoutId(): Int = R.layout.activity_speak_demo
 
     override fun setTitleBar(): String = "语音 Speak"
 
     override fun initView(savedInstanceState: Bundle?) {
-        binding.btnSpeak.setUserId("demo")
-        binding.btnSpeak.setPermissionConfig(
-            SpeakPermissionConfig.defaults(this) {
-                showRationaleDialog = true
+        val helper = SpeakHelper.create(this)
+            .setUserId("demo")
+            .setPermissionConfig(
+                SpeakPermissionConfig.defaults(this) {
+                    showRationaleDialog = true
+                }
+            )
+            .setSpeakUiStyle(
+                SpeakUiStyle.defaults(this) {
+                    // 可按需：editEnabled / editArcHeightPx / cancelTextColor 等
+                }
+            )
+            .setOnHoldUiListener { holding ->
+                binding.btnSpeak.setText(
+                    if (holding) SpeakR.string.speak_release_to_send
+                    else SpeakR.string.speak_hold_to_talk
+                )
             }
-        )
-        binding.btnSpeak.setSpeakUiStyle(
-            SpeakUiStyle.defaults(this) {
-                // 可按需：editEnabled / editArcHeightPx / cancelTextColor / sendTextSizePx 等
-            }
-        )
-        binding.btnSpeak.setOnSpeakListener { action, result ->
-            when (action) {
-                SpeakFinishAction.Send -> {
-                    if (result != null) {
-                        findListFragment()?.saveSend(result) {
-                            showToast("已保存 ${result.durationMs / 1000}″")
+            .setOnSpeakListener { action, result ->
+                when (action) {
+                    SpeakFinishAction.Send -> {
+                        if (result != null) {
+                            findListFragment()?.saveSend(result) {
+                                showToast("已保存 ${result.durationMs / 1000}″")
+                            }
                         }
                     }
+                    SpeakFinishAction.Edit -> {
+                        showToast("编辑回调：${result?.filePath ?: "null"}（本期无 ASR）")
+                    }
+                    SpeakFinishAction.Cancel -> Unit
                 }
-                SpeakFinishAction.Edit -> {
-                    showToast("编辑回调：${result?.filePath ?: "null"}（本期无 ASR）")
-                }
-                SpeakFinishAction.Cancel -> Unit
             }
-        }
+        speakHelper = helper
+        // 挂到任意 View：底栏图标 / ImageView / 普通 Button 均可
+        helper.attach(binding.btnSpeak)
     }
 
     override fun initData(bundle: Bundle?) = Unit
+
+    override fun onDestroy() {
+        speakHelper?.detach()
+        speakHelper = null
+        super.onDestroy()
+    }
 
     private fun findListFragment(): SpeakSmartPagingFragment? {
         val navHost = supportFragmentManager

@@ -151,7 +151,7 @@ Demo 参考：`SampleCoreNetworkRepository`、`LoginViewModel`、`DemoFlowPaging
 | `user` | 用户业务 UI / 逻辑 | 依赖 `common` + `base` + `userapi`，**禁止**直接依赖 mqtt / media |
 | `mqttcomponent` | MQTT 实现（`MqttClient` 等） | 仅 app 依赖；Gateway 适配写在 app |
 | `core-media` | 拍照/选图/压缩（`MediaHelper` 等） | 仅 app 依赖；Gateway 适配写在 app |
-| `core-speak` | 仿微信输入法语音：`SpeakButton` / 文件契约 `VoiceFileStore` / Room 元数据 | 按需；本期无 Gateway/ASR，业务直连模块；编辑仅回调；详见 [core-speak/README.md](./core-speak/README.md) |
+| `core-speak` | 仿微信输入法语音：`SpeakHelper.attach(View)` / `SpeakButton` 便捷壳 / `VoiceFileStore` / Room | 按需；本期无 Gateway/ASR；详见 [core-speak/README.md](./core-speak/README.md) |
 | `core-form` | 表单等通用 UI 组件 | 按需；`FormHost.validateAll` / `formStyle` 见 core-form README |
 | `core-gnss` | 定位能力 | 按需；见下方边界 |
 
@@ -159,7 +159,8 @@ Demo 参考：`SampleCoreNetworkRepository`、`LoginViewModel`、`DemoFlowPaging
 
 | 能力 | 建议 |
 |------|------|
-| `SpeakButton` 按住说话 + 权限说明 + 本地 AMR | **默认核心**；样式用 `SpeakUiStyle` / XML attrs |
+| `SpeakHelper.attach(任意 View)` + 权限说明 + 本地 AMR | **默认核心**；底栏图标等不要绑死在 `SpeakButton` |
+| `SpeakButton` | 可选便捷壳（XML attrs）；内部仍委托 Helper |
 | `VoiceFileStore` / Room `VoiceMessageRepository` | 按需；可换自定义落盘或只用不入库 |
 | `SpeakerView` 列表播放 | 按需 |
 | ASR / 消息上行 / Gateway | **不在本库**；`Edit` 回调由宿主接转写或编辑页 |

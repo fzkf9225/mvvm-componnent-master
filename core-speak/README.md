@@ -1,6 +1,8 @@
 # core-speak
 
-可选语音能力库：仿微信输入法「按住说话」面板（`SpeakButton` / Overlay / 波形）、本地 AMR 录音、文件契约与 Room 元数据。**本期不含 ASR / 网关**；松手「编辑」仅回传录音结果，转写由宿主自行接入。
+可选语音能力库：仿微信输入法「按住说话」面板、本地 AMR 录音、文件契约与 Room 元数据。  
+**推荐入口**是 [`SpeakHelper.attach(View)`](src/main/java/io/coderf/arklab/speak/SpeakHelper.kt)——把能力挂到任意 View（底栏图标 / `ImageView` / 普通 `Button` 等）。`SpeakButton` 仅为带 XML attrs 的便捷封装。  
+**本期不含 ASR / 网关**；松手「编辑」仅回传录音结果，转写由宿主自行接入。
 
 | 项 | 值 |
 |----|-----|
@@ -13,14 +15,15 @@
 
 ## 职责
 
-- 按住说话 UI：`SpeakButton` + 底部 IME 风格面板（撤回 / 发送 / 可选编辑白弧）
-- 麦克风权限前置说明（`ConfirmDialog` 风格）→ 系统 `RECORD_AUDIO`
-- `MediaRecorder` AMR_NB 录音与振幅采样（驱动波形）
-- 文件落盘契约 `VoiceFileStore`（默认 `files/Voice/{userId|All}/`）
-- Room 元数据：`VoiceMessage` / `VoiceMessageRepository`（可与宿主 Paging 栈组合）
-- 列表气泡播放：`SpeakerView`
+- **SpeakHelper**：权限 → 录音 → 上滑热区 → 松手回调，可 bind 到任意 View
+- 底部 IME 风格面板（撤回 / 发送 / 可选编辑白弧）
+- 麦克风权限前置说明（`ConfirmDialog`）→ 系统 `RECORD_AUDIO`
+- `MediaRecorder` AMR_NB + 振幅波形
+- `VoiceFileStore` / Room `VoiceMessageRepository`（可选）
+- `SpeakerView` 列表气泡播放
+- `SpeakButton`：可选 Material 按钮壳，内部委托 Helper
 
-**不**做：语音转文字、消息上行、Gateway 抽象（与 media/mqtt 不同，本期业务可直连本模块）。
+**不**做：语音转文字、消息上行、Gateway。
 
 ---
 
@@ -28,32 +31,30 @@
 
 `io.coderf.arklab.speak.*`：
 
-| 包 | 内容 | 说明 |
+| 包 / 类 | 内容 | 说明 |
 | --- | --- | --- |
-| `widget` | `SpeakButton` / `SpeakRecordOverlay` / `WaveformView` / `SpeakerView` | 宿主主要接入入口；XML 可引用 |
-| `style` | `SpeakUiStyle` | 颜色 / 字号 / 文案 / 编辑开关 / 白弧高度等 |
-| `permission` | `SpeakPermissionConfig` / `SpeakPermissionDialog` | 权限说明弹窗配置与展示 |
-| `model` | `SpeakFinishAction` / `SpeakHitZone` / `VoiceRecordResult` | 手势结果与录音结果 |
-| `record` | `VoiceRecorder` | MediaRecorder 封装 |
-| `file` | `VoiceFileStore` / `DefaultVoiceFileStore` | 文件创建 / 删除 / 读取 |
-| `db` | `VoiceDatabase` / `VoiceMessage` / Dao / Repository | 可选本地元数据；与业务库隔离 |
+| `SpeakHelper` | `attach` / `detach` + 配置链 | **推荐接入入口** |
+| `callback` | `OnSpeakListener` / `OnSpeakHoldUiListener` | 松手结果 / 按住态 UI |
+| `widget` | `SpeakButton` / Overlay / `WaveformView` / `SpeakerView` | 便捷控件与面板 |
+| `style` | `SpeakUiStyle` | 颜色 / 字号 / 文案 / 编辑开关 / 白弧高度 |
+| `permission` | `SpeakPermissionConfig` / Dialog | 权限说明 |
+| `model` | `SpeakFinishAction` / `SpeakHitZone` / `VoiceRecordResult` | 结果模型 |
+| `record` / `file` / `db` | 录音、文件、Room | 按需使用 |
 
 ---
 
 ## 依赖
 
 - `api project(':core-log')`
-- `api project(':core-db')`（Room 协程栈 / `BaseDaoBean`；经 db 传递 base）
+- `api project(':core-db')`
 - `implementation project(':core-utils')`
 - AndroidX Room / AppCompat / Material / Activity 等（见 `build.gradle`）
 
-Manifest 声明：`RECORD_AUDIO`。
+Manifest：`RECORD_AUDIO`。权限申请要求宿主为 `ComponentActivity`。
 
 ---
 
 ## 何时依赖
-
-App 或需要语音录入的业务模块按需引入（**不经** `common` facade 传递）：
 
 ```gradle
 implementation 'io.coderf.arklab.speak:speak:1.0.0'
@@ -61,61 +62,64 @@ implementation 'io.coderf.arklab.speak:speak:1.0.0'
 implementation project(':core-speak')
 ```
 
-Demo：`SpeakDemoActivity` + `SpeakSmartPagingFragment`（Room + SmartRefresh + Paging3）。
+Demo：`SpeakDemoActivity`（`SpeakHelper.attach` 普通按钮）+ `SpeakSmartPagingFragment`。
 
 ---
 
 ## 用法说明
 
-### 1. XML 放置按住说话按钮
+### 1. 推荐：挂到任意 View（底栏图标等）
+
+```kotlin
+private var speakHelper: SpeakHelper? = null
+
+override fun onCreate(...) {
+    val helper = SpeakHelper.create(this)
+        .setUserId("uid")
+        .setPermissionConfig(SpeakPermissionConfig.defaults(this))
+        .setSpeakUiStyle(SpeakUiStyle.defaults(this) {
+            editEnabled = true
+        })
+        .setOnHoldUiListener { holding ->
+            // ImageView 可忽略；Button 可切文案
+        }
+        .setOnSpeakListener { action, result ->
+            when (action) {
+                SpeakFinishAction.Send -> { /* 入库 / 上传 */ }
+                SpeakFinishAction.Edit -> { /* 自行 ASR */ }
+                SpeakFinishAction.Cancel -> Unit
+            }
+        }
+    speakHelper = helper
+    helper.attach(binding.aiIcon) // 任意 View
+}
+
+override fun onDestroy() {
+    speakHelper?.detach()
+    super.onDestroy()
+}
+```
+
+手势：未明显上滑松手 → `Edit`（若 `editEnabled`，否则按发送）；左上滑撤回、右上滑发送。
+
+### 2. 可选：XML `SpeakButton` 便捷封装
 
 ```xml
 <io.coderf.arklab.speak.widget.SpeakButton
     android:id="@+id/btnSpeak"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="按住说话"
     app:speakAccentColor="#2ECF9B"
-    app:speakWaveformColor="#2ECF9B"
     app:speakEditEnabled="true"
     app:speakEditArcHeight="112dp" />
 ```
 
-常用 attrs：`speakCancelTextColor` / `speakSendTextColor` / `speakEditTextColor` / `speakShowEditArc` / `speakActionTextSize` 等（细分请用 `SpeakUiStyle`）。
-
-### 2. 代码配置与回调
-
-```kotlin
-btnSpeak.setUserId("demo")
-btnSpeak.setPermissionConfig(
-    SpeakPermissionConfig.defaults(this) {
-        showRationaleDialog = true
-    }
-)
-btnSpeak.setSpeakUiStyle(
-    SpeakUiStyle.defaults(this) {
-        editEnabled = true
-        editArcHeightPx = DensityUtil.dp2px(this@SpeakDemoActivity, 112f).toFloat()
-        cancelTextColor = SpeakUiStyle.DEFAULT_CANCEL // 默认红
-        // sendTextColor / editTextSizePx / actionCancel / hintRecording …
-    }
-)
-btnSpeak.setOnSpeakListener { action, result ->
-    when (action) {
-        SpeakFinishAction.Send -> { /* result 非空：入库或上传 */ }
-        SpeakFinishAction.Edit -> { /* 本期无 ASR，自行转写或打开编辑页 */ }
-        SpeakFinishAction.Cancel -> { /* 文件已删 */ }
-    }
-}
-```
-
-手势约定：未明显上滑松手 → `Edit`（若 `editEnabled`，否则按发送逻辑）；左上滑撤回、右上滑发送。
+内部会 `attach(this)`，并自动切换「按住说话 / 松开发送」文案；高级场景仍可用 `btnSpeak.getSpeakHelper()`。
 
 ### 3. 自定义文件目录
 
 ```kotlin
-btnSpeak.setVoiceFileStore(DefaultVoiceFileStore(context, folderName = "MyVoice"))
-// 或实现 VoiceFileStore
+helper.setVoiceFileStore(DefaultVoiceFileStore(context, folderName = "MyVoice"))
 ```
 
 ### 4. Room 元数据 + Paging（可选）
@@ -125,10 +129,7 @@ val repo = VoiceMessageRepository(
     VoiceDatabase.getInstance(app).voiceMessageDao(),
     DefaultVoiceFileStore(app)
 )
-// insertRecord / deleteMessage；或配合 RoomPagingSource + PagingViewModel
 ```
-
-列表播放可用 `SpeakerView`（`TYPE_MINE` / `TYPE_OTHER` + `start(path)`）。
 
 ---
 
@@ -136,43 +137,38 @@ val repo = VoiceMessageRepository(
 
 | 类别 | 字段 |
 |------|------|
-| 颜色 | `waveformColor` / `accentColor` / `hintTextColor` / `cancelTextColor` / `sendTextColor` / `editTextColor` / `pillBackground` / `editArcBackground` / `glowColor` … |
+| 颜色 | `waveformColor` / `accentColor` / `cancelTextColor` / `sendTextColor` / `editTextColor` … |
 | 字号 | `hintTextSizePx` / `editTextSizePx` / `cancelTextSizePx` / `sendTextSizePx` |
-| 布局 | `editArcHeightPx`（白弧高度，默认约 112dp） |
-| 能力 | `editEnabled`（编辑文案 + Edit 回调）、`showEditArc`（是否绘制白弧，可独立） |
-| 文案 | `hintRecording` / `hintEdit` / `hintSend` / `hintCancel` / `actionEdit` / `actionSend` / `actionCancel` / `tooShort` … |
+| 布局 | `editArcHeightPx`（默认约 112dp） |
+| 能力 | `editEnabled`、`showEditArc` |
+| 文案 | `hintRecording` / `actionEdit` / `actionSend` / `actionCancel` … |
 
 ---
 
 ## 混淆
 
-`consumer-rules.pro` 随 AAR 发布：对外 `widget` / `style` / `permission` / `model` / `record` / `file` / `db` 保留；宿主开启 R8 一般无需再配。细则见模块内 `consumer-rules.pro` 注释。
+`consumer-rules.pro` 随 AAR 发布：`SpeakHelper` / `callback` / `widget` / `style` / `permission` / `model` / `record` / `file` / `db` 保留。
 
 ---
 
 ## 版本变更
 
-> 新版本请插在本节最上方；保持「版本号 + 日期 + 要点列表」格式，便于持续迭代。
+> 新版本请插在本节最上方。
 
 ### 1.0.0 — 2026-11-25
 
-首发：从 `core-base` 迁出语音能力，独立可选模块。
+首发：独立可选语音模块。
 
 **能力**
 
-- `SpeakButton` 仿微信 IME 按住说话：撤回 / 发送 / 可选编辑白弧；豆形按钮文字居中；撤回默认红色
-- `SpeakUiStyle` + XML attrs：弧高、编辑开关、撤回/发送/编辑色与字号等可配
-- `SpeakPermissionDialog` 对齐 `ConfirmDialog`（与 base / gnss 权限引导同风格）
-- `VoiceRecorder`（AMR_NB）+ `WaveformView` 振幅动画
-- `VoiceFileStore` / `DefaultVoiceFileStore`；`VoiceDatabase` + `VoiceMessageRepository`（Room 协程栈）
-- `SpeakerView` 气泡播放
-- Demo：`SpeakDemoActivity`（NavHost）+ `SpeakSmartPagingFragment`（`BaseSmartPagingFragment` + Room Paging）
-- `consumer-rules.pro` / `proguard-rules.pro` 随模块发布
+- **`SpeakHelper`**：按住说话逻辑与 View 解耦，`attach` / `detach` 挂到任意 View
+- `SpeakButton` 薄封装（attrs + 文案），内部委托 Helper
+- `SpeakUiStyle` / 权限说明 / AMR 录音 / 波形 / Room 元数据 / `SpeakerView`
+- Demo：`SpeakHelper.attach` + `SpeakSmartPagingFragment`
 
 **边界**
 
-- 无 ASR / Gateway；`SpeakFinishAction.Edit` 仅回传本地录音结果
-- Room 库与业务库隔离（`io_coderf_arklab_speak_voice`）
+- 无 ASR / Gateway；`Edit` 仅回传本地录音结果
 
 ---
 
@@ -182,4 +178,4 @@ val repo = VoiceMessageRepository(
 ./gradlew :core-speak:publish
 ```
 
-需配置环境变量：`ALIYUN_USER_NAME` / `ALIYUN_PASSWORD`。
+需环境变量：`ALIYUN_USER_NAME` / `ALIYUN_PASSWORD`。

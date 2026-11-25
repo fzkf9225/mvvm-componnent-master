@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/padding_m"
             android:lineSpacingExtra="4dp"
-            android:text="core-speak：按住说话（首次会先弹权限说明再申请麦克风）。松手编辑区=回调；左上滑撤回、右上滑发送入库。列表点击播放，长按删除。"
+            android:text="core-speak：SpeakHelper.attach 挂到任意 View（本页为普通 MaterialButton）。按住说话；松手编辑区=回调；左上滑撤回、右上滑发送。列表点击播放，长按删除。"
             android:textColor="?attr/colorOnSurface"
             android:textSize="@dimen/font_size_m"
             app:layout_constraintEnd_toEndOf="parent"
@@ -49,13 +49,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <io.coderf.arklab.speak.widget.SpeakButton
+            <!-- 普通按钮：语音能力由 SpeakHelper.attach 绑定，不依赖 SpeakButton -->
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSpeak"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
-                android:text="按住说话"
-                app:speakAccentColor="#2ECF9B"
-                app:speakWaveformColor="#2ECF9B" />
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="@string/speak_hold_to_talk"
+                android:textAllCaps="false" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

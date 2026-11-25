@@ -24,7 +24,7 @@ import kotlin.math.abs
 /**
  * 仿微信输入法语音面板（底部 IME 区域构图）。
  *
- * 由 [SpeakButton] 全屏 Dialog 承载；接入方一般无需直接实例化。
+ * 由 [io.coderf.arklab.speak.SpeakHelper] 全屏 Dialog 承载；接入方一般无需直接实例化。
  * 视觉由 [SpeakUiStyle] 驱动（白弧高度、撤回/发送/编辑色与字号、是否启用编辑等）。
  *
  * @author fz
