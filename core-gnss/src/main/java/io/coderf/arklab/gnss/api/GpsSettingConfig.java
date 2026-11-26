@@ -133,6 +133,13 @@ public class GpsSettingConfig {
     /** 是否启用文件记录，默认 true */
     private boolean fileLogEnabled = true;
 
+    // ========== 输出坐标系 ==========
+    /**
+     * 对外输出的经纬度坐标系，默认 {@link CoordinateSystem#WGS84}（与系统原始一致，升级无行为变化）。
+     * 过滤（速度/距离/静止等）始终在 WGS84 上完成，通过后再按此配置转换一次，保证回调、轨迹文件、Session 一致。
+     */
+    private CoordinateSystem coordinateSystem = CoordinateSystem.WGS84;
+
     // ========== 确认弹窗配置 ==========
     /** GPS 开关引导文案，空则使用内置默认文案 */
     private String gpsEnableDialogMessage = "";
@@ -356,6 +363,24 @@ public class GpsSettingConfig {
      */
     public GpsSettingConfig setFileLogEnabled(boolean enabled) {
         this.fileLogEnabled = enabled;
+        return this;
+    }
+
+    /**
+     * 当前配置的输出坐标系，默认 {@link CoordinateSystem#WGS84}。
+     */
+    public CoordinateSystem getCoordinateSystem() {
+        return coordinateSystem != null ? coordinateSystem : CoordinateSystem.WGS84;
+    }
+
+    /**
+     * 设置输出坐标系。过滤仍在 WGS84 上执行，通过后统一转换再回调/写文件。
+     * 传 null 视为 {@link CoordinateSystem#WGS84}。
+     *
+     * @return this
+     */
+    public GpsSettingConfig setCoordinateSystem(CoordinateSystem coordinateSystem) {
+        this.coordinateSystem = coordinateSystem != null ? coordinateSystem : CoordinateSystem.WGS84;
         return this;
     }
 

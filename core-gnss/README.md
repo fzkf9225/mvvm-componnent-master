@@ -26,17 +26,36 @@ namespace：`io.coderf.arklab.gnss`
 
 | 包 | 内容 | 说明 |
 | --- | --- | --- |
-| `api` | `GpsStarter` / `GpsCallback` / `GpsSettingConfig` / `LocationFilter` | **宿主唯一需要依赖的对外 API** |
+| `api` | `GpsStarter` / `GpsCallback` / `GpsSettingConfig` / `LocationFilter` / `CoordinateSystem` | **宿主唯一需要依赖的对外 API** |
 | `service` | `GpsService` / `Session` | 前台定位服务（Manifest 注册）与会话运行态 |
 | `permission` | `GpsLifecycleObserver` / `PermissionsChecker` | GPS 开关、前/后台定位权限引导流程 |
 | `location` | `GnssLocationListener` / `NmeaLocationListener` / `NmeaSentence` | 系统定位监听与 NMEA 解析（内部） |
 | `track` | `IFileLogger` / `CsvFileLogger` / `GpxFileLogger` / `FileLoggerFactory` / `Files` / `GpsFileParser`（写盘走 `CoreExecutors.serial()`） | 轨迹文件记录与解析 |
 | `ui` | `GPSConfirmDialog` / `UiUtil` | 权限引导确认弹窗（内部） |
-| `utils` | `AppUtil` / `DebugUtil` / `EsriUtil` / `LogUtil` | 通用工具 |
+| `utils` | `AppUtil` / `DebugUtil` / `EsriUtil` / `CoordinateConverter` / `LogUtil` | 通用工具 |
 
 > 自 3.3.0 起包路径调整，旧版 `common.*` / `listener.*` / `logger.*` / `dialog.*` 已废弃，升级时只需批量替换 import：
 > `common.GpsStarter|GpsCallback|GpsSettingConfig|LocationFilter` → `api.*`，`common.Session` → `service.Session`，
 > `common.GpsLifecycleObserver` → `permission.*`，`logger.*` / `utils.GpsFileParser` → `track.*`。
+
+---
+
+## 输出坐标系（可选）
+
+系统定位原始值为 **WGS84**。可通过配置统一转换为国内常用坐标系后再回调 / 写轨迹；质量过滤与里程计算仍在 WGS84 上完成，避免混用坐标系。
+
+```java
+GpsSettingConfig.getInstance()
+    .setCoordinateSystem(CoordinateSystem.GCJ02); // 或 BD09；默认 WGS84，不配置则行为与升级前一致
+```
+
+| 值 | 说明 |
+| --- | --- |
+| `WGS84` | 默认，系统原始输出 |
+| `GCJ02` | 国测局火星坐标（高德 / 腾讯等） |
+| `BD09` | 百度坐标 |
+
+转换依赖 `core-utils` 的 `GeoMapUtil`；境外点保持 WGS84。转换后的 `Location.extras` 中带有 `coord_sys` 标记。
 
 ---
 

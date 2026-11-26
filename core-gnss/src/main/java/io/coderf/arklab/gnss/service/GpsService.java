@@ -38,6 +38,7 @@ import io.coderf.arklab.gnss.service.Session;
 import io.coderf.arklab.gnss.location.GnssLocationListener;
 import io.coderf.arklab.gnss.location.NmeaLocationListener;
 import io.coderf.arklab.gnss.track.FileLoggerFactory;
+import io.coderf.arklab.gnss.utils.CoordinateConverter;
 import io.coderf.arklab.gnss.utils.EsriUtil;
 import io.coderf.arklab.gnss.utils.LogUtil;
 
@@ -899,6 +900,8 @@ public class GpsService extends Service {
             LogUtil.loggerI(TAG, "lastKnownLocation 过期，跳过首帧补发");
             return;
         }
+        // 与正式点一致：按配置转换后再补发，避免首帧与后续点坐标系不一致
+        last = CoordinateConverter.convert(last, gpsCallback.getConfig().getCoordinateSystem());
         lastAcceptedLocation = last;
         notifyLocationObservers(last);
         LogUtil.loggerI(TAG, "已向观察者补发 lastKnownLocation（不写入轨迹）");
@@ -1104,30 +1107,34 @@ public class GpsService extends Service {
             return;
         }
 
-        // ========== 所有过滤通过，记录点位 ==========
-        LogUtil.loggerI(TAG, String.format(Locale.getDefault(),"位置已接受: %.6f, %.6f, 精度: %.1f米",
-                loc.getLatitude(), loc.getLongitude(), loc.hasAccuracy() ? loc.getAccuracy() : -1));
-
-        // ========== 新增：写入文件 ==========
-        FileLoggerFactory.write(loc);
-// ========== 新增：记录到历史列表 ==========
-        session.addLocationToHistory(loc, gpsCallback.getConfig().getMaxLocationHistorySize());
-        session.incrementNumLegs();              // 增加轨迹点数
-        // 更新会话状态
+        // ========== 所有过滤通过（过滤全程使用系统原始 WGS84） ==========
+        // Session 内用于下轮过滤 / 里程的状态保持 WGS84，避免与下一点原始坐标混算
         session.setLatestTimeStamp(locationTimeStamp);
         session.setFirstRetryTimeStamp(0);
         session.setCurrentLocationInfo(loc);
-
-        // 更新总行程距离
+        session.incrementNumLegs();
         updateTotalDistance(loc);
+
+        // 对外输出统一按配置转换（默认 WGS84 透传，零行为变化）
+        Location output = CoordinateConverter.convert(loc, gpsCallback.getConfig().getCoordinateSystem());
+
+        LogUtil.loggerI(TAG, String.format(Locale.getDefault(),
+                "位置已接受: %.6f, %.6f, 精度: %.1f米, 坐标系: %s",
+                output.getLatitude(), output.getLongitude(),
+                output.hasAccuracy() ? output.getAccuracy() : -1,
+                gpsCallback.getConfig().getCoordinateSystem().name()));
+
+        FileLoggerFactory.write(output);
+        session.addLocationToHistory(output, gpsCallback.getConfig().getMaxLocationHistorySize());
+
         // 更新通知栏
         showNotification();
 
         // 停止当前定位管理器，设置下次定位闹钟
         stopManagerAndResetAlarm();
 
-        // 通知观察者
-        dispatchAcceptedLocation(loc);
+        // 通知观察者 / 业务回调
+        dispatchAcceptedLocation(output);
         if (gpsCallback.getConfig().getMaxTrackDurationMinutes() > 0 &&
                 (System.currentTimeMillis() - session.getStartTimeStamp()) >= gpsCallback.getConfig().getMaxTrackDurationMinutes() * 60_000L) {
             gpsCallback.toLimitTracking(gpsCallback.getConfig().getMaxTrackDurationMinutes());
