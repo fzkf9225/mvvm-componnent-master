@@ -346,7 +346,7 @@ public abstract class BaseFragment<VM extends BaseViewModel, VDB extends ViewDat
     }
 
     /**
-     * 请求错误渲染：业务码走登录/权限；其它走 Toast。
+     * 请求错误渲染：登录过期 / 无权限只跳转不 Toast；其它错误（含普通业务码）走 Toast。
      */
     @Override
     public void showError(AppError error) {
