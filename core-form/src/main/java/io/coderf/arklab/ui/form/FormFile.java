@@ -172,8 +172,7 @@ public class FormFile extends FormMedia implements FileAddAdapter.FileClearListe
         });
         mediaRecyclerView.setAdapter(fileAddAdapter);
         mediaRecyclerView.addItemDecoration(
-                new RecycleViewDivider(getContext(), LinearLayoutManager.VERTICAL, (int) columnMargin,
-                        0x00000000)
+                new RecycleViewDivider(getContext(), LinearLayoutManager.VERTICAL, (int) columnMargin)
         );
         if (mediaHelper != null) {
             mediaHelper.getMediaBuilder().setFileMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount);

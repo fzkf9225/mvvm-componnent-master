@@ -91,7 +91,7 @@ public class MultiPopupView<T extends PopupWindowBean> extends BasePopupWindow
         binding.multiRecyclerCategory.setLayoutManager(new GridLayoutManager(context, columnCount));
         binding.multiRecyclerCategory.setAdapter(popupWindowAdapter);
         binding.multiRecyclerCategory.addItemDecoration(
-                new GridSpacingItemDecoration((int) columnPadding, 0x00000000));
+                new GridSpacingItemDecoration((int) columnPadding));
         measureLayout();
     }
 

@@ -162,7 +162,7 @@ public class WightActivity extends BaseStatefulActivity<WightViewModel, Activity
                 return false;
             }
         });
-        binding.mRecyclerviewImage.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this, 8), 0x00000000));
+        binding.mRecyclerviewImage.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this, 8)));
 
         List<AttachmentBean> videoList = new ArrayList<>();
         AttachmentBean attachmentBean8 = new AttachmentBean();
@@ -179,7 +179,7 @@ public class WightActivity extends BaseStatefulActivity<WightViewModel, Activity
                 return false;
             }
         });
-        binding.mRecyclerviewVideo.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this, 8), 0x00000000));
+        binding.mRecyclerviewVideo.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this, 8)));
         //单选日历
         binding.calendarViewSingle.initData(getLifecycle(), getSupportFragmentManager());
         ShapeDrawable shapeDrawable = new ShapeDrawable(new OvalShape());

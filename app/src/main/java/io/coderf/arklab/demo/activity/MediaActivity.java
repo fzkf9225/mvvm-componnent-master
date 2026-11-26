@@ -191,7 +191,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
         mediaHelper.getMutableLiveDataWaterMark().observe(this, mediaBean -> binding.setWaterMarkImagePath(mediaBean.getMediaList().get(0)));
         imageAddAdapter = new ImageAddAdapter(mediaHelper.getMediaBuilder().imageMaxSelectedCount);
         imageAddAdapter.setBgColor(Color.WHITE);
-        binding.imageRecyclerView.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this, 12), 0x00000000));
+        binding.imageRecyclerView.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this, 12)));
         imageAddAdapter.setImageViewAddListener(this);
         imageAddAdapter.setImageViewClearListener(this);
         binding.imageRecyclerView.setLayoutManager(new FullyGridLayoutManager(this, 4) {
