@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -44,7 +45,7 @@ import io.coderf.arklab.common.widget.gallery.config.PreviewGalleryZoomConfig;
  * @since 1.0
  * @updated 2026/9/1 22:51
  */
-public class PreviewPhotoDialog extends Dialog {
+public class PreviewPhotoDialog extends Dialog implements io.coderf.arklab.common.widget.gallery.inter.PreviewItemActionHost {
     public final static String TAG = PreviewPhotoDialog.class.getSimpleName();
     /**
      * 图片集合
@@ -106,6 +107,11 @@ public class PreviewPhotoDialog extends Dialog {
      * 单次「保存图片」弹窗配置，为 null 时使用全局或内置默认
      */
     private ImageSaveDialogConfig imageSaveDialogConfig;
+    /**
+     * 单次视频自动播放；null 时用 {@link PreviewGalleryConfig#isGlobalVideoAutoPlayEnabled()}
+     */
+    @Nullable
+    private Boolean videoAutoPlayEnabled;
 
     /**
      * 使用默认预览主题创建
@@ -372,6 +378,24 @@ public class PreviewPhotoDialog extends Dialog {
     }
 
     /**
+     * 设置本次预览视频是否自动播放；未设置时使用全局配置（默认 true）。
+     * 关闭后进入视频页不自动起播，可点击播放器中心/底部按钮手动播放。
+     */
+    public PreviewPhotoDialog setVideoAutoPlayEnabled(boolean enabled) {
+        this.videoAutoPlayEnabled = enabled;
+        return this;
+    }
+
+    /**
+     * 本次预览视频是否自动播放（单次优先，否则全局）。
+     */
+    public boolean isVideoAutoPlayEnabled() {
+        return videoAutoPlayEnabled != null
+                ? videoAutoPlayEnabled
+                : PreviewGalleryConfig.isGlobalVideoAutoPlayEnabled();
+    }
+
+    /**
      * 设置本次预览长按保存弹窗的样式/文案，仅当前 Dialog 生效。
      */
     public PreviewPhotoDialog setImageSaveDialogConfig(ImageSaveDialogConfig imageSaveDialogConfig) {
@@ -403,11 +427,6 @@ public class PreviewPhotoDialog extends Dialog {
         }
         viewPager = findViewById(R.id.preview_viewPager);
         llPoint = findViewById(R.id.ll_point);
-        ShapeableImageView ivDownload = findViewById(R.id.iv_preview_download);
-        if (ivDownload != null) {
-            ivDownload.setVisibility(showDownloadButton ? View.VISIBLE : View.GONE);
-            ivDownload.setOnClickListener(v -> requestSaveCurrent());
-        }
         initPageAdapter();
         viewPager.setCurrentItem(position);
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -513,15 +532,45 @@ public class PreviewPhotoDialog extends Dialog {
         });
     }
 
-    /**
-     * 右下角下载：对当前页弹出保存确认（与长按保存同一套逻辑）。
-     */
-    public void requestSaveCurrent() {
+    // region PreviewItemActionHost
+
+    @Override
+    public boolean isDownloadActionVisible() {
+        return showDownloadButton;
+    }
+
+    @Override
+    public boolean canSaveCurrentMedia() {
+        return canSaveImage;
+    }
+
+    @Override
+    public void onDownloadAction(int adapterPosition) {
         if (!canSaveImage || pageAdapter == null) {
             return;
         }
-        pageAdapter.saveCurrentItem(position, downloadConfirmEnabled);
+        pageAdapter.saveCurrentItem(adapterPosition, downloadConfirmEnabled);
     }
+
+    @Override
+    public boolean isViewAllActionVisible() {
+        return false;
+    }
+
+    @Override
+    public void onViewAllAction(int adapterPosition) {
+        // 普通预览无「查看全部」
+    }
+
+    /**
+     * @deprecated 请走 {@link #onDownloadAction(int)}；保留给外部若有直接调用
+     */
+    @Deprecated
+    public void requestSaveCurrent() {
+        onDownloadAction(position);
+    }
+
+    // endregion
 
     @Override
     public void dismiss() {

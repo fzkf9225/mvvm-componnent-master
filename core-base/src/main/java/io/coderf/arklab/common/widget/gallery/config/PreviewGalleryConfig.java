@@ -25,6 +25,10 @@ public final class PreviewGalleryConfig {
      */
     @Nullable
     private static volatile ImageSaveDialogConfig sGlobalImageSaveDialogConfig;
+    /**
+     * 预览视频是否自动播放，默认 true；关闭后需点击播放器手动起播
+     */
+    private static volatile boolean sGlobalVideoAutoPlayEnabled = true;
 
     private PreviewGalleryConfig() {
     }
@@ -69,5 +73,20 @@ public final class PreviewGalleryConfig {
     @Nullable
     public static ImageSaveDialogConfig getGlobalImageSaveDialogConfig() {
         return sGlobalImageSaveDialogConfig;
+    }
+
+    /**
+     * 设置全局「预览视频自动播放」。默认 true。
+     * 单次 Dialog 可用 {@code setVideoAutoPlayEnabled} 覆盖。
+     */
+    public static void setGlobalVideoAutoPlayEnabled(boolean enabled) {
+        sGlobalVideoAutoPlayEnabled = enabled;
+    }
+
+    /**
+     * 全局预览视频是否自动播放。
+     */
+    public static boolean isGlobalVideoAutoPlayEnabled() {
+        return sGlobalVideoAutoPlayEnabled;
     }
 }

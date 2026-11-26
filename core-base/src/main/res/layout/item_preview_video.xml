@@ -11,7 +11,6 @@
         android:layout_height="match_parent"
         android:background="@android:color/black">
 
-        <!-- GSY 自带封面能力，无需再包一层 -->
         <io.coderf.arklab.common.widget.video.ArkVideoPlayerView
             android:id="@+id/preview_video_player"
             android:layout_width="0dp"
@@ -21,20 +20,32 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- 仅视频页显示：仿微信左上角关闭，关闭整个预览 Dialog -->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/btn_preview_video_close"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginStart="12dp"
             android:layout_marginTop="12dp"
+            android:background="@drawable/bg_preview_nav_circle"
             android:contentDescription="@string/video_dialog_close"
             android:scaleType="centerInside"
-            android:background="@drawable/bg_preview_nav_circle"
             android:src="@drawable/ic_ark_video_close"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible" />
+
+        <!-- merge：定位 + 底部三行；仅 PreviewInfo 适配器绑定，默认 gone -->
+        <include layout="@layout/include_preview_info_meta" />
+
+        <include
+            android:id="@+id/preview_item_actions"
+            layout="@layout/include_preview_item_actions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

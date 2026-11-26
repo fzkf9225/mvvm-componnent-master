@@ -6,8 +6,6 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
@@ -18,7 +16,6 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -27,7 +24,6 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.imageview.ShapeableImageView;
-import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,18 +41,22 @@ import io.coderf.arklab.common.widget.gallery.bean.PreviewInfoBean;
 import io.coderf.arklab.common.widget.gallery.config.PreviewGalleryConfig;
 import io.coderf.arklab.common.widget.gallery.config.PreviewGalleryZoomConfig;
 import io.coderf.arklab.common.widget.gallery.config.PreviewInfoConfig;
+import io.coderf.arklab.common.widget.gallery.inter.PreviewInfoMetaHost;
+import io.coderf.arklab.common.widget.gallery.inter.PreviewItemActionHost;
 
 /**
  * created by fz 2026/9/11
  * 信息大图预览：右上角定位、左右翻页、底部三行信息（名称/时间/定位）、右下角仿微信「查看全部」。
- * <p>不替代 {@link PreviewPhotoDialog}，两者可并存。</p>
+ * <p>定位与底部三行属于 ViewPager item 内容，由 {@link PreviewInfoMetaBinder} 绑定；
+ * Dialog 外壳只负责翻页按钮与系统 inset 分发。不替代 {@link PreviewPhotoDialog}。</p>
  *
  * @author fz
  * @version 1.0
  * @since 1.0
  * @created 2026/9/11
  */
-public class PreviewInfoPhotoDialog extends Dialog {
+public class PreviewInfoPhotoDialog extends Dialog
+        implements PreviewItemActionHost, PreviewInfoMetaHost {
 
     public final static String TAG = PreviewInfoPhotoDialog.class.getSimpleName();
 
@@ -69,10 +69,6 @@ public class PreviewInfoPhotoDialog extends Dialog {
      */
     private ViewPager2 viewPager;
     /**
-     * 右上角定位图标
-     */
-    private ShapeableImageView ivLocation;
-    /**
      * 上一张
      */
     private ShapeableImageView ivPrev;
@@ -80,27 +76,6 @@ public class PreviewInfoPhotoDialog extends Dialog {
      * 下一张
      */
     private ShapeableImageView ivNext;
-    /**
-     * 右下角「查看全部」
-     */
-    private ShapeableImageView ivViewAll;
-    private ShapeableImageView ivDownload;
-    /**
-     * 底部名称、时间、定位信息区
-     */
-    private LinearLayout llInfo;
-    /**
-     * 底部第一行：名称
-     */
-    private MaterialTextView tvTitle;
-    /**
-     * 底部第二行：时间
-     */
-    private MaterialTextView tvTime;
-    /**
-     * 底部第三行：定位
-     */
-    private MaterialTextView tvLocation;
     /**
      * 大图适配器
      */
@@ -113,6 +88,10 @@ public class PreviewInfoPhotoDialog extends Dialog {
      * 是否允许长按保存
      */
     private boolean canSaveImage = true;
+    /** 系统导航栏等底部 inset，传给 item 操作区 / 底部信息区 */
+    private int actionBottomInsetPx = 0;
+    /** 状态栏等顶部 inset，传给 item 定位图标 */
+    private int metaTopInsetPx = 0;
     /**
      * 加载占位图
      */
@@ -133,6 +112,11 @@ public class PreviewInfoPhotoDialog extends Dialog {
      */
     @Nullable
     private ImageSaveDialogConfig imageSaveDialogConfig;
+    /**
+     * 单次视频自动播放；null 时用 {@link PreviewGalleryConfig#isGlobalVideoAutoPlayEnabled()}
+     */
+    @Nullable
+    private Boolean videoAutoPlayEnabled;
     /**
      * 图标、文字和间距样式
      */
@@ -275,6 +259,24 @@ public class PreviewInfoPhotoDialog extends Dialog {
 
     public PreviewGalleryZoomConfig getEffectiveZoomConfig() {
         return zoomConfig != null ? zoomConfig : PreviewGalleryConfig.getGlobalZoomConfig();
+    }
+
+    /**
+     * 设置本次预览视频是否自动播放；未设置时使用全局配置（默认 true）。
+     * 关闭后进入视频页不自动起播，可点击播放器中心/底部按钮手动播放。
+     */
+    public PreviewInfoPhotoDialog setVideoAutoPlayEnabled(boolean enabled) {
+        this.videoAutoPlayEnabled = enabled;
+        return this;
+    }
+
+    /**
+     * 本次预览视频是否自动播放（单次优先，否则全局）。
+     */
+    public boolean isVideoAutoPlayEnabled() {
+        return videoAutoPlayEnabled != null
+                ? videoAutoPlayEnabled
+                : PreviewGalleryConfig.isGlobalVideoAutoPlayEnabled();
     }
 
     public PreviewInfoPhotoDialog setImageSaveDialogConfig(@Nullable ImageSaveDialogConfig imageSaveDialogConfig) {
@@ -495,15 +497,8 @@ public class PreviewInfoPhotoDialog extends Dialog {
         }
         View root = findViewById(R.id.cl_preview_info);
         viewPager = findViewById(R.id.preview_info_viewPager);
-        ivLocation = findViewById(R.id.iv_preview_location);
         ivPrev = findViewById(R.id.iv_preview_prev);
         ivNext = findViewById(R.id.iv_preview_next);
-        ivViewAll = findViewById(R.id.iv_preview_view_all);
-        ivDownload = findViewById(R.id.iv_preview_download);
-        llInfo = findViewById(R.id.ll_preview_info);
-        tvTitle = findViewById(R.id.tv_preview_title);
-        tvTime = findViewById(R.id.tv_preview_time);
-        tvLocation = findViewById(R.id.tv_preview_location);
         applyStyle(root);
         setCanceledOnTouchOutside(false);
         bindClicks();
@@ -514,13 +509,11 @@ public class PreviewInfoPhotoDialog extends Dialog {
         if (!imageInfos.isEmpty()) {
             viewPager.setCurrentItem(position, false);
         }
-        bindCurrentInfo();
         updateNavVisibility();
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int pos) {
                 position = pos;
-                bindCurrentInfo();
                 updateNavVisibility();
                 if (pageAdapter != null) {
                     pageAdapter.onPreviewPageSelected(pos);
@@ -531,9 +524,8 @@ public class PreviewInfoPhotoDialog extends Dialog {
     }
 
     /**
-     * 按 {@link PreviewInfoConfig} 应用背景、图标、字号和底部间距
-     *
-     * @param root 预览根布局
+     * 按 {@link PreviewInfoConfig} 应用 Dialog 外壳样式（背景、左右翻页）。
+     * 定位图标与底部三行由 {@link PreviewInfoMetaBinder} 在 item 内应用。
      */
     private void applyStyle(@Nullable View root) {
         int bgColor = config.getBackgroundColor() != null
@@ -542,89 +534,18 @@ public class PreviewInfoPhotoDialog extends Dialog {
         if (root != null) {
             root.setBackgroundColor(bgColor);
         }
-        ivLocation.setVisibility(config.isLocationEnabled() ? View.VISIBLE : View.GONE);
-        ivViewAll.setVisibility(config.isViewAllEnabled() ? View.VISIBLE : View.GONE);
-        if (ivDownload != null) {
-            ivDownload.setVisibility(config.isDownloadEnabled() ? View.VISIBLE : View.GONE);
-            applyCircleIconBackground(ivDownload, config.isViewAllCircleBackgroundEnabled());
-            applyIconSize(ivDownload, config.getViewAllIconSizePx());
-        }
-        ConstraintLayout.LayoutParams pagerLp = (ConstraintLayout.LayoutParams) viewPager.getLayoutParams();
-        if (config.isLocationEnabled()) {
-            pagerLp.topToBottom = R.id.iv_preview_location;
-            pagerLp.topToTop = ConstraintLayout.LayoutParams.UNSET;
-        } else {
-            pagerLp.topToBottom = ConstraintLayout.LayoutParams.UNSET;
-            pagerLp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
-        }
-        viewPager.setLayoutParams(pagerLp);
         if (config.getPrevIcon() != null) {
             ivPrev.setImageDrawable(config.getPrevIcon());
         }
         if (config.getNextIcon() != null) {
             ivNext.setImageDrawable(config.getNextIcon());
         }
-        if (config.getViewAllIcon() != null) {
-            ivViewAll.setImageDrawable(config.getViewAllIcon());
-        }
         applyCircleIconBackground(ivPrev, config.isPrevCircleBackgroundEnabled());
         applyCircleIconBackground(ivNext, config.isNextCircleBackgroundEnabled());
-        applyCircleIconBackground(ivViewAll, config.isViewAllCircleBackgroundEnabled());
-        applyIconSize(ivLocation, config.getLocationIconSizePx());
         applyIconSize(ivPrev, config.getNavIconSizePx());
         applyIconSize(ivNext, config.getNavIconSizePx());
-        applyIconSize(ivViewAll, config.getViewAllIconSizePx());
-
-        applyTextStyle(tvTitle,
-                config.getTitleTextSizePx() != null
-                        ? config.getTitleTextSizePx()
-                        : DensityUtil.sp2px(getContext(), 16f),
-                config.getTitleTextColor() != null
-                        ? config.getTitleTextColor()
-                        : PreviewInfoConfig.DEFAULT_TITLE_TEXT_COLOR);
-        applyTextStyle(tvTime,
-                config.getTimeTextSizePx() != null
-                        ? config.getTimeTextSizePx()
-                        : DensityUtil.sp2px(getContext(), 13f),
-                config.getTimeTextColor() != null
-                        ? config.getTimeTextColor()
-                        : PreviewInfoConfig.DEFAULT_SUB_TEXT_COLOR);
-        applyTextStyle(tvLocation,
-                config.getLocationTextSizePx() != null
-                        ? config.getLocationTextSizePx()
-                        : DensityUtil.sp2px(getContext(), 13f),
-                config.getLocationTextColor() != null
-                        ? config.getLocationTextColor()
-                        : PreviewInfoConfig.DEFAULT_SUB_TEXT_COLOR);
-
-        int titleTimeSpacing = config.getTitleTimeSpacingPx() != null
-                ? config.getTitleTimeSpacingPx()
-                : DensityUtil.dp2px(getContext(), 6f);
-        int timeLocationSpacing = config.getTimeLocationSpacingPx() != null
-                ? config.getTimeLocationSpacingPx()
-                : DensityUtil.dp2px(getContext(), 4f);
-        applyTopMargin(tvTime, titleTimeSpacing);
-        applyTopMargin(tvLocation, timeLocationSpacing);
-
-        int paddingStart = config.getInfoPaddingStartPx() != null
-                ? config.getInfoPaddingStartPx()
-                : DensityUtil.dp2px(getContext(), 16f);
-        int paddingTop = config.getInfoPaddingTopPx() != null
-                ? config.getInfoPaddingTopPx()
-                : DensityUtil.dp2px(getContext(), 12f);
-        int paddingEnd = config.getInfoPaddingEndPx() != null
-                ? config.getInfoPaddingEndPx()
-                : DensityUtil.dp2px(getContext(), 72f);
-        int paddingBottom = config.getInfoPaddingBottomPx() != null
-                ? config.getInfoPaddingBottomPx()
-                : DensityUtil.dp2px(getContext(), 24f);
-        llInfo.setPadding(paddingStart, paddingTop, paddingEnd, paddingBottom);
     }
 
-    /**
-     * ShapeableImageView 默认按矩形绘制 background，必须用圆形 ShapeAppearance +
-     * oval background 的 Outline 才能把底裁成圆。仅当前预览页生效。
-     */
     private void applyCircleIconBackground(ShapeableImageView view, boolean enabled) {
         if (!enabled) {
             view.setBackground(null);
@@ -644,16 +565,6 @@ public class PreviewInfoPhotoDialog extends Dialog {
     }
 
     /**
-     * @param textView   要设置的文字
-     * @param textSizePx 字号，单位 px
-     * @param textColor  文字颜色
-     */
-    private void applyTextStyle(MaterialTextView textView, float textSizePx, @ColorInt int textColor) {
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePx);
-        textView.setTextColor(textColor);
-    }
-
-    /**
      * @param view   图标
      * @param sizePx 宽高，单位 px；为空或小于等于 0 时不改
      */
@@ -670,36 +581,9 @@ public class PreviewInfoPhotoDialog extends Dialog {
     }
 
     /**
-     * @param view        需要拉开行距的文字
-     * @param topMarginPx 上边距，单位 px
-     */
-    private void applyTopMargin(View view, int topMarginPx) {
-        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
-        if (lp != null) {
-            lp.topMargin = topMarginPx;
-            view.setLayoutParams(lp);
-        }
-    }
-
-    /**
-     * 绑定定位、翻页和「查看全部」点击
+     * 绑定左右翻页点击。定位 / 下载 / 查看全部在 ViewPager item 内绑定。
      */
     private void bindClicks() {
-        ivLocation.setOnClickListener(v -> {
-            if (imageInfos.isEmpty()) {
-                return;
-            }
-            PreviewInfoBean item = currentItem();
-            boolean selected = item != null && item.isLocationIconSelected();
-            if (config.isLocationCanSelected() && item != null) {
-                selected = !selected;
-                item.setLocationIconSelected(selected);
-                bindLocationIcon(item);
-            }
-            if (onLocationClickListener != null) {
-                onLocationClickListener.onLocationClick(this, item, position, selected);
-            }
-        });
         ivPrev.setOnClickListener(v -> {
             if (position > 0) {
                 viewPager.setCurrentItem(position - 1, true);
@@ -709,19 +593,6 @@ public class PreviewInfoPhotoDialog extends Dialog {
             if (position < imageInfos.size() - 1) {
                 viewPager.setCurrentItem(position + 1, true);
             }
-        });
-        if (ivDownload != null) {
-            ivDownload.setOnClickListener(v -> requestSaveCurrent());
-        }
-        ivViewAll.setOnClickListener(v -> {
-            if (imageInfos.isEmpty()) {
-                return;
-            }
-            if (onViewAllClickListener != null) {
-                onViewAllClickListener.onViewAllClick(this, imageInfos, position);
-                return;
-            }
-            openDefaultAlbum();
         });
     }
 
@@ -764,68 +635,6 @@ public class PreviewInfoPhotoDialog extends Dialog {
     }
 
     /**
-     * 按当前条目刷新定位图标和底部三行文字
-     */
-    private void bindCurrentInfo() {
-        PreviewInfoBean item = currentItem();
-        bindLocationIcon(item);
-        if (item == null) {
-            tvTitle.setVisibility(View.GONE);
-            tvTime.setVisibility(View.GONE);
-            tvLocation.setVisibility(View.GONE);
-            llInfo.setVisibility(View.GONE);
-            return;
-        }
-        bindLine(tvTitle, config.isTitleEnabled() ? item.resolveTitle() : null);
-        bindLine(tvTime, config.isTimeEnabled() ? item.resolveTimeText() : null);
-        bindLine(tvLocation, config.isLocationTextEnabled() ? item.resolveLocationText() : null);
-        boolean hasInfo = tvTitle.getVisibility() == View.VISIBLE
-                || tvTime.getVisibility() == View.VISIBLE
-                || tvLocation.getVisibility() == View.VISIBLE;
-        llInfo.setVisibility(hasInfo ? View.VISIBLE : View.GONE);
-    }
-
-    /**
-     * 按当前条目刷新定位图标；开启可选中时翻页会保持各条目自己的选中态。
-     */
-    private void bindLocationIcon(@Nullable PreviewInfoBean item) {
-        if (!config.isLocationEnabled()) {
-            return;
-        }
-        boolean selected = config.isLocationCanSelected()
-                && item != null
-                && item.isLocationIconSelected();
-        Drawable icon = selected ? getLocationSelectedIcon() : getLocationNormalIcon();
-        if (icon != null) {
-            ivLocation.setImageDrawable(icon);
-        }
-    }
-
-    @Nullable
-    private Drawable getLocationNormalIcon() {
-        if (config.getLocationIcon() != null) {
-            return config.getLocationIcon();
-        }
-        return ContextCompat.getDrawable(getContext(), R.drawable.ic_preview_location);
-    }
-
-    /**
-     * 文案为空时隐藏该行
-     *
-     * @param textView 信息行
-     * @param text     要显示的文案
-     */
-    private void bindLine(MaterialTextView textView, @Nullable String text) {
-        if (TextUtils.isEmpty(text)) {
-            textView.setVisibility(View.GONE);
-            textView.setText("");
-            return;
-        }
-        textView.setVisibility(View.VISIBLE);
-        textView.setText(text);
-    }
-
-    /**
      * 第一张隐藏上一张，最后一张隐藏下一张，只有一张时两个都隐藏
      */
     private void updateNavVisibility() {
@@ -834,74 +643,20 @@ public class PreviewInfoPhotoDialog extends Dialog {
         ivNext.setVisibility(showNav && position < imageInfos.size() - 1 ? View.VISIBLE : View.GONE);
     }
 
-    @Nullable
-    private PreviewInfoBean currentItem() {
-        if (position < 0 || position >= imageInfos.size()) {
-            return null;
-        }
-        return imageInfos.get(position);
-    }
-
     /**
-     * 给定位图标、翻页区域和底部信息补上系统栏间距
-     *
-     * @param root 预览根布局
+     * 将系统栏 inset 分发给 item（定位 top / 信息与操作区 bottom）。
      */
     private void applyWindowInsets(@NonNull View root) {
-        final int locationTop = ((ViewGroup.MarginLayoutParams) ivLocation.getLayoutParams()).topMargin;
-        final int locationEnd = ((ViewGroup.MarginLayoutParams) ivLocation.getLayoutParams()).getMarginEnd();
-        final int pagerTop = ((ViewGroup.MarginLayoutParams) viewPager.getLayoutParams()).topMargin;
-        final int viewAllEnd = ((ViewGroup.MarginLayoutParams) ivViewAll.getLayoutParams()).getMarginEnd();
-        final int viewAllBottom = ((ViewGroup.MarginLayoutParams) ivViewAll.getLayoutParams()).bottomMargin;
-        final int infoPadStart = llInfo.getPaddingStart();
-        final int infoPadTop = llInfo.getPaddingTop();
-        final int infoPadEnd = llInfo.getPaddingEnd();
-        final int infoPadBottom = llInfo.getPaddingBottom();
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            ViewGroup.MarginLayoutParams locationLp = (ViewGroup.MarginLayoutParams) ivLocation.getLayoutParams();
-            locationLp.topMargin = locationTop + bars.top;
-            locationLp.setMarginEnd(locationEnd);
-            ivLocation.setLayoutParams(locationLp);
-            ViewGroup.MarginLayoutParams pagerLp = (ViewGroup.MarginLayoutParams) viewPager.getLayoutParams();
-            pagerLp.topMargin = config.isLocationEnabled() ? pagerTop : pagerTop + bars.top;
-            viewPager.setLayoutParams(pagerLp);
-            ViewGroup.MarginLayoutParams viewAllLp = (ViewGroup.MarginLayoutParams) ivViewAll.getLayoutParams();
-            viewAllLp.setMarginEnd(viewAllEnd);
-            viewAllLp.bottomMargin = viewAllBottom + bars.bottom;
-            ivViewAll.setLayoutParams(viewAllLp);
-            if (ivDownload != null) {
-                ViewGroup.MarginLayoutParams downloadLp = (ViewGroup.MarginLayoutParams) ivDownload.getLayoutParams();
-                downloadLp.bottomMargin = viewAllBottom + bars.bottom;
-                ivDownload.setLayoutParams(downloadLp);
+            metaTopInsetPx = bars.top;
+            actionBottomInsetPx = bars.bottom;
+            if (pageAdapter != null && position >= 0 && position < imageInfos.size()) {
+                pageAdapter.notifyItemChanged(position);
             }
-            llInfo.setPadding(infoPadStart, infoPadTop, infoPadEnd, infoPadBottom + bars.bottom);
             return insets;
         });
         ViewCompat.requestApplyInsets(root);
-    }
-
-    /**
-     * 选中态定位图标：优先自定义；未配置时用未选中图标（或默认图）染色为主题色。
-     */
-    @Nullable
-    public Drawable getLocationSelectedIcon() {
-        if (config.getLocationSelectedIcon() != null) {
-            return config.getLocationSelectedIcon();
-        }
-        int primary = ThemeAttrs.primary(getContext());
-        Drawable tinted;
-        if (config.getLocationIcon() != null) {
-            Drawable base = config.getLocationIcon();
-            Drawable src = base.getConstantState() != null
-                    ? base.getConstantState().newDrawable()
-                    : base;
-            tinted = DrawableUtil.withTint(src, primary);
-        } else {
-            tinted = DrawableUtil.withTint(getContext(), R.drawable.ic_preview_location, primary);
-        }
-        config.setLocationSelectedIcon(tinted);
-        return tinted;
     }
 
     /**
@@ -936,16 +691,140 @@ public class PreviewInfoPhotoDialog extends Dialog {
                             int position);
     }
 
+    // region PreviewInfoMetaHost
+
+    @NonNull
+    @Override
+    public PreviewInfoConfig getPreviewInfoConfig() {
+        return config;
+    }
+
+    @Nullable
+    @Override
+    public Drawable getLocationNormalIcon() {
+        if (config.getLocationIcon() != null) {
+            return config.getLocationIcon();
+        }
+        return ContextCompat.getDrawable(getContext(), R.drawable.ic_preview_location);
+    }
+
     /**
-     * 右下角下载：当前页保存（与长按保存同一套）。
+     * 选中态定位图标：优先自定义；未配置时用未选中图标（或默认图）染色为主题色。
      */
-    public void requestSaveCurrent() {
+    @Nullable
+    @Override
+    public Drawable getLocationSelectedIcon() {
+        if (config.getLocationSelectedIcon() != null) {
+            return config.getLocationSelectedIcon();
+        }
+        int primary = ThemeAttrs.primary(getContext());
+        Drawable tinted;
+        if (config.getLocationIcon() != null) {
+            Drawable base = config.getLocationIcon();
+            Drawable src = base.getConstantState() != null
+                    ? base.getConstantState().newDrawable()
+                    : base;
+            tinted = DrawableUtil.withTint(src, primary);
+        } else {
+            tinted = DrawableUtil.withTint(getContext(), R.drawable.ic_preview_location, primary);
+        }
+        config.setLocationSelectedIcon(tinted);
+        return tinted;
+    }
+
+    @Override
+    public int getMetaTopInsetPx() {
+        return metaTopInsetPx;
+    }
+
+    @Override
+    public int getMetaBottomInsetPx() {
+        return actionBottomInsetPx;
+    }
+
+    @Override
+    public void onLocationIconClick(@Nullable PreviewInfoBean item, int position, boolean selected) {
+        this.position = position;
+        if (onLocationClickListener != null) {
+            onLocationClickListener.onLocationClick(this, item, position, selected);
+        }
+    }
+
+    // endregion
+
+    // region PreviewItemActionHost
+
+    @Override
+    public boolean isDownloadActionVisible() {
+        return config == null || config.isDownloadEnabled();
+    }
+
+    @Override
+    public boolean isDownloadConfirmEnabled() {
+        return config != null && config.isDownloadConfirmEnabled();
+    }
+
+    @Override
+    public boolean canSaveCurrentMedia() {
+        return canSaveImage;
+    }
+
+    @Override
+    public void onDownloadAction(int adapterPosition) {
         if (!canSaveImage || pageAdapter == null) {
             return;
         }
-        boolean confirm = config != null && config.isDownloadConfirmEnabled();
-        pageAdapter.saveCurrentItem(position, confirm);
+        pageAdapter.saveCurrentItem(adapterPosition, isDownloadConfirmEnabled());
     }
+
+    @Override
+    public boolean isViewAllActionVisible() {
+        return config == null || config.isViewAllEnabled();
+    }
+
+    @Override
+    public void onViewAllAction(int adapterPosition) {
+        if (imageInfos.isEmpty()) {
+            return;
+        }
+        position = adapterPosition;
+        if (onViewAllClickListener != null) {
+            onViewAllClickListener.onViewAllClick(this, imageInfos, adapterPosition);
+            return;
+        }
+        openDefaultAlbum();
+    }
+
+    @Override
+    public Drawable getViewAllActionIcon() {
+        return config != null ? config.getViewAllIcon() : null;
+    }
+
+    @Override
+    public Integer getActionIconSizePx() {
+        return config != null ? config.getViewAllIconSizePx() : null;
+    }
+
+    @Override
+    public boolean isActionCircleBackgroundEnabled() {
+        return config == null || config.isViewAllCircleBackgroundEnabled();
+    }
+
+    @Override
+    public Drawable getActionCircleBackground() {
+        return config != null ? config.getNavBackground() : null;
+    }
+
+    @Override
+    public int getActionBottomInsetPx() {
+        return actionBottomInsetPx;
+    }
+
+    public void requestSaveCurrent() {
+        onDownloadAction(position);
+    }
+
+    // endregion
 
     @Override
     public void dismiss() {

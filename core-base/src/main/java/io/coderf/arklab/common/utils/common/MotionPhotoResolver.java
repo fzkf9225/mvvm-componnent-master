@@ -248,7 +248,8 @@ public final class MotionPhotoResolver {
                 return new EmbeddedMotion(fileSize - videoLength, videoLength);
             }
         }
-        long ftypOffset = findLastFtpOffset(context, stillPath, fileSize);
+        // 勿用「最后一个 ftyp」：视频 mdat 内常有伪匹配，会抽到无音轨残段导致实况无声
+        long ftypOffset = findFirstValidFtypOffset(context, stillPath, fileSize);
         if (ftypOffset >= 4) {
             return new EmbeddedMotion(ftypOffset - 4, fileSize - (ftypOffset - 4));
         }
@@ -256,37 +257,61 @@ public final class MotionPhotoResolver {
     }
 
     /**
-     * 在文件后部扫描 ISO BMFF {@code ftyp} box（Motion Photo 尾部视频常见）。
+     * 从头扫描第一个合法 ISO BMFF {@code ftyp} box（前 4 字节 big-endian size ∈ [16,256]）。
+     * Motion Photo（JPEG+MP4）上该位置即为内嵌视频起点。
+     *
+     * @return {@code ftyp} 四字符起始下标；未找到返回 -1
      */
-    private static long findLastFtpOffset(@NonNull Context context, @NonNull String stillPath, long fileSize)
+    private static long findFirstValidFtypOffset(@NonNull Context context, @NonNull String stillPath, long fileSize)
             throws Exception {
         if (fileSize < 16) {
             return -1;
         }
-        // 只扫尾部最多 8MB，兼顾大视频与性能
-        int window = (int) Math.min(fileSize, 8L * 1024L * 1024L);
-        long start = fileSize - window;
-        byte[] data = new byte[window];
+        final byte[] ftyp = {'f', 't', 'y', 'p'};
+        final int chunkSize = 1024 * 1024;
+        final int overlap = 8;
+        byte[] buffer = new byte[chunkSize + overlap];
         try (InputStream in = openStillStream(context, stillPath)) {
             if (in == null) {
                 return -1;
             }
-            skipFully(in, start);
-            int offset = 0;
-            while (offset < window) {
-                int read = in.read(data, offset, window - offset);
-                if (read < 0) {
+            long filePos = 0;
+            int carry = 0;
+            while (filePos < fileSize) {
+                int toRead = (int) Math.min(chunkSize, fileSize - filePos);
+                int filled = 0;
+                while (filled < toRead) {
+                    int read = in.read(buffer, carry + filled, toRead - filled);
+                    if (read < 0) {
+                        break;
+                    }
+                    filled += read;
+                }
+                if (filled <= 0 && carry == 0) {
                     break;
                 }
-                offset += read;
-            }
-            window = offset;
-        }
-        byte[] ftyp = {'f', 't', 'y', 'p'};
-        for (int i = window - 4; i >= 0; i--) {
-            if (data[i] == ftyp[0] && data[i + 1] == ftyp[1]
-                    && data[i + 2] == ftyp[2] && data[i + 3] == ftyp[3]) {
-                return start + i;
+                int window = carry + filled;
+                int scanStart = filePos == 0 ? 4 : 0;
+                for (int i = scanStart; i <= window - 4; i++) {
+                    if (buffer[i] == ftyp[0] && buffer[i + 1] == ftyp[1]
+                            && buffer[i + 2] == ftyp[2] && buffer[i + 3] == ftyp[3]
+                            && i >= 4) {
+                        int size = ((buffer[i - 4] & 0xFF) << 24)
+                                | ((buffer[i - 3] & 0xFF) << 16)
+                                | ((buffer[i - 2] & 0xFF) << 8)
+                                | (buffer[i - 1] & 0xFF);
+                        if (size >= 16 && size <= 256) {
+                            return filePos - carry + i;
+                        }
+                    }
+                }
+                if (window >= overlap) {
+                    System.arraycopy(buffer, window - overlap, buffer, 0, overlap);
+                    carry = overlap;
+                } else {
+                    carry = 0;
+                }
+                filePos += filled;
             }
         }
         return -1;

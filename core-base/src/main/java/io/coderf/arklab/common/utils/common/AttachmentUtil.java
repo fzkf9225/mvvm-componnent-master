@@ -39,6 +39,7 @@ import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.common.widget.dialog.MenuDialog;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 import io.coderf.arklab.core.utils.CollectionUtil;
+import io.coderf.arklab.core.utils.CoreExecutors;
 import io.coderf.arklab.core.utils.FileUtil;
 import io.reactivex.rxjava3.disposables.Disposable;
 
@@ -135,6 +136,40 @@ public class AttachmentUtil {
     @SuppressLint("Range")
     public static List<AttachmentBean> uriListToAttachmentList(List<Uri> uriList) {
         return uriListToAttachmentList(Config.getInstance().getApplication(), uriList);
+    }
+
+    /**
+     * 后台解析实况 / Motion Photo 并写入 {@link AttachmentBean#setLiveInfo(String)}，
+     * 供列表角标与预览识别。完成后在主线程回调（若有写入）。
+     *
+     * @param context  Context
+     * @param list     附件列表（会原地改 liveInfo）
+     * @param onEnriched 主线程回调；无任何写入时不回调
+     */
+    public static void enrichLiveInfoAsync(
+            Context context,
+            List<AttachmentBean> list,
+            Runnable onEnriched
+    ) {
+        if (context == null || CollectionUtil.isEmpty(list)) {
+            return;
+        }
+        Context app = context.getApplicationContext();
+        CoreExecutors.io().execute(() -> {
+            boolean changed = false;
+            for (AttachmentBean bean : list) {
+                try {
+                    if (MotionPhotoResolver.enrichAttachment(app, bean)) {
+                        changed = true;
+                    }
+                } catch (Exception e) {
+                    LogUtil.e("AttachmentUtil", "enrichLiveInfoAsync: " + e);
+                }
+            }
+            if (changed && onEnriched != null) {
+                CoreExecutors.main().execute(onEnriched);
+            }
+        });
     }
 
     @SuppressLint("Range")

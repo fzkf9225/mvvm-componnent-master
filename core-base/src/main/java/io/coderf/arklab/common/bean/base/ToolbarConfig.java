@@ -25,7 +25,6 @@ import androidx.databinding.BindingAdapter;
 
 import java.util.Objects;
 
-import io.coderf.arklab.common.BR;
 import io.coderf.arklab.common.R;
 import io.coderf.arklab.common.utils.theme.ThemeUtils;
 import io.coderf.arklab.common.widget.customview.ActionToolbar;
@@ -197,7 +196,7 @@ public class ToolbarConfig extends BaseObservable {
 
     public ToolbarConfig setTitle(String title) {
         this.title = title;
-        notifyPropertyChanged(BR.title);
+        notifyChange();
         return this;
     }
 
@@ -218,7 +217,7 @@ public class ToolbarConfig extends BaseObservable {
 
     public ToolbarConfig setHeight(int height) {
         this.height = height;
-        notifyPropertyChanged(BR.height);
+        notifyChange();
         return this;
     }
 
@@ -234,7 +233,7 @@ public class ToolbarConfig extends BaseObservable {
 
     public ToolbarConfig setTitleHint(String titleHint) {
         this.titleHint = titleHint;
-        notifyPropertyChanged(BR.titleHint);
+        notifyChange();
         return this;
     }
 
@@ -256,7 +255,7 @@ public class ToolbarConfig extends BaseObservable {
     @Deprecated
     public ToolbarConfig setLightMode(boolean lightMode) {
         isLightMode = lightMode;
-        notifyPropertyChanged(BR.lightMode);
+        notifyChange();
         return this;
     }
 
@@ -280,7 +279,7 @@ public class ToolbarConfig extends BaseObservable {
 
     public ToolbarConfig setEnableImmersionBar(boolean enableImmersionBar) {
         this.enableImmersionBar = enableImmersionBar;
-        notifyPropertyChanged(BR.enableImmersionBar);
+        notifyChange();
         return this;
     }
 
@@ -319,7 +318,7 @@ public class ToolbarConfig extends BaseObservable {
      */
     public ToolbarConfig setStatusBarColor(@ColorRes Integer statusBarColor) {
         this.statusBarColor = statusBarColor;
-        notifyPropertyChanged(BR.statusBarColor);
+        notifyChange();
         return this;
     }
 
@@ -330,7 +329,7 @@ public class ToolbarConfig extends BaseObservable {
 
     public ToolbarConfig setBackIconRes(int backIconRes) {
         this.backIconRes = backIconRes;
-        notifyPropertyChanged(BR.backIconRes);
+        notifyChange();
         return this;
     }
 
@@ -341,7 +340,7 @@ public class ToolbarConfig extends BaseObservable {
 
     public ToolbarConfig setDefaultTheme(boolean defaultTheme) {
         this.defaultTheme = defaultTheme;
-        notifyPropertyChanged(BR.defaultTheme);
+        notifyChange();
         return this;
     }
 
@@ -352,10 +351,7 @@ public class ToolbarConfig extends BaseObservable {
 
     public ToolbarConfig setTextColor(@ColorRes int textColor) {
         this.textColor = textColor;
-        notifyPropertyChanged(BR.textColor);
-        if (backIconColor == 0) {
-            notifyPropertyChanged(BR.backIconColor);
-        }
+        notifyChange();
         return this;
     }
 
@@ -374,7 +370,7 @@ public class ToolbarConfig extends BaseObservable {
      */
     public ToolbarConfig setBackIconColor(@ColorRes int backIconColor) {
         this.backIconColor = backIconColor;
-        notifyPropertyChanged(BR.backIconColor);
+        notifyChange();
         return this;
     }
 
@@ -385,7 +381,7 @@ public class ToolbarConfig extends BaseObservable {
 
     public ToolbarConfig setBgColor(@ColorRes int bgColor) {
         this.bgColor = bgColor;
-        notifyPropertyChanged(BR.bgColor);
+        notifyChange();
         return this;
     }
 
@@ -396,7 +392,7 @@ public class ToolbarConfig extends BaseObservable {
 
     public ToolbarConfig setShowBackButton(boolean showBackButton) {
         isShowBackButton = showBackButton;
-        notifyPropertyChanged(BR.showBackButton);
+        notifyChange();
         return this;
     }
 
@@ -417,7 +413,7 @@ public class ToolbarConfig extends BaseObservable {
     public ToolbarConfig setTitleTextSizeSp(float titleTextSizeSp) {
         if (titleTextSizeSp > 0f) {
             this.titleTextSizeSp = titleTextSizeSp;
-            notifyPropertyChanged(BR.titleTextSizeSp);
+            notifyChange();
         }
         return this;
     }
@@ -444,7 +440,7 @@ public class ToolbarConfig extends BaseObservable {
      */
     public ToolbarConfig setTitleBold(boolean titleBold) {
         this.titleBold = titleBold;
-        notifyPropertyChanged(BR.titleBold);
+        notifyChange();
         return this;
     }
 
@@ -458,7 +454,7 @@ public class ToolbarConfig extends BaseObservable {
      */
     public ToolbarConfig setTitleMaxLines(int titleMaxLines) {
         this.titleMaxLines = Math.max(1, titleMaxLines);
-        notifyPropertyChanged(BR.titleMaxLines);
+        notifyChange();
         return this;
     }
 
@@ -473,8 +469,7 @@ public class ToolbarConfig extends BaseObservable {
      */
     public ToolbarConfig setTitleGravity(int titleGravity) {
         this.titleGravity = titleGravity;
-        notifyPropertyChanged(BR.titleGravity);
-        notifyPropertyChanged(BR.titleCentered);
+        notifyChange();
         return this;
     }
 
@@ -515,7 +510,7 @@ public class ToolbarConfig extends BaseObservable {
      */
     public ToolbarConfig setTitleFontFamily(@Nullable String titleFontFamily) {
         this.titleFontFamily = titleFontFamily;
-        notifyPropertyChanged(BR.titleFontFamily);
+        notifyChange();
         return this;
     }
 
@@ -530,7 +525,7 @@ public class ToolbarConfig extends BaseObservable {
      */
     public ToolbarConfig setTitleFontRes(@FontRes int titleFontRes) {
         this.titleFontRes = titleFontRes;
-        notifyPropertyChanged(BR.titleFontRes);
+        notifyChange();
         return this;
     }
 
@@ -544,7 +539,7 @@ public class ToolbarConfig extends BaseObservable {
      */
     public ToolbarConfig setTitleLetterSpacing(float titleLetterSpacing) {
         this.titleLetterSpacing = titleLetterSpacing;
-        notifyPropertyChanged(BR.titleLetterSpacing);
+        notifyChange();
         return this;
     }
 
@@ -558,7 +553,7 @@ public class ToolbarConfig extends BaseObservable {
      */
     public ToolbarConfig setTitleAllCaps(boolean titleAllCaps) {
         this.titleAllCaps = titleAllCaps;
-        notifyPropertyChanged(BR.titleAllCaps);
+        notifyChange();
         return this;
     }
 
@@ -573,7 +568,7 @@ public class ToolbarConfig extends BaseObservable {
      */
     public ToolbarConfig setElevationDp(float elevationDp) {
         this.elevationDp = elevationDp;
-        notifyPropertyChanged(BR.elevationDp);
+        notifyChange();
         return this;
     }
 

@@ -30,6 +30,7 @@ import io.coderf.arklab.common.utils.common.LivePhotoInfo;
 import io.coderf.arklab.common.utils.download.DownLoadImageService;
 import io.coderf.arklab.common.utils.download.ImageDownLoadCallBack;
 import io.coderf.arklab.common.widget.gallery.PreviewMediaBinder;
+import io.coderf.arklab.common.widget.gallery.PreviewItemActionBinder;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 import io.coderf.arklab.common.widget.video.ArkVideoPlayerView;
 import io.coderf.arklab.core.utils.CoreExecutors;
@@ -179,12 +180,13 @@ public class PreviewViewPagerAdapter extends BaseRecyclerViewAdapter<AttachmentB
                     downloadImage(holder.itemView.getContext(), current.getPath(), current.getFileType());
                 },
                 (v, x, y) -> previewPhotoDialog.dismiss());
+        PreviewItemActionBinder.bind(holder.itemView, previewPhotoDialog, pos);
     }
 
     private void bindVideo(VideoViewHolder holder, AttachmentBean item, int pos) {
         ItemPreviewVideoBinding binding = holder.videoBinding;
         binding.clPreviewVideo.setBackgroundColor(Color.BLACK);
-        boolean autoPlay = pos == currentPage;
+        boolean autoPlay = pos == currentPage && previewPhotoDialog.isVideoAutoPlayEnabled();
         PreviewMediaBinder.bindVideoPlayer(
                 binding.previewVideoPlayer,
                 item.getPath(),
@@ -193,6 +195,7 @@ public class PreviewViewPagerAdapter extends BaseRecyclerViewAdapter<AttachmentB
         PreviewMediaBinder.bindVideoCloseButton(
                 binding.btnPreviewVideoClose,
                 previewPhotoDialog::dismiss);
+        PreviewItemActionBinder.bind(holder.itemView, previewPhotoDialog, pos);
     }
 
     @Override
@@ -218,7 +221,7 @@ public class PreviewViewPagerAdapter extends BaseRecyclerViewAdapter<AttachmentB
     }
 
     private void startPlayerAt(int position) {
-        if (recyclerView == null) {
+        if (recyclerView == null || !previewPhotoDialog.isVideoAutoPlayEnabled()) {
             return;
         }
         RecyclerView.ViewHolder vh = recyclerView.findViewHolderForAdapterPosition(position);

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 删除按钮：常态。红底白叉，圆角描边，适配 24dp 缩略图角标。 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Material Red 600 -->
+    <path
+        android:fillColor="#E53935"
+        android:pathData="M12,12m-11,0a11,11 0,1,1 22,0a11,11 0,1,1 -22,0" />
+    <!-- 白色细描边，与背景对比更干净 -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M12,12m-10.25,0a10.25,10.25 0,1,1 20.5,0a10.25,10.25 0,1,1 -20.5,0"
+        android:strokeWidth="0.6"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:pathData="M8.2,8.2L15.8,15.8"
+        android:strokeWidth="2.4"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M15.8,8.2L8.2,15.8"
+        android:strokeWidth="2.4"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round" />
+</vector>

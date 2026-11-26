@@ -27,7 +27,8 @@ import io.coderf.arklab.core.utils.FileUtil;
 /**
  * 大图预览中图片 / 实况 / 视频的绑定与释放公共逻辑。
  * <p>
- * {@link PreviewViewPagerAdapter} 与 {@link PreviewInfoViewPagerAdapter} 共用，避免双份拷贝。
+ * {@link io.coderf.arklab.common.widget.gallery.adapter.PreviewViewPagerAdapter} 与
+ * {@link io.coderf.arklab.common.widget.gallery.adapter.PreviewInfoViewPagerAdapter} 共用，避免双份拷贝。
  * 预览策略：实况关按住播、仅胶囊点击；视频用 {@link VideoPlayerConfig#previewDefaults()} 页内播放。
  *
  * @author fz

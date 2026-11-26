@@ -28,8 +28,10 @@ import io.coderf.arklab.common.databinding.ItemPreviewVideoBinding;
 import io.coderf.arklab.common.utils.common.LivePhotoInfo;
 import io.coderf.arklab.common.utils.download.DownLoadImageService;
 import io.coderf.arklab.common.utils.download.ImageDownLoadCallBack;
+import io.coderf.arklab.common.widget.gallery.PreviewInfoMetaBinder;
 import io.coderf.arklab.common.widget.gallery.PreviewInfoPhotoDialog;
 import io.coderf.arklab.common.widget.gallery.PreviewMediaBinder;
+import io.coderf.arklab.common.widget.gallery.PreviewItemActionBinder;
 import io.coderf.arklab.common.widget.gallery.bean.PreviewInfoBean;
 import io.coderf.arklab.common.widget.video.ArkVideoPlayerView;
 import io.coderf.arklab.core.utils.CoreExecutors;
@@ -179,12 +181,14 @@ public class PreviewInfoViewPagerAdapter extends BaseRecyclerViewAdapter<Preview
                     downloadImage(holder.itemView.getContext(), current.getPath(), current.getFileType());
                 },
                 (v, x, y) -> previewInfoPhotoDialog.dismiss());
+        PreviewInfoMetaBinder.bind(holder.itemView, previewInfoPhotoDialog, item, pos);
+        PreviewItemActionBinder.bind(holder.itemView, previewInfoPhotoDialog, pos);
     }
 
     private void bindVideo(VideoViewHolder holder, PreviewInfoBean item, int pos) {
         ItemPreviewVideoBinding binding = holder.videoBinding;
         binding.clPreviewVideo.setBackgroundColor(Color.BLACK);
-        boolean autoPlay = pos == currentPage;
+        boolean autoPlay = pos == currentPage && previewInfoPhotoDialog.isVideoAutoPlayEnabled();
         PreviewMediaBinder.bindVideoPlayer(
                 binding.previewVideoPlayer,
                 item.getPath(),
@@ -193,6 +197,8 @@ public class PreviewInfoViewPagerAdapter extends BaseRecyclerViewAdapter<Preview
         PreviewMediaBinder.bindVideoCloseButton(
                 binding.btnPreviewVideoClose,
                 previewInfoPhotoDialog::dismiss);
+        PreviewInfoMetaBinder.bind(holder.itemView, previewInfoPhotoDialog, item, pos);
+        PreviewItemActionBinder.bind(holder.itemView, previewInfoPhotoDialog, pos);
     }
 
     @Override
@@ -218,7 +224,7 @@ public class PreviewInfoViewPagerAdapter extends BaseRecyclerViewAdapter<Preview
     }
 
     private void startPlayerAt(int position) {
-        if (recyclerView == null) {
+        if (recyclerView == null || !previewInfoPhotoDialog.isVideoAutoPlayEnabled()) {
             return;
         }
         RecyclerView.ViewHolder vh = recyclerView.findViewHolderForAdapterPosition(position);

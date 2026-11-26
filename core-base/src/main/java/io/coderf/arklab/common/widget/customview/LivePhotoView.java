@@ -170,7 +170,7 @@ public class LivePhotoView extends FrameLayout {
      */
     private int badgeMarginHorizontalPx;
     /**
-     * 胶囊与容器上/下边缘的外边距（px），默认约 14dp
+     * 胶囊与容器上/下边缘的外边距（px），默认约 24dp
      */
     private int badgeMarginVerticalPx;
     /**
@@ -292,7 +292,7 @@ public class LivePhotoView extends FrameLayout {
     private void initDefaultBadgeMetrics(@NonNull Context context) {
         // 水平略大于垂直，贴边更接近微信大图预览观感
         badgeMarginHorizontalPx = DensityUtil.dp2px(context, 16f);
-        badgeMarginVerticalPx = DensityUtil.dp2px(context, 14f);
+        badgeMarginVerticalPx = DensityUtil.dp2px(context, 24f);
         badgeIconSizePx = DensityUtil.dp2px(context, 14f);
         // 播放中图标默认与静止态同尺寸
         badgePlayingIconSizePx = badgeIconSizePx;
