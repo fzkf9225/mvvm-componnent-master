@@ -71,7 +71,10 @@ dependencies {
     implementation libs.activity
     implementation libs.androidx.lifecycle.viewmodel.ktx
     implementation libs.androidx.lifecycle.common.java8
-    implementation libs.googlecode.isoparser
+    implementation libs.androidx.media3.transformer
+    implementation libs.androidx.media3.effect
+    implementation libs.androidx.media3.common
+    implementation libs.kotlinx.coroutines.core
     implementation libs.constraintlayout
 
     implementation libs.google.hilt.android
@@ -94,7 +97,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'io.coderf.arklab.media'
                 artifactId = 'media'
-                version = '3.7.1'
+                version = '4.0.0'
             }
         }
         repositories {

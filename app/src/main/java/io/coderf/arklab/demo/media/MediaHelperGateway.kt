@@ -5,7 +5,14 @@ import androidx.activity.ComponentActivity
 import androidx.lifecycle.LifecycleOwner
 import io.coderf.arklab.base.gateway.MediaGateway
 import io.coderf.arklab.base.gateway.MediaResultCallback
+import io.coderf.arklab.base.gateway.media.GatewayImageCompressOptions
+import io.coderf.arklab.base.gateway.media.GatewayVideoCompressOptions
+import io.coderf.arklab.base.gateway.media.GatewayVideoPreset
 import io.coderf.arklab.media.MediaHelper
+import io.coderf.arklab.media.compress.ImageCompressOptions
+import io.coderf.arklab.media.compress.ImageOutputFormat
+import io.coderf.arklab.media.compress.VideoCompressOptions
+import io.coderf.arklab.media.compress.VideoExportPreset
 import io.coderf.arklab.media.dialog.OpenImageDialog
 import io.coderf.arklab.media.enums.MediaTypeEnum
 
@@ -16,12 +23,12 @@ import io.coderf.arklab.media.enums.MediaTypeEnum
  * @author fz
  * @version 1.0
  * @since 1.0
- * @updated 2026/9/1 22:51
+ * @updated 2026/11/26 core-media 4.0
  */
 class MediaHelperGateway(
     private val host: ComponentActivity,
     private val mediaHelper: MediaHelper,
-    private val lifecycleOwner: LifecycleOwner = host
+    private val lifecycleOwner: LifecycleOwner = host,
 ) : MediaGateway {
 
     @Volatile
@@ -33,16 +40,20 @@ class MediaHelperGateway(
     init {
         mediaHelper.mutableLiveData.observe(lifecycleOwner) { bean ->
             if (bean?.mediaType == MediaTypeEnum.IMAGE) {
-                val uris = bean.mediaList ?: emptyList()
-                pickCallback?.onResult(uris)
+                pickCallback?.onResult(bean.mediaList.orEmpty())
                 pickCallback = null
             }
         }
         mediaHelper.mutableLiveDataCompress.observe(lifecycleOwner) { bean ->
-            if (bean?.mediaType == MediaTypeEnum.IMAGE) {
-                val uris = bean.mediaList ?: emptyList()
-                compressCallback?.onResult(uris)
-                compressCallback = null
+            when (bean?.mediaType) {
+                MediaTypeEnum.IMAGE,
+                MediaTypeEnum.VIDEO,
+                MediaTypeEnum.IMAGE_AND_VIDEO,
+                -> {
+                    compressCallback?.onResult(bean.mediaList.orEmpty())
+                    compressCallback = null
+                }
+                else -> Unit
             }
         }
     }
@@ -57,9 +68,22 @@ class MediaHelperGateway(
             .show()
     }
 
-    override fun compressImages(uris: List<Uri>, onResult: MediaResultCallback) {
+    override fun compressImages(
+        uris: List<Uri>,
+        options: GatewayImageCompressOptions,
+        onResult: MediaResultCallback,
+    ) {
         compressCallback = onResult
-        mediaHelper.startCompressImage(uris)
+        mediaHelper.startCompressImage(uris, options.toMediaOptions())
+    }
+
+    override fun compressVideos(
+        uris: List<Uri>,
+        options: GatewayVideoCompressOptions,
+        onResult: MediaResultCallback,
+    ) {
+        compressCallback = onResult
+        mediaHelper.startCompressVideo(uris, options.toMediaOptions())
     }
 
     override fun previewImages(uris: List<Uri>, startIndex: Int) {
@@ -67,4 +91,33 @@ class MediaHelperGateway(
     }
 
     override fun isAvailable(): Boolean = true
+
+    private fun GatewayImageCompressOptions.toMediaOptions(): ImageCompressOptions {
+        val format = when (format?.lowercase()) {
+            "jpeg", "jpg" -> ImageOutputFormat.JPEG
+            else -> ImageOutputFormat.WEBP
+        }
+        return ImageCompressOptions(
+            maxLongSide = maxLongSide ?: 1920,
+            targetSizeKb = targetSizeKb ?: 200,
+            skipUnderKb = skipUnderKb ?: 200,
+            format = format,
+            quality = quality ?: 80,
+        )
+    }
+
+    private fun GatewayVideoCompressOptions.toMediaOptions(): VideoCompressOptions {
+        val mediaPreset = when (preset) {
+            GatewayVideoPreset.LOW -> VideoExportPreset.LOW
+            GatewayVideoPreset.MEDIUM -> VideoExportPreset.MEDIUM
+            GatewayVideoPreset.HIGH -> VideoExportPreset.HIGH
+        }
+        return VideoCompressOptions(
+            preset = mediaPreset,
+            maxLongSide = maxLongSide,
+            skipUnderKb = skipUnderKb ?: 0,
+            timeoutMs = timeoutMs ?: 0L,
+            preferHevc = preferHevc ?: true,
+        )
+    }
 }

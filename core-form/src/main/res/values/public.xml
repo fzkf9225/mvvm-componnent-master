@@ -23,8 +23,6 @@
 
     <!--图片资源-->
     <public name="ic_add_theme_color" type="mipmap"/>
-    <public name="ic_clear_image_normal" type="mipmap"/>
-    <public name="ic_clear_image_pressed" type="mipmap"/>
     <public name="icon_down" type="mipmap"/>
     <public name="icon_file" type="mipmap"/>
     <!--字符串资源-->

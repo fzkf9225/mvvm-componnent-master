@@ -399,7 +399,8 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
                         return imageAddAdapter.getList().size();
                     }
                 })
-                .setImageQualityCompress(compressImageSize)
+                .setImageTargetSizeKb(compressImageSize)
+                .setImageSkipUnderKb(compressImageSize)
                 .builder();
         //图片、视频选择结果回调通知
         mediaHelper.getMutableLiveData().observe(lifecycleOwner, mediaBean -> {
@@ -432,6 +433,9 @@ public class FormImage extends FormMedia implements ImageAddAdapter.ImageViewAdd
                 List<AttachmentBean> attachmentList = AttachmentUtil.uriListToAttachmentList(mediaBean.getMediaList());
                 imageAddAdapter.getList().addAll(attachmentList);
                 imageAddAdapter.notifyDataSetChanged();
+                // 压缩后异步识别实况，刷新 LIVE 角标
+                AttachmentUtil.enrichLiveInfoAsync(getContext(), attachmentList,
+                        () -> imageAddAdapter.notifyDataSetChanged());
                 if (requireUriPermission) {
                     AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
                 }

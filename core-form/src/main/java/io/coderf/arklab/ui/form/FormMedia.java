@@ -583,7 +583,7 @@ public abstract class FormMedia extends CornerConstraintLayout implements FormVa
     public void createRecyclerView() {
         mediaRecyclerView = new RecyclerView(getContext());
         mediaRecyclerView.setId(View.generateViewId());
-        mediaRecyclerView.addItemDecoration(new GridSpacingItemDecoration((int) columnMargin, 0x00000000));
+        mediaRecyclerView.addItemDecoration(new GridSpacingItemDecoration((int) columnMargin));
         mediaRecyclerView.setLayoutManager(new FullyGridLayoutManager(getContext(), columnCount) {
             @Override
             public boolean canScrollVertically() {

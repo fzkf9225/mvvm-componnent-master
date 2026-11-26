@@ -39,7 +39,7 @@ import io.coderf.arklab.media.MediaHelper;
 import io.coderf.arklab.media.dialog.OpenMediaDialog;
 import io.coderf.arklab.media.enums.MediaPickerTypeEnum;
 import io.coderf.arklab.media.enums.MediaTypeEnum;
-import io.coderf.arklab.media.enums.VideoQualityEnum;
+import io.coderf.arklab.media.compress.VideoExportPreset;
 import io.coderf.arklab.media.listener.MediaListener;
 import io.coderf.arklab.ui.R;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -135,7 +135,7 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
             compress = typedArray.getBoolean(R.styleable.FormUI_compress, true);
             maxVideoDuration = typedArray.getInt(R.styleable.FormUI_maxVideoDuration, 30);
             formCountLabelTextSize = typedArray.getDimension(R.styleable.FormUI_formCountLabelTextSize, DensityUtil.sp2px(getContext(), 14));
-            compressVideo = typedArray.getInt(R.styleable.FormUI_compress_video, VideoQualityEnum.LOW.value);
+            compressVideo = typedArray.getInt(R.styleable.FormUI_compress_video, VideoExportPreset.LOW.getAttrValue());
             countLabelTextColor = typedArray.getColor(R.styleable.FormUI_countLabelTextColor, ThemeAttrs.onSurfaceVariant(getContext()));
             showCountLabel = typedArray.getBoolean(R.styleable.FormUI_showCountLabel, true);
             compressImageSize = typedArray.getInt(R.styleable.FormUI_compressImageSize, 300);
@@ -150,7 +150,7 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
             compress = true;
             compressImageSize = 300;
             maxVideoDuration = 30;
-            compressVideo = VideoQualityEnum.LOW.value;
+            compressVideo = VideoExportPreset.LOW.getAttrValue();
             labelTextColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext());
         }
     }
@@ -413,12 +413,13 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
                 .bindLifeCycle(lifecycleOwner)
                 .setMediaMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
                 .setChooseType(MediaPickerTypeEnum.PICK)
-                .setImageQualityCompress(compressImageSize)
+                .setImageTargetSizeKb(compressImageSize)
+                .setImageSkipUnderKb(compressImageSize)
                 .setWriteCaptureExifMetadata(writeCaptureExifMetadata)
                 .setMaxVideoTime(maxVideoDuration)
                 .setDefaultVideoSubPath(saveSubPath)
                 .setDefaultImageSubPath(saveSubPath)
-                .setVideoQuality(VideoQualityEnum.getInfo(compressVideo))
+                .setVideoPreset(VideoExportPreset.fromAttrValue(compressVideo))
                 .setShowPermissionDialog(protocolDialog)
                 .setMediaType(fileType)
                 .setImageSelectedListener(new MediaListener() {
@@ -461,6 +462,8 @@ public class FormImageAndVideo extends FormMedia implements MediaAddAdapter.Medi
 
                 mediaAddAdapter.getList().addAll(attachmentList);
                 mediaAddAdapter.notifyDataSetChanged();
+                AttachmentUtil.enrichLiveInfoAsync(getContext(), attachmentList,
+                        () -> mediaAddAdapter.notifyDataSetChanged());
                 if(requireUriPermission){
                     AttachmentUtil.takeUriPermission(getContext(), mediaBean.getMediaList());
                 }

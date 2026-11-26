@@ -18,9 +18,11 @@ import io.coderf.arklab.common.adapter.MediaAddAdapter;
 import io.coderf.arklab.common.base.BaseActivity;
 import io.coderf.arklab.common.bean.AttachmentBean;
 import io.coderf.arklab.common.utils.common.AttachmentUtil;
+import io.coderf.arklab.common.widget.recyclerview.GridSpacingItemDecoration;
 import io.coderf.arklab.core.utils.CollectionUtil;
 import io.coderf.arklab.common.widget.gallery.PreviewPhotoDialog;
 import io.coderf.arklab.common.widget.recyclerview.FullyGridLayoutManager;
+import io.coderf.arklab.core.utils.DensityUtil;
 import io.coderf.arklab.demo.R;
 import io.coderf.arklab.demo.bean.UseCase;
 import io.coderf.arklab.demo.databinding.ActivityMediaCompressBinding;
@@ -30,7 +32,7 @@ import io.coderf.arklab.media.dialog.OpenImageDialog;
 import io.coderf.arklab.media.dialog.OpenMediaDialog;
 import io.coderf.arklab.media.dialog.OpenShootDialog;
 import io.coderf.arklab.media.enums.MediaTypeEnum;
-import io.coderf.arklab.media.enums.VideoQualityEnum;
+import io.coderf.arklab.media.compress.VideoExportPreset;
 import io.coderf.arklab.media.module.ActivityMediaHelper;
 
 /**
@@ -66,6 +68,7 @@ public class MediaCompressActivity extends BaseActivity<MediaCompressViewModel, 
         mediaAddAdapter.setBgColor(Color.WHITE);
         mediaAddAdapter.setMediaClearListener(this);
         mediaAddAdapter.setMediaAddListener(this);
+        binding.imageVideoRecyclerView.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this,12)));
         binding.imageVideoRecyclerView.setLayoutManager(new FullyGridLayoutManager(this, 3) {
             @Override
             public boolean canScrollVertically() {
@@ -123,8 +126,9 @@ public class MediaCompressActivity extends BaseActivity<MediaCompressViewModel, 
         mediaHelper.getMediaBuilder()
                 .setImageMaxSelectedCount(1)
                 .setVideoMaxSelectedCount(1)
-                .setImageQualityCompress(300)
-                .setVideoQuality(VideoQualityEnum.LOW)
+                .setImageTargetSizeKb(300)
+                .setImageSkipUnderKb(300)
+                .setVideoPreset(VideoExportPreset.LOW)
                 // 相册 HEVC/高分辨率视频偶发卡在 98%/99%，设置超时后回调 CompressListener.onResult 失败
                 .setVideoCompressTimeoutMs(90_000L);
         //图片、视频选择结果回调通知

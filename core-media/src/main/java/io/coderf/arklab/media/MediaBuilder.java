@@ -19,7 +19,10 @@ import java.io.File;
 
 import io.coderf.arklab.media.enums.MediaPickerTypeEnum;
 import io.coderf.arklab.media.utils.MediaUtil;
-import io.coderf.arklab.media.enums.VideoQualityEnum;
+import io.coderf.arklab.media.compress.ImageCompressOptions;
+import io.coderf.arklab.media.compress.ImageOutputFormat;
+import io.coderf.arklab.media.compress.VideoCompressOptions;
+import io.coderf.arklab.media.compress.VideoExportPreset;
 import io.coderf.arklab.media.listener.MediaListener;
 import io.coderf.arklab.media.listener.OnDialogInterfaceClickListener;
 
@@ -52,23 +55,26 @@ public class MediaBuilder {
      * FileProvider authority 默认后缀，完整值为 {@code packageName + FILE_PROVIDER_SUFFIX}
      */
     public static final String FILE_PROVIDER_SUFFIX = ".FileProvider";
-    /**
-     * 图片压缩最大宽度未配置（0）：按原图像素自动等比缩放，不套固定宽高框。
-     */
-    public static final int DEFAULT_IMAGE_COMPRESS_MAX_WIDTH = 0;
-    /**
-     * 图片压缩最大高度未配置（0）：按原图像素自动等比缩放，不套固定宽高框。
-     */
-    public static final int DEFAULT_IMAGE_COMPRESS_MAX_HEIGHT = 0;
+    /** 图片默认长边上限（px） */
+    public static final int DEFAULT_IMAGE_MAX_LONG_SIDE = 1920;
+    /** 图片默认目标体积（kb） */
+    public static final int DEFAULT_IMAGE_TARGET_SIZE_KB = 200;
+    /** 图片默认跳过压缩阈值（kb） */
+    public static final int DEFAULT_IMAGE_SKIP_UNDER_KB = 200;
 
     /**
      * 设置视频拍摄时长，单位：秒
      */
     public int maxVideoTime = 30;
     /**
-     * 视频压缩质量
+     * 视频导出档位（4.0）
      */
-    private VideoQualityEnum videoQuality = VideoQualityEnum.MEDIUM;
+    private VideoExportPreset videoPreset = VideoExportPreset.MEDIUM;
+    /**
+     * 视频压缩完整 Options；preset / timeout / skip 仍可被分项 setter 覆盖
+     */
+    @Nullable
+    private VideoCompressOptions videoCompressOptions;
     /**
      * lifecycle绑定
      */
@@ -93,26 +99,24 @@ public class MediaBuilder {
      * 最大文图片和视频选择数量，同时选择图片和视频
      */
     public int mediaMaxSelectedCount = MediaHelper.DEFAULT_MEDIA_MAX_COUNT;
+    /** 图片目标体积 kb */
+    private int imageTargetSizeKb = DEFAULT_IMAGE_TARGET_SIZE_KB;
+    /** 图片小于该 kb 跳过压缩 */
+    private int imageSkipUnderKb = DEFAULT_IMAGE_SKIP_UNDER_KB;
+    /** 图片长边上限 px；0 表示不强行限制 */
+    private int imageMaxLongSide = DEFAULT_IMAGE_MAX_LONG_SIDE;
     /**
-     * 图片压缩大小限制，默认200，单位kb
+     * 完整图片 Options；非 null 时优先。
      */
-    public int imageQualityCompress = 200;
-    /**
-     * 图片压缩最大宽度，单位像素。0 表示未配置，按原图像素自动等比缩放。
-     */
-    private int imageCompressMaxWidth = DEFAULT_IMAGE_COMPRESS_MAX_WIDTH;
-    /**
-     * 图片压缩最大高度，单位像素。0 表示未配置，按原图像素自动等比缩放。
-     */
-    private int imageCompressMaxHeight = DEFAULT_IMAGE_COMPRESS_MAX_HEIGHT;
+    @Nullable
+    private ImageCompressOptions imageCompressOptions;
     /**
      * 视频小于该大小则跳过压缩，单位 kb。默认 0 表示不跳过（保持现有「始终压缩」行为）
      */
     private int videoSkipCompressUnderKb = 0;
     /**
      * 单次视频压缩超时时间，单位毫秒。
-     * 默认 120秒 表示启用超时；
-     * 大于 0 时，超过该时间仍未完成会回调 {@link io.coderf.arklab.media.compressor.video.CompressListener#onResult(boolean, String)} 失败。
+     * 默认 120秒 表示启用超时；大于 0 时超时后回调失败。
      */
     private long videoCompressTimeoutMs = 120_000L;
     /**
@@ -876,49 +880,43 @@ public class MediaBuilder {
     }
 
     /**
-     * 图片压缩质量
-     *
-     * @param imageQualityCompress 单位大小kb,默认200kb
-     * @return this
+     * 图片目标体积（kb）。默认 200。
      */
-    public MediaBuilder setImageQualityCompress(int imageQualityCompress) {
-        this.imageQualityCompress = imageQualityCompress;
+    public MediaBuilder setImageTargetSizeKb(int targetSizeKb) {
+        this.imageTargetSizeKb = Math.max(1, targetSizeKb);
+        this.imageCompressOptions = null;
         return this;
     }
 
     /**
-     * 图片压缩最大宽度（像素）。0 表示该边不限制；宽高都为 0 时按原图像素自动等比缩放。
-     *
-     * @param imageCompressMaxWidth 最大宽度，默认 0（自动）
-     * @return this
+     * 小于该 kb 则跳过图片压缩。默认 200。
      */
-    public MediaBuilder setImageCompressMaxWidth(int imageCompressMaxWidth) {
-        this.imageCompressMaxWidth = Math.max(0, imageCompressMaxWidth);
+    public MediaBuilder setImageSkipUnderKb(int skipUnderKb) {
+        this.imageSkipUnderKb = Math.max(0, skipUnderKb);
+        this.imageCompressOptions = null;
         return this;
     }
 
     /**
-     * 图片压缩最大高度（像素）。0 表示该边不限制；宽高都为 0 时按原图像素自动等比缩放。
-     *
-     * @param imageCompressMaxHeight 最大高度，默认 0（自动）
-     * @return this
+     * 图片长边上限（px）。0 表示不强行限制长边。默认 1920。
      */
-    public MediaBuilder setImageCompressMaxHeight(int imageCompressMaxHeight) {
-        this.imageCompressMaxHeight = Math.max(0, imageCompressMaxHeight);
+    public MediaBuilder setImageMaxLongSide(int maxLongSide) {
+        this.imageMaxLongSide = Math.max(0, maxLongSide);
+        this.imageCompressOptions = null;
         return this;
     }
 
     /**
-     * 同时设置图片压缩最大宽高（像素）。
-     * 传 (0, 0) 或不调用：按原图像素自动等比缩放。
-     * 任一边大于 0：将该边作为上限，另一边按原比例计算。
-     *
-     * @param maxWidth  最大宽度
-     * @param maxHeight 最大高度
-     * @return this
+     * 一次性设置图片压缩 Options。
      */
-    public MediaBuilder setImageCompressMaxSize(int maxWidth, int maxHeight) {
-        return setImageCompressMaxWidth(maxWidth).setImageCompressMaxHeight(maxHeight);
+    public MediaBuilder setImageCompressOptions(@Nullable ImageCompressOptions options) {
+        this.imageCompressOptions = options;
+        if (options != null) {
+            this.imageTargetSizeKb = Math.max(1, options.getTargetSizeKb());
+            this.imageSkipUnderKb = Math.max(0, options.getSkipUnderKb());
+            this.imageMaxLongSide = Math.max(0, options.getMaxLongSide());
+        }
+        return this;
     }
 
     /**
@@ -989,12 +987,27 @@ public class MediaBuilder {
     }
 
     /**
-     * 视频压缩质量，枚举VideoQualityEnum
-     * @param videoQuality 低质量-1，中质量-2，高质量-3
+     * 视频导出档位（替代旧 VideoQualityEnum）。
+     *
+     * @param videoPreset LOW / MEDIUM / HIGH
      * @return this
      */
-    public MediaBuilder setVideoQuality(VideoQualityEnum videoQuality) {
-        this.videoQuality = videoQuality;
+    public MediaBuilder setVideoPreset(VideoExportPreset videoPreset) {
+        this.videoPreset = videoPreset == null ? VideoExportPreset.MEDIUM : videoPreset;
+        this.videoCompressOptions = null;
+        return this;
+    }
+
+    /**
+     * 一次性设置视频压缩 Options（优先于分项 setter 中的 preset）。
+     */
+    public MediaBuilder setVideoCompressOptions(@Nullable VideoCompressOptions options) {
+        this.videoCompressOptions = options;
+        if (options != null) {
+            this.videoPreset = options.getPreset();
+            this.videoSkipCompressUnderKb = Math.max(0, options.getSkipUnderKb());
+            this.videoCompressTimeoutMs = Math.max(0L, options.getTimeoutMs());
+        }
         return this;
     }
 
@@ -1033,11 +1046,33 @@ public class MediaBuilder {
     }
 
     /**
-     * 获取视频压缩质量，低质量-1，中质量-2，高质量-3
-     * @return 视频质量
+     * 获取视频导出档位。
      */
-    public VideoQualityEnum getVideoQuality() {
-        return videoQuality;
+    public VideoExportPreset getVideoPreset() {
+        return videoPreset == null ? VideoExportPreset.MEDIUM : videoPreset;
+    }
+
+    @Nullable
+    public VideoCompressOptions getVideoCompressOptions() {
+        return videoCompressOptions;
+    }
+
+    /**
+     * 解析最终视频压缩参数（Options 对象优先，否则由分项字段组装）。
+     */
+    @NonNull
+    public VideoCompressOptions resolvedVideoCompressOptions() {
+        if (videoCompressOptions != null) {
+            return videoCompressOptions;
+        }
+        return new VideoCompressOptions(
+                getVideoPreset(),
+                null,
+                null,
+                true,
+                videoSkipCompressUnderKb,
+                videoCompressTimeoutMs
+        );
     }
 
     /**
@@ -1048,26 +1083,38 @@ public class MediaBuilder {
         return imageMaxSelectedCount;
     }
 
-    /**
-     * 获取图片压缩质量，单位kb
-     * @return 图片压缩质量
-     */
-    public int getImageQualityCompress() {
-        return imageQualityCompress;
+    public int getImageTargetSizeKb() {
+        return imageTargetSizeKb;
+    }
+
+    public int getImageSkipUnderKb() {
+        return imageSkipUnderKb;
+    }
+
+    public int getImageMaxLongSide() {
+        return imageMaxLongSide;
+    }
+
+    @Nullable
+    public ImageCompressOptions getImageCompressOptions() {
+        return imageCompressOptions;
     }
 
     /**
-     * 图片压缩最大宽度（像素）。0 表示未配置，走原图像素自动等比缩放。
+     * 解析最终图片压缩参数。
      */
-    public int getImageCompressMaxWidth() {
-        return imageCompressMaxWidth;
-    }
-
-    /**
-     * 图片压缩最大高度（像素）。0 表示未配置，走原图像素自动等比缩放。
-     */
-    public int getImageCompressMaxHeight() {
-        return imageCompressMaxHeight;
+    @NonNull
+    public ImageCompressOptions resolvedImageCompressOptions() {
+        if (imageCompressOptions != null) {
+            return imageCompressOptions;
+        }
+        return new ImageCompressOptions(
+                imageMaxLongSide,
+                Math.max(1, imageTargetSizeKb),
+                Math.max(0, imageSkipUnderKb),
+                ImageOutputFormat.WEBP,
+                80
+        );
     }
 
     /**

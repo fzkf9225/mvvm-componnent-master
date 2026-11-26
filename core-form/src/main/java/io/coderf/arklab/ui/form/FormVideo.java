@@ -39,7 +39,7 @@ import io.coderf.arklab.media.MediaHelper;
 import io.coderf.arklab.media.dialog.OpenShootDialog;
 import io.coderf.arklab.media.enums.MediaPickerTypeEnum;
 import io.coderf.arklab.media.enums.MediaTypeEnum;
-import io.coderf.arklab.media.enums.VideoQualityEnum;
+import io.coderf.arklab.media.compress.VideoExportPreset;
 import io.coderf.arklab.media.listener.MediaListener;
 import io.coderf.arklab.ui.R;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -132,7 +132,7 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
             required = typedArray.getBoolean(R.styleable.FormUI_required, false);
             compress = typedArray.getBoolean(R.styleable.FormUI_compress, true);
             maxVideoDuration = typedArray.getInt(R.styleable.FormUI_maxVideoDuration, 30);
-            compressVideo = typedArray.getInt(R.styleable.FormUI_compress_video, VideoQualityEnum.LOW.value);
+            compressVideo = typedArray.getInt(R.styleable.FormUI_compress_video, VideoExportPreset.LOW.getAttrValue());
             mediaType = typedArray.getInt(R.styleable.FormUI_mediaType, OpenShootDialog.CAMERA_ALBUM);
             maxCount = typedArray.getInt(R.styleable.FormUI_maxCount, MediaHelper.DEFAULT_ALBUM_MAX_COUNT);
             formCountLabelTextSize = typedArray.getDimension(R.styleable.FormUI_formCountLabelTextSize, DensityUtil.sp2px(getContext(), 14));
@@ -146,7 +146,7 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
             formCountLabelTextSize = DensityUtil.sp2px(getContext(), 14);
             countLabelTextColor = ThemeAttrs.onSurfaceVariant(getContext());
             compress = true;
-            compressVideo = VideoQualityEnum.LOW.value;
+            compressVideo = VideoExportPreset.LOW.getAttrValue();
             labelTextColor = io.coderf.arklab.common.utils.theme.ThemeAttrs.onSurface(getContext());
         }
     }
@@ -402,7 +402,7 @@ public class FormVideo extends FormMedia implements VideoAddAdapter.VideoAddList
                 .setVideoMaxSelectedCount(maxCount == -1 ? Integer.MAX_VALUE : maxCount)
                 .setChooseType(MediaPickerTypeEnum.PICK)
                 .setWriteCaptureExifMetadata(writeCaptureExifMetadata)
-                .setVideoQuality(VideoQualityEnum.getInfo(compressVideo))
+                .setVideoPreset(VideoExportPreset.fromAttrValue(compressVideo))
                 .setVideoType(fileType)
                 .setDefaultVideoSubPath(saveSubPath)
                 .setMaxVideoTime(maxVideoDuration)

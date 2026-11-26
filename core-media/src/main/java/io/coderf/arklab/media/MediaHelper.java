@@ -20,7 +20,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
-import io.coderf.arklab.media.R;
 import io.coderf.arklab.media.bean.MediaBean;
 import io.coderf.arklab.media.bean.MediaResult;
 import io.coderf.arklab.media.bean.SelectorOptions;
@@ -32,9 +31,9 @@ import io.coderf.arklab.media.dialog.PermissionReminderDialog;
 import io.coderf.arklab.media.dialog.TipDialog;
 import io.coderf.arklab.media.enums.MediaPickerTypeEnum;
 import io.coderf.arklab.media.enums.MediaTypeEnum;
-import io.coderf.arklab.media.handler.ImageCompressHandler;
-import io.coderf.arklab.media.handler.MediaCompressHandler;
-import io.coderf.arklab.media.handler.VideoCompressHandler;
+import io.coderf.arklab.media.compress.CompressScheduler;
+import io.coderf.arklab.media.compress.ImageCompressOptions;
+import io.coderf.arklab.media.compress.VideoCompressOptions;
 import io.coderf.arklab.media.handler.WaterMarkHandler;
 import io.coderf.arklab.media.helper.ConstantsHelper;
 import io.coderf.arklab.media.helper.MediaLifecycleObserver;
@@ -442,15 +441,23 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
     }
 
     /**
-     * 开始压缩
+     * 开始压缩图片（使用 MediaBuilder 上的图片 Options）。
      */
     public void startCompressImage(List<Uri> images) {
+        startCompressImage(images, null);
+    }
+
+    /**
+     * 开始压缩图片。
+     *
+     * @param images  源图 Uri
+     * @param options 非 null 时覆盖 Builder 配置
+     */
+    public void startCompressImage(List<Uri> images, @Nullable ImageCompressOptions options) {
         if (released || images == null) {
             return;
         }
-        Message message = new Message();
-        message.what = 0;
-        new ImageCompressHandler(this,handlerLooper(), images).sendMessage(message);
+        new CompressScheduler(this, handlerLooper()).startImages(images, options);
     }
 
     @Override
@@ -786,29 +793,33 @@ public class MediaHelper implements OpenImageDialog.OnOpenImageClickListener, Op
                 mediaLifecycleObserver.getCameraLauncher().launch(MediaTypeEnum.IMAGE_AND_VIDEO));
     }
     /**
-     * 开始压缩
+     * 开始压缩视频（使用 MediaBuilder 上的视频 Options / Preset）。
      */
     public void startCompressVideo(List<Uri> videos) {
-        if (released || videos == null) {
-            return;
-        }
-        Message message = new Message();
-        message.obj = videos;
-        message.what = 0;
-        new VideoCompressHandler(this,handlerLooper(), videos).sendMessage(message);
+        startCompressVideo(videos, null);
     }
 
     /**
-     * 开始压缩
+     * 开始压缩视频。
+     *
+     * @param videos  源视频 Uri
+     * @param options 非 null 时覆盖 Builder 配置
+     */
+    public void startCompressVideo(List<Uri> videos, @Nullable VideoCompressOptions options) {
+        if (released || videos == null) {
+            return;
+        }
+        new CompressScheduler(this, handlerLooper()).startVideos(videos, options);
+    }
+
+    /**
+     * 开始压缩（按 MIME 分流图片/视频，串行）。
      */
     public void startCompressMedia(List<Uri> mediaList) {
         if (released || mediaList == null) {
             return;
         }
-        Message message = new Message();
-        message.obj = mediaList;
-        message.what = 0;
-        new MediaCompressHandler(this,handlerLooper(), mediaList).sendMessage(message);
+        new CompressScheduler(this, handlerLooper()).startMixed(mediaList);
     }
 
     @Override

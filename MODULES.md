@@ -1,6 +1,6 @@
 # 模块说明与使用指南
 
-> 对应版本（以各模块 `build.gradle` 为准）：**common `4.8.1`** · **core-base `2.0.7`** · **core-network `1.8.0`** · **core-db `1.7.0`** · **core-ui `1.3.1`** · **core-utils `1.2.3`** · **core-log `1.2.0`** · **room-processor `1.2.0`** · **core-ws `1.0.1`** · **core-form `3.8.2`** · **core-media `3.7.1`** · **core-speak `1.0.0`** · **core-gnss `4.0.1`**  
+> 对应版本（以各模块 `build.gradle` 为准）：**common `4.8.1`** · **core-base `2.0.7`** · **core-network `1.8.0`** · **core-db `1.7.0`** · **core-ui `1.3.1`** · **core-utils `1.2.3`** · **core-log `1.2.0`** · **room-processor `1.2.0`** · **core-ws `1.0.1`** · **core-form `3.8.2`** · **core-media `4.0.0`** · **core-speak `1.0.0`** · **core-gnss `4.0.1`**  
 > Options 完善见 [UPGRADE.md §0](./UPGRADE.md#0-160network--db请求-options-完善)；剔除 `BaseView` 见 [UPGRADE.md §2](./UPGRADE.md#2-120彻底剔除-baseview--mvp-页面绑定)。  
 > 本文说明各模块职责、依赖关系与日常用法。升级请看 [UPGRADE.md](./UPGRADE.md)。
 
@@ -179,7 +179,7 @@ Demo 参考：`SampleCoreNetworkRepository`、`LoginViewModel`、`DemoFlowPaging
 | 能力 | 建议 |
 |------|------|
 | `MediaHelper` 选图/拍照/预览 + app 侧 `MediaGateway` | **保留**（组件化主路径） |
-| 自研 `ImgCompressor` / `VideoCompress` / Crop | 评估替换成熟库或拆 `core-media-compress`；仅 Demo 使用则优先外置 |
+| 压缩 4.0：Media3 Transformer + ImageDecoder/WebP | 已落地；业务经 `MediaGateway`，勿直接依赖 `core-media` |
 | 平行 `UIController` / `DebugUtil` / `LogUtil` | 计划删除，收敛到 core |
 | `core-form` → `implementation core-media` | 已知耦合；表单媒体行需要时再引，长期应改为 Gateway/可选依赖 |
 | `core-ws` | WebSocket（OkHttp，对齐 core-mqtt 分层） | 按需；业务信封勿写入框架 |
@@ -244,7 +244,7 @@ mediaGateway.pickImages(1, uris -> { /* 上传头像等 */ });
 | room-processor | `io.coderf.arklab.room:room-processor:1.2.0`（见 [room-processor/README.md](./room-processor/README.md)） |
 | core-mqtt | `io.coderf.arklab.mqtt:mqtt:1.6.2` |
 | core-ws | `io.coderf.arklab.ws:ws:1.0.1` |
-| core-media | `io.coderf.arklab.media:media:3.7.1`（原模块名 `commonmedia`；包名 / Maven 坐标不变） |
+| core-media | `io.coderf.arklab.media:media:4.0.0`（原模块名 `commonmedia`；包名 / Maven 坐标不变；4.0 压缩管线破坏性变更） |
 | core-speak | `io.coderf.arklab.speak:speak:1.0.0`（可选；见 [core-speak/README.md](./core-speak/README.md)） |
 | core-form | `io.coderf.arklab.ui:ui:3.8.2`（原模块名 `commonui`；包名 / Maven 坐标不变；`api` → core-base / core-network，另依赖 media） |
 | core-gnss | `io.coderf.arklab.gnss:core-gnss:4.0.1`（原 `googlegps`，包名 `io.coderf.arklab.gnss`，无旧坐标兼容） |

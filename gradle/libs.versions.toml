@@ -16,8 +16,7 @@ aspectjAspectjrt = "1.9.24"
 awsAndroidSdkVersion = "2.22.5"
 birbitAndroidPriorityJobqueue = "3.0.0"
 githubLogbackAndroidClassic = "1.1.1-6"
-googlecodeIsoparser = "1.1.22"
-mp4parser = "1.9.56"
+media3 = "1.11.1"
 guava = "33.6.0-android"
 lifecycleRuntimeKtxVersion = "2.11.0"
 nettyVersion = "4.1.9.Final"
@@ -172,9 +171,10 @@ org-apache-jackrabbit-jackrabbit-webdav = { module = "org.apache.jackrabbit:jack
 # Miscellaneous
 com-birbit-android-priority-jobqueue = { module = "com.birbit:android-priority-jobqueue", version.ref = "birbitAndroidPriorityJobqueue" }
 github-logback-android-classic = { module = "com.github.tony19:logback-android-classic", version.ref = "githubLogbackAndroidClassic" }
-googlecode-isoparser = { module = "com.googlecode.mp4parser:isoparser", version.ref = "googlecodeIsoparser" }
-mp4parser-muxer = { module = "org.mp4parser:muxer", version.ref = "mp4parser" }
-mp4parser-isoparser = { module = "org.mp4parser:isoparser", version.ref = "mp4parser" }
+# Media3 Transformer（core-media 4.0 视频压缩）
+androidx-media3-transformer = { module = "androidx.media3:media3-transformer", version.ref = "media3" }
+androidx-media3-effect = { module = "androidx.media3:media3-effect", version.ref = "media3" }
+androidx-media3-common = { module = "androidx.media3:media3-common", version.ref = "media3" }
 org-aspectj-aspectjrt = { module = "org.aspectj:aspectjrt", version.ref = "aspectjAspectjrt" }
 paho-org-eclipse-paho-mqttv5-client = { module = "org.eclipse.paho:org.eclipse.paho.mqttv5.client", version.ref = "orgEclipsePahoMqttv5Client" }
 slf4j-slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4jApi" }

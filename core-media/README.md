@@ -4,8 +4,8 @@
 
 | 项 | 值 |
 |----|-----|
-| 当前版本 | **3.7.0** |
-| Maven | `io.coderf.arklab.media:media:3.7.0` |
+| 当前版本 | **4.0.0** |
+| Maven | `io.coderf.arklab.media:media:4.0.0` |
 | namespace | `io.coderf.arklab.media` |
 | Gradle 模块 | `:core-media`（原 `:commonmedia`） |
 
@@ -23,7 +23,8 @@
 
 ## 依赖
 
-- 工程内仅 `api project(':core-log')`
+- 工程内：`api project(':core-log')`、`implementation project(':core-utils')`
+- Media3 Transformer / Effect / Common **1.11.1**（视频压缩）
 - 对外：`appcompat` / `material` / `activity` / `lifecycle` / Hilt / ExifInterface 等（见 `build.gradle`）
 
 ---
@@ -34,10 +35,10 @@
 
 ```gradle
 // app
-implementation 'io.coderf.arklab.media:media:3.7.0'
+implementation 'io.coderf.arklab.media:media:4.0.0'
 ```
 
-Demo 参考：`app/.../media/MediaHelperGateway`、`MediaGatewayModule`、`MediaActivity`。
+Demo 参考：`app/.../media/MediaHelperGateway`、`MediaGatewayModule`、`MediaCompressActivity`。
 
 ---
 
@@ -45,15 +46,11 @@ Demo 参考：`app/.../media/MediaHelperGateway`、`MediaGatewayModule`、`Media
 
 ### 1. Hilt 注入（推荐）
 
-Activity / Fragment 内注入即可，默认：`MediaPickerTypeEnum.PICK`、开启拍照 EXIF 写入、各类型最大选 9。
-
 ```java
 @Inject
 @ActivityMediaHelper   // Fragment 用 @FragmentMediaHelper
 MediaHelper mediaHelper;
 ```
-
-注入后可再改配置（无需重新 `builder()`）：
 
 ```java
 mediaHelper.getMediaBuilder()
@@ -61,155 +58,84 @@ mediaHelper.getMediaBuilder()
     .setVideoMaxSelectedCount(2)
     .setChooseType(MediaPickerTypeEnum.PICK)
     .setWriteCaptureExifMetadata(true)
-    .setImageQualityCompress(200)
+    .setImageTargetSizeKb(200)
+    .setImageSkipUnderKb(200)
+    .setImageMaxLongSide(1920)
+    .setVideoPreset(VideoExportPreset.MEDIUM)
     .setImageSelectedListener(() -> imageList.size());
 ```
-
-> `@ActivityMediaHelper` 要求宿主为 `ComponentActivity`（含 `AppCompatActivity`）。
 
 ### 2. 手动创建
 
 ```java
 MediaHelper mediaHelper = new MediaBuilder(this)
-    .bindLifeCycle(this)                 // 必填：绑定 Lifecycle
+    .bindLifeCycle(this)
     .setChooseType(MediaPickerTypeEnum.PICK)
-    .setImageQualityCompress(200)
-    // .setImageCompressMaxSize(720, 1280)  // 可选：最大宽高框；不设则原图等比缩放
-    .setVideoSkipCompressUnderKb(0)      // 小于该 kb 跳过视频压缩；0=不跳过
-    .setFileProviderAuthority(null)      // 空则 packageName.FileProvider
+    .setImageCompressOptions(new ImageCompressOptions(1920, 200, 200, ImageOutputFormat.WEBP, 80))
+    .setVideoCompressOptions(new VideoCompressOptions(VideoExportPreset.MEDIUM, null, null, true, 0, 120_000L))
+    .setFileProviderAuthority(null)
     .builder();
 ```
 
-### 3. 打开选择 / 拍摄
-
-| 场景 | API |
-|------|-----|
-| 底部 ActionSheet（相册+拍照） | `openImageDialog(view, OpenImageDialog.CAMERA_ALBUM)` |
-| 仅相册 / 仅拍照 | `openImg()` / `camera()` |
-| 视频选择 / 录像 | `openShoot()` / `shoot()` |
-| 图+视频混合 | `openMedia()` / `openMediaDialog(...)` |
-| 音频 / 文件 | `openAudio()` / `openFile()` 或 `openFileDialog(...)` |
-
-权限说明弹窗 → 系统授权 → 拒绝后提示去设置，由库内处理；业务侧一般只需调上述入口。
-
-### 4. 结果回调
-
-**分路 LiveData（历史兼容）：**
-
-```java
-mediaHelper.getMutableLiveData().observe(this, bean -> { /* 选择 */ });
-mediaHelper.getMutableLiveDataCompress().observe(this, bean -> { /* 压缩 */ });
-mediaHelper.getMutableLiveDataWaterMark().observe(this, bean -> { /* 水印 */ });
-```
-
-**统一结果（推荐新代码）：**
-
-```java
-// Java
-mediaHelper.getMediaResultLiveData().observe(this, result -> {
-    if (result instanceof MediaResult.Pick) { ... }
-    else if (result instanceof MediaResult.Compress) { ... }
-    else if (result instanceof MediaResult.WaterMark) { ... }
-});
-```
-
-```kotlin
-// Kotlin Flow
-lifecycleScope.launch {
-    mediaHelper.mediaResultFlow.collect { result ->
-        when (result) {
-            is MediaResult.Pick -> { }
-            is MediaResult.Compress -> { }
-            is MediaResult.WaterMark -> { }
-        }
-    }
-}
-```
-
-`MediaBean.mediaType`：`IMAGE` / `VIDEO` / `IMAGE_AND_VIDEO` / `AUDIO` / `FILE`。
-
-### 5. 压缩 / 水印
+### 3. 压缩入口
 
 ```java
 mediaHelper.startCompressImage(uriList);
+mediaHelper.startCompressImage(uriList, imageOptions); // 覆盖 Builder
 mediaHelper.startCompressVideo(uriList);
-mediaHelper.startCompressMedia(uriList);   // 按 MIME 自动分图片/视频
-mediaHelper.startWaterMark(bitmap);        // 或 startWaterMark(bitmap, alpha)
+mediaHelper.startCompressVideo(uriList, videoOptions);
+mediaHelper.startCompressMedia(uriList); // 按 MIME 分流，串行
 ```
 
-### 6. 独立裁剪
+默认：**图片 WebP**、目标约 200KB；**视频 MEDIUM**（长边约 1280、约 2.5Mbps），优先 H.265，失败自动回退 H.264。
 
-```java
-new ImageCropBuilder(this)
-    .setSourceUri(uri)
-    // .setFileProviderAuthority("xxx.FileProvider")
-    .setOnImageCropListener(new OnImageCropListener() { ... })
-    .start();
+### 4. Gateway（业务侧）
+
+业务只调 `:base` 的 `MediaGateway` + `GatewayImageCompressOptions` / `GatewayVideoCompressOptions`。  
+app 的 `MediaHelperGateway` 负责映射到 media 内部 Options。
+
+```kotlin
+mediaGateway.compressImages(uris) { out -> /* 上传 */ }
+mediaGateway.compressImages(uris, GatewayImageCompressOptions.JpegUpload) { out -> }
+mediaGateway.compressVideos(uris, GatewayVideoCompressOptions.LowFast) { out -> }
 ```
-
-### 7. 组装层 Gateway（Demo）
-
-业务模块只依赖 `:base` 的 `MediaGateway`；app 里用 `MediaHelper` 适配：
-
-- `app/.../media/MediaHelperGateway`
-- `app/.../di/MediaGatewayModule`
-
-### 8. 宿主注意
-
-- 声明与本库一致的 **FileProvider**（默认 authority：`包名.FileProvider`）
-- 库 Manifest 已声明媒体读/相机/录音/可选定位等；勿再依赖库内无关权限（3.7.0 已瘦身）
-- 录像公共目录默认落在 **Movies**（非 Pictures）；可用 `setDefaultVideoSubPath` 自定义相对路径
 
 ---
 
-## MediaBuilder 常用配置
-
-未设置压缩宽高时：图片按**原图像素自动等比缩放**，再按 `imageQualityCompress`（默认 200kb）做体积压缩。
+## MediaBuilder 压缩相关配置（4.0）
 
 | 方法 | 说明 |
 |------|------|
-| `bindLifeCycle` | 必填 |
-| `setChooseType` | `DEFAULT` 传统选择器 / `PICK` Photo Picker |
-| `setImageMaxSelectedCount` 等 | 各类型最大可选数 |
-| `setImageQualityCompress` | 小于该 kb 跳过图片压缩 |
-| `setImageCompressMaxSize` | 可选最大宽高框 |
-| `setVideoQuality` / `setVideoCompressTimeoutMs` | 视频质量与超时 |
-| `setWriteCaptureExifMetadata` | 拍照后写姿态/GPS 等到 EXIF |
-| `setShowPermissionDialog` | 是否展示授权前说明弹窗 |
-| `setPermissionPositiveTextColor` 等 | 仅 setter 调用后覆盖；默认跟 M3 主题色 |
-| `setFileProviderAuthority` | 非默认 FileProvider 时必设 |
-| `setSavePublic` / `setDefaultImageSubPath` / `setDefaultVideoSubPath` | 输出目录 |
+| `setImageCompressOptions` | 完整图片 Options |
+| `setImageTargetSizeKb` | 目标体积 kb（默认 200） |
+| `setImageSkipUnderKb` | 小于该 kb 跳过（默认 200） |
+| `setImageMaxLongSide` | 长边上限 px（默认 1920；0=不限） |
+| `setVideoCompressOptions` | 完整视频 Options |
+| `setVideoPreset` | `LOW` / `MEDIUM` / `HIGH` |
+| `setVideoSkipCompressUnderKb` | 视频跳过阈值；0=不跳过 |
+| `setVideoCompressTimeoutMs` | 超时毫秒；0=不超时（Builder 默认 120s） |
+
+**已删除（破坏性）：** `setImageQualityCompress`、`setImageCompressMaxSize`、`setVideoQuality` / `VideoQualityEnum`、自研 `ImgCompressor` / `VideoController` / mp4parser。
+
+体积策略：图片超标时 **二分 quality**，必要时再降长边；视频码率为 preset 表定量级，**禁止**再使用 `w×h×系数`。
 
 ---
 
 ## 版本变更
 
-> 新版本请插在本节最上方；保持「版本号 + 日期 + 要点列表」格式，便于持续迭代。
+### 4.0.0 — 2026-11-26
+
+**破坏性变更：压缩管线重写**
+
+- 视频：Media3 Transformer 1.11.1；优先 HEVC，失败回退 H.264；`VideoExportPreset` 替代 `VideoQualityEnum`
+- 图片：ImageDecoder（API 28+）/ BitmapFactory 兜底；默认 WebP；二分 quality
+- 调度：`CompressScheduler` 串行；删除旧 `*CompressHandler` 与 mp4parser / isoparser
+- Gateway：`compressImages/Videos` 支持 base 侧精简 Options（方案 A）
+- Maven 版本 **4.0.0**
 
 ### 3.7.0 — 2026-10-28
 
-权限与回调加固、Manifest 瘦身、Dialog/M3 对齐与若干体验优化（在 3.6.0 能力之上）。
-
-**缺陷修复**
-
-- 权限回调：无任何授予时不再执行 continuation；有授予再续传，并防止拒绝后死循环弹窗
-- `openAudio` / `openFile`：授权成功后自动继续打开选择器
-- `openMedia`：图片或视频任一侧缺权限都会申请（修正原先「与」逻辑漏申请）
-- `ImgCompressor`：失败只回调 `onCompressFail`，不再失败后再 `onCompressEnd(RESULT_OK)`
-- 自定义权限「确定」监听：业务回调后仍会 `launch` 系统授权，避免只改文案/埋点时流程中断
-
-**精简与主题**
-
-- 库 Manifest 移除与媒体无关的敏感权限（开机、电话状态等）
-- `PermissionReminderDialog` 复用 `TipDialog` + `MediaBaseDialog`（横屏/刘海补偿不变）
-- 确认框 / 未自定义的按钮色对齐 M3 语义色；裁剪确定按钮默认跟宿主 `colorPrimary`
-- 录像公共目录改为 `DIRECTORY_MOVIES`
-- 裁剪页源图改为后台解码，降低主线程 ANR 风险
-- `MediaModule` 抽取默认配置；非 `ComponentActivity` 给出明确异常
-
-### 3.6.0
-
-> （发布时未整理说明；若需补历史能力变更，可在此追加。）
+权限与回调加固、Manifest 瘦身、Dialog/M3 对齐与若干体验优化。
 
 ---
 
@@ -218,5 +144,3 @@ new ImageCropBuilder(this)
 ```bash
 ./gradlew :core-media:publish
 ```
-
-需配置环境变量：`ALIYUN_USER_NAME` / `ALIYUN_PASSWORD`。

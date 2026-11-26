@@ -78,12 +78,6 @@
 -keep class org.aspectj.** { *; }
 -dontwarn org.aspectj.**
 
-# MP4Parser/ISO Parser
--keep class com.coremedia.** { *; }
--keep class org.mp4parser.** { *; }
--dontwarn com.coremedia.**
--dontwarn org.mp4parser.**
-
 # Picasso 图片加载
 -keep class com.squareup.picasso.** { *; }
 -dontwarn com.squareup.picasso.**

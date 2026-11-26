@@ -135,7 +135,8 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
                         return mediaAddAdapter.getList().size();
                     }
                 })
-                .setImageQualityCompress(200);
+                .setImageTargetSizeKb(200)
+                .setImageSkipUnderKb(200);
         binding.buttonImage.setOnClickListener(v -> {
             try {
                 if (binding.getSourceImagePath() == null) {
@@ -205,7 +206,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
         videoAddAdapter.setVideoAddListener(this);
         videoAddAdapter.setVideoClearListener(this);
         videoAddAdapter.setBgColor(Color.WHITE);
-        binding.videoRecyclerView.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this, 12), 0x00000000));
+        binding.videoRecyclerView.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this, 12)));
         binding.videoRecyclerView.setLayoutManager(new FullyGridLayoutManager(this, 4) {
             @Override
             public boolean canScrollVertically() {
@@ -218,7 +219,7 @@ public class MediaActivity extends BaseActivity<MediaViewModel, ActivityMediaBin
         mediaAddAdapter.setMediaClearListener(this);
         mediaAddAdapter.setMediaAddListener(this);
         mediaAddAdapter.setBgColor(Color.WHITE);
-        binding.imageVideoRecyclerView.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this, 12), 0x00000000));
+        binding.imageVideoRecyclerView.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this, 12)));
         binding.imageVideoRecyclerView.setLayoutManager(new FullyGridLayoutManager(this, 4) {
             @Override
             public boolean canScrollVertically() {
