@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -33,27 +34,35 @@ import io.coderf.arklab.core.utils.NumberUtil;
 import io.coderf.arklab.common.widget.dialog.BaseDialog;
 import io.coderf.arklab.ui.bean.CalendarData;
 import io.coderf.arklab.ui.databinding.DialogDateRangePickBinding;
-import io.coderf.arklab.ui.widget.calendar.adapter.MonthViewPagerAdapter;
+import io.coderf.arklab.ui.widget.calendar.data.CalendarMonthRepository;
+import io.coderf.arklab.ui.widget.calendar.model.CalendarAppearance;
+import io.coderf.arklab.ui.widget.calendar.pager.MonthPageAdapter;
 import io.coderf.arklab.common.utils.theme.ThemeAttrs;
 
 
 /**
  * 年月日范围选择 dialog。
  * <p>
+ * 日历样式经 {@link #appearanceDraft} 收集，在 {@link #initView()} 时一次性
+ * {@link CalendarView#applyAppearance(CalendarAppearance)} 注入，避免与 View 双份运行时状态。
  * 横屏跟随 {@link BaseDialog}：收窄宽度、居中展示，并压缩日历单元格高度，避免底部按钮被裁切。
  *
  * @author fz
- * @version 1.1
+ * @version 1.2
  * @since 1.0
  * @created 2024/12/2
- * @updated 2026/9/23
+ * @updated 2026/11/27
  */
 public class DateRangePickDialog extends BaseDialog implements DefaultLifecycleObserver {
+    /** Activity Context（已从 ContextWrapper 解包） */
     private final Context context;
+    /** 标题文案；空则用默认「请选择日期范围」 */
     private String title = null;
+    /** 确定：回传起止日期 */
     private CalendarView.OnSelectedChangedListener onPositiveClickListener;
     private OnDialogInterfaceClickListener onNegativeClickListener;
     private OnDialogInterfaceClickListener onClearClickListener;
+    /** 是否允许点击外部关闭 */
     private boolean outSide = true;
     private String positiveText = null, negativeText = null;
     private boolean isShowPositiveView = true, isShowNegativeView = true;
@@ -61,70 +70,39 @@ public class DateRangePickDialog extends BaseDialog implements DefaultLifecycleO
     private ColorStateList positiveTextColor = null;
     private ColorStateList negativeTextColor = null;
     private ColorStateList clearTextColor = null;
-    /**
-     * 可选日期范围起始，未设置时不限制
-     */
+    /** 可选日期范围起始，未设置时不限制 */
     private String selectableStartDate;
-    /**
-     * 可选日期范围截止，未设置时不限制
-     */
+    /** 可选日期范围截止，未设置时不限制 */
     private String selectableEndDate;
+    /** 打开时预填的选中起点 yyyy-MM-dd */
+    private String presetSelectedStartDate;
+    /** 打开时预填的选中终点 yyyy-MM-dd */
+    private String presetSelectedEndDate;
+    /** 打开时定位的年；与 [initialMonth] 成对使用 */
+    private Integer initialYear;
+    /** 打开时定位的月（1-12） */
+    private Integer initialMonth;
+    /** 打开时定位到该日所在月；优先于 [initialYear]/[initialMonth] */
+    private String initialDate;
+    /** 初始跳转是否平滑滚动 */
+    private boolean initialSmoothScroll;
     /**
-     * 周末的颜色
+     * 日历外观草稿：链式 setter 写入此处，{@link #builder} / {@link #initView} 时注入 CalendarView。
      */
-    private @ColorInt int weekTextColor = 0x333333;
-    /**
-     * 工作日的颜色
-     */
-    private @ColorInt int workingDayTextColor = 0x333333;
-    /**
-     * 选中背景
-     */
-    private Drawable selectedBg = null;
+    private final CalendarAppearance appearanceDraft = new CalendarAppearance();
 
-    /**
-     * 默认背景
-     */
-    private Drawable normalBg = null;
-
-    /**
-     * 日历文字颜色大小
-     */
-    private Float textSize = null;
-
-    /**
-     * 日历文字可点击范围，也就是选中的大小，不包括下面的点
-     */
-    private Integer itemWidth = null;
-
-    /**
-     * 日历文字可点击范围，也就是选中的大小，不包括下面的点
-     */
-    private Integer itemHeight = null;
-
-    /**
-     * 日历下面圆点的大小
-     */
-    private Integer dotHeight = null;
-
-    /**
-     * 日历下面圆点的大小
-     */
-    private Integer dotWidth = null;
-
-    /**
-     * 选中文字颜色
-     */
-    private @ColorInt int selectedTextColor = 0xFFFFFFFF;
-
+    /** 窗口 gravity，默认 BOTTOM */
     private int gravity = Gravity.BOTTOM;
 
+    /** 历史签名保留；月页已非 Fragment，日历加载仅依赖 {@link #lifecycle} */
     private FragmentManager fragmentManager;
 
     private Lifecycle lifecycle;
 
+    /** 是否已向 lifecycle 注册过本 Observer，避免重复 add */
     private boolean lifecycleObserverRegistered;
 
+    /** Dialog 内容区背景；null 用默认圆角 surface */
     private Drawable bgDrawable;
 
     /** 是否显示左上角清空按钮，默认隐藏 */
@@ -153,27 +131,6 @@ public class DateRangePickDialog extends BaseDialog implements DefaultLifecycleO
     private float positiveButtonTextSizeSp = 0f;
     private float negativeButtonTextSizeSp = 0f;
 
-    /** 日历网格横向间距（px） */
-    private Integer itemHorizontalSpacing = null;
-    /** 日历网格纵向间距（px） */
-    private Integer itemVerticalSpacing = null;
-    /** 日历网格未选中时的间距颜色 */
-    private Integer itemGapColorUnselected = null;
-    /** 日历网格选中时的间距颜色 */
-    private Integer itemGapColorSelected = null;
-    /** 底部标签与日期数字之间的间距（px） */
-    private Integer bottomTagMarginTop = null;
-    /** 范围选择起始日底部标签 */
-    private String rangeStartLabel = null;
-    /** 范围选择截止日底部标签 */
-    private String rangeEndLabel = null;
-    /** 底部标签文字颜色 */
-    private Integer bottomTagTextColor = null;
-    /** 底部标签文字大小（px） */
-    private Float bottomTagTextSize = null;
-    /** 底部标签文字大小（sp），大于 0 时优先于 px */
-    private float bottomTagTextSizeSp = 0f;
-
     /**
      * Dialog 必须绑定 Activity 的 Window token。Fragment 的 {@link Fragment#requireContext()} /
      * {@link Fragment#getContext()} 通常是 {@link ContextWrapper}，不能直接强转为 Activity。
@@ -197,24 +154,25 @@ public class DateRangePickDialog extends BaseDialog implements DefaultLifecycleO
     public DateRangePickDialog(@NonNull Context context) {
         super(requireActivityContext(context));
         this.context = requireActivityContext(context);
-        textSize = (float) DensityUtil.sp2px(context, 14f);
-        itemWidth = DensityUtil.dp2px(context, 36f);
-        itemHeight = DensityUtil.dp2px(context, 36f);
-        dotWidth = DensityUtil.dp2px(context, 4f);
-        dotHeight = DensityUtil.dp2px(context, 4f);
+        appearanceDraft.setTextSize((float) DensityUtil.sp2px(context, 14f));
+        appearanceDraft.setItemWidth(DensityUtil.dp2px(context, 36f));
+        appearanceDraft.setItemHeight(DensityUtil.dp2px(context, 36f));
+        appearanceDraft.setDotWidth(DensityUtil.dp2px(context, 4f));
+        appearanceDraft.setDotHeight(DensityUtil.dp2px(context, 4f));
         ShapeDrawable shapeDrawableSelected = new ShapeDrawable(new OvalShape());
         shapeDrawableSelected.getPaint().setColor(ThemeAttrs.primary(context));
-        selectedBg = shapeDrawableSelected;
+        appearanceDraft.setSelectedBg(shapeDrawableSelected);
 
-        selectedTextColor = ThemeAttrs.onPrimary(context);
-        weekTextColor = ThemeAttrs.onSurface(context);
-        workingDayTextColor = ThemeAttrs.onSurface(context);
+        appearanceDraft.setSelectedTextColor(ThemeAttrs.onPrimary(context));
+        appearanceDraft.setWeekTextColor(ThemeAttrs.onSurface(context));
+        appearanceDraft.setWorkingDayTextColor(ThemeAttrs.onSurface(context));
 
         ShapeDrawable shapeDrawableNormal = new ShapeDrawable(new OvalShape());
         shapeDrawableNormal.getPaint().setColor(ContextCompat.getColor(context, io.coderf.arklab.common.R.color.transparent));
-        normalBg = shapeDrawableNormal;
-        clearTextColor = ColorStateList.valueOf(
-                ThemeAttrs.error(context));
+        appearanceDraft.setNormalBg(shapeDrawableNormal);
+        appearanceDraft.setItemHorizontalSpacing(DensityUtil.dp2px(context, 8f));
+        appearanceDraft.setItemVerticalSpacing(DensityUtil.dp2px(context, 8f));
+        clearTextColor = ColorStateList.valueOf(ThemeAttrs.error(context));
     }
 
     /**
@@ -262,6 +220,44 @@ public class DateRangePickDialog extends BaseDialog implements DefaultLifecycleO
 
     public DateRangePickDialog setSelectableEndDate(String selectableEndDate) {
         this.selectableEndDate = selectableEndDate;
+        return this;
+    }
+
+    /**
+     * 打开时预填选中区间（不立即滚动；滚动目标见 {@link #setInitialDate} / {@link #setInitialMonth}，
+     * 均未设时默认滚到起点月）。
+     *
+     * @param startDate 起点 yyyy-MM-dd，可为 null
+     * @param endDate   终点 yyyy-MM-dd，可为 null
+     */
+    public DateRangePickDialog setSelectedRange(String startDate, String endDate) {
+        this.presetSelectedStartDate = startDate;
+        this.presetSelectedEndDate = endDate;
+        return this;
+    }
+
+    /**
+     * 打开时定位到指定年月（1-12）。若同时设置了 {@link #setInitialDate}，以日期为准。
+     */
+    public DateRangePickDialog setInitialMonth(int year, int month) {
+        this.initialYear = year;
+        this.initialMonth = month;
+        return this;
+    }
+
+    /**
+     * 打开时定位到该日所在月（yyyy-MM-dd），不改选中态。
+     */
+    public DateRangePickDialog setInitialDate(String date) {
+        this.initialDate = date;
+        return this;
+    }
+
+    /**
+     * 初始跳转是否使用平滑滚动，默认 false。
+     */
+    public DateRangePickDialog setInitialSmoothScroll(boolean smoothScroll) {
+        this.initialSmoothScroll = smoothScroll;
         return this;
     }
 
@@ -386,109 +382,108 @@ public class DateRangePickDialog extends BaseDialog implements DefaultLifecycleO
     }
 
     public DateRangePickDialog setWorkingDayTextColor(int workingDayTextColor) {
-        this.workingDayTextColor = workingDayTextColor;
+        appearanceDraft.setWorkingDayTextColor(workingDayTextColor);
         return this;
     }
 
     public DateRangePickDialog setWeekTextColor(int weekTextColor) {
-        this.weekTextColor = weekTextColor;
+        appearanceDraft.setWeekTextColor(weekTextColor);
         return this;
     }
 
     public DateRangePickDialog setNormalBg(Drawable normalBg) {
-        this.normalBg = normalBg;
+        appearanceDraft.setNormalBg(normalBg);
         return this;
     }
 
     public DateRangePickDialog setSelectedBg(Drawable selectedBg) {
-        this.selectedBg = selectedBg;
+        appearanceDraft.setSelectedBg(selectedBg);
         return this;
     }
 
     public DateRangePickDialog setItemWidth(Integer itemWidth) {
-        this.itemWidth = itemWidth;
+        appearanceDraft.setItemWidth(itemWidth);
         return this;
     }
 
     public DateRangePickDialog setTextSize(Float textSize) {
-        this.textSize = textSize;
+        appearanceDraft.setTextSize(textSize);
         return this;
     }
 
     public DateRangePickDialog setItemHeight(Integer itemHeight) {
-        this.itemHeight = itemHeight;
+        appearanceDraft.setItemHeight(itemHeight);
         return this;
     }
 
     public DateRangePickDialog setDotWidth(Integer dotWidth) {
-        this.dotWidth = dotWidth;
+        appearanceDraft.setDotWidth(dotWidth);
         return this;
     }
 
     public DateRangePickDialog setSelectedTextColor(int selectedTextColor) {
-        this.selectedTextColor = selectedTextColor;
+        appearanceDraft.setSelectedTextColor(selectedTextColor);
         return this;
     }
 
     public DateRangePickDialog setDotHeight(Integer dotHeight) {
-        this.dotHeight = dotHeight;
+        appearanceDraft.setDotHeight(dotHeight);
         return this;
     }
 
     public DateRangePickDialog setItemHorizontalSpacing(Integer itemHorizontalSpacing) {
-        this.itemHorizontalSpacing = itemHorizontalSpacing;
+        appearanceDraft.setItemHorizontalSpacing(itemHorizontalSpacing);
         return this;
     }
 
     public DateRangePickDialog setItemVerticalSpacing(Integer itemVerticalSpacing) {
-        this.itemVerticalSpacing = itemVerticalSpacing;
+        appearanceDraft.setItemVerticalSpacing(itemVerticalSpacing);
         return this;
     }
 
     public DateRangePickDialog setItemGapColorUnselected(@ColorInt Integer itemGapColorUnselected) {
-        this.itemGapColorUnselected = itemGapColorUnselected;
+        appearanceDraft.setItemGapColorUnselected(itemGapColorUnselected);
         return this;
     }
 
     public DateRangePickDialog setItemGapColorSelected(@ColorInt Integer itemGapColorSelected) {
-        this.itemGapColorSelected = itemGapColorSelected;
+        appearanceDraft.setItemGapColorSelected(itemGapColorSelected);
         return this;
     }
 
     public DateRangePickDialog setBottomTagMarginTop(Integer bottomTagMarginTop) {
-        this.bottomTagMarginTop = bottomTagMarginTop;
-        applyBottomTagConfigIfReady();
+        appearanceDraft.setBottomTagMarginTop(bottomTagMarginTop);
+        applyAppearanceIfReady();
         return this;
     }
 
     public DateRangePickDialog setBottomTagMarginTopDp(float marginTopDp) {
-        this.bottomTagMarginTop = DensityUtil.dp2px(context, marginTopDp);
-        applyBottomTagConfigIfReady();
+        appearanceDraft.setBottomTagMarginTop(DensityUtil.dp2px(context, marginTopDp));
+        applyAppearanceIfReady();
         return this;
     }
 
     public DateRangePickDialog setRangeStartLabel(String rangeStartLabel) {
-        this.rangeStartLabel = rangeStartLabel;
-        applyBottomTagConfigIfReady();
+        appearanceDraft.setRangeStartLabel(rangeStartLabel);
+        applyAppearanceIfReady();
         return this;
     }
 
     public DateRangePickDialog setRangeEndLabel(String rangeEndLabel) {
-        this.rangeEndLabel = rangeEndLabel;
-        applyBottomTagConfigIfReady();
+        appearanceDraft.setRangeEndLabel(rangeEndLabel);
+        applyAppearanceIfReady();
         return this;
     }
 
     public DateRangePickDialog setBottomTagTextColor(@ColorInt Integer bottomTagTextColor) {
-        this.bottomTagTextColor = bottomTagTextColor;
-        applyBottomTagConfigIfReady();
+        appearanceDraft.setBottomTagTextColor(bottomTagTextColor);
+        applyAppearanceIfReady();
         return this;
     }
 
     public DateRangePickDialog setBottomTagTextSize(Float bottomTagTextSize) {
-        this.bottomTagTextSize = bottomTagTextSize;
-        this.bottomTagTextSizeSp = 0f;
-        applyBottomTagConfigIfReady();
+        appearanceDraft.setBottomTagTextSize(bottomTagTextSize);
+        applyAppearanceIfReady();
         return this;
     }
 
@@ -496,11 +491,10 @@ public class DateRangePickDialog extends BaseDialog implements DefaultLifecycleO
      * 设置底部标签文字大小（sp）。
      */
     public DateRangePickDialog setBottomTagTextSizeSp(float spSize) {
-        this.bottomTagTextSizeSp = spSize;
         if (spSize > 0f) {
-            this.bottomTagTextSize = (float) DensityUtil.sp2px(context, spSize);
+            appearanceDraft.setBottomTagTextSize((float) DensityUtil.sp2px(context, spSize));
         }
-        applyBottomTagConfigIfReady();
+        applyAppearanceIfReady();
         return this;
     }
 
@@ -520,27 +514,30 @@ public class DateRangePickDialog extends BaseDialog implements DefaultLifecycleO
             String startLabel,
             String endLabel) {
         if (textColor != null) {
-            this.bottomTagTextColor = textColor;
+            appearanceDraft.setBottomTagTextColor(textColor);
         }
         if (textSizeSp != null && textSizeSp > 0f) {
             setBottomTagTextSizeSp(textSizeSp);
         }
         if (marginTopPx != null) {
-            this.bottomTagMarginTop = marginTopPx;
+            appearanceDraft.setBottomTagMarginTop(marginTopPx);
         }
         if (startLabel != null) {
-            this.rangeStartLabel = startLabel;
+            appearanceDraft.setRangeStartLabel(startLabel);
         }
         if (endLabel != null) {
-            this.rangeEndLabel = endLabel;
+            appearanceDraft.setRangeEndLabel(endLabel);
         }
-        applyBottomTagConfigIfReady();
+        applyAppearanceIfReady();
         return this;
     }
 
-    private void applyBottomTagConfigIfReady() {
+    /**
+     * build 之后若再改底部标签等样式，立即把草稿刷到已创建的 CalendarView。
+     */
+    private void applyAppearanceIfReady() {
         if (binding != null) {
-            applyCalendarTagConfig();
+            binding.calendarViewRange.applyAppearance(appearanceDraft);
         }
     }
 
@@ -667,42 +664,49 @@ public class DateRangePickDialog extends BaseDialog implements DefaultLifecycleO
             }
         });
 
+        // 强制范围模式，再注入可选区间与外观草稿
+        binding.calendarViewRange.setMode(CalendarView.MODE_RANGE);
         binding.calendarViewRange.setSelectableDateRange(selectableStartDate, selectableEndDate);
-        if (textSize != null) {
-            binding.calendarViewRange.setTextSize(textSize);
-        }
-        if (dotHeight != null) {
-            binding.calendarViewRange.setDotHeight(dotHeight);
-        }
-        if (dotWidth != null) {
-            binding.calendarViewRange.setDotWidth(dotWidth);
-        }
-        if (itemHeight != null) {
-            binding.calendarViewRange.setItemHeight(itemHeight);
-        }
-        if (itemWidth != null) {
-            binding.calendarViewRange.setItemWidth(itemWidth);
-        }
-        if (selectedBg != null) {
-            binding.calendarViewRange.setSelectedBg(selectedBg);
-        }
-        if (normalBg != null) {
-            binding.calendarViewRange.setNormalBg(normalBg);
-        }
-        binding.calendarViewRange.setSelectedTextColor(selectedTextColor);
-        binding.calendarViewRange.setWorkingDayTextColor(workingDayTextColor);
-        binding.calendarViewRange.setWeekTextColor(weekTextColor);
-        applyCalendarSpacingConfig();
-        applyCalendarTagConfig();
         applyLandscapeCalendarMetrics();
+        binding.calendarViewRange.applyAppearance(appearanceDraft);
         binding.calendarViewRange.refreshTitle();
-        binding.calendarViewRange.initData(lifecycle, fragmentManager);
+        // 先挂 pending 选中 / 跳转，再 bindLifecycle，加载完成后自动落地
+        applyInitialCalendarState();
+        binding.calendarViewRange.bindLifecycle(lifecycle);
         applyTitleConfig();
         applyDynamicAppearance();
         refreshMonthLabel();
         setContentView(binding.getRoot());
         applyCancelableOutside(outSide);
         applyBottomSheetWindow(gravity);
+    }
+
+    /**
+     * 将预填选中与初始月/日跳转交给 CalendarView（未加载时走 pending）。
+     */
+    private void applyInitialCalendarState() {
+        CalendarView calendarView = binding.calendarViewRange;
+        if (presetSelectedStartDate != null || presetSelectedEndDate != null) {
+            calendarView.setSelectedRange(
+                    presetSelectedStartDate, presetSelectedEndDate, false, false);
+        }
+        if (!TextUtils.isEmpty(initialDate)) {
+            calendarView.scrollToDate(initialDate, initialSmoothScroll);
+        } else if (initialYear != null && initialMonth != null) {
+            calendarView.scrollToMonth(initialYear, initialMonth, initialSmoothScroll);
+        } else if (!TextUtils.isEmpty(presetSelectedStartDate)) {
+            calendarView.scrollToDate(presetSelectedStartDate, initialSmoothScroll);
+        } else if (!TextUtils.isEmpty(presetSelectedEndDate)) {
+            calendarView.scrollToDate(presetSelectedEndDate, initialSmoothScroll);
+        }
+    }
+
+    /**
+     * 直接拿到内嵌日历，便于运行时再调用 scroll / setSelected 等 API。
+     */
+    @Nullable
+    public CalendarView getCalendarView() {
+        return binding != null ? binding.calendarViewRange : null;
     }
 
     /**
@@ -714,17 +718,17 @@ public class DateRangePickDialog extends BaseDialog implements DefaultLifecycleO
         }
         int landscapeCell = DensityUtil.dp2px(context, 28f);
         float landscapeTextPx = DensityUtil.sp2px(context, 12f);
+        Integer itemHeight = appearanceDraft.getItemHeight();
+        Integer itemWidth = appearanceDraft.getItemWidth();
+        Float textSize = appearanceDraft.getTextSize();
         if (itemHeight != null && itemHeight > landscapeCell) {
-            itemHeight = landscapeCell;
-            binding.calendarViewRange.setItemHeight(itemHeight);
+            appearanceDraft.setItemHeight(landscapeCell);
         }
         if (itemWidth != null && itemWidth > landscapeCell) {
-            itemWidth = landscapeCell;
-            binding.calendarViewRange.setItemWidth(itemWidth);
+            appearanceDraft.setItemWidth(landscapeCell);
         }
         if (textSize != null && textSize > landscapeTextPx) {
-            textSize = landscapeTextPx;
-            binding.calendarViewRange.setTextSize(textSize);
+            appearanceDraft.setTextSize(landscapeTextPx);
         }
         // 标题 + 月份 + 按钮预留约 160dp
         int maxH = resolveLandscapeMaxContentHeightPx(160f);
@@ -745,41 +749,6 @@ public class DateRangePickDialog extends BaseDialog implements DefaultLifecycleO
         binding.dialogMessageType.setVisibility(isShowTitleView ? View.VISIBLE : View.GONE);
         if (titleTextColor != null) {
             binding.dialogMessageType.setTextColor(titleTextColor);
-        }
-    }
-
-    private void applyCalendarSpacingConfig() {
-        int horizontalSpacing = itemHorizontalSpacing != null
-                ? itemHorizontalSpacing
-                : DensityUtil.dp2px(context, 8f);
-        int verticalSpacing = itemVerticalSpacing != null
-                ? itemVerticalSpacing
-                : DensityUtil.dp2px(context, 8f);
-        binding.calendarViewRange.setItemSpacing(
-                horizontalSpacing,
-                verticalSpacing,
-                itemGapColorUnselected,
-                itemGapColorSelected
-        );
-    }
-
-    private void applyCalendarTagConfig() {
-        if (bottomTagMarginTop != null) {
-            binding.calendarViewRange.setBottomTagMarginTop(bottomTagMarginTop);
-        }
-        if (rangeStartLabel != null) {
-            binding.calendarViewRange.setRangeStartLabel(rangeStartLabel);
-        }
-        if (rangeEndLabel != null) {
-            binding.calendarViewRange.setRangeEndLabel(rangeEndLabel);
-        }
-        if (bottomTagTextColor != null) {
-            binding.calendarViewRange.setBottomTagTextColor(bottomTagTextColor);
-        }
-        if (bottomTagTextSizeSp > 0f) {
-            binding.calendarViewRange.setBottomTagTextSizeSp(bottomTagTextSizeSp);
-        } else if (bottomTagTextSize != null) {
-            binding.calendarViewRange.setBottomTagTextSize(bottomTagTextSize);
         }
     }
 
@@ -834,8 +803,8 @@ public class DateRangePickDialog extends BaseDialog implements DefaultLifecycleO
         if (binding == null || !isShowMonthView) {
             return;
         }
-        MonthViewPagerAdapter adapter = binding.calendarViewRange.getCalendarPagerAdapter();
-        if (adapter == null || adapter.getDateList() == null || adapter.getDateList().isEmpty()) {
+        MonthPageAdapter adapter = binding.calendarViewRange.getCalendarPagerAdapter();
+        if (adapter == null || adapter.getList() == null || adapter.getList().isEmpty()) {
             binding.tvMonth.postDelayed(this::refreshMonthLabel, 100);
             return;
         }
@@ -844,11 +813,10 @@ public class DateRangePickDialog extends BaseDialog implements DefaultLifecycleO
             return;
         }
         int pos = viewPager.getCurrentItem();
-        if (pos < 0 || pos >= adapter.getDateList().size()) {
-            Integer currentPos = io.coderf.arklab.ui.helper.CalendarDataSource.currentMonthPosField.get();
-            pos = currentPos != null ? currentPos : 0;
+        if (pos < 0 || pos >= adapter.getList().size()) {
+            pos = CalendarMonthRepository.currentMonthIndex();
         }
-        CalendarData calendarData = adapter.getDateList().get(pos);
+        CalendarData calendarData = adapter.getList().get(pos);
         binding.tvMonth.setText(calendarData.getYear() + "-"
                 + NumberUtil.formatMonthOrDay(calendarData.getMonth()));
         binding.tvMonth.setVisibility(View.VISIBLE);

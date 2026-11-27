@@ -181,7 +181,7 @@ public class WightActivity extends BaseStatefulActivity<WightViewModel, Activity
         });
         binding.mRecyclerviewVideo.addItemDecoration(new GridSpacingItemDecoration(DensityUtil.dp2px(this, 8)));
         //单选日历
-        binding.calendarViewSingle.initData(getLifecycle(), getSupportFragmentManager());
+        binding.calendarViewSingle.bindLifecycle(getLifecycle());
         ShapeDrawable shapeDrawable = new ShapeDrawable(new OvalShape());
         int width = DensityUtil.dp2px(this, 4f); // 宽度
         int height = DensityUtil.dp2px(this, 4f); // 高度
@@ -194,7 +194,7 @@ public class WightActivity extends BaseStatefulActivity<WightViewModel, Activity
         });
         binding.calendarViewSingle.setOnSelectedChangedListener((startDate, endDate) -> showToast(startDate));
         //多选日历
-        binding.calendarViewMulti.initData(getLifecycle(), getSupportFragmentManager());
+        binding.calendarViewMulti.bindLifecycle(getLifecycle());
         binding.calendarViewMulti.registerOnPageChangeCallback((calendarData, pos) -> {
             binding.calendarViewMulti.notifyAllMonthsChanged();
             binding.tvCalendarViewMulti.setText(calendarData.getYear() + "-" + NumberUtil.formatMonthOrDay(calendarData.getMonth()) + "（区间模式）");

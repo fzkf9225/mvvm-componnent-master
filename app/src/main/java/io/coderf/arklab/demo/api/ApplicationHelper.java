@@ -9,7 +9,6 @@ import io.coderf.arklab.common.api.BaseApplication;
 import io.coderf.arklab.common.api.Config;
 import io.coderf.arklab.common.api.DefaultActivityLifecycleCallback;
 import io.coderf.arklab.common.inter.ErrorService;
-import io.coderf.arklab.common.utils.log.LogUtil;
 import io.coderf.arklab.demo.BuildConfig;
 import io.coderf.arklab.gnss.api.GpsSettingConfig;
 import io.coderf.arklab.gnss.utils.DebugUtil;
@@ -21,7 +20,6 @@ import io.coderf.arklab.ws.Ws;
 import io.coderf.arklab.ui.api.FileApiService;
 import io.coderf.arklab.ui.api.MediaUploadConfig;
 import io.coderf.arklab.ui.helper.CalendarDataSource;
-import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
  * ApplicationHelper 类。
@@ -77,11 +75,7 @@ public class ApplicationHelper extends BaseApplication {
             Ws.enableDebug(this, true);
             ArkLog.channel("speak").setEnableDebug(true);
         }
-        Disposable disposable = CalendarDataSource.observableCalendarData()
-                .toList()
-                .subscribe(CalendarDataSource.calendarObservableField::set,
-                        throwable -> LogUtil.logger("CalendarView", "日历异常：" + throwable)
-                );
+        CalendarDataSource.preload();
         MediaUploadConfig.getInstance()
                 .setFileApiService(fileApiService)
                 .setUploadUrl("minioc/upload");

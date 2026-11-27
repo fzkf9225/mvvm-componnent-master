@@ -15,7 +15,7 @@
     <!--layout资源-->
     <public name="dialog_date_range_pick" type="layout"/>
     <public name="adapter_file_add_item" type="layout"/>
-    <public name="fragment_calendar_month" type="layout"/>
+    <public name="page_calendar_month" type="layout"/>
     <public name="item_calendar_day" type="layout"/>
     <public name="adapter_file_show_item" type="layout"/>
     <public name="tick_message_dialog" type="layout"/>

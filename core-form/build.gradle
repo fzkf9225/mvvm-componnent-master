@@ -75,6 +75,8 @@ dependencies {
     implementation libs.reactivex.rxandroid
     implementation libs.rxjava3.rxjava
     implementation libs.gson
+    implementation libs.kotlinx.coroutines.core
+    implementation libs.lifecycle.runtime.ktx
     // 直接依赖实现层，不经 common facade（表单用到 Base*/widget/R + ErrorConsumer）
     api project(':core-base')
     api project(':core-network')
